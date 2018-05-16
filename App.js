@@ -1,23 +1,19 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
-  }
-}
+import LoadingScene from './scenes/Loading'
+import WelcomeScene from './scenes/Welcome'
+import LoginScene from './scenes/Login'
+import HomeScene from './scenes/Home'
+import BalanceScene from './scenes/Balance'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const AppTabs = createBottomTabNavigator({
+  Home: HomeScene,
+  Balance: BalanceScene
+})
+
+export default createSwitchNavigator({
+  Loading: LoadingScene,
+  Auth: LoginScene,
+  App: AppTabs
+})

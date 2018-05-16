@@ -4,7 +4,8 @@
     "splash": {
       "image": "./assets/splashscreen.png",
       "backgroundColor": "#191A2A",
-      "resizeMode": "cover"
+      "resizeMode": "cover",
+      "barStyle": "light-content"
     }
   }
 }
