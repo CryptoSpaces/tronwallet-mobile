@@ -3,7 +3,7 @@ import { TouchableOpacity } from 'react-native'
 import * as Utils from '../../components/Utils'
 
 class LoginScene extends Component {
-  render() {
+  render () {
     return (
       <Utils.Container>
         <Utils.Text>Login Scene</Utils.Text>

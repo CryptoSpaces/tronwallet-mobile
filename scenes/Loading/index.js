@@ -11,8 +11,8 @@ class LoadingScene extends Component {
       'rubik-light': require('../../assets/fonts/Rubik-Light.ttf')
     })
   }
-  
-  render() {
+
+  render () {
     return (
       <AppLoading
         startAsync={this._loadStuff}

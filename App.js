@@ -1,4 +1,3 @@
-import React from 'react'
 import { createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
 
 import LoadingScene from './scenes/Loading'
@@ -14,6 +13,7 @@ const AppTabs = createBottomTabNavigator({
 
 export default createSwitchNavigator({
   Loading: LoadingScene,
+  Welcome: WelcomeScene,
   Auth: LoginScene,
   App: AppTabs
 })
