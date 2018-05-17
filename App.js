@@ -1,3 +1,4 @@
+import React, { Component } from 'react'
 import { createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
 
 import LoadingScene from './scenes/Loading'
@@ -11,9 +12,15 @@ const AppTabs = createBottomTabNavigator({
   Balance: BalanceScene
 })
 
-export default createSwitchNavigator({
+const RootSwitch = createSwitchNavigator({
   Loading: LoadingScene,
   Welcome: WelcomeScene,
   Auth: LoginScene,
   App: AppTabs
 })
+
+export default class App extends Component {
+  render () {
+    return <RootSwitch />
+  }
+}
