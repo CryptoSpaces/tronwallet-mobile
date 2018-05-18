@@ -6,17 +6,9 @@ import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { View } from 'react-native-animatable'
 import * as shape from 'd3-shape'
 
+import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
-
-const Gradient = () => (
-  <Svg.Defs key={'gradient'}>
-    <Svg.LinearGradient id={'gradient'} x1={'0%'} y={'0%'} x2={'100%'} y2={'100%'}>
-      <Svg.Stop offset={'0%'} stopColor={Colors.primaryGradient[0]} />
-      <Svg.Stop offset={'100%'} stopColor={Colors.primaryGradient[1]} />
-    </Svg.LinearGradient>
-  </Svg.Defs>
-)
 
 const Line = ({ line }) => (
   <Svg.Path

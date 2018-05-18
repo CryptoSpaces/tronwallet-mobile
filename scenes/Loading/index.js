@@ -16,7 +16,7 @@ class LoadingScene extends Component {
     return (
       <AppLoading
         startAsync={this._loadStuff}
-        onFinish={() => this.props.navigation.navigate('Auth')}
+        onFinish={() => this.props.navigation.navigate('Balance')}
         onError={console.warn}
       />
     )
