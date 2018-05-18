@@ -87,3 +87,13 @@ Text.propTypes = {
   size: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
   lineHeight: PropTypes.number
 }
+
+export const Label = styled.View`
+  padding: ${Spacing.small}px;
+  border-radius: 4px;
+  background-color: ${props => props.color};
+`
+
+Label.propTypes = {
+  color: PropTypes.string.isRequired
+}
