@@ -1,10 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { StatusBar } from 'react-native'
 import { createSwitchNavigator, createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
-import Amplify from 'aws-amplify';
-import aws_exports from './aws-exports';
-
-Amplify.configure(aws_exports);
+import Amplify from 'aws-amplify'
+import awsExports from './aws-exports'
 
 import LoadingScene from './scenes/Loading'
 import SignupScene from './scenes/Signup'
@@ -12,10 +10,12 @@ import ConfirmSignup from './scenes/Signup/ConfirmSignup'
 import WelcomeScene from './scenes/Welcome'
 import LoginScene from './scenes/Login'
 import ConfirmLogin from './scenes/Login/ConfirmLogin'
-import ForgotPassword from './scenes/ForgotPassword';
-import NewPassword from './scenes/ForgotPassword/NewPassword';
-import HomeScene from './scenes/Home';
-import BalanceScene from './scenes/Balance';
+import ForgotPassword from './scenes/ForgotPassword'
+import NewPassword from './scenes/ForgotPassword/NewPassword'
+import HomeScene from './scenes/Home'
+import BalanceScene from './scenes/Balance'
+
+Amplify.configure(awsExports)
 
 const AppTabs = createBottomTabNavigator({
   Home: HomeScene,
@@ -25,33 +25,32 @@ const AppTabs = createBottomTabNavigator({
 const SignStack = createStackNavigator(
   {
     Signup: SignupScene,
-    ConfirmSignup: ConfirmSignup,
+    ConfirmSignup: ConfirmSignup
   },
   {
     initialRouteName: 'Signup',
     navigationOptions: {
-      header: null,
-    },
-  });
-
+      header: null
+    }
+  })
 
 const LoginStack = createStackNavigator(
   {
     Login: LoginScene,
     ConfirmLogin: ConfirmLogin,
     ForgotPassword: ForgotPassword,
-    ConfirmNewPassword: NewPassword,
+    ConfirmNewPassword: NewPassword
   },
   {
     initialRouteName: 'Login',
     navigationOptions: {
-      header: null,
+      header: null
     }
   })
 
 const SignTabs = createMaterialTopTabNavigator({
   Login: LoginStack,
-  Sign: SignStack,
+  Sign: SignStack
 })
 
 const RootSwitch = createSwitchNavigator({
@@ -62,7 +61,7 @@ const RootSwitch = createSwitchNavigator({
 })
 
 class App extends Component {
-  render() {
+  render () {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
@@ -72,4 +71,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App
