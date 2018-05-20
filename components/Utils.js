@@ -97,3 +97,7 @@ export const Label = styled.View`
 Label.propTypes = {
   color: PropTypes.string.isRequired
 }
+
+export const Button = styled.TouchableOpacity`
+  
+`

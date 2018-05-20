@@ -1,27 +1,68 @@
 import React, { Component, Fragment } from 'react'
-import { createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
 import { StatusBar } from 'react-native'
+import { createSwitchNavigator, createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
+import Amplify from 'aws-amplify';
+import aws_exports from './aws-exports';
+
+Amplify.configure(aws_exports);
 
 import LoadingScene from './scenes/Loading'
+import SignupScene from './scenes/Signup'
+import ConfirmSignup from './scenes/Signup/ConfirmSignup'
 import WelcomeScene from './scenes/Welcome'
 import LoginScene from './scenes/Login'
-import HomeScene from './scenes/Home'
-import BalanceScene from './scenes/Balance'
+import ConfirmLogin from './scenes/Login/ConfirmLogin'
+import ForgotPassword from './scenes/ForgotPassword';
+import NewPassword from './scenes/ForgotPassword/NewPassword';
+import HomeScene from './scenes/Home';
+import BalanceScene from './scenes/Balance';
 
 const AppTabs = createBottomTabNavigator({
   Home: HomeScene,
   Balance: BalanceScene
 })
 
+const SignStack = createStackNavigator(
+  {
+    Signup: SignupScene,
+    ConfirmSignup: ConfirmSignup,
+  },
+  {
+    initialRouteName: 'Signup',
+    navigationOptions: {
+      header: null,
+    },
+  });
+
+
+const LoginStack = createStackNavigator(
+  {
+    Login: LoginScene,
+    ConfirmLogin: ConfirmLogin,
+    ForgotPassword: ForgotPassword,
+    ConfirmNewPassword: NewPassword,
+  },
+  {
+    initialRouteName: 'Login',
+    navigationOptions: {
+      header: null,
+    }
+  })
+
+const SignTabs = createMaterialTopTabNavigator({
+  Login: LoginStack,
+  Sign: SignStack,
+})
+
 const RootSwitch = createSwitchNavigator({
   Loading: LoadingScene,
   Welcome: WelcomeScene,
-  Auth: LoginScene,
+  Auth: SignTabs,
   App: AppTabs
 })
 
-export default class App extends Component {
-  render () {
+class App extends Component {
+  render() {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
@@ -30,3 +71,5 @@ export default class App extends Component {
     )
   }
 }
+
+export default App;

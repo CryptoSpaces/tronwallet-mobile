@@ -29,6 +29,8 @@
     ]
   },
   "dependencies": {
+    "aws-amplify": "^0.4.1",
+    "aws-amplify-react-native": "^0.2.11",
     "axios": "^0.18.0",
     "expo": "^27.0.1",
     "husky": "^0.14.3",
