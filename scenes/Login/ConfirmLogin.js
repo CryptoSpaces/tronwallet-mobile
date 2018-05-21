@@ -43,7 +43,7 @@ class ConfirmLogin extends Component {
     copyClipboard = async () => {
       const { totpCode } = this.state
       await Clipboard.setString(totpCode)
-      alert('Copied to clipboard')
+      // alert('Copied to clipboard')
     }
 
     loadUserData = async () => {

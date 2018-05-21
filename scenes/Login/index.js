@@ -40,23 +40,25 @@ class LoginScene extends Component {
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
       <Utils.Container>
-        <Utils.Text>Login Scene</Utils.Text>
-        <Utils.Container>
+        <Utils.ContentWithBackground source={require('../../assets/login-circle.png')} resizeMode='stretch' />
+        <Utils.Content>
           <Utils.Text size='xsmall' secondary>Email</Utils.Text>
           <TextInput style={{ color: 'white', fontSize: 30 }} keyboardType='email-address' onChangeText={(text) => this.changeInput(text, 'email')} />
           <Utils.Text size='xsmall' secondary>Password</Utils.Text>
           <TextInput style={{ color: 'white', fontSize: 30 }} secureTextEntry onChangeText={(text) => this.changeInput(text, 'password')} />
-        </Utils.Container>
+        </Utils.Content>
 
-        {loadingSign ? <ActivityIndicator size='small' color={Colors.yellow} />
-          : <TouchableOpacity onPress={this.signIn}>
-            <Utils.Text size='small'>LOGIN</Utils.Text>
-          </TouchableOpacity>}
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-          <Utils.Text size='small'>Forgot Password</Utils.Text>
-        </TouchableOpacity>
-        <Text style={{ color: 'red', fontSize: 30 }}>{signError}</Text>
-        {ChangedPassword && <Text style={{ color: 'green', fontSize: 22 }}>Password Changed</Text>}
+        <Utils.Content>
+          {loadingSign ? <ActivityIndicator size='small' color={Colors.yellow} />
+            : <TouchableOpacity onPress={this.signIn}>
+              <Utils.Text size='small'>LOGIN</Utils.Text>
+            </TouchableOpacity>}
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+            <Utils.Text size='small'>Forgot Password</Utils.Text>
+          </TouchableOpacity>
+          <Text style={{ color: 'red', fontSize: 30 }}>{signError}</Text>
+          {ChangedPassword && <Text style={{ color: 'green', fontSize: 22 }}>Password Changed</Text>}
+        </Utils.Content>
       </Utils.Container >
     )
   }
