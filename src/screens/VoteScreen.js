@@ -1,5 +1,9 @@
 import React, { PureComponent } from 'react'
-import { View, TextInput, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { FlatList, TouchableOpacity } from 'react-native'
+import { LinearGradient } from 'expo'
+import { Colors, Spacing } from '../../components/DesignSystem'
+import * as Utils from '../../components/Utils'
+import VoteDetailScreen from './VoteDetailScreen'
 
 class VoteScreen extends PureComponent {
   state = {
@@ -49,99 +53,90 @@ class VoteScreen extends PureComponent {
         url: 'http://google.com',
         issuer: '1231231231312312'
       }
-    ]
+    ],
+    modalVisible: false,
+    currentItem: null,
+    search: ''
   };
+
+  showModal = (currentItem) => {
+    this.setState({
+      currentItem,
+      modalVisible: true
+    })
+  }
+
+  onChange = (value, field) => {
+    this.setState({
+      [field]: value
+    })
+  }
 
   renderRow = ({ item }) => {
     return (
-      <View style={styles.row}>
-        <Text style={styles.text}>{item.url}</Text>
-        <View style={styles.item}>
-          <Text style={styles.label}>Issuer: </Text>
-          <Text style={styles.description}>
-            {`${item.issuer.slice(0, 8)}...${item.issuer.substr(item.issuer.length - 8)}`}
-          </Text>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity onPress={() => {}} style={styles.button}>
-            <Text style={styles.textButton}>Vote</Text>
+      <Utils.Item padding={16} borderBottomWidth={1}>
+        <Utils.Row justify='space-between' align='center'>
+          <Utils.Text secondary>#{item.id}</Utils.Text>
+          <Utils.View justify='space-between' height={50}>
+            <Utils.Text lineHeight={20}>{item.url}</Utils.Text>
+            <Utils.Row>
+              <Utils.Text secondary size='xsmall'>ISSUER: </Utils.Text>
+              <Utils.Text size='xsmall'>
+                {`${item.issuer.slice(0, 8)}...${item.issuer.substr(item.issuer.length - 8)}`}
+              </Utils.Text>
+            </Utils.Row>
+          </Utils.View>
+          <TouchableOpacity onPress={() => this.showModal(item)}>
+            <LinearGradient
+              start={[0, 1]}
+              end={[1, 0]}
+              colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
+              style={{ padding: Spacing.small, alignItems: 'center', borderRadius: 5, width: '100%' }}
+            >
+              <Utils.Text size='xsmall'>Vote</Utils.Text>
+            </LinearGradient>
           </TouchableOpacity>
-        </View>
-      </View>
+          {/* <Utils.Button
+            onPress={() => {}}
+            width={80}
+            height={40}
+            radius={10}
+            secundary
+            align="center"
+            justify="center"
+          >
+            <Utils.Text size="xsmall">Vote</Utils.Text>
+          </Utils.Button> */}
+        </Utils.Row>
+      </Utils.Item>
     )
   }
 
   render () {
-    const { voteList } = this.state
+    const { voteList, modalVisible, currentItem } = this.state
     return (
-      <View>
-        <TextInput style={styles.search} placeholder='Search a token' />
+      <Utils.Container>
+        <Utils.StatusBar transparent />
+        <Utils.FormInput
+          underlineColorAndroid='transparent'
+          keyboardType='numeric'
+          onChangeText={(text) => this.onChange(text, 'search')}
+          placeholder='Search a token'
+          placeholderTextColor='#fff'
+        />
         <FlatList
-          style={{ marginBottom: '7%' }}
           data={voteList}
           removeClippedSubviews
           renderItem={this.renderRow}
           keyExtractor={item => `${item.id}`}
         />
-      </View>
+        <VoteDetailScreen
+          visible={modalVisible}
+          item={currentItem}
+        />
+      </Utils.Container>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#fff'
-  },
-  row: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderColor: '#d3d3d3',
-    backgroundColor: '#fff'
-  },
-  item: {
-    flexDirection: 'row'
-  },
-  text: {
-    fontWeight: '800',
-    fontSize: 16,
-    paddingBottom: 10,
-    color: '#2C2C2C'
-  },
-  description: {
-    paddingBottom: 5,
-    color: '#2C2C2C'
-  },
-  label: {
-    fontWeight: '700',
-    color: '#2C2C2C'
-  },
-  textButton: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '600'
-  },
-  button: {
-    width: 100,
-    height: 40,
-    backgroundColor: '#2C2C2C',
-    borderColor: '#2C2C2C',
-    borderRadius: 10,
-    borderWidth: 2,
-    marginTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center'
-  },
-  search: {
-    height: 50,
-    padding: 8,
-    backgroundColor: 'white',
-    color: '#a0a0a0',
-    borderWidth: 1,
-    borderColor: '#cecece'
-  }
-})
 
 export default VoteScreen
