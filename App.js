@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
+import { StatusBar } from 'react-native'
 
 import LoadingScene from './scenes/Loading'
 import WelcomeScene from './scenes/Welcome'
@@ -23,6 +24,11 @@ const RootSwitch = createSwitchNavigator({
 
 export default class App extends Component {
   render () {
-    return <RootSwitch />
+    return (
+      <Fragment>
+        <StatusBar barStyle='light-content' />
+        <RootSwitch />
+      </Fragment>
+    )
   }
 }

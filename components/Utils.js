@@ -117,3 +117,12 @@ export const FormInput = styled.TextInput`
   border-bottom-width: 0.5px;
   border-bottom-color: ${Colors.secondaryText};
 `
+export const Label = styled.View`
+  padding: ${Spacing.small}px;
+  border-radius: 4px;
+  background-color: ${props => props.color};
+`
+
+Label.propTypes = {
+  color: PropTypes.string.isRequired
+}
