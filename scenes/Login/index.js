@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { TouchableOpacity, Text, TextInput, ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Image } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
 import { Colors } from '../../components/DesignSystem'
+import ButtonGradient from '../../components/ButtonGradient'
 
 class LoginScene extends Component {
   state = {
@@ -40,24 +41,22 @@ class LoginScene extends Component {
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
       <Utils.Container>
-        <Utils.ContentWithBackground source={require('../../assets/login-circle.png')} resizeMode='stretch' />
-        <Utils.Content>
-          <Utils.Text size='xsmall' secondary>Email</Utils.Text>
-          <TextInput style={{ color: 'white', fontSize: 30 }} keyboardType='email-address' onChangeText={(text) => this.changeInput(text, 'email')} />
-          <Utils.Text size='xsmall' secondary>Password</Utils.Text>
-          <TextInput style={{ color: 'white', fontSize: 30 }} secureTextEntry onChangeText={(text) => this.changeInput(text, 'password')} />
+        <Utils.Content height={80} justify='center' align='center'>
+          <Image source={require('../../assets/login-circle.png')} />
         </Utils.Content>
-
+        <Utils.VerticalSpacer size='small' />
         <Utils.Content>
+          <Utils.Text size='xsmall' secondary>E-MAIL</Utils.Text>
+          <Utils.FormInput underlineColorAndroid='transparent' keyboardType='email-address' onChangeText={(text) => this.changeInput(text, 'email')} />
+          <Utils.Text size='xsmall' secondary>Password</Utils.Text>
+          <Utils.FormInput underlineColorAndroid='transparent' secureTextEntry letterSpacing={10} onChangeText={(text) => this.changeInput(text, 'password')} />
           {loadingSign ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <TouchableOpacity onPress={this.signIn}>
-              <Utils.Text size='small'>LOGIN</Utils.Text>
-            </TouchableOpacity>}
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-            <Utils.Text size='small'>Forgot Password</Utils.Text>
-          </TouchableOpacity>
-          <Text style={{ color: 'red', fontSize: 30 }}>{signError}</Text>
-          {ChangedPassword && <Text style={{ color: 'green', fontSize: 22 }}>Password Changed</Text>}
+            : <ButtonGradient text='SIGN IN' onPress={this.signIn} />}
+        </Utils.Content>
+        <Utils.Content justify='center' align='center'>
+          {ChangedPassword && <Utils.Text size='small' success>Password Changed</Utils.Text>}
+          <Utils.Error>{signError}</Utils.Error>
+          <Utils.Text onPress={() => this.props.navigation.navigate('ForgotPassword')} size='small' font='light' secondary>FORGOT PASSWORD ?</Utils.Text>
         </Utils.Content>
       </Utils.Container >
     )
