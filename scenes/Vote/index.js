@@ -5,7 +5,7 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
 
-class VoteScreen extends PureComponent {
+class VoteScene extends PureComponent {
   state = {
     voteList: [
       {
@@ -106,10 +106,16 @@ class VoteScreen extends PureComponent {
     return (
       <Utils.Container>
         <Utils.StatusBar transparent />
-        <Header
-          title='TOTAL VOTES'
-          description='945,622,966'
-        />
+        <Header>
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
+            <Utils.Text size='small'>945,622,966</Utils.Text>
+          </Utils.View>
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
+            <Utils.Text size='small'>14,106</Utils.Text>
+          </Utils.View>
+        </Header>
         <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
           <Utils.FormInput
             underlineColorAndroid='transparent'
@@ -165,4 +171,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default VoteScreen
+export default VoteScene

@@ -7,7 +7,7 @@ import WelcomeScene from './scenes/Welcome'
 import LoginScene from './scenes/Login'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
-import VoteScreen from './src/screens/VoteScreen'
+import VoteScreen from './scenes/Vote'
 import ReceiveScreen from './src/screens/ReceiveScreen'
 
 const AppTabs = createBottomTabNavigator({

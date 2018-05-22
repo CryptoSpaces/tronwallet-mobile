@@ -30,14 +30,15 @@ const Header = ({
     <Utils.Content>
       <Utils.Row align='center' justify='space-between'>
         {leftBtn}
-        <Utils.View align='center'>
+        {children}
+        {/* <Utils.View align='center'>
           <Utils.Text size='xsmall' secondary>{title}</Utils.Text>
           <Utils.Text size='medium'>{description}</Utils.Text>
         </Utils.View>
         <Utils.View align='center'>
           <Utils.Text size='xsmall' secondary>{title}</Utils.Text>
           <Utils.Text size='medium'>{description}</Utils.Text>
-        </Utils.View>
+        </Utils.View> */}
         {rightBtn}
       </Utils.Row>
     </Utils.Content>
