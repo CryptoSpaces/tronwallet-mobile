@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react'
-import { FlatList, TouchableOpacity } from 'react-native'
+import { FlatList, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { LinearGradient } from 'expo'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
-import VoteDetailScreen from './VoteDetailScreen'
+import Header from '../../components/Header'
 
 class VoteScreen extends PureComponent {
   state = {
@@ -54,15 +54,13 @@ class VoteScreen extends PureComponent {
         issuer: '1231231231312312'
       }
     ],
-    modalVisible: false,
     currentItem: null,
     search: ''
   };
 
   showModal = (currentItem) => {
     this.setState({
-      currentItem,
-      modalVisible: true
+      currentItem
     })
   }
 
@@ -74,69 +72,97 @@ class VoteScreen extends PureComponent {
 
   renderRow = ({ item }) => {
     return (
-      <Utils.Item padding={16} borderBottomWidth={1}>
+      <Utils.Item padding={16}>
         <Utils.Row justify='space-between' align='center'>
-          <Utils.Text secondary>#{item.id}</Utils.Text>
-          <Utils.View justify='space-between' height={50}>
+          <Utils.Row justify='space-between' align='center'>
+            <View style={styles.rank}>
+              <Utils.Text secondary>#{item.id}</Utils.Text>
+            </View>
             <Utils.Text lineHeight={20}>{item.url}</Utils.Text>
-            <Utils.Row>
-              <Utils.Text secondary size='xsmall'>ISSUER: </Utils.Text>
-              <Utils.Text size='xsmall'>
-                {`${item.issuer.slice(0, 8)}...${item.issuer.substr(item.issuer.length - 8)}`}
-              </Utils.Text>
-            </Utils.Row>
-          </Utils.View>
-          <TouchableOpacity onPress={() => this.showModal(item)}>
-            <LinearGradient
-              start={[0, 1]}
-              end={[1, 0]}
-              colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-              style={{ padding: Spacing.small, alignItems: 'center', borderRadius: 5, width: '100%' }}
-            >
-              <Utils.Text size='xsmall'>Vote</Utils.Text>
-            </LinearGradient>
-          </TouchableOpacity>
-          {/* <Utils.Button
-            onPress={() => {}}
-            width={80}
-            height={40}
-            radius={10}
-            secundary
-            align="center"
-            justify="center"
-          >
-            <Utils.Text size="xsmall">Vote</Utils.Text>
-          </Utils.Button> */}
+          </Utils.Row>
+          <Utils.Row align='center' justify='space-between'>
+            <TouchableOpacity style={styles.button} onPress={() => this.showModal(item)}>
+              <Utils.Text size='xsmall'>-</Utils.Text>
+            </TouchableOpacity>
+            <Utils.FormInput
+              underlineColorAndroid='transparent'
+              keyboardType='numeric'
+              onChangeText={(text) => this.onChange(text, 'search')}
+              placeholderTextColor='#fff'
+              value='100'
+              style={{ marginLeft: 5, marginRight: 5 }}
+            />
+            <TouchableOpacity style={styles.button} onPress={() => this.showModal(item)}>
+              <Utils.Text size='xsmall'>+</Utils.Text>
+            </TouchableOpacity>
+          </Utils.Row>
         </Utils.Row>
       </Utils.Item>
     )
   }
 
   render () {
-    const { voteList, modalVisible, currentItem } = this.state
+    const { voteList } = this.state
     return (
       <Utils.Container>
         <Utils.StatusBar transparent />
-        <Utils.FormInput
-          underlineColorAndroid='transparent'
-          keyboardType='numeric'
-          onChangeText={(text) => this.onChange(text, 'search')}
-          placeholder='Search a token'
-          placeholderTextColor='#fff'
+        <Header
+          title='TOTAL VOTES'
+          description='945,622,966'
         />
+        <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
+          <Utils.FormInput
+            underlineColorAndroid='transparent'
+            onChangeText={(text) => this.onChange(text, 'search')}
+            placeholder='Search'
+            placeholderTextColor='#fff'
+            style={{ width: '70%' }}
+          />
+          <TouchableOpacity onPress={() => {}}>
+            <LinearGradient
+              start={[0, 1]}
+              end={[1, 0]}
+              colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
+              style={styles.submitButton}
+            >
+              <Utils.Text size='xsmall'>Submit</Utils.Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </Utils.Row>
         <FlatList
           data={voteList}
           removeClippedSubviews
           renderItem={this.renderRow}
           keyExtractor={item => `${item.id}`}
         />
-        <VoteDetailScreen
-          visible={modalVisible}
-          item={currentItem}
-        />
       </Utils.Container>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  searchWrapper: {
+    paddingLeft: 24,
+    paddingRight: 24
+  },
+  rank: {
+    paddingRight: 10
+  },
+  submitButton: {
+    padding: Spacing.small,
+    alignItems: 'center',
+    borderRadius: 5,
+    width: '100%'
+  },
+  button: {
+    backgroundColor: Colors.secondaryText,
+    borderColor: Colors.secondaryText,
+    borderRadius: 5,
+    height: 20,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
 
 export default VoteScreen

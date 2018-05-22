@@ -1,22 +1,22 @@
 import React, { PureComponent } from 'react'
-import { View, Text, Dimensions, StyleSheet } from 'react-native'
-import QRCode from 'react-native-qrcode'
+import { View, Text, StyleSheet } from 'react-native'
+// import QRCode from 'react-native-qrcode'
 
 class ReceiveScreen extends PureComponent {
   state = {}
 
   render () {
-    const { width } = Dimensions.get('window')
+    // const { width } = Dimensions.get('window')
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
           Select your account balance:
         </Text>
-        <QRCode
+        {/* <QRCode
           value={123456789}
           size={width * 0.7}
           fgColor='white'
-        />
+        /> */}
       </View>
     )
   }

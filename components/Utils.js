@@ -90,23 +90,10 @@ Text.propTypes = {
 
 export const Item = styled.View`
   ${props => props.padding && css`padding: ${props.padding}px`};
-  border-color: ${Colors.primaryText};
+  border-color: ${Colors.secondaryText};
   ${props => props.borderColor && css`border-color: ${props.borderColor}`};
   border-bottom-width: 0.2px;
   ${props => props.lineWidth && css`border-bottom-width: ${props.lineWidth}px`};
-  /* align-items: ${props => props.align};
-  justify-content: ${props => props.justify}; */
-`
-
-export const Button = styled.TouchableOpacity`
-  background-color: ${Colors.background};
-  ${props => props.secundary && css`background-color: ${Colors.secondaryText};`}
-  border-color: ${Colors.background};
-  ${props => props.radius && css`border-radius: ${props.radius}px`};
-  ${props => props.height && css`height: ${props.height}px;`};
-  ${props => props.width && css`width: ${props.width}px;`};
-  align-items: ${props => props.align};
-  justify-content: ${props => props.justify};
 `
 
 export const FormInput = styled.TextInput`
