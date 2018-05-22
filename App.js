@@ -8,13 +8,13 @@ import LoginScene from './scenes/Login'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScreen from './src/screens/VoteScreen'
-import ReceiveScreen from './src/screens/ReceiveScreen'
+import ReceiveScene from './scenes/Receive'
 
 const AppTabs = createBottomTabNavigator({
   Home: HomeScene,
   Balance: BalanceScene,
   Vote: VoteScreen,
-  Receive: ReceiveScreen
+  Receive: ReceiveScene
 })
 
 const RootSwitch = createSwitchNavigator({
