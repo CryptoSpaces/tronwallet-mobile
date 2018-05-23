@@ -99,14 +99,6 @@ export const Item = styled.View`
   ${props => props.lineWidth && css`border-bottom-width: ${props.lineWidth}px`};
 `
 
-export const FormInput = styled.TextInput`
-  color: ${Colors.primaryText};
-  padding: ${Spacing.small}px;
-  font-size: ${FontSize['small']};
-  margin-bottom: ${Spacing.medium}px;
-  border-bottom-width: 0.5px;
-  border-bottom-color: ${Colors.secondaryText};
-`
 export const Label = styled.View`
   padding: ${Spacing.small}px;
   border-radius: 4px;
