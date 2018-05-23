@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
+// import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
   state = {
@@ -58,6 +59,12 @@ class VoteScene extends PureComponent {
     search: ''
   };
 
+  // async componentWillMount() {
+  // const { candidates } = await Client.getTotalVotes();
+  // console.log('>>>>>>>: ', candidates);
+  // this.setState({ voteList: candidates });
+  // }
+
   showModal = (currentItem) => {
     this.setState({
       currentItem
@@ -89,7 +96,7 @@ class VoteScene extends PureComponent {
               keyboardType='numeric'
               onChangeText={(text) => this.onChange(text, 'search')}
               placeholderTextColor='#fff'
-              value='100'
+              placeholder='0'
               style={{ marginLeft: 5, marginRight: 5 }}
             />
             <TouchableOpacity style={styles.button} onPress={() => this.showModal(item)}>
