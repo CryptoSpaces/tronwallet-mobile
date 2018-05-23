@@ -1,6 +1,15 @@
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
-import QRCode from 'react-native-qrcode'
+import { Dimensions } from 'react-native'
+
+import {
+  Container,
+  Content,
+  VerticalSpacer,
+  Text
+} from '../../components/Utils'
+import QRCode from '../../components/QRCode'
+import DropdownModal from '../../components/DropdownModal'
+import receiveInfo from './receive.json'
 
 class ReceiveScreen extends PureComponent {
   state = {}
@@ -8,33 +17,22 @@ class ReceiveScreen extends PureComponent {
   render () {
     const { width } = Dimensions.get('window')
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          Select your account balance:
-        </Text>
-        <QRCode
-          value={123456789}
-          size={width * 0.7}
-          fgColor='white'
-        />
-      </View>
+      <Container>
+        <Content align='center'>
+          <VerticalSpacer size='large' />
+          <Text size='xsmall' secondary>Account balance:</Text>
+          <DropdownModal />
+          <VerticalSpacer size='medium' />
+        </Content>
+        <Content align='center'>
+          <QRCode
+            value={receiveInfo.value}
+            size={width * 0.6}
+          />
+        </Content>
+      </Container>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: '#fff'
-  },
-  title: {
-    fontSize: 16,
-    color: '#2C2C2C',
-    fontWeight: '700',
-    padding: 30
-  }
-})
 
 export default ReceiveScreen
