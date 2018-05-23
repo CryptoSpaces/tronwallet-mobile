@@ -1,122 +1,161 @@
+// Dependencies
 import React, { PureComponent } from 'react'
-import { FlatList, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { FlatList, TouchableOpacity, View, StyleSheet, ActivityIndicator } from 'react-native'
 import { LinearGradient } from 'expo'
+
+// Utils
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
+
+// Components
 import Header from '../../components/Header'
-// import Client from '../../src/services/client'
+import InputAmount from '../../src/components/Vote/InputAmount'
+
+// Service
+import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
   state = {
     voteList: [
-      {
-        id: 1,
-        url: 'http://getty.io',
-        issuer: '1231231231312312'
-      },
-      {
-        id: 2,
-        url: 'http://google.com',
-        issuer: '1231231231312312daskdhgasjdhgasjdhgasjdhgassadgasjdhags'
-      },
-      {
-        id: 3,
-        url: 'http://getty.io',
-        issuer: '1231231231312312'
-      },
-      {
-        id: 4,
-        url: 'http://getty.io',
-        issuer: '1231231231312312'
-      },
-      {
-        id: 5,
-        url: 'http://getty.io',
-        issuer: '1231231231312312'
-      },
-      {
-        id: 6,
-        url: 'http://google.com',
-        issuer: '1231231231312312'
-      },
-      {
-        id: 7,
-        url: 'http://google.com',
-        issuer: '1231231231312312'
-      },
-      {
-        id: 8,
-        url: 'http://google.com',
-        issuer: '1231231231312312'
-      },
-      {
-        id: 9,
-        url: 'http://google.com',
-        issuer: '1231231231312312'
-      }
+      // {
+      //   id: 1,
+      //   url: 'http://getty.io',
+      //   issuer: '1231231231312312'
+      // },
+      // {
+      //   id: 2,
+      //   url: 'http://google.com',
+      //   issuer: '1231231231312312daskdhgasjdhgasjdhgasjdhgassadgasjdhags'
+      // },
+      // {
+      //   id: 3,
+      //   url: 'http://getty.io',
+      //   issuer: '1231231231312312'
+      // },
+      // {
+      //   id: 4,
+      //   url: 'http://getty.io',
+      //   issuer: '1231231231312312'
+      // },
+      // {
+      //   id: 5,
+      //   url: 'http://getty.io',
+      //   issuer: '1231231231312312'
+      // },
+      // {
+      //   id: 6,
+      //   url: 'http://google.com',
+      //   issuer: '1231231231312312'
+      // },
+      // {
+      //   id: 7,
+      //   url: 'http://google.com',
+      //   issuer: '1231231231312312'
+      // },
+      // {
+      //   id: 8,
+      //   url: 'http://google.com',
+      //   issuer: '1231231231312312'
+      // },
+      // {
+      //   id: 9,
+      //   url: 'http://google.com',
+      //   issuer: '1231231231312312'
+      // }
     ],
     currentItem: null,
-    search: ''
+    search: '',
+    loading: true,
+    loadingList: false,
+    totalVotes: 0
   };
 
-  // async componentWillMount() {
-  // const { candidates } = await Client.getTotalVotes();
-  // console.log('>>>>>>>: ', candidates);
-  // this.setState({ voteList: candidates });
-  // }
+  componentDidMount () {
+    this.onLoadData()
+  }
 
-  showModal = (currentItem) => {
+  onLoadData = async () => {
+    const { candidates, totalVotes } = await Client.getTotalVotes()
+    this.setState({ voteList: candidates, loading: false, totalVotes })
+  }
+
+  onSubmit = async () => {
+    const votesPrepared = {}
+    const { voteList } = this.state
+    voteList.forEach((vote) => {
+      if (vote.amount && Number(vote.amount) > 0) {
+        const key = vote.address
+        votesPrepared[key] = vote.amount
+      }
+    })
+    await Client.postVotes(votesPrepared)
+  }
+
+  onChangeVotes = (value, address) => {
+    const { voteList } = this.state
+    voteList.find(v => v.address === address).amount = Number(value)
     this.setState({
-      currentItem
+      voteList
     })
   }
 
-  onChange = (value, field) => {
-    this.setState({
-      [field]: value
-    })
+  onSearch = async (value, field) => {
+    const { voteList } = this.state
+    if (value) {
+      this.setState({ loadingList: true })
+      const regex = new RegExp(value, 'i')
+      const votesFilter = voteList.filter((vote) => vote.url.match(regex))
+      this.setState({ voteList: votesFilter, loadingList: false })
+    } else {
+      this.setState({ loadingList: true })
+      const { candidates } = await Client.getTotalVotes()
+      this.setState({ voteList: candidates, loadingList: false })
+    }
   }
 
-  renderRow = ({ item }) => {
+  renderRow = ({ item, index }) => {
+    let url = item.url
+    if (url.length > 25) {
+      url = `${url.slice(0, 20)}...`
+    }
     return (
       <Utils.Item padding={16}>
         <Utils.Row justify='space-between' align='center'>
           <Utils.Row justify='space-between' align='center'>
             <View style={styles.rank}>
-              <Utils.Text secondary>#{item.id}</Utils.Text>
+              <Utils.Text secondary>#{index + 1}</Utils.Text>
             </View>
-            <Utils.Text lineHeight={20}>{item.url}</Utils.Text>
+            <Utils.Text lineHeight={20}>{url}</Utils.Text>
           </Utils.Row>
-          <Utils.Row align='center' justify='space-between'>
-            <TouchableOpacity style={styles.button} onPress={() => this.showModal(item)}>
-              <Utils.Text size='xsmall'>-</Utils.Text>
-            </TouchableOpacity>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              keyboardType='numeric'
-              onChangeText={(text) => this.onChange(text, 'search')}
-              placeholderTextColor='#fff'
-              placeholder='0'
-              style={{ marginLeft: 5, marginRight: 5 }}
-            />
-            <TouchableOpacity style={styles.button} onPress={() => this.showModal(item)}>
-              <Utils.Text size='xsmall'>+</Utils.Text>
-            </TouchableOpacity>
-          </Utils.Row>
+          <InputAmount
+            input={item.amount ? item.amount : ''}
+            onOutput={this.onChangeVotes}
+            max={14106}
+            id={item.address}
+          />
         </Utils.Row>
       </Utils.Item>
     )
   }
 
   render () {
-    const { voteList } = this.state
+    const { voteList, loading, totalVotes, loadingList } = this.state
+    if (loading) {
+      return (
+        <Utils.Container>
+          <Utils.Content height={200} justify='center' align='center'>
+            <ActivityIndicator size='large' color={Colors.yellow} />
+          </Utils.Content>
+        </Utils.Container>
+      )
+    }
     return (
       <Utils.Container>
         <Utils.StatusBar transparent />
         <Header>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
-            <Utils.Text size='small'>945,622,966</Utils.Text>
+            <Utils.Text size='small'>{totalVotes.toLocaleString()}</Utils.Text>
           </Utils.View>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
@@ -126,12 +165,12 @@ class VoteScene extends PureComponent {
         <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
           <Utils.FormInput
             underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onChange(text, 'search')}
+            onChangeText={(text) => this.onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
             style={{ width: '70%' }}
           />
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={this.onSubmit}>
             <LinearGradient
               start={[0, 1]}
               end={[1, 0]}
@@ -142,12 +181,18 @@ class VoteScene extends PureComponent {
             </LinearGradient>
           </TouchableOpacity>
         </Utils.Row>
-        <FlatList
-          data={voteList}
-          removeClippedSubviews
-          renderItem={this.renderRow}
-          keyExtractor={item => `${item.id}`}
-        />
+        {
+          loadingList
+            ? <Utils.Content height={200} justify='center' align='center'>
+              <ActivityIndicator size='large' color={Colors.yellow} />
+            </Utils.Content>
+            : <FlatList
+              data={voteList}
+              removeClippedSubviews
+              renderItem={this.renderRow}
+              keyExtractor={item => `${item.address}`}
+            />
+        }
       </Utils.Container>
     )
   }

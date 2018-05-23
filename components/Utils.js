@@ -8,9 +8,9 @@ import { Colors, Spacing, FontSize } from './DesignSystem'
 export const View = styled.View`
   align-items: ${props => props.align};
   justify-content: ${props => props.justify};
-  ${props => props.flex && css`flex: ${props.flex};`}
-  ${props => props.height && css`height: ${props.height}px;`}
-  ${props => props.width && css`width: ${props.width}px;`}
+  ${props => props.flex && css`flex: ${props.flex};`};
+  ${props => props.height && css`height: ${props.height}px;`};
+  ${props => props.width && css`width: ${props.width}px;`};
 `
 
 View.defaultProps = {
