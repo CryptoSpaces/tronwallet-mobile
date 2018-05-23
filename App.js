@@ -3,13 +3,14 @@ import { StatusBar } from 'react-native'
 import { createSwitchNavigator, createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
 import Amplify from 'aws-amplify'
 import awsExports from './aws-exports'
-
+import { Colors, Spacing, width } from './components/DesignSystem'
 import LoadingScene from './scenes/Loading'
 import SignupScene from './scenes/Signup'
 import ConfirmSignup from './scenes/Signup/ConfirmSignup'
 import WelcomeScene from './scenes/Welcome'
 import LoginScene from './scenes/Login'
 import ConfirmLogin from './scenes/Login/ConfirmLogin'
+import Send from './scenes/Send'
 import ForgotPassword from './scenes/ForgotPassword'
 import NewPassword from './scenes/ForgotPassword/NewPassword'
 import HomeScene from './scenes/Home'
@@ -18,6 +19,7 @@ import BalanceScene from './scenes/Balance'
 Amplify.configure(awsExports)
 
 const AppTabs = createBottomTabNavigator({
+  Send: Send,
   Home: HomeScene,
   Balance: BalanceScene
 })
@@ -51,6 +53,27 @@ const LoginStack = createStackNavigator(
 const SignTabs = createMaterialTopTabNavigator({
   Login: LoginStack,
   Sign: SignStack
+}, {
+  tabBarOptions: {
+    activeTintColor: Colors.primaryText,
+    inactiveTintColor: Colors.secondaryText,
+    style: {
+      height: width * 0.2,
+      paddingTop: Spacing['large'],
+      backgroundColor: Colors.background
+    },
+    labelStyle: {
+      fontSize: 12,
+      lineHeight: 20
+    },
+    barStyle: {
+      width: 20
+    },
+    indicatorStyle: {
+      width: 20,
+      alignSelf: 'center'
+    }
+  }
 })
 
 const RootSwitch = createSwitchNavigator({
