@@ -133,3 +133,19 @@ font-size: ${FontSize['xsmall']};
   color: #ff5454;
   margin-bottom: ${Spacing.small}px;
 `
+export const PasteButton = styled.TouchableOpacity`
+  margin-horizontal: 5px;
+  padding:${Spacing.small}px;
+  border-radius: 5px;
+  border-width:1px;
+  borderColor: ${Colors.secondaryText};
+`
+export const PlusButton = styled.TouchableOpacity`
+  background-color: ${Colors.secondaryText};
+  border-color: ${Colors.secondaryText};
+  border-radius: 5px;
+  height: 20px;
+  width: 20px;
+  justify-content: center;
+  align-items: center;
+`

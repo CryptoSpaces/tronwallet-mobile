@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { StatusBar } from 'react-native'
-import { createSwitchNavigator, createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
+import { StatusBar, Platform } from 'react-native'
+import { createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
 import Amplify from 'aws-amplify'
 import awsExports from './aws-exports'
 import { Colors, Spacing, width } from './components/DesignSystem'
@@ -10,21 +10,25 @@ import ConfirmSignup from './scenes/Signup/ConfirmSignup'
 import WelcomeScene from './scenes/Welcome'
 import LoginScene from './scenes/Login'
 import ConfirmLogin from './scenes/Login/ConfirmLogin'
-import Send from './scenes/Send'
+import SendScreen from './scenes/Send'
 import ForgotPassword from './scenes/ForgotPassword'
 import NewPassword from './scenes/ForgotPassword/NewPassword'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScreen from './scenes/Vote'
 import ReceiveScreen from './src/screens/ReceiveScreen'
+import TransactionScreen from './scenes/Transaction'
 
 Amplify.configure(awsExports)
+const prefix = Platform.OS === 'android' ? 'exp://localhost:19000/--/' : 'exp://localhost:19000/--/'
 
 const AppTabs = createBottomTabNavigator({
-  Send: Send,
   Home: HomeScene,
   Balance: BalanceScene,
-  Vote: VoteScreen,
+  Vote: {
+    screen: VoteScreen,
+    path: 'vote'
+  },
   Receive: ReceiveScreen
 })
 
@@ -80,11 +84,22 @@ const SignTabs = createMaterialTopTabNavigator({
   }
 })
 
-const RootSwitch = createSwitchNavigator({
+const RootSwitch = createStackNavigator({
   Loading: LoadingScene,
   Welcome: WelcomeScene,
   Auth: SignTabs,
-  App: AppTabs
+  App: AppTabs,
+  Send: SendScreen,
+  TransactionDetail: {
+    screen: TransactionScreen,
+    path: 'transaction/:tx'
+  }
+}, {
+  initialRouteName: 'Loading',
+  mode: 'modal',
+  navigationOptions: {
+    header: null
+  }
 })
 
 class App extends Component {
@@ -92,7 +107,7 @@ class App extends Component {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
-        <RootSwitch />
+        <RootSwitch uriPrefix={prefix} />
       </Fragment>
     )
   }
