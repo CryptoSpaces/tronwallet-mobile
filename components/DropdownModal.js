@@ -8,36 +8,58 @@ class DropdownModal extends Component {
   static propTypes = {
     width: PropTypes.string,
     fontSize: PropTypes.number,
-    color: PropTypes.string
+    color: PropTypes.string,
+    options: PropTypes.array,
+    onSelect: PropTypes.func
   }
 
   static defaultProps = {
     width: '90%',
     fontSize: FontSize.medium,
-    color: 'white'
+    color: 'white',
+    options: [],
+    onSelect: () => {}
   }
 
   state = {
-    value: 'azhar',
+    selectedValue: { name: '', value: '' },
     modalVisible: false
   }
 
   onSelect = (value, label) => {
-    this.setState({ value })
+    const selectedValue = { value, name: label }
+    this.props.onSelect(selectedValue)
   }
 
   setModalVisible = (modalVisible) => {
     this.setState({ modalVisible })
   }
 
-  render () {
-    const { fontSize, color } = this.props
+  renderOption = (option) => {
     const optionStyle = { borderWidth: 0, borderBottomWidth: 1, borderColor: Colors.secondaryText }
     const optionStyleText = { color: 'white' }
+
+    return (
+      <Option
+        key={option.value}
+        style={optionStyle}
+        styleText={optionStyleText}
+        value={option.value}
+      >{option.name}</Option>
+    )
+  }
+
+  render () {
+    const { fontSize, color, options, label } = this.props
+    const optionListStyle = {
+      backgroundColor: 'rgba(0,0,0,.9)',
+      borderColor: Colors.secondaryText
+    }
+
     return (
       <Select
         onSelect={this.onSelect}
-        defaultText={this.state.value}
+        defaultText={label}
         style={{
           width: 300,
           borderBottomWidth: 0.5,
@@ -52,17 +74,13 @@ class DropdownModal extends Component {
         }}
         transparent
         animationType='fade'
-        optionListStyle={{ backgroundColor: 'rgba(0,0,0,.9)', transform: [{ translateY: -125 }], borderColor: Colors.secondaryText, height: 200 }}
+        optionListStyle={optionListStyle}
+        backdropStyle={{
+          transform: [{ translateY: 20 }],
+          maxHeight: 300
+        }}
       >
-        <Option style={optionStyle} styleText={optionStyleText} value='azhar'>Azhar</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='johnceena'>Johnceena</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='undertaker'>Undertaker</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='Daniel'>Daniel</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='Roman'>Roman</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='Stonecold'>Stonecold</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='Rock'>Rock</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='Sheild'>Sheild</Option>
-        <Option style={optionStyle} styleText={optionStyleText} value='Orton'>Orton</Option>
+        {options.map(this.renderOption)}
       </Select>
     )
   }
