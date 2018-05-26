@@ -21,8 +21,8 @@ class ClientWallet {
       from: '27khY3PteHw69bcfxUVUhFu373UWxJgiycV',
       votes
     }
-    console.log('>>> ', body)
-    // const data = await axios.post(`${this.devApi}/vote`, body);
+    const { data: { transaction } } = await axios.post(`${this.devApi}/vote`, body)
+    return transaction
   }
 }
 

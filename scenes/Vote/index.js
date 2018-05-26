@@ -16,53 +16,7 @@ import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
   state = {
-    voteList: [
-      // {
-      //   id: 1,
-      //   url: 'http://getty.io',
-      //   issuer: '1231231231312312'
-      // },
-      // {
-      //   id: 2,
-      //   url: 'http://google.com',
-      //   issuer: '1231231231312312daskdhgasjdhgasjdhgasjdhgassadgasjdhags'
-      // },
-      // {
-      //   id: 3,
-      //   url: 'http://getty.io',
-      //   issuer: '1231231231312312'
-      // },
-      // {
-      //   id: 4,
-      //   url: 'http://getty.io',
-      //   issuer: '1231231231312312'
-      // },
-      // {
-      //   id: 5,
-      //   url: 'http://getty.io',
-      //   issuer: '1231231231312312'
-      // },
-      // {
-      //   id: 6,
-      //   url: 'http://google.com',
-      //   issuer: '1231231231312312'
-      // },
-      // {
-      //   id: 7,
-      //   url: 'http://google.com',
-      //   issuer: '1231231231312312'
-      // },
-      // {
-      //   id: 8,
-      //   url: 'http://google.com',
-      //   issuer: '1231231231312312'
-      // },
-      // {
-      //   id: 9,
-      //   url: 'http://google.com',
-      //   issuer: '1231231231312312'
-      // }
-    ],
+    voteList: [],
     currentItem: null,
     search: '',
     loading: true,
@@ -82,18 +36,24 @@ class VoteScene extends PureComponent {
   onSubmit = async () => {
     const votesPrepared = {}
     const { voteList } = this.state
+    this.setState({ loading: true })
     voteList.forEach((vote) => {
       if (vote.amount && Number(vote.amount) > 0) {
         const key = vote.address
-        votesPrepared[key] = vote.amount
+        votesPrepared[key] = Number(vote.amount)
       }
     })
-    await Client.postVotes(votesPrepared)
+    try {
+      await Client.postVotes(votesPrepared)
+      this.setState({ loading: false })
+    } catch (error) {
+      this.setState({ loading: false })
+    }
   }
 
   onChangeVotes = (value, address) => {
     const { voteList } = this.state
-    voteList.find(v => v.address === address).amount = Number(value)
+    voteList.find(v => v.address === address).amount = value
     this.setState({
       voteList
     })
