@@ -19,8 +19,8 @@ class ReceiveScreen extends PureComponent {
   }
 
   loadAccountsBalance = () => {
-    const accountSelected = receiveInfo.accounts[0]
     const options = this.mapAccountsToDropdownOptions(receiveInfo.accounts)
+    const accountSelected = options[0].value
 
     this.setState({ accountSelected, options })
   }
@@ -29,8 +29,8 @@ class ReceiveScreen extends PureComponent {
     return accounts.map((account) => ({ name: account, value: account }))
   }
 
-  onSelect = (selectedValue) => {
-    this.setState({ accountSelected: selectedValue.value })
+  onSelect = (accountSelected) => {
+    this.setState({ accountSelected })
   }
 
   render () {
@@ -42,7 +42,12 @@ class ReceiveScreen extends PureComponent {
         <Content align='center'>
           <VerticalSpacer size='large' />
           <Text size='xsmall' secondary>Account balance:</Text>
-          <DropdownModal label={accountSelected} options={options} onSelect={this.onSelect} />
+          <DropdownModal
+            searchPlaceholderText='Search accounts...'
+            selectedItem={accountSelected}
+            options={options}
+            onSelect={this.onSelect}
+          />
           <VerticalSpacer size='medium' />
         </Content>
         <Content align='center'>
