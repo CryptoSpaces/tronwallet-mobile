@@ -15,13 +15,16 @@ class BalanceScene extends Component {
       <Utils.Container>
         <Utils.StatusBar />
         <Header
-          title='TRX BALANCE'
-          description='$ 25 821,23'
           onLeftPress={() => {}}
           leftIcon={<Ionicons name='ios-menu' color={Colors.primaryText} size={24} />}
-          onRightPress={() => {}}
+          onRightPress={() => this.props.navigation.navigate('Send')}
           rightIcon={<Feather name='plus' color={Colors.primaryText} size={24} />}
-        />
+        >
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>TRX BALANCE</Utils.Text>
+            <Utils.Text size='medium'>$ 25 821,23</Utils.Text>
+          </Utils.View>
+        </Header>
         <Utils.Content>
           <Utils.Content>
             <LineChart

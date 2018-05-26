@@ -75,7 +75,9 @@ export const Text = styled.Text`
   font-family: rubik-medium;
   color: ${Colors.primaryText};
   font-size: ${props => FontSize[props.size]};
+  ${props => props.font && css`font-family: rubik-${props.font}`};
   ${props => props.secondary && css`color: ${Colors.secondaryText};`}
+  ${props => props.success && css`color: ${Colors.green};`}
   ${props => props.lineHeight && css`line-height: ${props.lineHeight};`}
 `
 
@@ -85,7 +87,8 @@ Text.defaultProps = {
 
 Text.propTypes = {
   size: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
-  lineHeight: PropTypes.number
+  lineHeight: PropTypes.number,
+  font: PropTypes.oneOf(['bold', 'light', 'medium'])
 }
 
 export const Item = styled.View`
@@ -96,14 +99,6 @@ export const Item = styled.View`
   ${props => props.lineWidth && css`border-bottom-width: ${props.lineWidth}px`};
 `
 
-export const FormInput = styled.TextInput`
-  color: ${Colors.primaryText};
-  padding: ${Spacing.small}px;
-  font-size: ${FontSize['small']};
-  margin-bottom: ${Spacing.medium}px;
-  border-bottom-width: 0.5px;
-  border-bottom-color: ${Colors.secondaryText};
-`
 export const Label = styled.View`
   padding: ${Spacing.small}px;
   border-radius: 4px;
@@ -113,3 +108,44 @@ export const Label = styled.View`
 Label.propTypes = {
   color: PropTypes.string.isRequired
 }
+
+export const FormInput = styled.TextInput`
+  color: ${Colors.primaryText};
+  padding: ${Spacing.small}px;
+  font-size: ${FontSize['small']};
+  margin-bottom: ${Spacing.medium}px;
+  border-bottom-width: 0.5px;
+  border-bottom-color: ${Colors.secondaryText};
+`
+
+export const FormGroup = styled.KeyboardAvoidingView`
+padding: ${Spacing.big}px;
+${props => props.background && css`background-color: ${props.background};`}
+`
+export const Error = styled.Text`
+  font-size: ${FontSize['small']};
+  color: #ff5454;
+  text-align:center;
+  margin-bottom: ${Spacing.small}px;
+`
+export const InputError = styled.Text`
+font-size: ${FontSize['xsmall']};
+  color: #ff5454;
+  margin-bottom: ${Spacing.small}px;
+`
+export const PasteButton = styled.TouchableOpacity`
+  margin-horizontal: 5px;
+  padding:${Spacing.small}px;
+  border-radius: 5px;
+  border-width:1px;
+  borderColor: ${Colors.secondaryText};
+`
+export const PlusButton = styled.TouchableOpacity`
+  background-color: ${Colors.secondaryText};
+  border-color: ${Colors.secondaryText};
+  border-radius: 5px;
+  height: 20px;
+  width: 20px;
+  justify-content: center;
+  align-items: center;
+`
