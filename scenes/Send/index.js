@@ -23,19 +23,28 @@ class SendScene extends Component {
     trxBalance: 0.000
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadData()
   }
 
   loadData = async () => {
-    const result = await Promise.all([Client.getPublicKey(), Client.getBalances()])
-    const { balance } = result[1].find(b => b.name === 'TRX')
-    this.setState({
-      from: result[0],
-      balances: result[1],
-      loadingData: false,
-      trxBalance: balance
-    })
+    try {
+      const result = await Promise.all([Client.getPublicKey(), Client.getBalances()])
+      const { balance } = result[1].find(b => b.name === 'TRX')
+      this.setState({
+        from: result[0],
+        balances: result[1],
+        loadingData: false,
+        trxBalance: balance
+      });
+    } catch (error) {
+      alert('Error while loading data');
+      //TODO - Error handler
+      this.setState({
+        loadingData: false,
+      });
+    }
+
   }
 
   changeInput = (text, field) => {
@@ -68,10 +77,11 @@ class SendScene extends Component {
       const dataToSend = qs.stringify({
         txDetails: { from, to, amount, Type: 'SEND' },
         pk: from,
-        from: 'mobile',
-        URL: Expo.Linking.makeUrl('transaction'),
+        from:'mobile',
+        URL: Expo.Linking.makeUrl('/transaction'),
         data
       })
+
       const url = `tronvault://tronvault/auth/${dataToSend}`
       const supported = await Linking.canOpenURL(url)
       if (supported) await Linking.openURL(url)
@@ -81,7 +91,7 @@ class SendScene extends Component {
     }
   }
 
-  render () {
+  render() {
     const {
       loadingSign,
       loadingData,

@@ -17,7 +17,7 @@ class TransactionScene extends Component {
     success: null,
     submitError: null
   }
-  componentDidMount () {
+  componentDidMount() {
     this.loadData()
   }
 
@@ -71,7 +71,7 @@ class TransactionScene extends Component {
     contractsElements.push(
       <Utils.Row style={{ justifyContent: 'space-between', marginVertical: 5 }} key={'timestamp'}>
         <Utils.Text secondary size='small'>Time</Utils.Text>
-        <Utils.Text size='xsmall'>{moment(1527115797796999936 / 1000000).format('MM/DD/YYYY HH:MM:SS')}</Utils.Text>
+        <Utils.Text size='xsmall'>{moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}</Utils.Text>
       </Utils.Row>)
     return contractsElements
   };
@@ -92,7 +92,7 @@ class TransactionScene extends Component {
     </Utils.Content>
   )
 
-  render () {
+  render() {
     const { success, submitError, loadingData } = this.state
 
     if (loadingData) {

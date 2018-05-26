@@ -20,7 +20,7 @@ import ReceiveScreen from './src/screens/ReceiveScreen'
 import TransactionScreen from './scenes/Transaction'
 
 Amplify.configure(awsExports)
-const prefix = Platform.OS === 'android' ? 'exp://localhost:19000/--/' : 'exp://localhost:19000/--/'
+const prefix = Expo.Linking.makeUrl('/'); //TODO - Review before release
 
 const AppTabs = createBottomTabNavigator({
   Home: HomeScene,
