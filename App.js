@@ -16,7 +16,7 @@ import NewPassword from './scenes/ForgotPassword/NewPassword'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScreen from './scenes/Vote'
-import ReceiveScreen from './src/screens/ReceiveScreen'
+import ReceiveScene from './scenes/Receive'
 import TransactionScreen from './scenes/Transaction'
 
 Amplify.configure(awsExports)
@@ -29,7 +29,7 @@ const AppTabs = createBottomTabNavigator({
     screen: VoteScreen,
     path: 'vote'
   },
-  Receive: ReceiveScreen
+  Receive: ReceiveScene
 })
 
 const SignStack = createStackNavigator(
