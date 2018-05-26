@@ -6,6 +6,7 @@
       "backgroundColor": "#191A2A",
       "resizeMode": "cover",
       "barStyle": "light-content"
-    }
+    },
+    "scheme": "tronmobile"
   }
 }

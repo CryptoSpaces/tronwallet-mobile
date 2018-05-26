@@ -17,7 +17,7 @@ class BalanceScene extends Component {
         <Header
           onLeftPress={() => {}}
           leftIcon={<Ionicons name='ios-menu' color={Colors.primaryText} size={24} />}
-          onRightPress={() => {}}
+          onRightPress={() => this.props.navigation.navigate('Send')}
           rightIcon={<Feather name='plus' color={Colors.primaryText} size={24} />}
         >
           <Utils.View align='center'>

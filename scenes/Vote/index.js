@@ -1,7 +1,15 @@
 // Dependencies
 import React, { PureComponent } from 'react'
-import { FlatList, TouchableOpacity, View, StyleSheet, ActivityIndicator } from 'react-native'
+import _ from 'lodash'
+import {
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  Linking
+} from 'react-native'
 import { LinearGradient } from 'expo'
+import qs from 'qs'
 
 // Utils
 import { Colors, Spacing } from '../../components/DesignSystem'
@@ -9,7 +17,7 @@ import * as Utils from '../../components/Utils'
 
 // Components
 import Header from '../../components/Header'
-import InputAmount from '../../src/components/Vote/InputAmount'
+import VoteItem from '../../src/components/Vote/VoteItem'
 
 // Service
 import Client from '../../src/services/client'
@@ -21,7 +29,12 @@ class VoteScene extends PureComponent {
     search: '',
     loading: true,
     loadingList: false,
-    totalVotes: 0
+    totalVotes: 0,
+    totalRemaining: 0,
+    totalTrx: 0,
+    from: '',
+    currentVotes: {},
+    userVotes: {}
   };
 
   componentDidMount () {
@@ -29,22 +42,49 @@ class VoteScene extends PureComponent {
   }
 
   onLoadData = async () => {
-    const { candidates, totalVotes } = await Client.getTotalVotes()
-    this.setState({ voteList: candidates, loading: false, totalVotes })
+    const data = await Promise.all([
+      Client.getTotalVotes(),
+      Client.getFreeze(),
+      Client.getUserVotes(),
+      Client.getPublicKey()
+    ])
+    const { candidates, totalVotes } = data[0]
+    const frozen = data[1]
+    const userVotes = data[2]
+    const from = data[3]
+    const totalTrx = frozen.total || 0
+    this.setState({
+      voteList: _.orderBy(candidates, ['votes', 'url'], ['desc', 'asc']) || 0,
+      loading: false,
+      totalVotes,
+      totalRemaining: totalTrx,
+      totalTrx,
+      userVotes,
+      from
+    })
   }
 
   onSubmit = async () => {
-    const votesPrepared = {}
-    const { voteList } = this.state
+    const { from, currentVotes } = this.state
     this.setState({ loading: true })
-    voteList.forEach((vote) => {
-      if (vote.amount && Number(vote.amount) > 0) {
-        const key = vote.address
-        votesPrepared[key] = Number(vote.amount)
-      }
+    _.forIn(currentVotes, function (value, key) {
+      currentVotes[key] = Number(value)
     })
+
     try {
-      await Client.postVotes(votesPrepared)
+      // Transaction String
+      const data = await Client.postVotes(currentVotes)
+      // Data to deep link, same format as Tron Wallet
+      const dataToSend = qs.stringify({
+        txDetails: { from, Type: 'VOTE' },
+        pk: from,
+        from: 'mobile',
+        URL: Expo.Linking.makeUrl('/transaction'),
+        data
+      })
+      const url = `tronvault://tronvault/auth/${dataToSend}`
+      const supported = await Linking.canOpenURL(url)
+      if (supported) await Linking.openURL(url)
       this.setState({ loading: false })
     } catch (error) {
       this.setState({ loading: false })
@@ -52,11 +92,13 @@ class VoteScene extends PureComponent {
   }
 
   onChangeVotes = (value, address) => {
-    const { voteList } = this.state
-    voteList.find(v => v.address === address).amount = value
-    this.setState({
-      voteList
-    })
+    const { currentVotes, totalTrx } = this.state
+    const newVotes = { ...currentVotes, [address]: value }
+    const totalUserVotes = _.reduce(newVotes, function (result, value, key) {
+      return Number(result) + Number(value)
+    }, 0)
+    const totalRemaining = totalTrx - totalUserVotes
+    this.setState({ currentVotes: newVotes, totalRemaining })
   }
 
   onSearch = async (value, field) => {
@@ -73,33 +115,32 @@ class VoteScene extends PureComponent {
     }
   }
 
+  format = (value) => {
+    return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  }
+
   renderRow = ({ item, index }) => {
-    let url = item.url
-    if (url.length > 25) {
-      url = `${url.slice(0, 20)}...`
-    }
+    const { currentVotes, userVotes } = this.state
     return (
-      <Utils.Item padding={16}>
-        <Utils.Row justify='space-between' align='center'>
-          <Utils.Row justify='space-between' align='center'>
-            <View style={styles.rank}>
-              <Utils.Text secondary>#{index + 1}</Utils.Text>
-            </View>
-            <Utils.Text lineHeight={20}>{url}</Utils.Text>
-          </Utils.Row>
-          <InputAmount
-            input={item.amount ? item.amount : ''}
-            onOutput={this.onChangeVotes}
-            max={14106}
-            id={item.address}
-          />
-        </Utils.Row>
-      </Utils.Item>
+      <VoteItem
+        item={item}
+        index={index}
+        format={this.format}
+        onChangeVotes={this.onChangeVotes}
+        votes={currentVotes[item.address]}
+        userVote={userVotes[item.address]}
+      />
     )
   }
 
   render () {
-    const { voteList, loading, totalVotes, loadingList } = this.state
+    const {
+      voteList,
+      loading,
+      totalVotes,
+      loadingList,
+      totalRemaining
+    } = this.state
     if (loading) {
       return (
         <Utils.Container>
@@ -115,11 +156,11 @@ class VoteScene extends PureComponent {
         <Header>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
-            <Utils.Text size='small'>{totalVotes.toLocaleString()}</Utils.Text>
+            <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
           </Utils.View>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
-            <Utils.Text size='small'>14,106</Utils.Text>
+            <Utils.Text size='small'>{this.format(totalRemaining)}</Utils.Text>
           </Utils.View>
         </Header>
         <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
@@ -162,9 +203,6 @@ const styles = StyleSheet.create({
   searchWrapper: {
     paddingLeft: 24,
     paddingRight: 24
-  },
-  rank: {
-    paddingRight: 10
   },
   submitButton: {
     padding: Spacing.small,
