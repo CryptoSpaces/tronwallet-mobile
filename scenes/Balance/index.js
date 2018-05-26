@@ -7,21 +7,25 @@ import { FlatList } from 'react-native'
 import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
+import Header from '../../components/Header'
 
 class BalanceScene extends Component {
   render () {
     return (
       <Utils.Container>
         <Utils.StatusBar />
+        <Header
+          onLeftPress={() => {}}
+          leftIcon={<Ionicons name='ios-menu' color={Colors.primaryText} size={24} />}
+          onRightPress={() => this.props.navigation.navigate('Send')}
+          rightIcon={<Feather name='plus' color={Colors.primaryText} size={24} />}
+        >
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>TRX BALANCE</Utils.Text>
+            <Utils.Text size='medium'>$ 25 821,23</Utils.Text>
+          </Utils.View>
+        </Header>
         <Utils.Content>
-          <Utils.Row align='center' justify='space-between'>
-            <Ionicons name='ios-menu' color={Colors.primaryText} size={24} />
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>TRX BALANCE</Utils.Text>
-              <Utils.Text size='medium'>$ 25 821,23</Utils.Text>
-            </Utils.View>
-            <Feather name='plus' color={Colors.primaryText} size={24} />
-          </Utils.Row>
           <Utils.Content>
             <LineChart
               style={{ height: 30 }}
