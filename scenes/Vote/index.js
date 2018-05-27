@@ -160,7 +160,12 @@ class VoteScene extends PureComponent {
           </Utils.View>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
-            <Utils.Text size='small'>{this.format(totalRemaining)}</Utils.Text>
+            <Utils.Text
+              size='small'
+              style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
+            >
+              {this.format(totalRemaining)}
+            </Utils.Text>
           </Utils.View>
         </Header>
         <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
@@ -171,7 +176,7 @@ class VoteScene extends PureComponent {
             placeholderTextColor='#fff'
             style={{ width: '70%' }}
           />
-          <TouchableOpacity onPress={this.onSubmit}>
+          <TouchableOpacity onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}>
             <LinearGradient
               start={[0, 1]}
               end={[1, 0]}
@@ -209,15 +214,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     width: '100%'
-  },
-  button: {
-    backgroundColor: Colors.secondaryText,
-    borderColor: Colors.secondaryText,
-    borderRadius: 5,
-    height: 20,
-    width: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 })
 
