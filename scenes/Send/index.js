@@ -12,7 +12,6 @@ import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
 
-
 class SendScene extends Component {
   state = {
     from: '',
