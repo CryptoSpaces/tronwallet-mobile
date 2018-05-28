@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Ionicons, Feather } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
-import { FlatList, ActivityIndicator } from 'react-native'
+import { FlatList, ActivityIndicator, View } from 'react-native'
+import axios from 'axios'
 
 import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
@@ -14,10 +15,11 @@ import formatAmount from '../../utils/formatnumber'
 
 class BalanceScene extends Component {
   state = {
-    balances: [],
     loading: false,
     error: null,
-    trxBalance: 0
+    assetBalance: [],
+    trxBalance: 0,
+    trxPrice: 0
   }
 
   componentDidMount () {
@@ -35,15 +37,23 @@ class BalanceScene extends Component {
     try {
       const balances = await Client.getBalances()
       const trxBalance = balances.find(b => b.name === 'TRX')
-      this.setState({ trxBalance: trxBalance.balance, balances, loading: false })
+      const assetBalance = balances.filter(b => b.name !== 'TRX')
+      const { data: { data } } = await axios.get('https://api.coinmarketcap.com/v2/ticker/1958')
+
+      this.setState({
+        trxBalance: trxBalance.balance,
+        assetBalance,
+        loading: false,
+        trxPrice: data.quotes.USD.price
+      })
     } catch (error) {
       this.setState({ error: error.message, loading: false })
     }
   }
 
   renderTokens = ({ item }) => {
-    const { balances } = this.state
-    if (!balances.length) return
+    const { assetBalance } = this.state
+    if (!assetBalance.length) return
 
     return (<Utils.Row align='center' justify='space-between'>
       <Utils.Label color={tint(0.9, Colors.background)}>
@@ -54,7 +64,7 @@ class BalanceScene extends Component {
   }
 
   render () {
-    const { balances, trxBalance, loading } = this.state
+    const { assetBalance, trxBalance, loading, trxPrice } = this.state
 
     if (loading) {
       return <Utils.View style={{ backgroundColor: Colors.background }} flex={1} justify='center' align='center'>
@@ -65,8 +75,7 @@ class BalanceScene extends Component {
       <Utils.Container>
         <Utils.StatusBar />
         <Header
-          onLeftPress={() => { }}
-          leftIcon={<Ionicons name='ios-menu' color={Colors.primaryText} size={24} />}
+          leftIcon={<View />}
           onRightPress={() => this.props.navigation.navigate('Send')}
           rightIcon={<Feather name='plus' color={Colors.primaryText} size={24} />}
         >
@@ -86,14 +95,18 @@ class BalanceScene extends Component {
               <Gradient />
             </LineChart>
           </Utils.Content>
+          <Utils.Text size='xsmall' secondary>TRX PRICE: {trxPrice}</Utils.Text>
           <Utils.VerticalSpacer size='medium' />
-          <FlatList
-            data={balances}
-            renderItem={this.renderTokens}
-            keyExtractor={item => item.name}
-            ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
-            scrollEnabled={false}
-          />
+          {assetBalance.length
+            ? <FlatList
+              data={assetBalance}
+              renderItem={this.renderTokens}
+              keyExtractor={item => item.name}
+              ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
+              scrollEnabled={false}
+            />
+            : <Utils.Text size='small'>There were not other token found</Utils.Text>
+          }
         </Utils.Content>
       </Utils.Container>
     )
