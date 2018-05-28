@@ -24,6 +24,7 @@ import TransactionScreen from './scenes/Transaction'
 import SettingScene from './scenes/Settings'
 import TokensScene from './scenes/Tokens'
 import ParticipateScene from './scenes/Tokens/Participate'
+import GetVaultScene from './scenes/GetVault/GetVault'
 
 Amplify.configure(awsExports)
 const prefix = Linking.makeUrl('/') // TODO - Review before release
@@ -53,6 +54,7 @@ const AppTabs = createBottomTabNavigator({
     path: 'vote'
   },
   Tokens: TokensScene,
+  GetVault: GetVaultScene,
   Receive: ReceiveScene,
   Settings: SettingsStack
 }, {
