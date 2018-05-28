@@ -23,10 +23,10 @@ import NewPassword from './scenes/ForgotPassword/NewPassword'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScreen from './scenes/Vote'
+import ReceiveScene from './scenes/Receive'
 import TransactionScreen from './scenes/Transaction'
 import TokensScene from './scenes/Tokens'
 import ParticipateScene from './scenes/Tokens/Participate'
-import ReceiveScreen from './src/screens/ReceiveScreen'
 
 Amplify.configure(awsExports)
 const prefix = Linking.makeUrl('/')
@@ -36,7 +36,7 @@ const AppTabs = createBottomTabNavigator({
   Balance: BalanceScene,
   Vote: VoteScreen,
   Tokens: TokensScene,
-  Receive: ReceiveScreen
+  Receive: ReceiveScene
 })
 
 const SignStack = createStackNavigator({

@@ -15,7 +15,13 @@ export const Colors = {
   secondaryText: '#66688F',
   primaryGradient: ['#FF4465', '#F6CA1D'],
   yellow: '#F5FF30',
-  green: '#a9ff68'
+  green: '#a9ff68',
+  RGB: {
+    background: '25,26,42',
+    darkerBackground: '16,16,26',
+    primaryText: '255,255,255',
+    secondaryText: '102,104,143'
+  }
 }
 
 const { width } = Dimensions.get('window')
