@@ -29,7 +29,7 @@ class TransactionScene extends Component {
       this.setState({ transactionData, signedTransaction })
     } catch (error) {
       console.log(error.message)
-      alert('Something wrong getting transaction details')
+      // alert('Something wrong getting transaction details')
     } finally {
       this.setState({ loadingData: false })
     }

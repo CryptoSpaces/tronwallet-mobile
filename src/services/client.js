@@ -36,7 +36,7 @@ class ClientWallet {
       return user
     } catch (error) {
       if (error.code === 'UserNotFoundException' || error === 'not authenticated') {
-        throw new Error(error.message || error)
+        throw new Error(error.message || error) // TODO redirect to login screen
       }
     }
   };

@@ -79,7 +79,7 @@ class VoteScene extends PureComponent {
         txDetails: { from, Type: 'VOTE' },
         pk: from,
         from: 'mobile',
-        URL: Expo.Linking.makeUrl('/transaction'),
+        URL: Linking.makeUrl('/transaction'),
         data
       })
       const url = `tronvault://tronvault/auth/${dataToSend}`

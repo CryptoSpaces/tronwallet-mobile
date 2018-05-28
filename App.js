@@ -1,9 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { StatusBar } from 'react-native'
+import { StatusBar, KeyboardAvoidingView } from 'react-native'
+import { Linking } from 'expo'
 import { createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
 import Amplify from 'aws-amplify'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import awsExports from './aws-exports'
-import { Colors, Spacing, width } from './components/DesignSystem'
+import { Colors, ScreenSize } from './components/DesignSystem'
+
 import LoadingScene from './scenes/Loading'
 import SignupScene from './scenes/Signup'
 import ConfirmSignup from './scenes/Signup/ConfirmSignup'
@@ -18,9 +21,27 @@ import BalanceScene from './scenes/Balance'
 import VoteScreen from './scenes/Vote'
 import ReceiveScene from './scenes/Receive'
 import TransactionScreen from './scenes/Transaction'
+import SettingScene from './scenes/Settings'
 
 Amplify.configure(awsExports)
-const prefix = Expo.Linking.makeUrl('/') // TODO - Review before release
+const prefix = Linking.makeUrl('/') // TODO - Review before release
+
+const SettingsStack = createStackNavigator({
+  SettingScene
+}, {
+  initialRouteName: 'SettingScene',
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.background,
+      elevation: 0,
+      borderColor: Colors.background
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontFamily: 'rubik-medium'
+    }
+  }
+})
 
 const AppTabs = createBottomTabNavigator({
   Home: HomeScene,
@@ -29,7 +50,35 @@ const AppTabs = createBottomTabNavigator({
     screen: VoteScreen,
     path: 'vote'
   },
-  Receive: ReceiveScene
+  Receive: ReceiveScene,
+  Settings: SettingsStack
+}, {
+  navigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      let iconName
+      if (routeName === 'Home') {
+        iconName = `ios-home${focused ? '' : '-outline'}`
+      } else if (routeName === 'Balance') {
+        iconName = `ios-cash${focused ? '' : '-outline'}`
+      } else if (routeName === 'Vote') {
+        iconName = `ios-information-circle${focused ? '' : '-outline'}`
+      } else if (routeName === 'Receive') {
+        iconName = `ios-download${focused ? '' : '-outline'}`
+      } else if (routeName === 'Settings') {
+        iconName = `ios-settings${focused ? '' : '-outline'}`
+      }
+
+      return <Ionicons name={iconName} size={26} color={tintColor} />
+    }
+  }),
+  tabBarOptions: {
+    activeTintColor: Colors.primaryText,
+    inactiveTintColor: Colors.secondaryText,
+    style: {
+      backgroundColor: Colors.background
+    }
+  }
 })
 
 const SignStack = createStackNavigator(
@@ -40,7 +89,8 @@ const SignStack = createStackNavigator(
   {
     initialRouteName: 'Signup',
     navigationOptions: {
-      header: null
+      header: null,
+      title: 'SIGN UP'
     }
   })
 
@@ -58,28 +108,40 @@ const LoginStack = createStackNavigator(
     }
   })
 
+const tabWidth = ScreenSize.width / 2
+const indicatorWidth = 15
+
 const SignTabs = createMaterialTopTabNavigator({
-  Login: LoginStack,
-  Sign: SignStack
+  Login: {
+    screen: LoginStack,
+    navigationOptions: {
+      title: 'SIGN IN'
+    }
+  },
+  Sign: {
+    screen: SignStack,
+    navigationOptions: {
+      title: 'SIGN UP'
+    }
+  }
 }, {
   tabBarOptions: {
     activeTintColor: Colors.primaryText,
     inactiveTintColor: Colors.secondaryText,
     style: {
-      height: width * 0.2,
-      paddingTop: Spacing['large'],
-      backgroundColor: Colors.background
+      paddingTop: 60,
+      backgroundColor: Colors.background,
+      elevation: 0
     },
     labelStyle: {
-      fontSize: 12,
-      lineHeight: 20
-    },
-    barStyle: {
-      width: 20
+      fontSize: 16,
+      lineHeight: 20,
+      fontFamily: 'rubik-medium'
     },
     indicatorStyle: {
-      width: 20,
-      alignSelf: 'center'
+      width: indicatorWidth,
+      height: 1.2,
+      marginLeft: ((tabWidth / 2) - (indicatorWidth / 2))
     }
   }
 })
@@ -107,7 +169,9 @@ class App extends Component {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
-        <RootSwitch uriPrefix={prefix} />
+        <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+          <RootSwitch uriPrefix={prefix} />
+        </KeyboardAvoidingView>
       </Fragment>
     )
   }

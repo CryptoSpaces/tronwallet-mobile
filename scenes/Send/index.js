@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking } from 'react-native'
+import { ActivityIndicator, Linking, Alert } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import * as Utils from '../../components/Utils'
@@ -9,6 +9,7 @@ import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
 import { Select, Option } from 'react-native-chooser'
+import { Linking as ExpoLinking } from 'expo'
 
 class SendScene extends Component {
   state = {
@@ -38,7 +39,7 @@ class SendScene extends Component {
         trxBalance: balance
       })
     } catch (error) {
-      alert('Error while loading data')
+      Alert.alert('Error while loading data')
       // TODO - Error handler
       this.setState({
         loadingData: false
@@ -77,7 +78,7 @@ class SendScene extends Component {
         txDetails: { from, to, amount, Type: 'SEND' },
         pk: from,
         from: 'mobile',
-        URL: Expo.Linking.makeUrl('/transaction'),
+        URL: ExpoLinking.makeUrl('/transaction'),
         data
       })
 
