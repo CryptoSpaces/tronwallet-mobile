@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { AppLoading, Font } from 'expo'
+import { Auth } from 'aws-amplify'
 
 class LoadingScene extends Component {
   _loadStuff = async () => {
@@ -12,11 +13,22 @@ class LoadingScene extends Component {
     })
   }
 
+  _checkSession = async () => {
+    try {
+      const session = await Auth.currentSession()
+      if (session) {
+        this.props.navigation.navigate('App')
+      }
+    } catch (error) {
+      this.props.navigation.navigate('Auth')
+    }
+  }
+
   render () {
     return (
       <AppLoading
         startAsync={this._loadStuff}
-        onFinish={() => this.props.navigation.navigate('Tokens')}
+        onFinish={() => this._checkSession()}
         onError={console.warn}
       />
     )

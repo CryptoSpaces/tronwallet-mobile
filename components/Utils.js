@@ -81,9 +81,10 @@ export const Text = styled.Text`
   color: ${Colors.primaryText};
   font-size: ${props => FontSize[props.size]};
   ${props => props.font && css`font-family: rubik-${props.font}`};
-  ${props => props.secondary && css`color: ${Colors.secondaryText};`}
-  ${props => props.success && css`color: ${Colors.green};`}
-  ${props => props.lineHeight && css`line-height: ${props.lineHeight};`}
+  ${props => props.secondary && css`color: ${Colors.secondaryText}`};
+  ${props => props.success && css`color: ${Colors.green}`};
+  ${props => props.lineHeight && css`line-height: ${props.lineHeight}`};
+  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
 `
 
 Text.defaultProps = {
@@ -116,12 +117,15 @@ Label.propTypes = {
 
 export const FormInput = styled.TextInput`
   color: ${Colors.primaryText};
-  padding: ${Spacing.small}px;
+  padding: ${Spacing.small}px 0px;
   font-size: ${FontSize['small']};
-  margin-bottom: ${Spacing.medium}px;
-  border-bottom-width: 0.5px;
+  margin-bottom: ${props => props.marginBottom}px;
+  border-bottom-width: 0.3px;
   border-bottom-color: ${Colors.secondaryText};
 `
+FormInput.defaultProps = {
+  marginBottom: Spacing.medium
+}
 
 export const FormGroup = styled.KeyboardAvoidingView`
   padding: ${Spacing.big}px;
@@ -130,14 +134,20 @@ export const FormGroup = styled.KeyboardAvoidingView`
 export const Error = styled.Text`
   font-size: ${FontSize['small']};
   color: #ff5454;
-  text-align:center;
+  text-align: center;
   margin-bottom: ${Spacing.small}px;
 `
+
 export const InputError = styled.Text`
 font-size: ${FontSize['xsmall']};
   color: #ff5454;
-  margin-bottom: ${Spacing.small}px;
+  margin-bottom: ${props => props.marginBottom}px;
 `
+
+InputError.defaultProps = {
+  marginBottom: Spacing.small
+}
+
 export const PasteButton = styled.TouchableOpacity`
   margin-horizontal: 5px;
   padding: ${Spacing.small}px;

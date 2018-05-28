@@ -24,7 +24,12 @@ export const Colors = {
   }
 }
 
-const { width } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
+
+export const ScreenSize = {
+  width,
+  height
+}
 
 const getAdjustedFontSize = (size) => parseInt(size) * width * (1.8 - 0.002 * width) / 400
 
