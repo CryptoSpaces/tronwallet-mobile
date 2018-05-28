@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { AreaChart, Grid } from 'react-native-svg-charts'
 import { Svg } from 'expo'
-import { ActivityIndicator, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import { View } from 'react-native-animatable'
 import * as shape from 'd3-shape'
 
@@ -105,10 +105,12 @@ class HomeScene extends Component {
     const { price } = this.state
     return (
       <Utils.Container>
-        <Utils.ContentWithBackground source={require('../../assets/home-header.png')} resizeMode='stretch'>
+        <Utils.ContentWithBackground source={require('../../assets/home-header.png')} resizeMode='contain'>
           <Utils.StatusBar transparent />
-          <Utils.Text>TRX</Utils.Text>
           <Utils.VerticalSpacer size='large' />
+          <Utils.View align='flex-start'>
+            <Image source={require('../../assets/tron-logo-small.png')} resizeMode='contain' style={{height: 60}} />
+          </Utils.View>
           <Utils.Row justify='flex-end'>
             <Utils.View>
               <Utils.Text secondary>TRX PRICE</Utils.Text>
@@ -170,7 +172,7 @@ class HomeScene extends Component {
               <AreaChart
                 style={{ height: 200 }}
                 data={this.state.graph.data}
-                contentInset={{ top: 30 }}
+                contentInset={{ top: 30, bottom: 30 }}
                 curve={shape.curveLinear}
                 svg={{ fill: 'url(#gradient)', opacity: 0.2 }}
                 numberOfTicks={4}

@@ -17,7 +17,8 @@
     "ios": "react-native-scripts ios",
     "test": "jest",
     "lint": "standard",
-    "precommit": "yarn lint"
+    "precommit": "yarn lint",
+    "fix": "standard --fix"
   },
   "jest": {
     "preset": "jest-expo"
