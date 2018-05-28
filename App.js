@@ -79,7 +79,7 @@ const AppTabs = createBottomTabNavigator({
     activeTintColor: Colors.primaryText,
     inactiveTintColor: Colors.secondaryText,
     style: {
-      backgroundColor: Colors.background
+      backgroundColor: 'black'
     }
   }
 })
