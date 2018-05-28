@@ -9,8 +9,8 @@ import logoIOS from '../../assets/logo-ios.png'
 import logoAndroid from '../../assets/logo-android.png'
 import tronLogo from '../../assets/tron-logo-small.png'
 
-const ANDROID_URL = 'https://play.google.com/store/apps/details?id=com.tronmobile'
-const IOS_URL = 'https://itunes.apple.com/us/app/tronvault/id1380161153?ls=1&mt=8'
+const ANDROID_URL = 'market://details?id=com.tronmobile'
+const IOS_URL = 'itms://itunes.apple.com/us/app/tronvault/id1380161153?ls=1&mt=8'
 
 const { width } = Dimensions.get('window')
 export default (props) => {
