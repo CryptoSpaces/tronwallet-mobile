@@ -65,7 +65,7 @@ class BalanceScene extends Component {
   }
 
   render () {
-    const { assetBalance, trxBalance, loading, trxPrice } = this.state
+    const { assetBalance, trxBalance, loading, trxPrice, error } = this.state
 
     if (loading) return <LoadingScene />
 
@@ -103,8 +103,9 @@ class BalanceScene extends Component {
               ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
               scrollEnabled={false}
             />
-            : <Utils.Text size='small'>There were not other token found</Utils.Text>
+            : <Utils.Text size='xsmall'>Tip: You can participate to other tokens</Utils.Text>
           }
+          <Utils.Error>{error}</Utils.Error>
         </Utils.Content>
       </Utils.Container>
     )
