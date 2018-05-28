@@ -4,8 +4,7 @@ import _ from 'lodash'
 import {
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView
+  ActivityIndicator
 } from 'react-native'
 import { LinearGradient, Linking } from 'expo'
 import qs from 'qs'
@@ -162,54 +161,52 @@ class VoteScene extends PureComponent {
     }
 
     return (
-      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
-        <Utils.KeyboardAwareContainer enableOnAndroid>
-          <Utils.Container>
-            <Utils.StatusBar transparent />
-            <Header>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
-                <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
-              </Utils.View>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
-                <Utils.Text
-                  size='small'
-                  style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
-                >
-                  {this.format(totalRemaining)}
-                </Utils.Text>
-              </Utils.View>
-            </Header>
-            <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
-              <Utils.FormInput
-                underlineColorAndroid='transparent'
-                onChangeText={(text) => this.onSearch(text, 'search')}
-                placeholder='Search'
-                placeholderTextColor='#fff'
-                style={{ width: '70%' }}
-              />
-              <TouchableOpacity onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}>
-                <LinearGradient
-                  start={[0, 1]}
-                  end={[1, 0]}
-                  colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-                  style={styles.submitButton}
-                >
-                  <Utils.Text size='xsmall'>Submit</Utils.Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </Utils.Row>
-            {
-              loadingList
-                ? <Utils.Content height={200} justify='center' align='center'>
-                  <ActivityIndicator size='large' color={Colors.yellow} />
-                </Utils.Content>
-                : this.renderList()
-            }
-          </Utils.Container>
-        </Utils.KeyboardAwareContainer>
-      </KeyboardAvoidingView>
+      <Utils.KeyboardAwareContainer enableOnAndroid>
+        <Utils.Container>
+          <Utils.StatusBar transparent />
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
+              <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
+            </Utils.View>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
+              <Utils.Text
+                size='small'
+                style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
+              >
+                {this.format(totalRemaining)}
+              </Utils.Text>
+            </Utils.View>
+          </Header>
+          <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
+            <Utils.FormInput
+              underlineColorAndroid='transparent'
+              onChangeText={(text) => this.onSearch(text, 'search')}
+              placeholder='Search'
+              placeholderTextColor='#fff'
+              style={{ width: '70%' }}
+            />
+            <TouchableOpacity onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}>
+              <LinearGradient
+                start={[0, 1]}
+                end={[1, 0]}
+                colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
+                style={styles.submitButton}
+              >
+                <Utils.Text size='xsmall'>Submit</Utils.Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </Utils.Row>
+          {
+            loadingList
+              ? <Utils.Content height={200} justify='center' align='center'>
+                <ActivityIndicator size='large' color={Colors.yellow} />
+              </Utils.Content>
+              : this.renderList()
+          }
+        </Utils.Container>
+      </Utils.KeyboardAwareContainer>
     )
   }
 }
