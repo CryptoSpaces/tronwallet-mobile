@@ -30,14 +30,22 @@ class SendScene extends Component {
   }
 
   loadData = async () => {
-    const result = await Promise.all([Client.getPublicKey(), Client.getBalances()])
-    const { balance } = result[1].find(b => b.name === 'TRX')
-    this.setState({
-      from: result[0],
-      balances: result[1],
-      loadingData: false,
-      trxBalance: balance
-    })
+    try {
+      const result = await Promise.all([Client.getPublicKey(), Client.getBalances()])
+      const { balance } = result[1].find(b => b.name === 'TRX')
+      this.setState({
+        from: result[0],
+        balances: result[1],
+        loadingData: false,
+        trxBalance: balance
+      })
+    } catch (error) {
+      alert('Error while loading data')
+      // TODO - Error handler
+      this.setState({
+        loadingData: false
+      })
+    }
   }
 
   changeInput = (text, field) => {
@@ -74,6 +82,7 @@ class SendScene extends Component {
         URL: Linking.makeUrl('transaction'),
         data
       })
+
       const url = `tronvault://tronvault/auth/${dataToSend}`
       const supported = await Linking.canOpenURL(url)
       if (supported) await Linking.openURL(url)

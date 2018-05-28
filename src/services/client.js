@@ -5,7 +5,7 @@ export const ONE_TRX = 1000000
 class ClientWallet {
   constructor (opt = null) {
     this.api = 'https://api.tronscan.org/api'
-    this.notifier = 'https://tronnotifier-dev.now.sh/v1'
+    this.notifier = 'https://tronnotifier-dev.now.sh/v1/wallet'
   }
 
   async getTotalVotes () {
@@ -13,6 +13,16 @@ class ClientWallet {
     const totalVotes = data.total_votes
     const candidates = data.candidates
     return { totalVotes, candidates }
+  }
+
+  async postVotes (votes) {
+    const owner = await this.getPublicKey()
+    const body = {
+      from: owner,
+      votes
+    }
+    const { data: { transaction } } = await axios.post(`${this.notifier}/vote`, body)
+    return transaction
   }
 
   getUserAttributes = async () => {
@@ -60,7 +70,7 @@ class ClientWallet {
 
   async getTransactionString ({ to, from, token, amount }) {
     try {
-      const { data: { transaction } } = await axios.post(`${this.notifier}/wallet/transfer`, { to, from, token, amount })
+      const { data: { transaction } } = await axios.post(`${this.notifier}/transfer`, { to, from, token, amount })
       return transaction
     } catch (error) {
       throw new Error(error.message || error)
@@ -83,6 +93,18 @@ class ClientWallet {
     const owner = await this.getPublicKey()
     const { data: { balances } } = await axios.get(`${this.api}/account/${owner}`)
     return balances
+  }
+
+  async getFreeze () {
+    const owner = await this.getPublicKey()
+    const { data: { frozen } } = await axios.get(`${this.api}/account/${owner}/balance`)
+    return { ...frozen, total: frozen.total / ONE_TRX }
+  }
+
+  async getUserVotes () {
+    const owner = await this.getPublicKey()
+    const { data: { votes } } = await axios.get(`${this.api}/account/${owner}/votes`)
+    return votes
   }
 }
 
