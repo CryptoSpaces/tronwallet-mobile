@@ -44,6 +44,7 @@
     "react-native-chooser": "^1.7.0",
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "^0.19.1",
+    "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-modal": "^6.0.0",
     "react-native-qrcode": "^0.2.6",
     "react-native-sectioned-multi-select": "^0.4.7",

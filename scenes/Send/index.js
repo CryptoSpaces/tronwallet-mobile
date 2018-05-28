@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Linking, Alert } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
+import { Select, Option } from 'react-native-chooser'
+import { Linking as ExpoLinking } from 'expo'
+
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
-import { Select, Option } from 'react-native-chooser'
-import { Linking as ExpoLinking } from 'expo'
+
 
 class SendScene extends Component {
   state = {

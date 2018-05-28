@@ -22,6 +22,8 @@ import VoteScreen from './scenes/Vote'
 import ReceiveScene from './scenes/Receive'
 import TransactionScreen from './scenes/Transaction'
 import SettingScene from './scenes/Settings'
+import TokensScene from './scenes/Tokens'
+import ParticipateScene from './scenes/Tokens/Participate'
 
 Amplify.configure(awsExports)
 const prefix = Linking.makeUrl('/') // TODO - Review before release
@@ -50,6 +52,7 @@ const AppTabs = createBottomTabNavigator({
     screen: VoteScreen,
     path: 'vote'
   },
+  Tokens: TokensScene,
   Receive: ReceiveScene,
   Settings: SettingsStack
 }, {
@@ -94,19 +97,17 @@ const SignStack = createStackNavigator(
     }
   })
 
-const LoginStack = createStackNavigator(
-  {
-    Login: LoginScene,
-    ConfirmLogin: ConfirmLogin,
-    ForgotPassword: ForgotPassword,
-    ConfirmNewPassword: NewPassword
-  },
-  {
-    initialRouteName: 'Login',
-    navigationOptions: {
-      header: null
-    }
-  })
+const LoginStack = createStackNavigator({
+  Login: LoginScene,
+  ConfirmLogin: ConfirmLogin,
+  ForgotPassword: ForgotPassword,
+  ConfirmNewPassword: NewPassword
+}, {
+  initialRouteName: 'Login',
+  navigationOptions: {
+    header: null
+  }
+})
 
 const tabWidth = ScreenSize.width / 2
 const indicatorWidth = 15
@@ -152,6 +153,7 @@ const RootSwitch = createStackNavigator({
   Auth: SignTabs,
   App: AppTabs,
   Send: SendScreen,
+  Participate: ParticipateScene,
   TransactionDetail: {
     screen: TransactionScreen,
     path: 'transaction/:tx'
