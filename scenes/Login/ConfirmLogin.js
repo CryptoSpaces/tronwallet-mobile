@@ -78,6 +78,7 @@ class ConfirmLogin extends Component {
     try {
       totpCode ? await Auth.verifyTotpToken(user, code) : await Auth.confirmSignIn(user, code, 'SOFTWARE_TOKEN_MFA')
 
+      const userPublicKey = await Client.getPublicKey();
       if (userPublicKey) {
         this.setState({
           loadingConfirm: false,
