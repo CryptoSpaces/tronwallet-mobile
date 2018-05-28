@@ -23,7 +23,7 @@ class TransactionScene extends Component {
     isConnected: null
   }
 
-  componentDidMount() {
+  async componentDidMount () {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this._loadData()
     })
@@ -31,9 +31,12 @@ class TransactionScene extends Component {
       'connectionChange',
       this._connectionEventListenner
     )
+    NetInfo.isConnected.fetch().then(isConnected => {
+      this.setState({ isConnected })
+    })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
     NetInfo.isConnected.removeEventListener(
       'connectionChange',
@@ -65,7 +68,7 @@ class TransactionScene extends Component {
       const transactionData = await Client.getTransactionDetails(signedTransaction)
       this.setState({ transactionData, signedTransaction })
     } catch (error) {
-      this.setState({ submitError: error.message });
+      this.setState({ submitError: error.message })
     } finally {
       this.setState({ loadingData: false })
     }
@@ -74,10 +77,10 @@ class TransactionScene extends Component {
   submitTransaction = async () => {
     const { signedTransaction } = this.state
     this.setState({ loadingSubmit: true })
-    let error = null;
+    let error = null
     try {
       const { success, code } = await Client.submitTransaction(signedTransaction)
-      if (!success) error = code;
+      if (!success) error = code
 
       this.setState({ loadingSubmit: false, success, submitted: true, submitError: error })
     } catch (error) {
@@ -159,7 +162,7 @@ class TransactionScene extends Component {
     </Utils.Content>
   )
 
-  render() {
+  render () {
     const {
       submitError,
       loadingData,
@@ -171,7 +174,7 @@ class TransactionScene extends Component {
       <Utils.Container>
         <Utils.StatusBar transparent />
         <Header
-          onLeftPress={() => this.props.navigation.pop()}
+          onLeftPress={() => this.props.navigation.navigate('Home')}
           leftIcon={<Ionicons name='ios-close' color={Colors.primaryText} size={40} />}
         >
           <Utils.View align='center'>
