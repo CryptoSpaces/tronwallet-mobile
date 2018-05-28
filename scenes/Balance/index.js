@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Feather } from '@expo/vector-icons'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
-import { FlatList, ActivityIndicator, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import axios from 'axios'
 
 import Gradient from '../../components/Gradient'
@@ -10,6 +10,7 @@ import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import Header from '../../components/Header'
 import Client from '../../src/services/client'
+import LoadingScene from '../../components/LoadingScene'
 
 import formatAmount from '../../utils/formatnumber'
 
@@ -64,13 +65,10 @@ class BalanceScene extends Component {
   }
 
   render () {
-    const { assetBalance, trxBalance, loading, trxPrice } = this.state
+    const { assetBalance, trxBalance, loading, trxPrice, error } = this.state
 
-    if (loading) {
-      return <Utils.View style={{ backgroundColor: Colors.background }} flex={1} justify='center' align='center'>
-        <ActivityIndicator size='large' color={Colors.yellow} />
-      </Utils.View>
-    }
+    if (loading) return <LoadingScene />
+
     return (
       <Utils.Container>
         <Utils.StatusBar />
@@ -105,8 +103,9 @@ class BalanceScene extends Component {
               ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
               scrollEnabled={false}
             />
-            : <Utils.Text size='small'>There were not other token found</Utils.Text>
+            : <Utils.Text size='xsmall'>Tip: You can participate to other tokens</Utils.Text>
           }
+          <Utils.Error>{error}</Utils.Error>
         </Utils.Content>
       </Utils.Container>
     )
