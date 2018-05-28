@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { StatusBar, KeyboardAvoidingView } from 'react-native'
+import { StatusBar } from 'react-native'
 import { Linking } from 'expo'
 import { createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
 import Amplify from 'aws-amplify'
@@ -171,9 +171,7 @@ class App extends Component {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
-        <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
-          <RootSwitch uriPrefix={prefix} />
-        </KeyboardAvoidingView>
+        <RootSwitch uriPrefix={prefix} />
       </Fragment>
     )
   }

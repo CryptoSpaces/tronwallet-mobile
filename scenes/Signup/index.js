@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Keyboard } from 'react-native'
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
 import { Colors } from '../../components/DesignSystem'
@@ -76,60 +76,62 @@ class SignupScene extends Component {
   render () {
     const { signError } = this.state
     return (
-      <Utils.Container
-        keyboardShouldPersistTaps={'always'}
-        keyboardDismissMode='interactive'
-      >
-        <Utils.Content height={80} justify='center' align='center'>
-          <Image source={require('../../assets/login-circle.png')} />
-        </Utils.Content>
+      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+        <Utils.Container
+          keyboardShouldPersistTaps={'always'}
+          keyboardDismissMode='interactive'
+        >
+          <Utils.Content height={80} justify='center' align='center'>
+            <Image source={require('../../assets/login-circle.png')} />
+          </Utils.Content>
 
-        <Utils.FormGroup>
+          <Utils.FormGroup>
 
-          <Utils.Text size='xsmall' secondary>NAME</Utils.Text>
-          <Utils.FormInput
-            innerRef={ref => { this.username = ref }}
-            underlineColorAndroid='transparent'
-            marginBottom={40}
-            onChangeText={(text) => this.changeInput(text, 'username')}
-            onSubmitEditing={() => this._nextInput('username')}
-            returnKeyType={'next'}
-          />
+            <Utils.Text size='xsmall' secondary>NAME</Utils.Text>
+            <Utils.FormInput
+              innerRef={ref => { this.username = ref }}
+              underlineColorAndroid='transparent'
+              marginBottom={40}
+              onChangeText={(text) => this.changeInput(text, 'username')}
+              onSubmitEditing={() => this._nextInput('username')}
+              returnKeyType={'next'}
+            />
 
-          <Utils.Text size='xsmall' secondary>E-MAIL</Utils.Text>
-          <Utils.FormInput
-            innerRef={ref => { this.email = ref }}
-            keyboardType='email-address'
-            underlineColorAndroid='transparent'
-            marginBottom={40}
-            autoCapitalize='none'
-            autoCorrect={false}
-            onChangeText={(text) => this.changeInput(text, 'email')}
-            onSubmitEditing={() => this._nextInput('email')}
-            returnKeyType={'next'}
-          />
+            <Utils.Text size='xsmall' secondary>E-MAIL</Utils.Text>
+            <Utils.FormInput
+              innerRef={ref => { this.email = ref }}
+              keyboardType='email-address'
+              underlineColorAndroid='transparent'
+              marginBottom={40}
+              autoCapitalize='none'
+              autoCorrect={false}
+              onChangeText={(text) => this.changeInput(text, 'email')}
+              onSubmitEditing={() => this._nextInput('email')}
+              returnKeyType={'next'}
+            />
 
-          <Utils.Text size='xsmall' secondary>PASSWORD</Utils.Text>
-          <Utils.FormInput
-            innerRef={ref => { this.password = ref }}
-            letterSpacing={10}
-            underlineColorAndroid='transparent'
-            secureTextEntry
-            onChangeText={(text) => this.changeInput(text, 'password')}
-            onSubmitEditing={() => this._nextInput('password')}
-            returnKeyType={'send'}
+            <Utils.Text size='xsmall' secondary>PASSWORD</Utils.Text>
+            <Utils.FormInput
+              innerRef={ref => { this.password = ref }}
+              letterSpacing={10}
+              underlineColorAndroid='transparent'
+              secureTextEntry
+              onChangeText={(text) => this.changeInput(text, 'password')}
+              onSubmitEditing={() => this._nextInput('password')}
+              returnKeyType={'send'}
 
-          />
+            />
 
-          {this.renderSubmitButton()}
+            {this.renderSubmitButton()}
 
-        </Utils.FormGroup>
+          </Utils.FormGroup>
 
-        <Utils.Content justify='center' align='center'>
-          <Utils.Error>{signError}</Utils.Error>
-          <Utils.Text onPress={() => this.props.navigation.navigate('ForgotPassword')} size='small' font='light' secondary>PRIVACY POLICY</Utils.Text>
-        </Utils.Content>
-      </Utils.Container>
+          <Utils.Content justify='center' align='center'>
+            <Utils.Error>{signError}</Utils.Error>
+            <Utils.Text onPress={() => this.props.navigation.navigate('ForgotPassword')} size='small' font='light' secondary>PRIVACY POLICY</Utils.Text>
+          </Utils.Content>
+        </Utils.Container>
+      </KeyboardAvoidingView>
     )
   }
 }
