@@ -1,9 +1,16 @@
 import React, { Component, Fragment } from 'react'
 import { StatusBar } from 'react-native'
-import { createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
+import {
+  createBottomTabNavigator,
+  createStackNavigator,
+  createMaterialTopTabNavigator
+} from 'react-navigation'
 import Amplify from 'aws-amplify'
+import { Linking } from 'expo'
+
 import awsExports from './aws-exports'
-import { Colors, Spacing, width } from './components/DesignSystem'
+import {Colors, Spacing, width} from './components/DesignSystem'
+
 import LoadingScene from './scenes/Loading'
 import SignupScene from './scenes/Signup'
 import ConfirmSignup from './scenes/Signup/ConfirmSignup'
@@ -18,45 +25,41 @@ import BalanceScene from './scenes/Balance'
 import VoteScreen from './scenes/Vote'
 import ReceiveScene from './scenes/Receive'
 import TransactionScreen from './scenes/Transaction'
+import TokensScene from './scenes/Tokens'
+import ParticipateScene from './scenes/Tokens/Participate'
 
 Amplify.configure(awsExports)
-const prefix = Expo.Linking.makeUrl('/') // TODO - Review before release
+const prefix = Linking.makeUrl('/')
 
 const AppTabs = createBottomTabNavigator({
   Home: HomeScene,
   Balance: BalanceScene,
-  Vote: {
-    screen: VoteScreen,
-    path: 'vote'
-  },
+  Vote: VoteScreen,
+  Tokens: TokensScene,
   Receive: ReceiveScene
 })
 
-const SignStack = createStackNavigator(
-  {
-    Signup: SignupScene,
-    ConfirmSignup: ConfirmSignup
-  },
-  {
-    initialRouteName: 'Signup',
-    navigationOptions: {
-      header: null
-    }
-  })
+const SignStack = createStackNavigator({
+  Signup: SignupScene,
+  ConfirmSignup: ConfirmSignup
+}, {
+  initialRouteName: 'Signup',
+  navigationOptions: {
+    header: null
+  }
+})
 
-const LoginStack = createStackNavigator(
-  {
-    Login: LoginScene,
-    ConfirmLogin: ConfirmLogin,
-    ForgotPassword: ForgotPassword,
-    ConfirmNewPassword: NewPassword
-  },
-  {
-    initialRouteName: 'Login',
-    navigationOptions: {
-      header: null
-    }
-  })
+const LoginStack = createStackNavigator({
+  Login: LoginScene,
+  ConfirmLogin: ConfirmLogin,
+  ForgotPassword: ForgotPassword,
+  ConfirmNewPassword: NewPassword
+}, {
+  initialRouteName: 'Login',
+  navigationOptions: {
+    header: null
+  }
+})
 
 const SignTabs = createMaterialTopTabNavigator({
   Login: LoginStack,
@@ -90,6 +93,7 @@ const RootSwitch = createStackNavigator({
   Auth: SignTabs,
   App: AppTabs,
   Send: SendScreen,
+  Participate: ParticipateScene,
   TransactionDetail: {
     screen: TransactionScreen,
     path: 'transaction/:tx'

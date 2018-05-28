@@ -5,10 +5,9 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
-  Linking
+  ActivityIndicator
 } from 'react-native'
-import { LinearGradient } from 'expo'
+import { LinearGradient, Linking } from 'expo'
 import qs from 'qs'
 
 // Utils
@@ -79,7 +78,7 @@ class VoteScene extends PureComponent {
         txDetails: { from, Type: 'VOTE' },
         pk: from,
         from: 'mobile',
-        URL: Expo.Linking.makeUrl('/transaction'),
+        URL: Linking.makeUrl('transaction'),
         data
       })
       const url = `tronvault://tronvault/auth/${dataToSend}`

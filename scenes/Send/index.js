@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking } from 'react-native'
+import { ActivityIndicator } from 'react-native'
+import { Linking } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
+import { Select, Option } from 'react-native-chooser'
+
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
-import { Select, Option } from 'react-native-chooser'
 
 class SendScene extends Component {
   state = {
@@ -77,7 +79,7 @@ class SendScene extends Component {
         txDetails: { from, to, amount, Type: 'SEND' },
         pk: from,
         from: 'mobile',
-        URL: Expo.Linking.makeUrl('/transaction'),
+        URL: Linking.makeUrl('transaction'),
         data
       })
 

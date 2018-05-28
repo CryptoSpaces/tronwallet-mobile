@@ -10,7 +10,6 @@ class LoginScene extends Component {
     email: '',
     password: '',
     signError: null
-
   }
 
   changeInput = (text, field) => {
@@ -58,7 +57,7 @@ class LoginScene extends Component {
           <Utils.Error>{signError}</Utils.Error>
           <Utils.Text onPress={() => this.props.navigation.navigate('ForgotPassword')} size='small' font='light' secondary>FORGOT PASSWORD ?</Utils.Text>
         </Utils.Content>
-      </Utils.Container >
+      </Utils.Container>
     )
   }
 }
