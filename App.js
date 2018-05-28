@@ -54,7 +54,6 @@ const AppTabs = createBottomTabNavigator({
     path: 'vote'
   },
   Tokens: TokensScene,
-  GetVault: GetVaultScene,
   Receive: ReceiveScene,
   Settings: SettingsStack
 }, {
@@ -156,6 +155,7 @@ const RootSwitch = createStackNavigator({
   Auth: SignTabs,
   App: AppTabs,
   Send: SendScreen,
+  GetVault: GetVaultScene,
   Participate: ParticipateScene,
   TransactionDetail: {
     screen: TransactionScreen,
