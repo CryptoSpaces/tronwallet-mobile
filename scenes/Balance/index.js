@@ -68,7 +68,7 @@ class BalanceScene extends Component {
 
     if (loading) {
       return <Utils.View style={{ backgroundColor: Colors.background }} flex={1} justify='center' align='center'>
-        <ActivityIndicator size='large' color={Colors.primaryText} />
+        <ActivityIndicator size='large' color={Colors.yellow} />
       </Utils.View>
     }
     return (

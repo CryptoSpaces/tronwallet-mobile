@@ -147,15 +147,20 @@ class VoteScene extends PureComponent {
       loadingList,
       totalRemaining
     } = this.state
+
     if (loading) {
       return (
-        <Utils.Container>
-          <Utils.Content height={200} justify='center' align='center'>
-            <ActivityIndicator size='large' color={Colors.yellow} />
-          </Utils.Content>
-        </Utils.Container>
+        <Utils.View
+          style={{ backgroundColor: Colors.background }}
+          flex={1}
+          justify='center'
+          align='center'
+        >
+          <ActivityIndicator size='large' color={Colors.yellow} />
+        </Utils.View>
       )
     }
+
     return (
       <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
         <Utils.KeyboardAwareContainer enableOnAndroid>
