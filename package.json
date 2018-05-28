@@ -29,7 +29,7 @@
     ]
   },
   "dependencies": {
-    "aws-amplify": "^0.4.1",
+    "aws-amplify": "0.3.3",
     "aws-amplify-react-native": "^0.2.11",
     "axios": "^0.18.0",
     "expo": "^27.0.1",
@@ -42,6 +42,8 @@
     "react-native": "~0.55.2",
     "react-native-animatable": "^1.2.4",
     "react-native-chooser": "^1.7.0",
+    "react-native-easy-toast": "^1.1.0",
+    "react-native-elements": "^0.19.1",
     "react-native-modal": "^6.0.0",
     "react-native-qrcode": "^0.2.6",
     "react-native-sectioned-multi-select": "^0.4.7",
