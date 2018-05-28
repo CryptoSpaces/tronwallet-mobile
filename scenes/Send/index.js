@@ -105,8 +105,7 @@ class SendScene extends Component {
       <Utils.Container>
         <Utils.StatusBar />
         <Header
-          leftIcon={<Ionicons name='md-menu' color={Colors.primaryText} size={24} />}
-          onLeftPress={() => { }}
+          leftIcon={<Utils.View />}
           rightIcon={<Ionicons name='ios-close' color={Colors.primaryText} size={40} />}
           onRightPress={() => this.props.navigation.goBack()}
         >
