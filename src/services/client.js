@@ -92,7 +92,8 @@ class ClientWallet {
   async getBalances () {
     const owner = await this.getPublicKey()
     const { data: { balances } } = await axios.get(`${this.api}/account/${owner}`)
-    return balances
+    const sortedBalances = balances.sort((a, b) => (Number(b.balance) - Number(a.balance)))
+    return sortedBalances
   }
 
   async getFreeze () {
