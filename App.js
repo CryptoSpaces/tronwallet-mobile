@@ -75,6 +75,7 @@ const AppTabs = createBottomTabNavigator({
       return <Ionicons name={iconName} size={26} color={tintColor} />
     }
   }),
+  initialRouteName: 'Receive',
   tabBarOptions: {
     activeTintColor: Colors.primaryText,
     inactiveTintColor: Colors.secondaryText,
