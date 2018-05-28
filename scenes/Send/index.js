@@ -114,6 +114,7 @@ class SendScene extends Component {
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
           </Utils.View>
         </Header>
+
         <Utils.Content>
           <Utils.Text size='xsmall' secondary>To</Utils.Text>
           <PasteInput value={to} field='from' onChangeText={(text) => this.changeInput(text, 'to')} />
@@ -129,6 +130,7 @@ class SendScene extends Component {
           >
             {this.renderTokens()}
           </Select>
+
           <Utils.Text size='xsmall' secondary>Amount</Utils.Text>
           <Utils.Row align='center' justify='flex-start'>
             <Utils.FormInput
@@ -144,14 +146,19 @@ class SendScene extends Component {
               <Utils.Text size='xsmall'>+</Utils.Text>
             </Utils.PlusButton>
           </Utils.Row>
+
         </Utils.Content>
         <Utils.Content justify='center' align='center'>
           {signError && <Utils.Error>{signError}</Utils.Error>}
-          {loadingSign || loadingData ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />}
+          {
+            loadingSign || loadingData
+              ? <ActivityIndicator size='small' color={Colors.yellow} />
+              : <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />
+          }
           <Utils.VerticalSpacer size='medium' />
         </Utils.Content>
-      </Utils.Container >
+
+      </Utils.Container>
     )
   }
 }
