@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Image } from 'react-native'
 import { Auth } from 'aws-amplify'
-import Modal from 'react-native-modal'
 import Toast from 'react-native-easy-toast'
 
 import { Colors } from '../../components/DesignSystem'
@@ -9,7 +8,6 @@ import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../src/services/address'
 import Client from '../../src/services/client'
-import PasteInput from '../../components/PasteInput'
 import CopyInput from '../../components/CopyInput'
 
 class ConfirmLogin extends Component {
@@ -20,9 +18,7 @@ class ConfirmLogin extends Component {
     confirmError: null,
     loadingConfirm: false,
     loadingData: true,
-    modalPkVisible: false,
-    userPublicKey: null,
-    confirmPkError: null
+    userPublicKey: null
   }
 
   componentDidMount () {
@@ -43,12 +39,7 @@ class ConfirmLogin extends Component {
     }
   }
 
-  goBackLogin = () => {
-    this.setState({
-      modalPkVisible: false
-    },
-    () => this.props.navigation.navigate('Login'))
-  }
+  goBackLogin = () => this.props.navigation.navigate('Login');
 
   changeInput = (text, field) => {
     this.setState({
@@ -63,7 +54,7 @@ class ConfirmLogin extends Component {
     try {
       if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
       await Client.setUserPk(userPublicKey)
-      this.setState({ loadingConfirm: false, modalPkVisible: false }, () => navigation.navigate('App'))
+      this.setState({ loadingConfirm: false }, () => navigation.navigate('App'))
     } catch (error) {
       this.setState({
         confirmError: error.message || error,
@@ -74,7 +65,7 @@ class ConfirmLogin extends Component {
 
   confirmLogin = async () => {
     const { totpCode, user, code } = this.state
-    this.setState({ loadingConfirm: true })
+    this.setState({ loadingConfirm: true, confirmError: null })
     try {
       totpCode ? await Auth.verifyTotpToken(user, code) : await Auth.confirmSignIn(user, code, 'SOFTWARE_TOKEN_MFA')
 
@@ -82,13 +73,15 @@ class ConfirmLogin extends Component {
       if (userPublicKey) {
         this.setState({
           loadingConfirm: false,
-          confirmError: null,
-          modalPkVisible: false
+          confirmError: null
         },
         () => this.props.navigation.navigate('App')
         )
       } else {
-        this.setState({ modalPkVisible: true, loadingConfirm: false })
+        this.setState({ loadingConfirm: false },
+          () => {
+            this.props.navigation.navigate('SetPublicKey')
+          })
       }
     } catch (error) {
       let message = error.message
@@ -103,35 +96,6 @@ class ConfirmLogin extends Component {
     console.log(this.state.totpCode)
 
     if (success) { this.refs.toast.show('Google Authenticator secret copied to the clipboard') }
-  }
-
-  renderModalPk = () => {
-    const { confirmError, loadingConfirm, userPublicKey } = this.state
-
-    return (
-      <Utils.Container>
-
-        <Utils.Content>
-          <Utils.Text>You need to set your public key before continue</Utils.Text>
-          <PasteInput
-            value={userPublicKey}
-            field='userPublicKey'
-            onChangeText={(text) => this.changeInput(text, 'userPublicKey')}
-          />
-          <Utils.Error>{confirmError}</Utils.Error>
-          {loadingConfirm
-            ? (<Utils.Content height={80} justify='center' align='center'>
-              <ActivityIndicator size='small' color={Colors.yellow} />
-            </Utils.Content>)
-            : (<ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} />)
-          }
-        </Utils.Content>
-
-        <Utils.Content align='center'>
-          <Utils.Text onPress={this.goBackLogin} size='small' font='light' secondary>Back to Login</Utils.Text>
-        </Utils.Content>
-      </Utils.Container>
-    )
   }
 
   renderTOTPArea = () => {
@@ -152,7 +116,7 @@ class ConfirmLogin extends Component {
   }
 
   render () {
-    const { confirmError, loadingConfirm, modalPkVisible } = this.state
+    const { confirmError, loadingConfirm } = this.state
     return (
       <Utils.Container>
         <Utils.Content height={80} justify='center' align='center'>
@@ -176,16 +140,6 @@ class ConfirmLogin extends Component {
           <Utils.Error>{confirmError}</Utils.Error>
           <Utils.Text size='small' font='light' secondary onPress={this.goBackLogin} > Back to Login </Utils.Text>
         </Utils.Content>
-
-        <Modal
-          isVisible={modalPkVisible}
-          animationInTiming={1000}
-          animationOutTiming={1000}
-          backdropTransitionInTiming={1000}
-          backdropTransitionOutTiming={1000}
-        >
-          {this.renderModalPk()}
-        </Modal>
         <Toast
           ref='toast'
           position='center'

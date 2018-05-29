@@ -3,6 +3,7 @@ import { StyleSheet, Alert } from 'react-native'
 import { Auth } from 'aws-amplify'
 import { ListItem, Card } from 'react-native-elements'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from './../../components/Utils'
 import { Colors, Spacing } from './../../components/DesignSystem'
@@ -23,7 +24,12 @@ class Settings extends Component {
           text: 'Yes',
           onPress: async () => {
             await Auth.signOut()
-            this.props.navigation.navigate('Auth')
+            const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'Auth' })],
+              key: null
+            })
+            this.props.navigation.dispatch(resetAction)
           },
           style: 'default'
         }

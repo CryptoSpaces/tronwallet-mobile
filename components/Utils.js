@@ -119,7 +119,7 @@ Label.propTypes = {
 export const FormInput = styled.TextInput`
   color: ${Colors.primaryText};
   padding: ${Spacing.small}px 0px;
-  font-size: ${FontSize['small']};
+  font-size: ${FontSize['xsmall']};
   margin-bottom: ${props => props.marginBottom}px;
   border-bottom-width: 0.3px;
   border-bottom-color: ${Colors.secondaryText};
@@ -152,7 +152,7 @@ InputError.defaultProps = {
 
 export const PasteButton = styled.TouchableOpacity`
   margin-horizontal: 5px;
-  padding: ${Spacing.small}px;
+  padding: ${Spacing.medium - 5}px;
   border-radius: 5px;
   border-width:1px;
   borderColor: ${Colors.secondaryText};
