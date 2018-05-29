@@ -70,7 +70,7 @@ class ChangePKModal extends PureComponent {
             }
           />
           <Utils.FormGroup>
-            <Utils.Text size='xsmall' secondary>NEW PRIVATE KEY</Utils.Text>
+            <Utils.Text size='xsmall' secondary>NEW PUBLIC KEY</Utils.Text>
             <Utils.FormInput
               innerRef={ref => { this.newPk = ref }}
               underlineColorAndroid='transparent'

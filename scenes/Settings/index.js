@@ -96,12 +96,12 @@ class Settings extends Component {
     const list = [
       {
         title: address,
-        description: 'Current account',
+        description: 'Current Account',
         icon: 'user,-person,-avtar,-profile-picture,-dp'
       },
       {
-        title: 'Update',
-        description: 'Change private key',
+        title: 'Edit Public Key',
+        description: 'Change public key',
         icon: 'key,-password,-lock,-privacy,-login',
         onPress: () => this.setState({ changePKVisible: true })
       }
