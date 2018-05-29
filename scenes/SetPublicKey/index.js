@@ -1,73 +1,105 @@
-import React, { PureComponent } from 'react'
-import { StyleSheet } from 'react-native'
-import { Colors, Spacing } from '../../components/DesignSystem'
+import React, { Component } from 'react'
+import { ActivityIndicator, Image, TouchableOpacity, Linking } from 'react-native'
+// import Toast from 'react-native-easy-toast'
+
+import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
-import Header from '../../components/Header'
-// import Client from '../../src/services/client'
+import PasteInput from '../../components/PasteInput'
+import ButtonGradient from '../../components/ButtonGradient'
+import { isAddressValid } from '../../src/services/address'
+import Client from '../../src/services/client'
+import tronLogo from '../../assets/tron-logo-small.png'
 
-class VoteScene extends PureComponent {
+export default class SetPkScene extends Component {
     state = {
-      userPublicKey: ''
-    };
-
-    onChange = (value, field) => {
-      this.setState({
-        [field]: value
-      })
+      userPublicKey: null,
+      loading: false,
+      error: null
     }
 
+    confirmPublicKey = async () => {
+      const { userPublicKey } = this.state
+      const { navigation } = this.props
+      this.setState({ loading: true, error: null })
+      try {
+        if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
+        await Client.setUserPk(userPublicKey)
+        this.setState({ loading: false }, () => navigation.navigate('App'))
+      } catch (error) {
+        this.setState({
+          error: error.message || error,
+          loading: false
+        })
+      }
+    }
+
+    getKeyFromVault = async () => {
+      this.setState({ loading: true, error: null })
+      try {
+        const url = `tronvault://tronvault/auth`
+        const supported = await Linking.canOpenURL(url)
+        if (supported) {
+          await Linking.openURL(url)
+          this.setState({ loading: false })
+        } else {
+          this.setState({ loading: false }, () => {
+            this.props.navigation.navigate('GetVault')
+          })
+        }
+      } catch (error) {
+        this.setState({ error: error.message, loading: false })
+      }
+    }
+
+    goBackLogin = () => this.props.navigation.navigate('Login');
+
+    renderButtonOptions = () => {
+      return <React.Fragment>
+        <ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} />
+        <Utils.VerticalSpacer size='large' />
+        <TouchableOpacity style={{
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          padding: 5,
+          borderWidth: 0.8,
+          flexDirection: 'row',
+          borderRadius: 5,
+          borderColor: Colors.secondaryText
+        }} onPress={this.getKeyFromVault}>
+          <Utils.Text font='light'>FETCH KEY FROM TRON VAULT</Utils.Text>
+          <Image style={{ width: 40, height: 40 }} source={tronLogo} />
+        </TouchableOpacity>
+      </React.Fragment>
+    }
+
+    renderLoadingView = () => (
+      <Utils.Content height={80} justify='center' align='center'>
+        <ActivityIndicator size='small' color={Colors.yellow} />
+      </Utils.Content>
+    )
     render () {
+      const { userPublicKey, loading, error } = this.state
+
       return (
         <Utils.Container>
-          <Utils.StatusBar transparent />
-          <Header>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
-              <Utils.Text size='small'>945,622,966</Utils.Text>
-            </Utils.View>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
-              <Utils.Text size='small'>14,106</Utils.Text>
-            </Utils.View>
-          </Header>
-          <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              onChangeText={(text) => this.onChange(text, 'userPublicKey')}
-              placeholder='Search'
-              placeholderTextColor='#fff'
-              style={{ width: '70%' }}
+          <Utils.StatusBar />
+          <Utils.Content>
+            <Utils.Text>You need to set your public key before continue</Utils.Text>
+            <PasteInput
+              value={userPublicKey}
+              field='userPublicKey'
+              onChangeText={(userPublicKey) => this.setState({ userPublicKey })}
             />
-
-          </Utils.Row>
+            {loading && this.renderLoadingView()}
+            <Utils.VerticalSpacer size='medium' />
+            {!loading && this.renderButtonOptions()}
+            <Utils.VerticalSpacer size='medium' />
+            {error && <Utils.Error>{error}</Utils.Error>}
+          </Utils.Content>
+          <Utils.Content align='center'>
+            <Utils.Text onPress={this.goBackLogin} size='small' font='light' secondary>Back to Login</Utils.Text>
+          </Utils.Content>
         </Utils.Container>
       )
     }
 }
-
-const styles = StyleSheet.create({
-  searchWrapper: {
-    paddingLeft: 24,
-    paddingRight: 24
-  },
-  rank: {
-    paddingRight: 10
-  },
-  submitButton: {
-    padding: Spacing.small,
-    alignItems: 'center',
-    borderRadius: 5,
-    width: '100%'
-  },
-  button: {
-    backgroundColor: Colors.secondaryText,
-    borderColor: Colors.secondaryText,
-    borderRadius: 5,
-    height: 20,
-    width: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
-
-export default VoteScene
