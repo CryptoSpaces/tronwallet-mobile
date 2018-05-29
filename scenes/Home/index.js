@@ -124,7 +124,6 @@ class HomeScene extends Component {
           <Utils.VerticalSpacer size='large' />
         </Utils.ContentWithBackground>
         <Utils.Content background={Colors.background} flex={1}>
-          <Utils.VerticalSpacer size='large' />
           <Utils.Row justify='space-between' align='center'>
             <Utils.View>
               <Utils.Text secondary size='xsmall' lineHeight={20}>MARKET CAP</Utils.Text>
@@ -151,7 +150,6 @@ class HomeScene extends Component {
               )
             }
           </Utils.Row>
-          <Utils.VerticalSpacer size='large' />
         </Utils.Content>
         <Utils.Row justify='space-evenly'>
           {

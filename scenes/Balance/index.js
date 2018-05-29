@@ -31,7 +31,7 @@ class BalanceScene extends Component {
 
   componentWillUnmount () {
     this._navListener.remove()
-  }
+  }b
 
   loadData = async () => {
     this.setState({ loading: true })
@@ -56,12 +56,14 @@ class BalanceScene extends Component {
     const { assetBalance } = this.state
     if (!assetBalance.length) return
 
-    return (<Utils.Row align='center' justify='space-between'>
-      <Utils.Label color={tint(0.9, Colors.background)}>
-        <Utils.Text>{item.name}</Utils.Text>
-      </Utils.Label>
-      <Utils.Text>{`${formatAmount(item.balance)}`}</Utils.Text>
-    </Utils.Row>)
+    return (
+      <Utils.Row align='center' justify='space-between'>
+        <Utils.Label color={tint(0.9, Colors.background)}>
+          <Utils.Text>{item.name}</Utils.Text>
+        </Utils.Label>
+        <Utils.Text>{`${formatAmount(item.balance)}`}</Utils.Text>
+      </Utils.Row>
+    )
   }
 
   render () {
