@@ -78,8 +78,8 @@ class BalanceScene extends Component {
           rightIcon={<Feather name='plus' color={Colors.primaryText} size={24} />}
         >
           <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>BALANCE</Utils.Text>
-            <Utils.Text size='medium'>{formatAmount(trxBalance)} TRX</Utils.Text>
+            <Utils.Text size='xsmall' secondary>TRX BALANCE</Utils.Text>
+            <Utils.Text size='medium'>{formatAmount(trxBalance)}</Utils.Text>
           </Utils.View>
         </Header>
         <Utils.Content>
