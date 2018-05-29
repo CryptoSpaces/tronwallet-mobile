@@ -16,6 +16,7 @@ import * as Utils from '../../components/Utils'
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../src/components/Vote/VoteItem'
+import LoadingScene from '../../components/LoadingScene'
 
 // Service
 import Client from '../../src/services/client'
@@ -147,18 +148,7 @@ class VoteScene extends PureComponent {
       totalRemaining
     } = this.state
 
-    if (loading) {
-      return (
-        <Utils.View
-          style={{ backgroundColor: Colors.background }}
-          flex={1}
-          justify='center'
-          align='center'
-        >
-          <ActivityIndicator size='large' color={Colors.yellow} />
-        </Utils.View>
-      )
-    }
+    if (loading) return <LoadingScene />
 
     return (
       <Utils.KeyboardAwareContainer enableOnAndroid>
@@ -201,7 +191,7 @@ class VoteScene extends PureComponent {
           {
             loadingList
               ? <Utils.Content height={200} justify='center' align='center'>
-                <ActivityIndicator size='large' color={Colors.yellow} />
+                <ActivityIndicator size='large' color={Colors.primaryText} />
               </Utils.Content>
               : this.renderList()
           }
