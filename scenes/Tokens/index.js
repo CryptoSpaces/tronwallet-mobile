@@ -13,7 +13,7 @@ class TokensScene extends Component {
     error: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._loadTokens()
   }
 
