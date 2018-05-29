@@ -51,6 +51,7 @@
     "react-native-sectioned-multi-select": "^0.4.7",
     "react-native-svg-charts": "^5.0.0",
     "react-navigation": "^2.0.1",
+    "rn-placeholder": "^1.2.0",
     "standard": "^11.0.1",
     "styled-components": "^3.2.6"
   }
