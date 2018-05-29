@@ -10,12 +10,12 @@ class TransactionsScene extends Component {
 	  return {
 	    header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
+    <Utils.Header>
             <Utils.TitleWrapper>
-              <Utils.Title>Transactions</Utils.Title>
-            </Utils.TitleWrapper>
+        <Utils.Title>Transactions</Utils.Title>
+      </Utils.TitleWrapper>
           </Utils.Header>
-        </SafeAreaView>
+  </SafeAreaView>
 	    )
 	  }
   }

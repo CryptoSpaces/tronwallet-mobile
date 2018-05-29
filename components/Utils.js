@@ -6,6 +6,29 @@ import { Constants } from 'expo'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
+export const Header = styled.View`
+  height: 90px;
+  flex-direction: row;
+  align-items: center;
+  background-color: black;
+  border-bottom-width: 1px;
+  border-color: black;
+`
+
+export const Title = styled.Text`
+  color: white;
+  font-weight: 700;
+  padding-left: 16;
+  font-size: 26;
+`
+
+export const TitleWrapper = styled.View`
+	flex: 1;
+	height: 100%;
+	background-color: black;
+	justify-content: center;
+`
+
 export const View = styled.View`
   align-items: ${props => props.align};
   justify-content: ${props => props.justify};
@@ -119,7 +142,7 @@ Label.propTypes = {
 export const FormInput = styled.TextInput`
   color: ${Colors.primaryText};
   padding: ${Spacing.small}px 0px;
-  font-size: ${FontSize['xsmall']};
+  font-size: ${FontSize['small']};
   margin-bottom: ${props => props.marginBottom}px;
   border-bottom-width: 0.3px;
   border-bottom-color: ${Colors.secondaryText};
