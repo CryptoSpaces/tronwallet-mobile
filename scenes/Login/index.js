@@ -88,10 +88,8 @@ class LoginScene extends Component {
           <Utils.Content height={80} justify='center' align='center'>
             <Image source={require('../../assets/login-circle.png')} />
           </Utils.Content>
-
           <Utils.VerticalSpacer size='large' />
           <Utils.FormGroup>
-
             <Utils.Text size='xsmall' secondary>E-MAIL</Utils.Text>
             <Utils.FormInput
               innerRef={ref => { this.email = ref }}
@@ -104,7 +102,6 @@ class LoginScene extends Component {
               onSubmitEditing={() => this._submit('email')}
               returnKeyType={'next'}
             />
-
             <Utils.Text size='xsmall' secondary>PASSWORD</Utils.Text>
             <Utils.FormInput
               innerRef={ref => { this.password = ref }}
@@ -115,11 +112,8 @@ class LoginScene extends Component {
               onSubmitEditing={() => this._submit('password')}
               returnKeyType='send'
             />
-
             {this.renderSubmitButton()}
-
           </Utils.FormGroup>
-
           <Utils.Content justify='center' align='center'>
             {ChangedPassword && <Utils.Text size='small' success>Password Changed</Utils.Text>}
             <Utils.Error>{signError}</Utils.Error>

@@ -136,7 +136,7 @@ class HomeScene extends Component {
             {
               !this.state.marketcap || !this.state.volume || !this.state.supply ? (
                 <Utils.Content>
-                  <ActivityIndicator size='small' color={Colors.yellow} />
+                  <ActivityIndicator size='small' color={Colors.primaryText} />
                 </Utils.Content>
               ) : (
                 <View animation='fadeIn'>
@@ -165,7 +165,7 @@ class HomeScene extends Component {
         {
           this.state.graph.loading ? (
             <Utils.Content height={200} justify='center'>
-              <ActivityIndicator size='large' color={Colors.yellow} />
+              <ActivityIndicator size='large' color={Colors.primaryText} />
             </Utils.Content>
           ) : (
             <View animation='fadeIn'>

@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import { StatusBar } from 'react-native'
 import { Linking } from 'expo'
-import { createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
+import {
+  createBottomTabNavigator,
+  createStackNavigator,
+  createMaterialTopTabNavigator
+} from 'react-navigation'
 import Amplify from 'aws-amplify'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+
 import awsExports from './aws-exports'
 import { Colors, ScreenSize } from './components/DesignSystem'
 
@@ -27,6 +31,11 @@ import TokensScene from './scenes/Tokens'
 import ParticipateScene from './scenes/Tokens/Participate'
 import GetVaultScene from './scenes/GetVault/GetVault'
 
+import { createIconSetFromFontello } from '@expo/vector-icons'
+import fontelloConfig from './assets/icons/config.json'
+
+const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
+
 Amplify.configure(awsExports)
 const prefix = Linking.makeUrl('/') // TODO - Review before release
 
@@ -48,8 +57,8 @@ const SettingsStack = createStackNavigator({
 })
 
 const AppTabs = createBottomTabNavigator({
-  Home: HomeScene,
   Balance: BalanceScene,
+  Home: HomeScene,
   Vote: {
     screen: VoteScreen,
     path: 'vote'
@@ -63,18 +72,20 @@ const AppTabs = createBottomTabNavigator({
       const { routeName } = navigation.state
       let iconName
       if (routeName === 'Home') {
-        iconName = `ios-home${focused ? '' : '-outline'}`
+        iconName = `graph,-bar,-chart,-statistics,-analytics`
       } else if (routeName === 'Balance') {
-        iconName = `ios-cash${focused ? '' : '-outline'}`
+        iconName = `wallet,-money,-cash,-balance,-purse`
       } else if (routeName === 'Vote') {
-        iconName = `ios-information-circle${focused ? '' : '-outline'}`
+        iconName = `shout-out,-speaker,-offer,-announcement,-loud`
       } else if (routeName === 'Receive') {
-        iconName = `ios-download${focused ? '' : '-outline'}`
+        iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
+      } else if (routeName === 'Tokens') {
+        iconName = `money,-currency,-note,-cash,-capital`
       } else if (routeName === 'Settings') {
-        iconName = `ios-settings${focused ? '' : '-outline'}`
+        iconName = `gear,-settings,-update,-setup,-config`
       }
 
-      return <Ionicons name={iconName} size={26} color={tintColor} />
+      return <Icon name={iconName} size={26} color={tintColor} />
     }
   }),
   tabBarOptions: {
@@ -150,7 +161,7 @@ const SignTabs = createMaterialTopTabNavigator({
   }
 })
 
-const RootSwitch = createStackNavigator({
+const RootNavigator = createStackNavigator({
   Loading: LoadingScene,
   Welcome: WelcomeScene,
   Auth: SignTabs,
@@ -179,7 +190,7 @@ class App extends Component {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
-        <RootSwitch uriPrefix={prefix} />
+        <RootNavigator uriPrefix={prefix} />
       </Fragment>
     )
   }

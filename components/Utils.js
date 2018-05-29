@@ -13,6 +13,7 @@ export const View = styled.View`
   ${props => props.flex && css`flex: ${props.flex};`}
   ${props => props.height && css`height: ${props.height};`}
   ${props => props.width && css`width: ${props.width};`}
+  ${props => props.background && css`background-color: ${props.background};`}
 `
 
 View.defaultProps = {
