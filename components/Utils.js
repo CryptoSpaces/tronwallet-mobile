@@ -1,7 +1,9 @@
+import React from 'react'
 import styled, { css } from 'styled-components'
 import { ImageBackground } from 'react-native'
 import PropTypes from 'prop-types'
 import { Constants } from 'expo'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
@@ -9,8 +11,8 @@ export const View = styled.View`
   align-items: ${props => props.align};
   justify-content: ${props => props.justify};
   ${props => props.flex && css`flex: ${props.flex};`}
-  ${props => props.height && css`height: ${props.height}px;`}
-  ${props => props.width && css`width: ${props.width}px;`}
+  ${props => props.height && css`height: ${props.height};`}
+  ${props => props.width && css`width: ${props.width};`}
 `
 
 View.defaultProps = {
@@ -28,7 +30,10 @@ export const Container = styled.ScrollView`
   flex: 1;
   background-color: ${Colors.background};
   ${props => props.darker && css`background-color: ${Colors.darkerBackground};`}
+  ${props => props.transparent && css`background-color: transparent;`}
 `
+
+export const KeyboardAwareContainer = Container.withComponent(KeyboardAwareScrollView)
 
 export const Content = View.extend`
   padding: ${Spacing.big}px;
@@ -76,9 +81,10 @@ export const Text = styled.Text`
   color: ${Colors.primaryText};
   font-size: ${props => FontSize[props.size]};
   ${props => props.font && css`font-family: rubik-${props.font}`};
-  ${props => props.secondary && css`color: ${Colors.secondaryText};`}
-  ${props => props.success && css`color: ${Colors.green};`}
-  ${props => props.lineHeight && css`line-height: ${props.lineHeight};`}
+  ${props => props.secondary && css`color: ${Colors.secondaryText}`};
+  ${props => props.success && css`color: ${Colors.green}`};
+  ${props => props.lineHeight && css`line-height: ${props.lineHeight}`};
+  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
 `
 
 Text.defaultProps = {
@@ -111,31 +117,40 @@ Label.propTypes = {
 
 export const FormInput = styled.TextInput`
   color: ${Colors.primaryText};
-  padding: ${Spacing.small}px;
+  padding: ${Spacing.small}px 0px;
   font-size: ${FontSize['small']};
-  margin-bottom: ${Spacing.medium}px;
-  border-bottom-width: 0.5px;
+  margin-bottom: ${props => props.marginBottom}px;
+  border-bottom-width: 0.3px;
   border-bottom-color: ${Colors.secondaryText};
 `
+FormInput.defaultProps = {
+  marginBottom: Spacing.medium
+}
 
 export const FormGroup = styled.KeyboardAvoidingView`
-padding: ${Spacing.big}px;
-${props => props.background && css`background-color: ${props.background};`}
+  padding: ${Spacing.big}px;
+  ${props => props.background && css`background-color: ${props.background};`}
 `
 export const Error = styled.Text`
   font-size: ${FontSize['small']};
   color: #ff5454;
-  text-align:center;
+  text-align: center;
   margin-bottom: ${Spacing.small}px;
 `
+
 export const InputError = styled.Text`
 font-size: ${FontSize['xsmall']};
   color: #ff5454;
-  margin-bottom: ${Spacing.small}px;
+  margin-bottom: ${props => props.marginBottom}px;
 `
+
+InputError.defaultProps = {
+  marginBottom: Spacing.small
+}
+
 export const PasteButton = styled.TouchableOpacity`
   margin-horizontal: 5px;
-  padding:${Spacing.small}px;
+  padding: ${Spacing.small}px;
   border-radius: 5px;
   border-width:1px;
   borderColor: ${Colors.secondaryText};
@@ -149,3 +164,19 @@ export const PlusButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `
+
+export const ButtonWrapper = styled.TouchableOpacity`
+  border-color: ${Colors.green};
+  border-width: 1px;
+  border-radius: ${Spacing.xsmall}px;
+  padding-vertical: ${Spacing.xsmall}px;
+  padding-horizontal: ${Spacing.small}px;
+  justify-content: center;
+  align-items: center;
+`
+
+export const Button = props => (
+  <ButtonWrapper onPress={props.onPress}>
+    <Text>{props.children}</Text>
+  </ButtonWrapper>
+)

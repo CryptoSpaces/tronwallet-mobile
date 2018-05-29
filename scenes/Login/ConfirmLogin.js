@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
-import { TouchableOpacity, ActivityIndicator, Clipboard, Image } from 'react-native'
+import { ActivityIndicator, Image } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Modal from 'react-native-modal'
+import Toast from 'react-native-easy-toast'
+
 import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../src/services/address'
 import Client from '../../src/services/client'
 import PasteInput from '../../components/PasteInput'
+import CopyInput from '../../components/CopyInput'
 
 class ConfirmLogin extends Component {
   state = {
@@ -26,40 +29,25 @@ class ConfirmLogin extends Component {
     this.loadUserData()
   }
 
-  confirmPublicKey = async () => {
-    const { userPublicKey } = this.state
-    const { navigation } = this.props
-    this.setState({ loadingConfirm: true })
+  loadUserData = async () => {
     try {
-      if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
-      await Client.setUserPk(userPublicKey)
-      this.setState({ loadingConfirm: false })
-      navigation.navigate('App')
+      // const userPubliKey = await Client.getPublicKey()
+      const user = this.props.navigation.getParam('user')
+      let totpCode = null
+      if (user.challengeParam.MFAS_CAN_SETUP) {
+        totpCode = await Auth.setupTOTP(user)
+      }
+      this.setState({ user, totpCode })
     } catch (error) {
-      this.setState({ confirmError: error.message || error, loadingConfirm: false })
+      this.setState({ confirmError: error.message })
     }
   }
 
-  renderModalPk = () => {
-    const { confirmError, loadingConfirm, userPublicKey } = this.state
-
-    return (
-      <Utils.Container>
-        <Utils.Content>
-          <Utils.Text>You need to set your public key before continue</Utils.Text>
-          <PasteInput value={userPublicKey} field='userPublicKey' onChangeText={(text) => this.changeInput(text, 'userPublicKey')} />
-          <Utils.Error>{confirmError}</Utils.Error>
-          {loadingConfirm ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <ButtonGradient text='Confirm Public Key' onPress={this.confirmPublicKey.bind(this)} />}
-        </Utils.Content>
-        <Utils.Content align='center'>
-          <Utils.Text onPress={() => {
-            this.setState({ modalPkVisible: false })
-            this.props.navigation.navigate('Login')
-          }} size='small' font='light' secondary>Back to Login</Utils.Text>
-        </Utils.Content>
-      </Utils.Container>
-    )
+  goBackLogin = () => {
+    this.setState({
+      modalPkVisible: false
+    },
+    () => this.props.navigation.navigate('Login'))
   }
 
   changeInput = (text, field) => {
@@ -68,15 +56,37 @@ class ConfirmLogin extends Component {
     })
   }
 
+  confirmPublicKey = async () => {
+    const { userPublicKey } = this.state
+    const { navigation } = this.props
+    this.setState({ loadingConfirm: true })
+    try {
+      if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
+      await Client.setUserPk(userPublicKey)
+      this.setState({ loadingConfirm: false, modalPkVisible: false }, () => navigation.navigate('App'))
+    } catch (error) {
+      this.setState({
+        confirmError: error.message || error,
+        loadingConfirm: false
+      })
+    }
+  }
+
   confirmLogin = async () => {
-    const { totpCode, user, code, userPublicKey } = this.state
+    const { totpCode, user, code } = this.state
     this.setState({ loadingConfirm: true })
     try {
       totpCode ? await Auth.verifyTotpToken(user, code) : await Auth.confirmSignIn(user, code, 'SOFTWARE_TOKEN_MFA')
 
+      const userPublicKey = await Client.getPublicKey()
       if (userPublicKey) {
-        this.setState({ loadingConfirm: false, confirmError: null })
-        this.props.navigation.navigate('App')
+        this.setState({
+          loadingConfirm: false,
+          confirmError: null,
+          modalPkVisible: false
+        },
+        () => this.props.navigation.navigate('App')
+        )
       } else {
         this.setState({ modalPkVisible: true, loadingConfirm: false })
       }
@@ -89,51 +99,83 @@ class ConfirmLogin extends Component {
     }
   }
 
-  copyClipboard = async () => {
-    const { totpCode } = this.state
-    await Clipboard.setString(totpCode)
-    // alert('Copied to clipboard')
+  showToast = (success) => {
+    console.log(this.state.totpCode)
+
+    if (success) { this.refs.toast.show('TOTP authenticator copied to the clipboard') }
   }
 
-  loadUserData = async () => {
-    try {
-      const userPubliKey = await Client.getPublicKey()
-      const user = this.props.navigation.getParam('user')
-      let totpCode = null
-      if (user.challengeParam.MFAS_CAN_SETUP) {
-        totpCode = await Auth.setupTOTP(user)
-      }
-      this.setState({ user, totpCode, userPubliKey })
-    } catch (error) {
-      this.setState({ confirmError: error.message })
-    }
+  renderModalPk = () => {
+    const { confirmError, loadingConfirm, userPublicKey } = this.state
+
+    return (
+      <Utils.Container>
+
+        <Utils.Content>
+          <Utils.Text>You need to set your public key before continue</Utils.Text>
+          <PasteInput
+            value={userPublicKey}
+            field='userPublicKey'
+            onChangeText={(text) => this.changeInput(text, 'userPublicKey')}
+          />
+          <Utils.Error>{confirmError}</Utils.Error>
+          {loadingConfirm
+            ? (<Utils.Content height={80} justify='center' align='center'>
+              <ActivityIndicator size='small' color={Colors.yellow} />
+            </Utils.Content>)
+            : (<ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} />)
+          }
+        </Utils.Content>
+
+        <Utils.Content align='center'>
+          <Utils.Text onPress={this.goBackLogin} size='small' font='light' secondary>Back to Login</Utils.Text>
+        </Utils.Content>
+      </Utils.Container>
+    )
+  }
+
+  renderTOTPArea = () => {
+    const { totpCode } = this.state
+    if (!totpCode) return null
+
+    return (
+      <React.Fragment>
+        <Utils.Text size='small' marginBottom={20} secondary>TOTP Secret</Utils.Text>
+        <Utils.Text size='xsmall'>
+          You need to link your account with some TOTP authenticator. {'\n'}We recomend Google Authenticator.
+        </Utils.Text>
+        <CopyInput value={totpCode} editable={false} onCopyText={this.showToast} />
+      </React.Fragment>
+    )
   }
 
   render () {
-    const { confirmError, loadingConfirm, totpCode, modalPkVisible } = this.state
+    const { confirmError, loadingConfirm, modalPkVisible } = this.state
     return (
       <Utils.Container>
         <Utils.Content height={80} justify='center' align='center'>
           <Image source={require('../../assets/login-circle.png')} />
         </Utils.Content>
         <Utils.Content>
-          <Utils.Text size='xsmall' secondary>Authenticator Code</Utils.Text>
+
+          <Utils.Text size='xsmall' secondary>AUTHENTICATOR CODE</Utils.Text>
           <Utils.FormInput underlineColorAndroid='transparent' onChangeText={(text) => this.changeInput(text, 'code')} />
-          {totpCode &&
-            <React.Fragment>
-              <Utils.Text size='small' secondary>TOTP Secret</Utils.Text>
-              <Utils.Text size='xsmall'>You need to link your account with some TOTP authenticator. We recomend Google Authenticator. Click To copy</Utils.Text>
-              <TouchableOpacity onPress={this.copyClipboard}>
-                <Utils.FormInput multiline value={totpCode} editable={false} />
-              </TouchableOpacity>
-            </React.Fragment>}
-          {loadingConfirm ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <ButtonGradient text='Confirm Login' onPress={this.confirmLogin} />}
+
+          {this.renderTOTPArea()}
+
+          {loadingConfirm
+            ? (<Utils.Content height={80} justify='center' align='center'>
+              <ActivityIndicator size='small' color={Colors.yellow} />
+            </Utils.Content>)
+            : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} />)
+          }
         </Utils.Content>
+
         <Utils.Content justify='center' align='center'>
           <Utils.Error>{confirmError}</Utils.Error>
-          <Utils.Text onPress={() => this.props.navigation.goBack()} size='small' font='light' secondary>Back to Login</Utils.Text>
+          <Utils.Text size='small' font='light' secondary onPress={this.goBackLogin} > Back to Login </Utils.Text>
         </Utils.Content>
+
         <Modal
           isVisible={modalPkVisible}
           animationInTiming={1000}
@@ -143,6 +185,13 @@ class ConfirmLogin extends Component {
         >
           {this.renderModalPk()}
         </Modal>
+        <Toast
+          ref='toast'
+          position='center'
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+          opacity={0.8}
+        />
       </Utils.Container>
     )
   }

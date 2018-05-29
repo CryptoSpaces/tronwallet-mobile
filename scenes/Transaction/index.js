@@ -17,6 +17,7 @@ class TransactionScene extends Component {
     success: null,
     submitError: null
   }
+
   componentDidMount () {
     this.loadData()
   }
@@ -29,7 +30,7 @@ class TransactionScene extends Component {
       this.setState({ transactionData, signedTransaction })
     } catch (error) {
       console.log(error.message)
-      alert('Something wrong getting transaction details')
+      // alert('Something wrong getting transaction details')
     } finally {
       this.setState({ loadingData: false })
     }
@@ -45,6 +46,7 @@ class TransactionScene extends Component {
       this.setState({ loadingSubmit: false, submitError: error.message })
     }
   }
+
   renderContracts = () => {
     const { transactionData } = this.state
     if (!transactionData) return
@@ -59,6 +61,16 @@ class TransactionScene extends Component {
             <Utils.Text size='xsmall'>{contracts[0][ctr] / 1000000}</Utils.Text>
           </Utils.Row>
         )
+      } else if (ctr === 'votes') {
+        const totalVotes = contracts[0][ctr].reduce((prev, curr) => {
+          return (prev + curr.voteCount)
+        }, 0)
+        contractsElements.push(
+          <Utils.Row key={'votes'} style={{ justifyContent: 'space-between', marginVertical: 5 }}>
+            <Utils.Text secondary size='small'>TotalVotes</Utils.Text>
+            <Utils.Text size='xsmall'>{totalVotes}</Utils.Text>
+          </Utils.Row>
+        )
       } else {
         contractsElements.push(
           <Utils.Row key={ctr} style={{ justifyContent: 'space-between', marginVertical: 5 }}>
@@ -69,12 +81,12 @@ class TransactionScene extends Component {
       }
     }
     contractsElements.push(
-      <Utils.Row style={{ justifyContent: 'space-between', marginVertical: 5 }} key={'timestamp'}>
+      <Utils.Row style={{ justifyContent: 'space-between', marginVertical: 5 }} key={'timestamp'} >
         <Utils.Text secondary size='small'>Time</Utils.Text>
-        <Utils.Text size='xsmall'>{moment(1527115797796999936 / 1000000).format('MM/DD/YYYY HH:MM:SS')}</Utils.Text>
-      </Utils.Row>)
+        <Utils.Text size='xsmall'>{moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}</Utils.Text>
+      </Utils.Row >)
     return contractsElements
-  };
+  }
 
   renderBeforeSubmit = () => {
     const { loadingSubmit } = this.state

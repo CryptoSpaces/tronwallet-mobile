@@ -29,14 +29,20 @@ class HomeScene extends Component {
     },
     marketcap: null,
     volume: null,
-    supply: null
+    supply: null,
+    price: 0
   }
 
   componentDidMount () {
-    this._loadData()
-    this._loadGraphData()
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      this._loadData()
+      this._loadGraphData()
+    })
   }
 
+  componentWillUnmount () {
+    this._navListener.remove()
+  }
   get timeSpans () {
     return ['1H', '1D', '1W', '1M', '1Y', 'ALL']
   }
@@ -46,7 +52,8 @@ class HomeScene extends Component {
     this.setState({
       marketcap: data.quotes.USD.market_cap,
       volume: data.quotes.USD.volume_24h,
-      supply: data.circulating_supply
+      supply: data.circulating_supply,
+      price: data.quotes.USD.price
     })
   }
 
@@ -95,6 +102,7 @@ class HomeScene extends Component {
   }
 
   render () {
+    const { price } = this.state
     return (
       <Utils.Container>
         <Utils.ContentWithBackground source={require('../../assets/home-header.png')} resizeMode='stretch'>
@@ -103,11 +111,11 @@ class HomeScene extends Component {
           <Utils.VerticalSpacer size='large' />
           <Utils.Row justify='flex-end'>
             <Utils.View>
-              <Utils.Text secondary>BALANCE</Utils.Text>
+              <Utils.Text secondary>TRX PRICE</Utils.Text>
               <Utils.Row>
-                <Utils.Text secondary>$</Utils.Text>
+                <Utils.Text secondary />
                 <Utils.HorizontalSpacer />
-                <Utils.Text size='medium'>14 820,70</Utils.Text>
+                <Utils.Text size='medium'>{price}</Utils.Text>
               </Utils.Row>
             </Utils.View>
           </Utils.Row>

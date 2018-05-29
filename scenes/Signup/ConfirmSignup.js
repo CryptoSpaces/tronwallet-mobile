@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image } from 'react-native'
+import { ActivityIndicator, Image, Keyboard } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
 import { Colors } from '../../components/DesignSystem'
@@ -10,7 +10,6 @@ class SignupScene extends Component {
     code: '',
     confirmError: null,
     loadingConfirm: false
-
   }
 
   changeInput = (text, field) => {
@@ -18,36 +17,63 @@ class SignupScene extends Component {
       [field]: text
     })
   }
+
   confirmSignup = async () => {
     const { code } = this.state
     const { navigation } = this.props
+    Keyboard.dismiss()
+
     const email = navigation.getParam('email')
     this.setState({ loadingConfirm: true })
     try {
       await Auth.confirmSignUp(email, code)
-      navigation.navigate('Login')
-      this.setState({ loadingConfirm: false })
+      this.setState({
+        loadingConfirm: false
+      }, () => navigation.navigate('Login'))
     } catch (error) {
       this.setState({ confirmError: error.message, loadingConfirm: false })
     }
   }
+
+  renderSubmitButton = () => {
+    const { loadingConfirm } = this.state
+
+    if (loadingConfirm) {
+      return (
+        <Utils.Content height={80} justify='center' align='center'>
+          <ActivityIndicator size='small' color={Colors.yellow} />
+        </Utils.Content>
+      )
+    }
+
+    return (<ButtonGradient onPress={this.confirmSignup} text='CONFIRM SIGN UP' size='small' />)
+  }
+
   render () {
-    const { confirmError, loadingConfirm } = this.state
+    const { confirmError } = this.state
     return (
-      <Utils.Container>
+      <Utils.Container
+        keyboardShouldPersistTaps={'always'}
+        keyboardDismissMode='interactive'
+      >
         <Utils.Content height={80} justify='center' align='center'>
           <Image source={require('../../assets/login-circle.png')} />
         </Utils.Content>
         <Utils.Content>
-          <Utils.Text size='xsmall' secondary>Code</Utils.Text>
-          <Utils.FormInput keyboardType='numeric' onChangeText={(text) => this.changeInput(text, 'code')} />
+
+          <Utils.Text size='xsmall' secondary>CODE</Utils.Text>
+          <Utils.FormInput
+            keyboardType='numeric'
+            onChangeText={(text) => this.changeInput(text, 'code')}
+            onSubmitEditing={this.confirmSignup}
+            returnKeyType={'send'}
+          />
           <Utils.Text size='xsmall'>We sent you a verification code, please submit it</Utils.Text>
           <Utils.InputError>{confirmError}</Utils.InputError>
-          {loadingConfirm
-            ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <ButtonGradient onPress={this.confirmSignup} text='Confirm Sign Up' size='small' />
-          }
+
+          {this.renderSubmitButton()}
         </Utils.Content>
+
         <Utils.Content justify='center' align='center'>
           <Utils.Error>{confirmError}</Utils.Error>
           <Utils.Text onPress={() => this.props.navigation.goBack()} size='small' font='light' secondary>Back to Sign Up</Utils.Text>
