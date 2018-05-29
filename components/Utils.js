@@ -124,6 +124,7 @@ export const FormInput = styled.TextInput`
   border-bottom-width: 0.3px;
   border-bottom-color: ${Colors.secondaryText};
 `
+
 FormInput.defaultProps = {
   marginBottom: Spacing.medium
 }
