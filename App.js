@@ -23,7 +23,9 @@ import NewPassword from './scenes/ForgotPassword/NewPassword'
 import SetPublicKey from './scenes/SetPublicKey'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
-import VoteScreen from './scenes/Vote'
+import VoteScene from './scenes/Vote'
+import ReceiveScene from './scenes/Receive'
+import TransactionsScene from './scenes/Transactions'
 import TransactionScreen from './scenes/Transaction'
 import TransferScene from './scenes/Transfer'
 import SettingScene from './scenes/Settings'
@@ -56,15 +58,38 @@ const SettingsStack = createStackNavigator({
   }
 })
 
+const VoteStack = createStackNavigator({
+  VoteScene
+}, {
+  initialRouteName: 'VoteScene'
+})
+const TransferStack = createStackNavigator({
+  TransferScene
+}, {
+  initialRouteName: 'TransferScene'
+})
+const TokensStack = createStackNavigator({
+  TokensScene
+}, {
+  initialRouteName: 'TokensScene'
+})
+
+const TransactionsStack = createStackNavigator({
+  TransactionsScene
+}, {
+  initialRouteName: 'TransactionsScene'
+})
+
 const AppTabs = createBottomTabNavigator({
-  Balance: BalanceScene,
   Home: HomeScene,
   Vote: {
-    screen: VoteScreen,
+    screen: VoteStack,
     path: 'vote'
   },
-  Tokens: TokensScene,
-  Transfer: TransferScene,
+  Tokens: TokensStack,
+  Balance: BalanceScene,
+  Transactions: TransactionsStack,
+  Transfer: TransferStack,
   Settings: SettingsStack
 }, {
   navigationOptions: ({ navigation }) => ({
@@ -75,9 +100,11 @@ const AppTabs = createBottomTabNavigator({
         iconName = `graph,-bar,-chart,-statistics,-analytics`
       } else if (routeName === 'Balance') {
         iconName = `wallet,-money,-cash,-balance,-purse`
+      } else if (routeName === 'Transfer') {
+        iconName = `user,-person,-avtar,-profile-picture,-dp`
       } else if (routeName === 'Vote') {
         iconName = `shout-out,-speaker,-offer,-announcement,-loud`
-      } else if (routeName === 'Transfer') {
+      } else if (routeName === 'Transactions') {
         iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
       } else if (routeName === 'Tokens') {
         iconName = `money,-currency,-note,-cash,-capital`
@@ -95,7 +122,9 @@ const AppTabs = createBottomTabNavigator({
       backgroundColor: 'black'
     },
     showLabel: false
-  }
+  },
+  initialRouteName: 'Balance'
+
 })
 
 const SignStack = createStackNavigator(
