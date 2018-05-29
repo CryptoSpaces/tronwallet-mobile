@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert } from 'react-native'
+import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
@@ -99,6 +99,36 @@ class SendScene extends Component {
     }
   }
 
+  renderHeader = () => {
+    const { trxBalance } = this.state;
+    const { noNavigation } = this.props;
+
+    if (noNavigation) {
+      return (
+        <View>
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
+            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+          </Utils.View>
+        </View>
+      );
+    } else {
+      return (
+        <Header
+          leftIcon={<Ionicons name='md-menu' color={Colors.primaryText} size={24} />}
+          onLeftPress={() => { }}
+          rightIcon={<Ionicons name='ios-close' color={Colors.primaryText} size={40} />}
+          onRightPress={() => this.props.navigation.goBack()}
+        >
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
+            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+          </Utils.View>
+        </Header>
+      );
+    }
+  }
+
   render () {
     const {
       loadingSign,
@@ -111,11 +141,7 @@ class SendScene extends Component {
     return (
       <Utils.Container>
         <Utils.StatusBar />
-        <Header
-          leftIcon={<Utils.View />}
-          rightIcon={<Ionicons name='ios-close' color={Colors.primaryText} size={40} />}
-          onRightPress={() => this.props.navigation.goBack()}
-        >
+        <Header>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>

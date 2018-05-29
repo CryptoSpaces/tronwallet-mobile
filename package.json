@@ -30,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "aws-amplify": "0.4.1",
+    "aws-amplify": "0.3.3",
     "aws-amplify-react-native": "^0.2.11",
     "axios": "^0.18.0",
     "expo": "^27.0.1",
@@ -50,6 +50,7 @@
     "react-native-qrcode": "^0.2.6",
     "react-native-sectioned-multi-select": "^0.4.7",
     "react-native-svg-charts": "^5.0.0",
+    "react-native-tab-view": "^0.0.78",
     "react-navigation": "^2.0.1",
     "rn-placeholder": "^1.2.0",
     "standard": "^11.0.1",
