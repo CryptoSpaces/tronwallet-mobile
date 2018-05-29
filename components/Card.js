@@ -27,7 +27,7 @@ class Card extends Component {
       );
     }
 
-    return null;
+    return null
   }
 
   render() {

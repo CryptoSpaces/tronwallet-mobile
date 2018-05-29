@@ -53,6 +53,10 @@ export const Row = View.extend`
   flex-direction: row;
 `
 
+export const Column = View.extend`
+  flex-direction: column;
+`
+
 export const HorizontalSpacer = styled.View`
   width: ${props => Spacing[props.size]}px;
 `
@@ -79,7 +83,7 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   font-family: rubik-medium;
-  color: ${Colors.primaryText};
+  color: ${props => props.color};
   font-size: ${props => FontSize[props.size]};
   ${props => props.font && css`font-family: rubik-${props.font}`};
   ${props => props.secondary && css`color: ${Colors.secondaryText}`};
@@ -89,7 +93,8 @@ export const Text = styled.Text`
 `
 
 Text.defaultProps = {
-  size: 'small'
+  size: 'small',
+  color: Colors.primaryText
 }
 
 Text.propTypes = {
@@ -181,3 +186,10 @@ export const Button = props => (
     <Text>{props.children}</Text>
   </ButtonWrapper>
 )
+
+export const Card = styled.View`
+  padding: 10px;
+  background-color: ${Colors.darkerBackground};
+  width: 100%;
+  border-radius: 6px;
+`
