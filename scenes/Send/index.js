@@ -85,8 +85,14 @@ class SendScene extends Component {
 
       const url = `tronvault://tronvault/auth/${dataToSend}`
       const supported = await Linking.canOpenURL(url)
-      if (supported) await Linking.openURL(url)
-      this.setState({ loadingSign: false })
+      if (supported) {
+        await Linking.openURL(url)
+        this.setState({ loadingSign: false })
+      } else {
+        this.setState({ loadingSign: false }, () => {
+          this.props.navigation.navigate('GetVault')
+        })
+      }
     } catch (error) {
       this.setState({ signError: error.message || error, loadingSign: false })
     }
@@ -157,7 +163,6 @@ class SendScene extends Component {
           }
           <Utils.VerticalSpacer size='medium' />
         </Utils.Content>
-
       </Utils.Container>
     )
   }

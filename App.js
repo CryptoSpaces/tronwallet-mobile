@@ -23,6 +23,7 @@ import TransactionScreen from './scenes/Transaction'
 import SettingScene from './scenes/Settings'
 import TokensScene from './scenes/Tokens'
 import ParticipateScene from './scenes/Tokens/Participate'
+import GetVaultScene from './scenes/GetVault/GetVault'
 
 import { createIconSetFromFontello } from '@expo/vector-icons'
 import fontelloConfig from './assets/icons/config.json'
@@ -160,6 +161,7 @@ const RootSwitch = createStackNavigator({
   Auth: SignTabs,
   App: AppTabs,
   Send: SendScreen,
+  GetVault: GetVaultScene,
   Participate: ParticipateScene,
   TransactionDetail: {
     screen: TransactionScreen,
