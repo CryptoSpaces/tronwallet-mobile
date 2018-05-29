@@ -98,14 +98,21 @@ class ClientWallet {
 
   async getFreeze () {
     const owner = await this.getPublicKey()
-    const { data: { frozen } } = await axios.get(`${this.api}/account/${owner}/balance`)
-    return { ...frozen, total: frozen.total / ONE_TRX }
+    const { data: { frozen, bandwidth, balances }, data } = await axios.get(`${this.api}/account/${owner}`)
+    return { ...frozen, total: frozen.total / ONE_TRX, bandwidth, balances }
   }
 
   async getUserVotes () {
     const owner = await this.getPublicKey()
     const { data: { votes } } = await axios.get(`${this.api}/account/${owner}/votes`)
     return votes
+  }
+
+  async freezeToken (amount) {
+    const from = await this.getPublicKey()
+    const { data } = await axios.post(`${this.notifier}/freeze`, { from, amount, duration: '300' })
+
+    console.log(data, '<<<<')
   }
 }
 
