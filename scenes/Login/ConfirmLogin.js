@@ -18,8 +18,7 @@ class ConfirmLogin extends Component {
     confirmError: null,
     loadingConfirm: false,
     loadingData: true,
-    userPublicKey: null,
-    confirmPkError: null
+    userPublicKey: null
   }
 
   componentDidMount () {
@@ -66,7 +65,7 @@ class ConfirmLogin extends Component {
 
   confirmLogin = async () => {
     const { totpCode, user, code } = this.state
-    this.setState({ loadingConfirm: true })
+    this.setState({ loadingConfirm: true, confirmError: null })
     try {
       totpCode ? await Auth.verifyTotpToken(user, code) : await Auth.confirmSignIn(user, code, 'SOFTWARE_TOKEN_MFA')
 

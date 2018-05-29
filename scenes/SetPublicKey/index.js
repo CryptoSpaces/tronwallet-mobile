@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Image,
   TouchableOpacity,
-  Linking,
-  NetInfo
+  Linking
 } from 'react-native'
-// import Toast from 'react-native-easy-toast'
+import { Linking as ExpoLinking } from 'expo'
+import Toast from 'react-native-easy-toast'
+import { Feather } from '@expo/vector-icons'
 
+import Header from '../../components/Header'
 import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import PasteInput from '../../components/PasteInput'
@@ -16,8 +17,6 @@ import { isAddressValid } from '../../src/services/address'
 import Client from '../../src/services/client'
 import qs from 'qs'
 
-import tronLogo from '../../assets/tron-logo-small.png'
-
 export default class SetPkScene extends Component {
   state = {
     userPublicKey: null,
@@ -25,15 +24,25 @@ export default class SetPkScene extends Component {
     error: null
   }
 
-  componentDidMount () {
-    NetInfo.isConnected.addEventListener(
-      'connectionChange',
-      this._connectionEventListenner
-    )
-    NetInfo.isConnected.fetch().then(isConnected => {
-      this.setState({ isConnected })
-    })
+  componentWillReceiveProps (nextProps) {
+    this._checkDeepLink(nextProps)
   }
+
+  _checkDeepLink = async (nextProps) => {
+    const { navigation } = nextProps
+
+    if (navigation.state.params && navigation.state.params.data) {
+      const deepLinkData = qs.parse(navigation.state.params.data)
+
+      if (deepLinkData.action === 'setpk') {
+        const userPublicKey = deepLinkData.pk
+        this.setState({ userPublicKey }, () => {
+          this.refs.toast.show('Public key pasted')
+        })
+      }
+    }
+  }
+
   confirmPublicKey = async () => {
     const { userPublicKey } = this.state
     const { navigation } = this.props
@@ -58,6 +67,7 @@ export default class SetPkScene extends Component {
         URL: ExpoLinking.makeUrl('/getkey')
       })
       const url = `tronvault://tronvault/auth/${dataToSend}`
+
       const supported = await Linking.canOpenURL(url)
       if (supported) {
         await Linking.openURL(url)
@@ -81,14 +91,10 @@ export default class SetPkScene extends Component {
       <TouchableOpacity style={{
         alignItems: 'center',
         justifyContent: 'space-around',
-        padding: 5,
-        borderWidth: 0.8,
-        flexDirection: 'row',
-        borderRadius: 5,
-        borderColor: Colors.secondaryText
+        marginHorizontal: 5,
+        flexDirection: 'row'
       }} onPress={this.getKeyFromVault}>
-        <Utils.Text font='light'>FETCH KEY FROM TRON VAULT</Utils.Text>
-        <Image style={{ width: 40, height: 40 }} source={tronLogo} />
+        <Utils.Text secondary font='light' size='small'>CONNECT TRON VAULT</Utils.Text>
       </TouchableOpacity>
     </React.Fragment>
   }
@@ -100,10 +106,13 @@ export default class SetPkScene extends Component {
   )
   render () {
     const { userPublicKey, loading, error } = this.state
-
     return (
       <Utils.Container>
         <Utils.StatusBar />
+        <Header
+          leftIcon={<Feather name='x' color={Colors.primaryText} size={24} />}
+          onLeftPress={this.goBackLogin}
+        />
         <Utils.Content>
           <Utils.Text>You need to set your public key before continue</Utils.Text>
           <PasteInput
@@ -117,9 +126,13 @@ export default class SetPkScene extends Component {
           <Utils.VerticalSpacer size='medium' />
           {error && <Utils.Error>{error}</Utils.Error>}
         </Utils.Content>
-        <Utils.Content align='center'>
-          <Utils.Text onPress={this.goBackLogin} size='small' font='light' secondary>Back</Utils.Text>
-        </Utils.Content>
+        <Toast
+          ref='toast'
+          position='center'
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+          opacity={0.8}
+        />
       </Utils.Container>
     )
   }

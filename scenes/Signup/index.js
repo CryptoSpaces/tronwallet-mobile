@@ -23,7 +23,7 @@ class SignupScene extends Component {
 
   signUp = async () => {
     const { email, password, username } = this.state
-    this.setState({ loadingSign: true }, () => Keyboard.dismiss())
+    this.setState({ loadingSign: true, signError: null }, () => Keyboard.dismiss())
     try {
       await Auth.signUp({
         username: email,

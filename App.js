@@ -171,7 +171,7 @@ const RootNavigator = createStackNavigator({
   Participate: ParticipateScene,
   SetPublicKey: {
     screen: SetPublicKey,
-    path: 'getkey/:key'
+    path: 'getkey/:data'
   },
   TransactionDetail: {
     screen: TransactionScreen,
