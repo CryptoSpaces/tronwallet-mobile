@@ -24,7 +24,7 @@ class LoginScene extends Component {
     const { email, password } = this.state
     Keyboard.dismiss()
 
-    this.setState({ loadingSign: true, signError: null})
+    this.setState({ loadingSign: true, signError: null })
 
     try {
       const user = await Auth.signIn(email, password)
