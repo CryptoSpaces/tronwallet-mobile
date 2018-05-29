@@ -1,8 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import { StatusBar } from 'react-native'
 import { Linking } from 'expo'
-import { createBottomTabNavigator, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation'
+import {
+  createBottomTabNavigator,
+  createStackNavigator,
+  createMaterialTopTabNavigator
+} from 'react-navigation'
 import Amplify from 'aws-amplify'
+
 import awsExports from './aws-exports'
 import { Colors, ScreenSize } from './components/DesignSystem'
 
@@ -155,7 +160,7 @@ const SignTabs = createMaterialTopTabNavigator({
   }
 })
 
-const RootSwitch = createStackNavigator({
+const RootNavigator = createStackNavigator({
   Loading: LoadingScene,
   Welcome: WelcomeScene,
   Auth: SignTabs,
@@ -180,7 +185,7 @@ class App extends Component {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
-        <RootSwitch uriPrefix={prefix} />
+        <RootNavigator uriPrefix={prefix} />
       </Fragment>
     )
   }

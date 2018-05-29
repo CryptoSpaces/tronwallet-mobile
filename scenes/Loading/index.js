@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
-import { AppLoading, Font } from 'expo'
+import { Font } from 'expo'
+import { ActivityIndicator } from 'react-native'
 import { Auth } from 'aws-amplify'
+import * as Utils from '../../components/Utils'
+import { Colors } from '../../components/DesignSystem'
 
 class LoadingScene extends Component {
+  async componentDidMount () {
+    await this._loadStuff()
+    this._checkSession()
+  }
+
   _loadStuff = async () => {
     await Font.loadAsync({
       'rubik-black': require('../../assets/fonts/Rubik-Black.ttf'),
@@ -27,11 +35,9 @@ class LoadingScene extends Component {
 
   render () {
     return (
-      <AppLoading
-        startAsync={this._loadStuff}
-        onFinish={() => this._checkSession()}
-        onError={console.warn}
-      />
+      <Utils.View flex={1} align='center' justify='center' background={Colors.background}>
+        <ActivityIndicator />
+      </Utils.View>
     )
   }
 }
