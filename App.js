@@ -26,6 +26,7 @@ import BalanceScene from './scenes/Balance'
 import VoteScreen from './scenes/Vote'
 import ReceiveScene from './scenes/Receive'
 import TransactionScreen from './scenes/Transaction'
+import TransferScene from './scenes/Transfer'
 import SettingScene from './scenes/Settings'
 import TokensScene from './scenes/Tokens'
 import ParticipateScene from './scenes/Tokens/Participate'
@@ -64,7 +65,7 @@ const AppTabs = createBottomTabNavigator({
     path: 'vote'
   },
   Tokens: TokensScene,
-  Receive: ReceiveScene,
+  Transfer: TransferScene,
   Settings: SettingsStack
 }, {
   navigationOptions: ({ navigation }) => ({
@@ -77,7 +78,7 @@ const AppTabs = createBottomTabNavigator({
         iconName = `wallet,-money,-cash,-balance,-purse`
       } else if (routeName === 'Vote') {
         iconName = `shout-out,-speaker,-offer,-announcement,-loud`
-      } else if (routeName === 'Receive') {
+      } else if (routeName === 'Transfer') {
         iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
       } else if (routeName === 'Tokens') {
         iconName = `money,-currency,-note,-cash,-capital`
