@@ -20,7 +20,7 @@ class Settings extends Component {
   }
 
   state = {
-    currentUser: null,
+    currentUser: '',
     loading: true,
     changePKVisible: false
   }
@@ -70,7 +70,7 @@ class Settings extends Component {
     }
     return (
       <TouchableWithoutFeedback onPress={logout.onPress}>
-        <Utils.Item padding={16} top>
+        <Utils.Item padding={16} top={0.2}>
           <Utils.Row justify='space-between' align='center'>
             <Utils.Row justify='space-between' align='center'>
               <View style={styles.rank}>
