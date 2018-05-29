@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 import { ImageBackground } from 'react-native'
 import PropTypes from 'prop-types'
 import { Constants } from 'expo'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
@@ -27,14 +26,10 @@ View.propTypes = {
   flex: PropTypes.number
 }
 
-export const Container = styled.ScrollView`
-  flex: 1;
-  background-color: ${Colors.background};
-  ${props => props.darker && css`background-color: ${Colors.darkerBackground};`}
-  ${props => props.transparent && css`background-color: transparent;`}
-`
-
-export const KeyboardAwareContainer = Container.withComponent(KeyboardAwareScrollView)
+export const Container = View.extend.attrs({
+  flex: 1,
+  background: Colors.background
+})``
 
 export const Content = View.extend`
   padding: ${Spacing.big}px;
@@ -108,7 +103,7 @@ export const Item = styled.View`
   border-color: ${Colors.secondaryText};
   ${props => props.borderColor && css`border-color: ${props.borderColor}`};
   border-bottom-width: 0.2px;
-  ${props => props.lineWidth && css`border-bottom-width: ${props.lineWidth}px`};
+  ${props => props.top && css`border-top-width: 0.2px`}
 `
 
 export const Label = styled.View`
