@@ -99,7 +99,6 @@ export const Item = styled.View`
   ${props => props.borderColor && css`border-color: ${props.borderColor}`};
   border-bottom-width: 0.2px;
   ${props => props.top && css`border-top-width: 0.2px`}
-  /* border-top-width: 0.2px; */
 `
 
 export const Label = styled.View`
