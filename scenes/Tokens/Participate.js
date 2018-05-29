@@ -3,12 +3,12 @@ import axios from 'axios'
 import moment from 'moment'
 import qs from 'qs'
 import { Linking } from 'expo'
-import { ActivityIndicator, KeyboardAvoidingView, View, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 import ButtonGradient from './../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
-import { Spacing, Colors } from './../../components/DesignSystem'
+import { Colors } from './../../components/DesignSystem'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client from '../../src/services/client'
 
@@ -69,7 +69,7 @@ class ParticipateScene extends Component {
             <Utils.VerticalSpacer />
             <Utils.Card>
               <Utils.View>
-                <Utils.Text size="medium">{token.name}</Utils.Text>
+                <Utils.Text size='medium'>{token.name}</Utils.Text>
                 <Utils.VerticalSpacer />
                 <Utils.Text size='xsmall' success>block</Utils.Text>
                 <Utils.Text>{token.block}</Utils.Text>
