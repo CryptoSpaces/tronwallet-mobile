@@ -29,7 +29,7 @@ class LoadingScene extends Component {
         this.props.navigation.navigate('App')
       }
     } catch (error) {
-      this.props.navigation.navigate('Auth')
+      this.props.navigation.navigate('Login')
     }
   }
 

@@ -20,6 +20,7 @@ import ConfirmLogin from './scenes/Login/ConfirmLogin'
 import SendScreen from './scenes/Send'
 import ForgotPassword from './scenes/ForgotPassword'
 import NewPassword from './scenes/ForgotPassword/NewPassword'
+import SetPublicKey from './scenes/SetPublicKey'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScreen from './scenes/Vote'
@@ -169,6 +170,10 @@ const RootNavigator = createStackNavigator({
   Send: SendScreen,
   GetVault: GetVaultScene,
   Participate: ParticipateScene,
+  SetPublicKey: {
+    screen: SetPublicKey,
+    path: 'getkey/:data'
+  },
   TransactionDetail: {
     screen: TransactionScreen,
     path: 'transaction/:tx'

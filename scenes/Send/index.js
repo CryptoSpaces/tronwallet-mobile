@@ -78,6 +78,7 @@ class SendScene extends Component {
       const dataToSend = qs.stringify({
         txDetails: { from, to, amount, Type: 'SEND' },
         pk: from,
+        action: 'transaction',
         from: 'mobile',
         URL: ExpoLinking.makeUrl('/transaction'),
         data

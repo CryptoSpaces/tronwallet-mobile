@@ -16,7 +16,7 @@ import formatAmount from '../../utils/formatnumber'
 
 class BalanceScene extends Component {
   state = {
-    loading: false,
+    loading: true,
     error: null,
     assetBalance: [],
     trxBalance: 0,

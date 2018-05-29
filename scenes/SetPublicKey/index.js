@@ -1,73 +1,139 @@
-import React, { PureComponent } from 'react'
-import { StyleSheet } from 'react-native'
-import { Colors, Spacing } from '../../components/DesignSystem'
-import * as Utils from '../../components/Utils'
+import React, { Component } from 'react'
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  Linking
+} from 'react-native'
+import { Linking as ExpoLinking } from 'expo'
+import Toast from 'react-native-easy-toast'
+import { Feather } from '@expo/vector-icons'
+
 import Header from '../../components/Header'
-// import Client from '../../src/services/client'
+import { Colors } from '../../components/DesignSystem'
+import * as Utils from '../../components/Utils'
+import PasteInput from '../../components/PasteInput'
+import ButtonGradient from '../../components/ButtonGradient'
+import { isAddressValid } from '../../src/services/address'
+import Client from '../../src/services/client'
+import qs from 'qs'
 
-class VoteScene extends PureComponent {
-    state = {
-      userPublicKey: ''
-    };
+export default class SetPkScene extends Component {
+  state = {
+    userPublicKey: null,
+    loading: false,
+    error: null
+  }
 
-    onChange = (value, field) => {
+  componentWillReceiveProps (nextProps) {
+    this._checkDeepLink(nextProps)
+  }
+
+  _checkDeepLink = async (nextProps) => {
+    const { navigation } = nextProps
+
+    if (navigation.state.params && navigation.state.params.data) {
+      const deepLinkData = qs.parse(navigation.state.params.data)
+
+      if (deepLinkData.action === 'setpk') {
+        const userPublicKey = deepLinkData.pk
+        this.setState({ userPublicKey }, () => {
+          this.refs.toast.show('Public key pasted')
+        })
+      }
+    }
+  }
+
+  confirmPublicKey = async () => {
+    const { userPublicKey } = this.state
+    const { navigation } = this.props
+    this.setState({ loading: true, error: null })
+    try {
+      if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
+      await Client.setUserPk(userPublicKey)
+      this.setState({ loading: false }, () => navigation.navigate('App'))
+    } catch (error) {
       this.setState({
-        [field]: value
+        error: error.message || error,
+        loading: false
       })
     }
-
-    render () {
-      return (
-        <Utils.Container>
-          <Utils.StatusBar transparent />
-          <Header>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
-              <Utils.Text size='small'>945,622,966</Utils.Text>
-            </Utils.View>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
-              <Utils.Text size='small'>14,106</Utils.Text>
-            </Utils.View>
-          </Header>
-          <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              onChangeText={(text) => this.onChange(text, 'userPublicKey')}
-              placeholder='Search'
-              placeholderTextColor='#fff'
-              style={{ width: '70%' }}
-            />
-
-          </Utils.Row>
-        </Utils.Container>
-      )
-    }
-}
-
-const styles = StyleSheet.create({
-  searchWrapper: {
-    paddingLeft: 24,
-    paddingRight: 24
-  },
-  rank: {
-    paddingRight: 10
-  },
-  submitButton: {
-    padding: Spacing.small,
-    alignItems: 'center',
-    borderRadius: 5,
-    width: '100%'
-  },
-  button: {
-    backgroundColor: Colors.secondaryText,
-    borderColor: Colors.secondaryText,
-    borderRadius: 5,
-    height: 20,
-    width: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
   }
-})
 
-export default VoteScene
+  getKeyFromVault = async () => {
+    this.setState({ loading: true, error: null })
+    try {
+      const dataToSend = qs.stringify({
+        action: 'getkey',
+        URL: ExpoLinking.makeUrl('/getkey')
+      })
+      const url = `tronvault://tronvault/auth/${dataToSend}`
+
+      const supported = await Linking.canOpenURL(url)
+      if (supported) {
+        await Linking.openURL(url)
+        this.setState({ loading: false })
+      } else {
+        this.setState({ loading: false }, () => {
+          this.props.navigation.navigate('GetVault')
+        })
+      }
+    } catch (error) {
+      this.setState({ error: error.message, loading: false })
+    }
+  }
+
+  goBackLogin = () => this.props.navigation.goBack();
+
+  renderButtonOptions = () => {
+    return <React.Fragment>
+      <ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} />
+      <Utils.VerticalSpacer size='large' />
+      <TouchableOpacity style={{
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        marginHorizontal: 5,
+        flexDirection: 'row'
+      }} onPress={this.getKeyFromVault}>
+        <Utils.Text secondary font='light' size='small'>CONNECT TRON VAULT</Utils.Text>
+      </TouchableOpacity>
+    </React.Fragment>
+  }
+
+  renderLoadingView = () => (
+    <Utils.Content height={80} justify='center' align='center'>
+      <ActivityIndicator size='small' color={Colors.yellow} />
+    </Utils.Content>
+  )
+  render () {
+    const { userPublicKey, loading, error } = this.state
+    return (
+      <Utils.Container>
+        <Utils.StatusBar />
+        <Header
+          leftIcon={<Feather name='x' color={Colors.primaryText} size={24} />}
+          onLeftPress={this.goBackLogin}
+        />
+        <Utils.Content>
+          <Utils.Text>You need to set your public key before continue</Utils.Text>
+          <PasteInput
+            value={userPublicKey}
+            field='userPublicKey'
+            onChangeText={(userPublicKey) => this.setState({ userPublicKey })}
+          />
+          {loading && this.renderLoadingView()}
+          <Utils.VerticalSpacer size='medium' />
+          {!loading && this.renderButtonOptions()}
+          <Utils.VerticalSpacer size='medium' />
+          {error && <Utils.Error>{error}</Utils.Error>}
+        </Utils.Content>
+        <Toast
+          ref='toast'
+          position='center'
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+          opacity={0.8}
+        />
+      </Utils.Container>
+    )
+  }
+}
