@@ -6,7 +6,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  SafeAreaView
 } from 'react-native'
 import { LinearGradient, Linking } from 'expo'
 import qs from 'qs'
@@ -25,6 +26,20 @@ import LoadingScene from '../../components/LoadingScene'
 import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
+  static navigationOptions = ({ navigation }) => {
+	  return {
+	    header: (
+        <SafeAreaView style={{ backgroundColor: 'black' }}>
+    <Utils.Header>
+            <Utils.TitleWrapper>
+        <Utils.Title>Vote</Utils.Title>
+      </Utils.TitleWrapper>
+          </Utils.Header>
+  </SafeAreaView>
+	    )
+	  }
+  }
+
   state = {
     voteList: [],
     currentItem: null,
@@ -217,8 +232,8 @@ class VoteScene extends PureComponent {
 
 const styles = StyleSheet.create({
   searchWrapper: {
-    paddingLeft: 24,
-    paddingRight: 24
+    paddingLeft: 0,
+    paddingRight: 16
   },
   submitButton: {
     padding: Spacing.small,

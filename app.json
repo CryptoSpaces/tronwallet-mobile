@@ -1,12 +1,21 @@
 {
   "expo": {
+    "name": "TronWallet",
+    "version": "1.6.10",
     "sdkVersion": "27.0.0",
+    "slug": "tronwallet",
     "splash": {
       "image": "./assets/splashscreen.png",
       "backgroundColor": "#191A2A",
       "resizeMode": "cover",
       "barStyle": "light-content"
     },
-    "scheme": "tronmobile"
+    "scheme": "tronmobile",
+    "ios": {
+      "bundleIdentifier": "me.tronwallet"
+    },
+    "android": {
+      "package": "me.tronwallet"
+    }
   }
 }

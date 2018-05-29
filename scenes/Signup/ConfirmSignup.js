@@ -61,14 +61,14 @@ class SignupScene extends Component {
         </Utils.Content>
         <Utils.Content>
 
-          <Utils.Text size='xsmall' secondary>CODE</Utils.Text>
+          <Utils.Text size='xsmall' secondary>EMAIL VERIFICATION CODE</Utils.Text>
           <Utils.FormInput
             keyboardType='numeric'
             onChangeText={(text) => this.changeInput(text, 'code')}
             onSubmitEditing={this.confirmSignup}
             returnKeyType={'send'}
           />
-          <Utils.Text size='xsmall'>We sent you a verification code, please submit it</Utils.Text>
+          <Utils.Text size='xsmall'>We sent you an email with the verification code from no-reply@verificationemail.com, please check your spam if you didn't find it.</Utils.Text>
           <Utils.InputError>{confirmError}</Utils.InputError>
 
           {this.renderSubmitButton()}
