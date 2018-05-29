@@ -144,7 +144,7 @@ class VoteScene extends PureComponent {
       />
     ),
     android: (
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView behavior='padding'>
         <KeyboardAwareFlatList
           keyExtractor={item => item.address}
           data={this.state.voteList}

@@ -54,8 +54,8 @@ class SignupScene extends Component {
           />
           {
             loadingForgot
-            ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <ButtonGradient text='Change Password' onPress={this.forgotPassword} />
+              ? <ActivityIndicator size='small' color={Colors.yellow} />
+              : <ButtonGradient text='Change Password' onPress={this.forgotPassword} />
           }
         </Utils.Content>
         <Utils.Content justify='center' align='center'>
