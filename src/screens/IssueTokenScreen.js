@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TextInput } from 'react-native'
 import Button from 'react-native-micro-animated-button'
+import * as Utils from '../../components/Utils'
 
 class IssueTokenScreen extends PureComponent {
   state = {};
 
   render () {
     return (
-      <ScrollView style={styles.container}>
+      <Utils.Container>
         <View style={styles.form}>
           <Text style={styles.title}>Details</Text>
           <View style={styles.formItem}>
@@ -111,16 +112,12 @@ class IssueTokenScreen extends PureComponent {
             onPress={() => {}}
           />
         </View>
-      </ScrollView>
+      </Utils.Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column'
-  },
   form: {
     display: 'flex',
     padding: 10
