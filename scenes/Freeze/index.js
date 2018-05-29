@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Alert } from 'react-native'
 
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
@@ -27,7 +26,6 @@ class ReceiveScene extends Component {
         trxBalance: balance
       })
     } catch (error) {
-      Alert.alert('Error while loading data')
       // TODO - Error handler
       this.setState({
         loadingData: false

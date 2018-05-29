@@ -10,9 +10,6 @@ const initialLayout = {
   width: Dimensions.get('window').width
 }
 
-// const FirstRoute = () => <View style={[ styles.container, { backgroundColor: '#ff4081' } ]} />
-// const SecondRoute = () => <View style={[ styles.container, { backgroundColor: '#673ab7' } ]} />
-
 export default class TransferScene extends React.Component {
   state = {
     index: 0,
