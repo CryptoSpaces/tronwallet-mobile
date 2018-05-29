@@ -7,6 +7,7 @@ import * as Utils from './../../components/Utils'
 import { Colors, Spacing } from './../../components/DesignSystem'
 import Client from '../../src/services/client'
 import LoadingScene from '../../components/LoadingScene'
+import ChangePKModal from './ChangePKModal'
 
 import { createIconSetFromFontello } from '@expo/vector-icons'
 import fontelloConfig from '../../assets/icons/config.json'
@@ -20,7 +21,8 @@ class Settings extends Component {
 
   state = {
     currentUser: null,
-    loading: true
+    loading: true,
+    changePKVisible: false
   }
 
   componentDidMount () {
@@ -101,7 +103,7 @@ class Settings extends Component {
         title: 'Update',
         description: 'Change private key',
         icon: 'key,-password,-lock,-privacy,-login',
-        onPress: () => {}
+        onPress: () => this.setState({ changePKVisible: true })
       }
     ]
 
@@ -138,7 +140,7 @@ class Settings extends Component {
   }
 
   render () {
-    const { loading } = this.state
+    const { loading, changePKVisible } = this.state
     if (loading) return <LoadingScene />
 
     return (
@@ -149,6 +151,11 @@ class Settings extends Component {
         {this.renderList()}
         <Utils.VerticalSpacer size='big' />
         {this.renderLogout()}
+        <ChangePKModal
+          visible={changePKVisible}
+          onClose={() => this.setState({ changePKVisible: false })}
+          onLoadData={this.onLoadData}
+        />
       </Utils.Container>
     )
   }
