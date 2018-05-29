@@ -217,8 +217,8 @@ class VoteScene extends PureComponent {
 
 const styles = StyleSheet.create({
   searchWrapper: {
-    paddingLeft: 24,
-    paddingRight: 24
+    paddingLeft: 0,
+    paddingRight: 16
   },
   submitButton: {
     padding: Spacing.small,
