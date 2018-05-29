@@ -5,12 +5,12 @@ import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
 import { Linking as ExpoLinking } from 'expo'
 
-import * as Utils from '../../components/Utils'
-import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
+import * as Utils from '../../components/Utils'
+import { Colors } from '../../components/DesignSystem'
 
 class SendScene extends Component {
   state = {
@@ -99,6 +99,36 @@ class SendScene extends Component {
     }
   }
 
+  renderHeader = () => {
+    const { trxBalance } = this.state
+    const { noNavigation } = this.props
+
+    if (noNavigation) {
+      return (
+        <Utils.View>
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
+            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+          </Utils.View>
+        </Utils.View>
+      )
+    } else {
+      return (
+        <Header
+          leftIcon={<Ionicons name='md-menu' color={Colors.primaryText} size={24} />}
+          onLeftPress={() => { }}
+          rightIcon={<Ionicons name='ios-close' color={Colors.primaryText} size={40} />}
+          onRightPress={() => this.props.navigation.goBack()}
+        >
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
+            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+          </Utils.View>
+        </Header>
+      )
+    }
+  }
+
   render () {
     const {
       loadingSign,
@@ -111,11 +141,7 @@ class SendScene extends Component {
     return (
       <Utils.Container>
         <Utils.StatusBar />
-        <Header
-          leftIcon={<Utils.View />}
-          rightIcon={<Ionicons name='ios-close' color={Colors.primaryText} size={40} />}
-          onRightPress={() => this.props.navigation.goBack()}
-        >
+        <Header>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
