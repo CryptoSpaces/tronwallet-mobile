@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-<<<<<<< HEAD
-import { ActivityIndicator, Linking, View } from 'react-native'
-=======
 import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView } from 'react-native'
->>>>>>> 5ea3c45cafdcaec5ff62be5e71fa36410e2bb993
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
@@ -89,8 +85,14 @@ class SendScene extends Component {
 
       const url = `tronvault://tronvault/auth/${dataToSend}`
       const supported = await Linking.canOpenURL(url)
-      if (supported) await Linking.openURL(url)
-      this.setState({ loadingSign: false })
+      if (supported) {
+        await Linking.openURL(url)
+        this.setState({ loadingSign: false })
+      } else {
+        this.setState({ loadingSign: false }, () => {
+          this.props.navigation.navigate('GetVault')
+        })
+      }
     } catch (error) {
       this.setState({ signError: error.message || error, loadingSign: false })
     }
@@ -136,67 +138,58 @@ class SendScene extends Component {
     } = this.state
 
     return (
-      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
-        <Utils.Container>
-          <Utils.StatusBar />
-          { this.renderHeader() }
-          <Utils.Content>
-            <Utils.Text size='xsmall' secondary>To</Utils.Text>
-            <PasteInput value={to} field='from' onChangeText={(text) => this.changeInput(text, 'to')} />
-            <Utils.Text size='xsmall' secondary>Token</Utils.Text>
-            <Select
-              onSelect={this.onSelectToken}
-              defaultText={this.state.token}
-              style={{ borderBottomWidth: 0.5, width: '50%', borderWidth: 0, marginVertical: 10, borderColor: Colors.secondaryText }}
-              textStyle={{ color: Colors.primaryText }}
-              transparent
-              animationType='fade'
-              optionListStyle={{ borderRadius: 10, backgroundColor: Colors.secondaryText }}
+      <Utils.Container>
+        <Utils.StatusBar />
+        <Header>
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
+            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+          </Utils.View>
+        </Header>
+
+        <Utils.Content>
+          <Utils.Text size='xsmall' secondary>To</Utils.Text>
+          <PasteInput value={to} field='from' onChangeText={(text) => this.changeInput(text, 'to')} />
+          <Utils.Text size='xsmall' secondary>Token</Utils.Text>
+          <Select
+            onSelect={this.onSelectToken}
+            defaultText={this.state.token}
+            style={{ borderBottomWidth: 0.5, width: '50%', borderWidth: 0, marginVertical: 10, borderColor: Colors.secondaryText }}
+            textStyle={{ color: Colors.primaryText }}
+            transparent
+            animationType='fade'
+            optionListStyle={{ borderRadius: 10, backgroundColor: Colors.secondaryText }}
+          >
+            {this.renderTokens()}
+          </Select>
+
+          <Utils.Text size='xsmall' secondary>Amount</Utils.Text>
+          <Utils.Row align='center' justify='flex-start'>
+            <Utils.FormInput
+              underlineColorAndroid='transparent'
+              keyboardType='numeric'
+              value={String(this.state.amount)}
+              onChangeText={(text) => this.changeInput(text, 'amount')}
+              placeholderTextColor='#fff'
+              placeholder='0'
+              style={{ marginRight: 15, width: '50%' }}
             />
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
-                <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-              </Utils.View>
-          </Utils.Content>
-          <Utils.Content>
-            <Utils.Text size='xsmall' secondary>To</Utils.Text>
-            <PasteInput value={to} field='from' onChangeText={(text) => this.changeInput(text, 'to')} />
-            <Utils.Text size='xsmall' secondary>Token</Utils.Text>
-            <Select
-              onSelect={this.onSelectToken}
-              defaultText={this.state.token}
-              style={{ borderBottomWidth: 0.5, width: '50%', borderWidth: 0, marginVertical: 10, borderColor: Colors.secondaryText }}
-              textStyle={{ color: Colors.primaryText }}
-              transparent
-              animationType='fade'
-              optionListStyle={{ borderRadius: 10, backgroundColor: Colors.secondaryText }}
-            >
-              {this.renderTokens()}
-            </Select>
-            <Utils.Text size='xsmall' secondary>Amount</Utils.Text>
-            <Utils.Row align='center' justify='flex-start'>
-              <Utils.FormInput
-                underlineColorAndroid='transparent'
-                keyboardType='numeric'
-                value={String(this.state.amount)}
-                onChangeText={(text) => this.changeInput(text, 'amount')}
-                placeholderTextColor='#fff'
-                placeholder='0'
-                style={{ marginRight: 15, width: '50%' }}
-              />
-              <Utils.PlusButton onPress={this.changeAmount}>
-                <Utils.Text size='xsmall'>+</Utils.Text>
-              </Utils.PlusButton>
-            </Utils.Row>
-          </Utils.Content>
-          <Utils.Content justify='center' align='center'>
-            {signError && <Utils.Error>{signError}</Utils.Error>}
-            {loadingSign || loadingData ? <ActivityIndicator size='small' color={Colors.yellow} />
-              : <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />}
-            <Utils.VerticalSpacer size='medium' />
-          </Utils.Content>
-        </Utils.Container>
-      </KeyboardAvoidingView>
+            <Utils.PlusButton onPress={this.changeAmount}>
+              <Utils.Text size='xsmall'>+</Utils.Text>
+            </Utils.PlusButton>
+          </Utils.Row>
+
+        </Utils.Content>
+        <Utils.Content justify='center' align='center'>
+          {signError && <Utils.Error>{signError}</Utils.Error>}
+          {
+            loadingSign || loadingData
+              ? <ActivityIndicator size='small' color={Colors.yellow} />
+              : <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />
+          }
+          <Utils.VerticalSpacer size='medium' />
+        </Utils.Content>
+      </Utils.Container>
     )
   }
 }

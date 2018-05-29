@@ -13,7 +13,31 @@ import { Select, Option } from 'react-native-chooser'
 
 class ReceiveScene extends Component {
   state = {
+    from: '',
+    balances: [],
     trxBalance: 25000
+  }
+
+  componentDidMount () {
+    this.loadData()
+  }
+
+  loadData = async () => {
+    try {
+      const result = await Promise.all([Client.getPublicKey(), Client.getBalances()])
+      const { balance } = result[1].find(b => b.name === 'TRX')
+      this.setState({
+        from: result[0],
+        balances: result[1],
+        trxBalance: balance
+      })
+    } catch (error) {
+      Alert.alert('Error while loading data')
+      // TODO - Error handler
+      this.setState({
+        loadingData: false
+      })
+    }
   }
 
   render () {
