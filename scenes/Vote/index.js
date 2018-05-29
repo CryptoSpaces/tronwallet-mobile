@@ -4,8 +4,7 @@ import _ from 'lodash'
 import {
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView
+  ActivityIndicator
 } from 'react-native'
 import { LinearGradient, Linking } from 'expo'
 import qs from 'qs'
@@ -17,6 +16,7 @@ import * as Utils from '../../components/Utils'
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../src/components/Vote/VoteItem'
+import LoadingScene from '../../components/LoadingScene'
 
 // Service
 import Client from '../../src/services/client'
@@ -147,64 +147,56 @@ class VoteScene extends PureComponent {
       loadingList,
       totalRemaining
     } = this.state
-    if (loading) {
-      return (
-        <Utils.Container>
-          <Utils.Content height={200} justify='center' align='center'>
-            <ActivityIndicator size='large' color={Colors.yellow} />
-          </Utils.Content>
-        </Utils.Container>
-      )
-    }
+
+    if (loading) return <LoadingScene />
+
     return (
-      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
-        <Utils.KeyboardAwareContainer enableOnAndroid>
-          <Utils.Container>
-            <Utils.StatusBar transparent />
-            <Header>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
-                <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
-              </Utils.View>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
-                <Utils.Text
-                  size='small'
-                  style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
-                >
-                  {this.format(totalRemaining)}
-                </Utils.Text>
-              </Utils.View>
-            </Header>
-            <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
-              <Utils.FormInput
-                underlineColorAndroid='transparent'
-                onChangeText={(text) => this.onSearch(text, 'search')}
-                placeholder='Search'
-                placeholderTextColor='#fff'
-                style={{ width: '70%' }}
-              />
-              <TouchableOpacity onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}>
-                <LinearGradient
-                  start={[0, 1]}
-                  end={[1, 0]}
-                  colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-                  style={styles.submitButton}
-                >
-                  <Utils.Text size='xsmall'>Submit</Utils.Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </Utils.Row>
-            {
-              loadingList
-                ? <Utils.Content height={200} justify='center' align='center'>
-                  <ActivityIndicator size='large' color={Colors.yellow} />
-                </Utils.Content>
-                : this.renderList()
-            }
-          </Utils.Container>
-        </Utils.KeyboardAwareContainer>
-      </KeyboardAvoidingView>
+      <Utils.KeyboardAwareContainer enableOnAndroid>
+        <Utils.Container>
+          <Utils.StatusBar transparent />
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
+              <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
+            </Utils.View>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
+              <Utils.Text
+                size='small'
+                style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
+              >
+                {this.format(totalRemaining)}
+              </Utils.Text>
+            </Utils.View>
+          </Header>
+          <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
+            <Utils.FormInput
+              underlineColorAndroid='transparent'
+              onChangeText={(text) => this.onSearch(text, 'search')}
+              placeholder='Search'
+              placeholderTextColor='#fff'
+              style={{ width: '70%' }}
+            />
+            <TouchableOpacity onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}>
+              <LinearGradient
+                start={[0, 1]}
+                end={[1, 0]}
+                colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
+                style={styles.submitButton}
+              >
+                <Utils.Text size='xsmall'>Submit</Utils.Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </Utils.Row>
+          {
+            loadingList
+              ? <Utils.Content height={200} justify='center' align='center'>
+                <ActivityIndicator size='large' color={Colors.primaryText} />
+              </Utils.Content>
+              : this.renderList()
+          }
+        </Utils.Container>
+      </Utils.KeyboardAwareContainer>
     )
   }
 }
