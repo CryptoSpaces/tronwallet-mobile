@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { View, ActivityIndicator, Linking, Alert } from 'react-native'
+import { ActivityIndicator, Linking, Alert } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
 import { Linking as ExpoLinking } from 'expo'
 
-import * as Utils from '../../components/Utils'
-import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
+import * as Utils from '../../components/Utils'
+import { Colors } from '../../components/DesignSystem'
 
 class SendScene extends Component {
   state = {
@@ -105,12 +105,12 @@ class SendScene extends Component {
 
     if (noNavigation) {
       return (
-        <View>
+        <Utils.View>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>Send Transaction</Utils.Text>
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
           </Utils.View>
-        </View>
+        </Utils.View>
       )
     } else {
       return (

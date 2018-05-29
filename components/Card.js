@@ -1,7 +1,7 @@
-import { View, TouchableOpacity } from 'react-native'
 import React, { Component } from 'react'
-import * as Utils from './Utils'
+import { View, TouchableOpacity } from 'react-native'
 import { Colors } from './DesignSystem'
+import * as Utils from './Utils'
 
 const CardRow = ({ label, value }) => (
   <View style={{ flexDirection: 'row', paddingHorizontal: '5%', paddingVertical: '2%' }}>

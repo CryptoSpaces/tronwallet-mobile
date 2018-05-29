@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import * as Utils from '../../components/Utils'
+
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import Card from './../../components/Card'
+import * as Utils from '../../components/Utils'
 
 class ReceiveScene extends Component {
   state = {
