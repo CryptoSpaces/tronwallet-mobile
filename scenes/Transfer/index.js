@@ -1,18 +1,14 @@
-import * as React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import FreezeScreen from '../Freeze';
-import SendScreen from '../Send';
-import ReceiveScreen from '../Receive';
-
+import * as React from 'react'
+import { Dimensions } from 'react-native'
+import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
+import FreezeScreen from '../Freeze'
+import SendScreen from '../Send'
+import ReceiveScreen from '../Receive'
 
 const initialLayout = {
   height: 0,
-  width: Dimensions.get('window').width,
-};
-
-const FirstRoute = () => <View style={[ styles.container, { backgroundColor: '#ff4081' } ]} />;
-const SecondRoute = () => <View style={[ styles.container, { backgroundColor: '#673ab7' } ]} />;
+  width: Dimensions.get('window').width
+}
 
 export default class TransferScene extends React.Component {
   state = {
@@ -21,7 +17,7 @@ export default class TransferScene extends React.Component {
       { key: 'send', title: 'Send' },
       { key: 'receive', title: 'Receive' },
       { key: 'freeze', title: 'Freeze' }
-    ],
+    ]
   };
 
   _handleIndexChange = index => this.setState({ index });
@@ -34,7 +30,7 @@ export default class TransferScene extends React.Component {
     freeze: FreezeScreen
   });
 
-  render() {
+  render () {
     return (
       <TabViewAnimated
         navigationState={this.state}
@@ -44,12 +40,6 @@ export default class TransferScene extends React.Component {
         initialLayout={initialLayout}
         style={{ backgroundColor: 'black' }}
       />
-    );
+    )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

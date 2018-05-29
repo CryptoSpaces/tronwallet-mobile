@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView } from 'react-native'
+import { View, ActivityIndicator, Linking, Alert } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
@@ -100,8 +100,8 @@ class SendScene extends Component {
   }
 
   renderHeader = () => {
-    const { trxBalance } = this.state;
-    const { noNavigation } = this.props;
+    const { trxBalance } = this.state
+    const { noNavigation } = this.props
 
     if (noNavigation) {
       return (
@@ -111,7 +111,7 @@ class SendScene extends Component {
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
           </Utils.View>
         </View>
-      );
+      )
     } else {
       return (
         <Header
@@ -125,7 +125,7 @@ class SendScene extends Component {
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
           </Utils.View>
         </Header>
-      );
+      )
     }
   }
 
