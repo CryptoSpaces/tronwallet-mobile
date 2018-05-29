@@ -9,7 +9,8 @@ class LoadingScene extends Component {
       'rubik-bold': require('../../assets/fonts/Rubik-Bold.ttf'),
       'rubik-medium': require('../../assets/fonts/Rubik-Medium.ttf'),
       'rubik-regular': require('../../assets/fonts/Rubik-Regular.ttf'),
-      'rubik-light': require('../../assets/fonts/Rubik-Light.ttf')
+      'rubik-light': require('../../assets/fonts/Rubik-Light.ttf'),
+      'tronwallet': require('../../assets/icons/tronwallet.ttf')
     })
   }
 
