@@ -21,7 +21,7 @@ export default class SetPkScene extends Component {
     error: null
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     this._checkDeepLink(nextProps)
   }
 
@@ -63,14 +63,12 @@ export default class SetPkScene extends Component {
         action: 'getkey',
         URL: ExpoLinking.makeUrl('/getkey')
       })
-      
-      const supported = await Linking.canOpenURL(url)
-      this.openDeepLink(dataToSend);
+
+      this.openDeepLink(dataToSend)
     } catch (error) {
       this.setState({ error: error.message, loading: false })
     }
   }
-
 
   openDeepLink = async (dataToSend) => {
     try {
@@ -106,7 +104,7 @@ export default class SetPkScene extends Component {
       <ActivityIndicator size='small' color={Colors.yellow} />
     </Utils.Content>
   )
-  render() {
+  render () {
     const { userPublicKey, loading, error } = this.state
     return (
       <Utils.Container>
