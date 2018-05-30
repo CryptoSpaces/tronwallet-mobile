@@ -13,7 +13,7 @@
     "scheme": "tronmobile",
     "ios": {
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["tronvault", "tronvault2"]
+        "LSApplicationQueriesSchemes": ["tronvault"]
       },
       "bundleIdentifier": "me.tronwallet"
     },

@@ -117,7 +117,7 @@ const AppTabs = createBottomTabNavigator(
         } else if (routeName === 'Balance') {
           iconName = `wallet,-money,-cash,-balance,-purse`
         } else if (routeName === 'Transfer') {
-          //iconName = `user,-person,-avtar,-profile-picture,-dp`
+          // iconName = `user,-person,-avtar,-profile-picture,-dp`
           iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
         } else if (routeName === 'Vote') {
           iconName = `shout-out,-speaker,-offer,-announcement,-loud`

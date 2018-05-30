@@ -24,8 +24,6 @@ class FreezeScene extends Component {
   sendDeepLink = async (data) => {
     const { from, amount } = this.state
     const { navigation } = this.props
-    
-    console.log(navigation, '<<< nav')
 
     try {
       // Data to deep link, same format as Tron Wallet
@@ -39,24 +37,23 @@ class FreezeScene extends Component {
       })
 
       const url = `tronvault://auth/${dataToSend}`
-      
+
       // TODO: handle android and ios
       await Linking.openURL(url)
-      console.log(url);
       // const supported = await Linking.canOpenURL(url)
-      console.log(supported, '<<< Supported')
-      if (supported) {
-        console.log('supported?', supported)
-        await Linking.openURL(url)
-        this.setState({ loadingSign: false })
-        
-      } else {
-        this.setState({ loadingSign: false }, () => {
-          this.props.navigation.navigate('GetVault')
-        })
-      }
+      // console.log(supported, '<<< Supported')
+      // if (supported) {
+      //   console.log('supported?', supported)
+      //   await Linking.openURL(url)
+      //   this.setState({ loadingSign: false })
+
+      // } else {
+      //   this.setState({ loadingSign: false }, () => {
+      //     this.props.navigation.navigate('GetVault')
+      //   })
+      // }
     } catch (error) {
-      console.log(error, '<<< error');
+      alert(error.message)
       this.setState({ signError: error.message || error, loadingSign: false })
     }
   }
@@ -74,7 +71,7 @@ class FreezeScene extends Component {
         total: result[1].total
       })
     } catch (error) {
-      //console.log('ERROR', error)
+      // console.log('ERROR', error)
       // TODO - Error handler
       this.setState({
         loadingData: false
@@ -83,14 +80,14 @@ class FreezeScene extends Component {
   }
 
   freezeToken = async () => {
-    const { amount } = this.state;
-    
-    const transaction = await Client.freezeToken(amount);
-    this.sendDeepLink(transaction);
-    // alert('FREEZE');
+    const { amount } = this.state
+
+    const transaction = await Client.freezeToken(amount)
+    this.sendDeepLink(transaction)
   }
 
   unfreezeToken = () => {
+    const { amount } = this.state
     // alert('UNFREEZE');
   }
 
@@ -116,12 +113,12 @@ class FreezeScene extends Component {
           </Header>
           <Utils.Content style={{ backgroundColor: 'transparent' }}>
             <Card isEditable buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
-              <CardRow label="New Frozen TRX" value={amount + total} />
-              <CardRow label="New Bandwith" value={bandwidth} />
+              <CardRow label='New Frozen TRX' value={amount + total} />
             </Card>
-            <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}>
-              <CardRow label="Frozen TRX" value={total} />
-              <CardRow label="Current Bandwith" value={bandwidth} />
+            {/* <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}> */}
+            <Card>
+              <CardRow label='Frozen TRX' value={total} />
+              <CardRow label='Current Bandwidth' value={bandwidth} />
             </Card>
           </Utils.Content>
         </Utils.Container>
