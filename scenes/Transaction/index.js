@@ -177,6 +177,7 @@ class TransactionScene extends Component {
             <ButtonGradient
               text='Submit Transaction'
               onPress={this.submitTransaction}
+              size='small'
             />
           )}
         </Utils.Content>

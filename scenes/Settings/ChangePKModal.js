@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Modal, View } from 'react-native'
 import * as Utils from './../../components/Utils'
 import Header from '../../components/Header'
-import { Colors } from '../../components/DesignSystem'
+import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../src/services/address'
 import Client from '../../src/services/client'
@@ -78,14 +78,14 @@ class ChangePKModal extends PureComponent {
                 this.newPk = ref
               }}
               underlineColorAndroid='transparent'
-              marginBottom={40}
               autoCapitalize='none'
               autoCorrect={false}
               onChangeText={v => this.setState({ newPk: v })}
               onSubmitEditing={this.setUser}
               returnKeyType='send'
+              padding={Spacing.medium}
             />
-            <ButtonGradient text='OK' onPress={this.setUser} size='small' />
+            <ButtonGradient text='OK' onPress={this.setUser} size='medium' />
           </Utils.FormGroup>
           <Utils.Content justify='center' align='center'>
             <Utils.Error>{errorMessage}</Utils.Error>
