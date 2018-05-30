@@ -204,13 +204,13 @@ class HomeScene extends Component {
           ))}
         </Utils.Row>
         {this.state.graph.loading ? (
-          <Utils.Content height={200} justify='center'>
+          <Utils.Content height={120} justify='center'>
             <ActivityIndicator size='large' color={Colors.primaryText} />
           </Utils.Content>
         ) : (
-          <View animation='fadeIn'>
+          <View animation='fadeIn' style={{ flex: 1 }}>
             <AreaChart
-              style={{ height: 200 }}
+              style={{ flex: 1 }}
               data={this.state.graph.data}
               contentInset={{ top: 30, bottom: 30 }}
               curve={shape.curveLinear}
