@@ -11,6 +11,7 @@ import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
+import { DeeplinkURL } from '../../utils/deeplinkUtils'
 
 class SendScene extends Component {
   state = {
@@ -96,16 +97,9 @@ class SendScene extends Component {
         data
       })
 
-      const url = `tronvault://tronvault/auth/${dataToSend}`
-      const supported = await Linking.canOpenURL(url)
-      if (supported) {
-        await Linking.openURL(url)
-        this.setState({ loadingSign: false })
-      } else {
-        this.setState({ loadingSign: false }, () => {
-          this.props.navigation.navigate('GetVault')
-        })
-      }
+      const url = `${DeeplinkURL}auth/${dataToSend}`
+      await Linking.openURL(url)
+      this.setState({ loadingSign: false })
     } catch (error) {
       this.setState({ signError: error.message || error, loadingSign: false })
     }

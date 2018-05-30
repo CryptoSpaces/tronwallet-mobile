@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Feather } from '@expo/vector-icons'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
-import { FlatList, View } from 'react-native'
+import { FlatList } from 'react-native'
 import axios from 'axios'
 
 import Gradient from '../../components/Gradient'
@@ -70,7 +69,7 @@ class BalanceScene extends Component {
   }
 
   render () {
-    const { navigation } = this.props;
+    const { navigation } = this.props
     const { assetBalance, trxBalance, loading, trxPrice, error } = this.state
 
     if (loading) return <LoadingScene />

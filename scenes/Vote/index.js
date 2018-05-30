@@ -15,7 +15,7 @@ import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 // Utils
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
-
+import {DeeplinkURL} from '../../utils/deeplinkUtils'
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../src/components/Vote/VoteItem'
@@ -100,7 +100,7 @@ class VoteScene extends PureComponent {
         URL: Linking.makeUrl('transaction'),
         data
       })
-      const url = `tronvault://tronvault/auth/${dataToSend}`
+      const url = `${DeeplinkURL}auth/${dataToSend}`
       const supported = await Linking.canOpenURL(url)
       if (supported) await Linking.openURL(url)
       this.setState({ loading: false })
