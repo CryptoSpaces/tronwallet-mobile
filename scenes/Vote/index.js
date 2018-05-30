@@ -96,6 +96,7 @@ class VoteScene extends PureComponent {
         txDetails: { from, Type: 'VOTE' },
         pk: from,
         from: 'mobile',
+        action: 'transaction',
         URL: Linking.makeUrl('transaction'),
         data
       })
