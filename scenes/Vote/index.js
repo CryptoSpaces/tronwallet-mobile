@@ -183,7 +183,7 @@ class VoteScene extends PureComponent {
     return (
       <Utils.Container>
         <Utils.StatusBar transparent />
-        <Header>
+        <Utils.Row justify='flex-start'>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>
               TOTAL VOTES
@@ -201,7 +201,7 @@ class VoteScene extends PureComponent {
               {this.format(totalRemaining)}
             </Utils.Text>
           </Utils.View>
-        </Header>
+        </Utils.Row>
         <Utils.Row
           style={styles.searchWrapper}
           justify='space-between'
