@@ -1,11 +1,25 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, SafeAreaView } from 'react-native'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from './../../components/ButtonGradient'
 import { Spacing, Colors } from './../../components/DesignSystem'
 
 class TokensScene extends Component {
+  static navigationOptions = ({ navigation }) => {
+	  return {
+	    header: (
+        <SafeAreaView style={{ backgroundColor: 'black' }}>
+    <Utils.Header>
+            <Utils.TitleWrapper>
+        <Utils.Title>Tokens</Utils.Title>
+      </Utils.TitleWrapper>
+          </Utils.Header>
+  </SafeAreaView>
+	    )
+	  }
+  }
+
   state = {
     loading: true,
     data: [],
