@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { View, ActivityIndicator, Linking, Alert } from 'react-native'
+import qs from 'qs'
+import { Linking as ExpoLinking } from 'expo'
 import * as Utils from '../../components/Utils'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
@@ -18,10 +21,49 @@ class FreezeScene extends Component {
     this.loadData()
   }
 
+  sendDeepLink = async (data) => {
+    const { from, amount } = this.state
+    const { navigation } = this.props
+    
+    console.log(navigation, '<<< nav')
+
+    try {
+      // Data to deep link, same format as Tron Wallet
+      const dataToSend = qs.stringify({
+        txDetails: { from, amount, Type: 'FREEZE' },
+        pk: from,
+        action: 'transaction',
+        from: 'mobile',
+        URL: ExpoLinking.makeUrl('/transaction'),
+        data
+      })
+
+      const url = `tronvault2://tronvault2/auth/${dataToSend}`
+      
+      await Linking.openURL(url)
+      console.log(url);
+      // const supported = await Linking.canOpenURL(url)
+      console.log(supported, '<<< Supported')
+      if (supported) {
+        console.log('supported?', supported)
+        await Linking.openURL(url)
+        this.setState({ loadingSign: false })
+        
+      } else {
+        this.setState({ loadingSign: false }, () => {
+          this.props.navigation.navigate('GetVault')
+        })
+      }
+    } catch (error) {
+      console.log(error, '<<< error');
+      this.setState({ signError: error.message || error, loadingSign: false })
+    }
+  }
+
   loadData = async () => {
     try {
       const result = await Promise.all([Client.getPublicKey(), Client.getFreeze()])
-
+      
       const { balance } = result[1].balances.find(b => b.name === 'TRX')
 
       this.setState({
@@ -40,15 +82,16 @@ class FreezeScene extends Component {
     }
   }
 
-  freezeToken = () => {
-    const { amount } = this.state
-
-    Client.freezeToken(amount)
-    alert('FREEZE')
+  freezeToken = async () => {
+    const { amount } = this.state;
+    
+    const transaction = await Client.freezeToken(amount);
+    this.sendDeepLink(transaction);
+    // alert('FREEZE');
   }
 
   unfreezeToken = () => {
-    alert('UNFREEZE')
+    // alert('UNFREEZE');
   }
 
   render () {
@@ -70,12 +113,12 @@ class FreezeScene extends Component {
         </Header>
         <Utils.Content style={{ backgroundColor: 'transparent' }}>
           <Card isEditable buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
-            <CardRow label='New Frozen TRX' value={amount + total} />
-            <CardRow label='New Bandwith' value={bandwidth} />
+            <CardRow label="New Frozen TRX" value={amount + total} />
+            <CardRow label="New Bandwith" value={bandwidth} />
           </Card>
           <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}>
-            <CardRow label='Frozen TRX' value={total} />
-            <CardRow label='Current Bandwith' value={bandwidth} />
+            <CardRow label="Frozen TRX" value={total} />
+            <CardRow label="Current Bandwith" value={bandwidth} />
           </Card>
         </Utils.Content>
       </Utils.Container >

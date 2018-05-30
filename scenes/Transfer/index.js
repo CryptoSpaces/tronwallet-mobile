@@ -25,9 +25,9 @@ export default class TransferScene extends React.Component {
   _renderHeader = props => <TabBar {...props} style={{ backgroundColor: 'black', marginTop: '5%', flex: 0.1 }} />;
 
   _renderScene = SceneMap({
-    send: SendScreen,
+    send: () => <SendScreen {...this.props} />,
     receive: () => <ReceiveScreen {...this.props} />,
-    freeze: FreezeScreen
+    freeze: () => <FreezeScreen {...this.props} />
   });
 
   render () {
