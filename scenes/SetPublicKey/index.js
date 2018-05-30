@@ -3,6 +3,7 @@ import { ActivityIndicator, TouchableOpacity, Linking } from 'react-native'
 import { Linking as ExpoLinking } from 'expo'
 import Toast from 'react-native-easy-toast'
 import { Feather } from '@expo/vector-icons'
+import { Auth } from 'aws-amplify'
 
 import Header from '../../components/Header'
 import { Colors } from '../../components/DesignSystem'
@@ -82,7 +83,10 @@ export default class SetPkScene extends Component {
     }
   }
 
-  goBackLogin = () => this.props.navigation.goBack()
+  goBackLogin = async () => {
+    await Auth.signOut()
+    this.props.navigation.navigate('Login')
+  }
 
   renderButtonOptions = () => {
     return <React.Fragment>

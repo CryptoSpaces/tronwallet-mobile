@@ -13,7 +13,6 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class LoginScene extends Component {
-
   state = {
     email: '',
     password: '',
@@ -89,72 +88,72 @@ class LoginScene extends Component {
     const { signError } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior='padding'
         keyboardVerticalOffset={150}
         style={{ flex: 1 }}
       >
         <ScrollView>
-        <Utils.Container
-          keyboardShouldPersistTaps={'always'}
-          keyboardDismissMode='interactive'
-        >
-          <Utils.Content height={80} justify='center' align='center'>
-            <Image source={require('../../assets/login-circle.png')} />
-          </Utils.Content>
-          <Utils.VerticalSpacer size='large' />
-          <Utils.FormGroup>
-            <Utils.Text size='xsmall' secondary>
+          <Utils.Container
+            keyboardShouldPersistTaps={'always'}
+            keyboardDismissMode='interactive'
+          >
+            <Utils.Content height={80} justify='center' align='center'>
+              <Image source={require('../../assets/login-circle.png')} />
+            </Utils.Content>
+            <Utils.VerticalSpacer size='large' />
+            <Utils.FormGroup>
+              <Utils.Text size='xsmall' secondary>
               E-MAIL
-            </Utils.Text>
-            <Utils.FormInput
-              innerRef={ref => {
-                this.email = ref
-              }}
-              underlineColorAndroid='transparent'
-              keyboardType='email-address'
-              marginBottom={20}
-              autoCapitalize='none'
-              autoCorrect={false}
-              onChangeText={text => this.changeInput(text, 'email')}
-              onSubmitEditing={() => this._submit('email')}
-              returnKeyType={'next'}
-              padding={Spacing.small}
-            />
-            <Utils.Text size='xsmall' secondary>
-              PASSWORD
-            </Utils.Text>
-            <Utils.FormInput
-              innerRef={ref => {
-                this.password = ref
-              }}
-              underlineColorAndroid='transparent'
-              secureTextEntry
-              letterSpacing={10}
-              onChangeText={text => this.changeInput(text, 'password')}
-              onSubmitEditing={() => this._submit('password')}
-              returnKeyType='send'
-              padding={Spacing.small}
-            />
-            {this.renderSubmitButton()}
-          </Utils.FormGroup>
-          <Utils.Content justify='center' align='center'>
-            {ChangedPassword && (
-              <Utils.Text size='small' success>
-                Password Changed
               </Utils.Text>
-            )}
-            <Utils.Error>{signError}</Utils.Error>
-            <Utils.Text
-              onPress={() => this.props.navigation.navigate('ForgotPassword')}
-              size='small'
-              font='light'
-              secondary
-            >
+              <Utils.FormInput
+                innerRef={ref => {
+                  this.email = ref
+                }}
+                underlineColorAndroid='transparent'
+                keyboardType='email-address'
+                marginBottom={20}
+                autoCapitalize='none'
+                autoCorrect={false}
+                onChangeText={text => this.changeInput(text, 'email')}
+                onSubmitEditing={() => this._submit('email')}
+                returnKeyType={'next'}
+                padding={Spacing.small}
+              />
+              <Utils.Text size='xsmall' secondary>
+              PASSWORD
+              </Utils.Text>
+              <Utils.FormInput
+                innerRef={ref => {
+                  this.password = ref
+                }}
+                underlineColorAndroid='transparent'
+                secureTextEntry
+                letterSpacing={10}
+                onChangeText={text => this.changeInput(text, 'password')}
+                onSubmitEditing={() => this._submit('password')}
+                returnKeyType='send'
+                padding={Spacing.small}
+              />
+              {this.renderSubmitButton()}
+            </Utils.FormGroup>
+            <Utils.Content justify='center' align='center'>
+              {ChangedPassword && (
+                <Utils.Text size='small' success>
+                Password Changed
+                </Utils.Text>
+              )}
+              <Utils.Error>{signError}</Utils.Error>
+              <Utils.Text
+                onPress={() => this.props.navigation.navigate('ForgotPassword')}
+                size='small'
+                font='light'
+                secondary
+              >
               FORGOT PASSWORD ?
-            </Utils.Text>
-          </Utils.Content>
-        </Utils.Container>
+              </Utils.Text>
+            </Utils.Content>
+          </Utils.Container>
         </ScrollView>
       </KeyboardAvoidingView>
     )

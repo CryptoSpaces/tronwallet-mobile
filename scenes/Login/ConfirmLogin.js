@@ -157,8 +157,8 @@ class ConfirmLogin extends Component {
               : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} size='medium' />)
             }
           </Utils.Content>
+          <Utils.Error>{confirmError}</Utils.Error>
           <Utils.Content justify='center' align='center'>
-            <Utils.Error>{confirmError}</Utils.Error>
             <Utils.Text
               size='small'
               font='light'
