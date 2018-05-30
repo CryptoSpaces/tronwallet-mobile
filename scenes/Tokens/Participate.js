@@ -84,7 +84,6 @@ class ParticipateScene extends Component {
 
   render () {
     const token = this.props.navigation.getParam('token')
-    console.log('TOKEN CHEGANDO>>', token)
     return (
       <KeyboardAwareScrollView>
         <Utils.StatusBar />
