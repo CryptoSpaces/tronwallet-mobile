@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
-import { Colors } from '../../components/DesignSystem'
+import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class SignupScene extends Component {
@@ -54,6 +54,7 @@ class SignupScene extends Component {
             autoCapitalize='none'
             keyboardType='email-address'
             onChangeText={text => this.changeInput(text, 'email')}
+            padding={Spacing.medium}
           />
           {
             loadingForgot

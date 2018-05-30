@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Linking, Alert, ScrollView } from 'react-native'
+import { Linking, ScrollView } from 'react-native'
 import qs from 'qs'
 import { Linking as ExpoLinking } from 'expo'
 import * as Utils from '../../components/Utils'

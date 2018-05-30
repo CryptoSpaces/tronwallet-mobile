@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
-import { Colors } from '../../components/DesignSystem'
+import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class SignupScene extends Component {
@@ -107,6 +107,7 @@ class SignupScene extends Component {
               onChangeText={text => this.changeInput(text, 'username')}
               onSubmitEditing={() => this._nextInput('username')}
               returnKeyType={'next'}
+              padding={Spacing.medium}
             />
 
             <Utils.Text size='xsmall' secondary>
@@ -124,6 +125,7 @@ class SignupScene extends Component {
               onChangeText={text => this.changeInput(text, 'email')}
               onSubmitEditing={() => this._nextInput('email')}
               returnKeyType={'next'}
+              padding={Spacing.medium}
             />
 
             <Utils.Text size='xsmall' secondary>
@@ -139,6 +141,7 @@ class SignupScene extends Component {
               onChangeText={text => this.changeInput(text, 'password')}
               onSubmitEditing={() => this._nextInput('password')}
               returnKeyType={'send'}
+              padding={Spacing.medium}
             />
 
             {this.renderSubmitButton()}

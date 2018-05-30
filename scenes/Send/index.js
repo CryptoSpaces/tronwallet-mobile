@@ -216,10 +216,11 @@ class SendScene extends Component {
               onSelect={this.onSelectToken}
               defaultText={this.state.token}
               style={{
-                borderBottomWidth: 0.5,
                 width: '100%',
-                borderWidth: 0,
+                borderWidth: 0.5,
                 marginVertical: 10,
+                borderRadius: 5,
+                padding: 12,
                 borderColor: Colors.secondaryText
               }}
               textStyle={{ color: Colors.primaryText }}

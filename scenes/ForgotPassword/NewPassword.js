@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
-import { Colors } from '../../components/DesignSystem'
+import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class ConfirmNewPassword extends Component {
@@ -54,6 +54,7 @@ class ConfirmNewPassword extends Component {
             autoCapitalize='none'
             keyboardType='email-address'
             onChangeText={text => this.changeInput(text, 'code')}
+            padding={Spacing.medium}
           />
           <Utils.Text size='xsmall' secondary>
             New Password
@@ -65,6 +66,7 @@ class ConfirmNewPassword extends Component {
             autoCapitalize='none'
             keyboardType='numeric'
             onChangeText={text => this.changeInput(text, 'newPassword')}
+            padding={Spacing.medium}
           />
           {loadingForgot ? (
             <ActivityIndicator size='small' color={Colors.yellow} />
