@@ -212,6 +212,7 @@ class VoteScene extends PureComponent {
             onChangeText={text => this.onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
+            marginTop={Spacing.medium}
             style={{ width: '70%', marginLeft: 15 }}
           />
           <ButtonGradient

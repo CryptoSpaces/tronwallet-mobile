@@ -172,6 +172,9 @@ class ParticipateScene extends Component {
                 <Utils.VerticalSpacer size='medium' />
               </Utils.View>
               <Utils.Content>
+                <Utils.Text size='xsmall' secondary>
+                  AMOUNT
+                </Utils.Text>
                 <Utils.FormInput
                   keyboardType='numeric'
                   placeholder='0'

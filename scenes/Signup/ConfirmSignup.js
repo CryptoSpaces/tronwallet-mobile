@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, Keyboard } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
-import { Colors } from '../../components/DesignSystem'
+import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class SignupScene extends Component {
@@ -77,6 +77,7 @@ class SignupScene extends Component {
             onChangeText={text => this.changeInput(text, 'code')}
             onSubmitEditing={this.confirmSignup}
             returnKeyType={'send'}
+            padding={Spacing.medium}
           />
           <Utils.Text size='xsmall'>
             We sent you an email with the verification code from

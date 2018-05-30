@@ -12,8 +12,14 @@ const PasteInput = ({ onChangeText, field, value }) => {
     onChangeText(content, field)
   }
   return (
-    <Utils.Row style={{ alignItems: 'center' }}>
-      <Utils.FormInput value={value} style={{ flex: 1, width: '100%' }} underlineColorAndroid='transparent' onChangeText={onChangeText} />
+    <Utils.Row align='center'>
+      <Utils.FormInput
+        value={value}
+        style={{ flex: 1, width: '100%' }}
+        underlineColorAndroid='transparent'
+        onChangeText={onChangeText}
+        marginTop={15}
+      />
       <Utils.PasteButton onPress={paste}>
         <Ionicons name='md-clipboard' size={FontSize['small']} color={Colors.primaryText} />
       </Utils.PasteButton>
