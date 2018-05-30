@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop: '5%'
+    marginTop: '5%',
+    height: 55
   },
   inputWrapper: {
     backgroundColor: Colors.darkerBackground,

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ScrollView } from 'react-native'
 
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
@@ -39,19 +40,21 @@ class FreezeScene extends Component {
     } = this.state
 
     return (
-      <Utils.Container>
-        <Utils.StatusBar />
-        <Header>
-          <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>Freeze</Utils.Text>
-            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-          </Utils.View>
-        </Header>
-        <Utils.Content style={{ backgroundColor: 'transparent' }}>
-          <Card isEditable buttonLabel='Freeze' />
-          <Card buttonLabel='Unfreeze (0)' />
-        </Utils.Content>
-      </Utils.Container >
+      <ScrollView>
+        <Utils.Container>
+          <Utils.StatusBar />
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>Freeze</Utils.Text>
+              <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+            </Utils.View>
+          </Header>
+          <Utils.Content style={{ backgroundColor: 'transparent' }}>
+            <Card isEditable buttonLabel='Freeze' />
+            <Card buttonLabel='Unfreeze (0)' />
+          </Utils.Content>
+        </Utils.Container>
+      </ScrollView>
     )
   }
 }
