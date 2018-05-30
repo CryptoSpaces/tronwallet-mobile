@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Feather } from '@expo/vector-icons'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
 import { FlatList } from 'react-native'
@@ -32,7 +31,6 @@ class BalanceScene extends Component {
   componentWillUnmount () {
     this._navListener.remove()
   }
-  b
 
   loadData = async () => {
     this.setState({ loading: true })
