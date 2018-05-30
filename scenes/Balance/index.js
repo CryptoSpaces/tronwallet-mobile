@@ -76,8 +76,7 @@ class BalanceScene extends Component {
     return (
       <Utils.Container>
         <Utils.StatusBar />
-        <Header
-        >
+        <Header top={24} bottom={24}>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>
               TRX BALANCE
