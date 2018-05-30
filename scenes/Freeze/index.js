@@ -37,7 +37,7 @@ class FreezeScene extends Component {
       })
 
       const url = `tronvault://auth/${dataToSend}`
-      
+
       // TODO: handle android and ios
       await Linking.openURL(url)
       // const supported = await Linking.canOpenURL(url)
@@ -71,7 +71,7 @@ class FreezeScene extends Component {
         total: result[1].total
       })
     } catch (error) {
-      //console.log('ERROR', error)
+      // console.log('ERROR', error)
       // TODO - Error handler
       this.setState({
         loadingData: false
