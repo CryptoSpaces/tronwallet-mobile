@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Keyboard } from 'react-native'
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, ScrollView } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
 import { Colors, Spacing } from '../../components/DesignSystem'
@@ -53,7 +53,7 @@ class SignupScene extends Component {
       <ButtonGradient
         onPress={this.confirmSignup}
         text='CONFIRM SIGN UP'
-        size='small'
+        size='medium'
       />
     )
   }

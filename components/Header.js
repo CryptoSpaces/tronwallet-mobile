@@ -10,7 +10,9 @@ const Header = ({
   onRightPress = null,
   leftIcon = <Text style={{ color: Colors.primaryText }}>BACK</Text>,
   rightIcon = <Text style={{ color: Colors.primaryText }}>RIGHT</Text>,
-  children
+  children,
+  top = 20,
+  bottom = 10
 }) => {
   const placeholder = <View />
 
@@ -27,21 +29,13 @@ const Header = ({
   ) : placeholder
 
   return (
-    <Utils.Content>
+    <View style={{ paddingTop: top, paddingBottom: bottom }}>
       <Utils.Row align='center' justify='space-between'>
         {leftBtn}
         {children}
-        <Utils.View align='center'>
-          <Utils.Text size='xsmall' secondary>{title}</Utils.Text>
-          <Utils.Text size='medium'>{description}</Utils.Text>
-        </Utils.View>
-        <Utils.View align='center'>
-          <Utils.Text size='xsmall' secondary>{title}</Utils.Text>
-          <Utils.Text size='medium'>{description}</Utils.Text>
-        </Utils.View>
         {rightBtn}
       </Utils.Row>
-    </Utils.Content>
+    </View>
   )
 }
 
