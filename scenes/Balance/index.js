@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
-import { FlatList, Image } from 'react-native'
+import { FlatList, Image, TouchableOpacity } from 'react-native'
 import axios from 'axios'
 
 import Gradient from '../../components/Gradient'
@@ -116,8 +116,8 @@ class BalanceScene extends Component {
               <Gradient />
             </LineChart>
           </Utils.Content>
-          <Utils.Text size='small' secondary>
-            TRX PRICE: $ {trxPrice}
+          <Utils.Text size='xsmall' secondary>
+            $ {trxPrice}
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
           {assetBalance.length ? (
@@ -133,16 +133,23 @@ class BalanceScene extends Component {
           ) : (
             <Utils.View align='center'>
               <Utils.VerticalSpacer size='big' />
-              <Utils.VerticalSpacer size='big' />
-              <Image
+              {/* <Image
                 source={require('../../assets/empty.png')}
                 resizeMode='contain'
-                style={{ height: 90 }}
-              />
-              <Utils.VerticalSpacer size='large' />
-              <Utils.Text size='xsmall' secondary onPress={() => navigation.navigate('Tokens')}>
-                CLICK HERE TO PARTICIPATE ON TRON TOKENS
-              </Utils.Text>
+                style={{ height: 220 }}
+              /> */}
+              <Utils.VerticalSpacer size='medium' />
+              <TouchableOpacity 
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                  marginHorizontal: 5,
+                  flexDirection: 'row'
+                }}
+                onPress={() => navigation.navigate('Tokens')}
+              >
+                <Utils.Text secondary font='light' size='small'>Click here to participate in other tokens.</Utils.Text>
+              </TouchableOpacity>              
             </Utils.View>
           )}
           <Utils.Error>{error}</Utils.Error>
