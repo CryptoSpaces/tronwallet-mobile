@@ -18,7 +18,13 @@ class FreezeScene extends Component {
   }
 
   componentDidMount () {
-    this.loadData()
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      this.loadData()
+    })
+  }
+
+  componentWillUnmount () {
+    this._navListener.remove()
   }
 
   sendDeepLink = async (data) => {

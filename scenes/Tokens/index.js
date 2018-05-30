@@ -63,9 +63,9 @@ class TokensScene extends Component {
     if (item.percentage < 100) {
       return (
         <ButtonGradient
-          size='small'
+          size='xsmall'
           onPress={() => this.navigate(item)}
-          text='PARTICIPATE'
+          text='Participate'
         />
       )
     }
@@ -82,10 +82,10 @@ class TokensScene extends Component {
 
   renderCard = (item) => (
     <Utils.Card>
-      <Utils.Text size='medium'>{item.name}</Utils.Text>
+      <Utils.Text size='medium' secondary>{item.name}</Utils.Text>
       <Utils.VerticalSpacer size='medium' />
 
-      <Utils.Text ellipsizeMode='tail' numberOfLines={2} size='xsmall' >{item.url}</Utils.Text>
+      <Utils.Text ellipsizeMode='tail' numberOfLines={2} size='small' >{item.url}</Utils.Text>
       <Utils.VerticalSpacer size='medium' />
 
       <Utils.Row style={{ justifyContent: 'space-between', marginBottom: 5 }}>

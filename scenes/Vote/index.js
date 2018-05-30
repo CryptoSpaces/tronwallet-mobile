@@ -55,7 +55,13 @@ class VoteScene extends PureComponent {
   }
 
   componentDidMount () {
-    this.onLoadData()
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      this.onLoadData()
+    })
+  }
+
+  componentWillUnmount () {
+    this._navListener.remove()
   }
 
   onLoadData = async () => {
