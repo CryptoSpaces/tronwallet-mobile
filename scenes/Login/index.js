@@ -11,6 +11,7 @@ import { Auth } from 'aws-amplify'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
+import { version } from './../../package.json'
 
 class LoginScene extends Component {
 
@@ -100,10 +101,14 @@ class LoginScene extends Component {
           keyboardShouldPersistTaps={'always'}
           keyboardDismissMode='interactive'
         >
-          <Utils.Content height={80} justify='center' align='center'>
+          <Utils.Content justify='center' align='center'>
+            <Utils.VerticalSpacer size='small' />
             <Image source={require('../../assets/login-circle.png')} />
+            <Utils.VerticalSpacer size='small' />
+            <Utils.Text size='medium'>
+              TRONWALLET
+            </Utils.Text>
           </Utils.Content>
-          <Utils.VerticalSpacer size='large' />
           <Utils.FormGroup>
             <Utils.Text size='xsmall' secondary>
               E-MAIL
@@ -153,6 +158,10 @@ class LoginScene extends Component {
               secondary
             >
               FORGOT PASSWORD ?
+            </Utils.Text>
+            <Utils.VerticalSpacer size='large' />
+            <Utils.Text size='xsmall' secondary>
+              {`v${version}`}
             </Utils.Text>
           </Utils.Content>
         </Utils.Container>

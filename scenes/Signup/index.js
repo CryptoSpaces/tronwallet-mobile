@@ -97,8 +97,14 @@ class SignupScene extends Component {
           keyboardShouldPersistTaps={'always'}
           keyboardDismissMode='interactive'
         >
-          <Utils.Content height={80} justify='center' align='center'>
+
+          <Utils.Content justify='center' align='center'>
+            <Utils.VerticalSpacer size='medium' />
             <Image source={require('../../assets/login-circle.png')} />
+            <Utils.VerticalSpacer size='small' />
+            <Utils.Text size='medium'>
+              TRONWALLET
+            </Utils.Text>
           </Utils.Content>
 
           <Utils.FormGroup>
