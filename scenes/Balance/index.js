@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
-import { FlatList } from 'react-native'
+import { FlatList, Image } from 'react-native'
 import axios from 'axios'
 
 import Gradient from '../../components/Gradient'
@@ -76,14 +76,19 @@ class BalanceScene extends Component {
     return (
       <Utils.Container>
         <Utils.StatusBar />
-        <Header top={24} bottom={24}>
+          <Utils.VerticalSpacer size='large' />
+          <Utils.Row justify='center'>
           <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>
-              TRX BALANCE
-            </Utils.Text>
-            <Utils.Text size='medium'>{formatAmount(trxBalance)}</Utils.Text>
-          </Utils.View>
-        </Header>
+            <Image
+              source={require('../../assets/tron-logo-small.png')}
+              resizeMode='contain'
+              style={{ height: 60 }}
+            />
+            <Utils.VerticalSpacer size='medium' />
+            <Utils.Text secondary>BALANCE</Utils.Text>
+            <Utils.Text size='medium'>{formatAmount(trxBalance)} TRX</Utils.Text>
+          </Utils.View>             
+          </Utils.Row>     
         <Utils.Content>
           <Utils.Content>
             <LineChart
@@ -111,8 +116,8 @@ class BalanceScene extends Component {
               <Gradient />
             </LineChart>
           </Utils.Content>
-          <Utils.Text size='xsmall' secondary>
-            TRX PRICE: {trxPrice}
+          <Utils.Text size='small' secondary>
+            TRX PRICE: $ {trxPrice}
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
           {assetBalance.length ? (
@@ -127,12 +132,17 @@ class BalanceScene extends Component {
             />
           ) : (
             <Utils.View align='center'>
-              <Utils.VerticalSpacer size='medium' />
-              <Utils.Text size='small'>
-                You can participate to other TRON tokens.
+              <Utils.VerticalSpacer size='big' />
+              <Utils.VerticalSpacer size='big' />
+              <Image
+                source={require('../../assets/empty.png')}
+                resizeMode='contain'
+                style={{ height: 90 }}
+              />
+              <Utils.VerticalSpacer size='large' />
+              <Utils.Text size='xsmall' secondary onPress={() => navigation.navigate('Tokens')}>
+                CLICK HERE TO PARTICIPATE ON TRON TOKENS
               </Utils.Text>
-              <Utils.VerticalSpacer size='medium' />
-              <ButtonGradient text='Participate' onPress={() => navigation.navigate('Tokens')} size='small' />
             </Utils.View>
           )}
           <Utils.Error>{error}</Utils.Error>
