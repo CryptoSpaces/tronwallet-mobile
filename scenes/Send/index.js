@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert } from 'react-native'
+import { ActivityIndicator, Linking, Alert, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
@@ -132,7 +132,7 @@ class SendScene extends Component {
           leftIcon={
             <Ionicons name='md-menu' color={Colors.primaryText} size={24} />
           }
-          onLeftPress={() => {}}
+          onLeftPress={() => { }}
           rightIcon={
             <Ionicons name='ios-close' color={Colors.primaryText} size={40} />
           }
@@ -153,78 +153,77 @@ class SendScene extends Component {
     const { loadingSign, loadingData, signError, to, trxBalance } = this.state
 
     return (
-      <Utils.Container>
-        <Utils.StatusBar />
-        <Header>
+      <ScrollView>
+        <Utils.Container>
+          <Utils.StatusBar />
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>
               Send Transaction
             </Utils.Text>
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
           </Utils.View>
-        </Header>
-
-        <Utils.Content>
-          <Utils.Text size='xsmall' secondary>
-            To
-          </Utils.Text>
-          <PasteInput
-            value={to}
-            field='from'
-            onChangeText={text => this.changeInput(text, 'to')}
-          />
-          <Utils.Text size='xsmall' secondary>
-            Token
-          </Utils.Text>
-          <Select
-            onSelect={this.onSelectToken}
-            defaultText={this.state.token}
-            style={{
-              borderBottomWidth: 0.5,
-              width: '50%',
-              borderWidth: 0,
-              marginVertical: 10,
-              borderColor: Colors.secondaryText
-            }}
-            textStyle={{ color: Colors.primaryText }}
-            transparent
-            animationType='fade'
-            optionListStyle={{
-              borderRadius: 10,
-              backgroundColor: Colors.secondaryText
-            }}
-          >
-            {this.renderTokens()}
-          </Select>
-
-          <Utils.Text size='xsmall' secondary>
-            Amount
-          </Utils.Text>
-          <Utils.Row align='center' justify='flex-start'>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              keyboardType='numeric'
-              value={String(this.state.amount)}
-              onChangeText={text => this.changeInput(text, 'amount')}
-              placeholderTextColor='#fff'
-              placeholder='0'
-              style={{ marginRight: 15, width: '50%' }}
+          <Utils.Content>
+            <Utils.Text size='xsmall' secondary>
+              To
+            </Utils.Text>
+            <PasteInput
+              value={to}
+              field='from'
+              onChangeText={text => this.changeInput(text, 'to')}
             />
-            <Utils.PlusButton onPress={this.changeAmount}>
-              <Utils.Text size='xsmall'>+</Utils.Text>
-            </Utils.PlusButton>
-          </Utils.Row>
-        </Utils.Content>
-        <Utils.Content justify='center' align='center'>
-          {signError && <Utils.Error>{signError}</Utils.Error>}
-          {loadingSign || loadingData ? (
-            <ActivityIndicator size='small' color={Colors.yellow} />
-          ) : (
-            <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />
-          )}
-          <Utils.VerticalSpacer size='medium' />
-        </Utils.Content>
-      </Utils.Container>
+            <Utils.Text size='xsmall' secondary>
+              Token
+            </Utils.Text>
+            <Select
+              onSelect={this.onSelectToken}
+              defaultText={this.state.token}
+              style={{
+                borderBottomWidth: 0.5,
+                width: '50%',
+                borderWidth: 0,
+                marginVertical: 10,
+                borderColor: Colors.secondaryText
+              }}
+              textStyle={{ color: Colors.primaryText }}
+              transparent
+              animationType='fade'
+              optionListStyle={{
+                borderRadius: 10,
+                backgroundColor: Colors.secondaryText
+              }}
+            >
+              {this.renderTokens()}
+            </Select>
+
+            <Utils.Text size='xsmall' secondary>
+              Amount
+            </Utils.Text>
+            <Utils.Row align='center' justify='flex-start'>
+              <Utils.FormInput
+                underlineColorAndroid='transparent'
+                keyboardType='numeric'
+                value={String(this.state.amount)}
+                onChangeText={text => this.changeInput(text, 'amount')}
+                placeholderTextColor='#fff'
+                placeholder='0'
+                style={{ marginRight: 15, width: '50%' }}
+              />
+              <Utils.PlusButton onPress={this.changeAmount}>
+                <Utils.Text size='xsmall'>+</Utils.Text>
+              </Utils.PlusButton>
+            </Utils.Row>
+          </Utils.Content>
+          <Utils.Content justify='center' align='center'>
+            {signError && <Utils.Error>{signError}</Utils.Error>}
+            {loadingSign || loadingData ? (
+              <ActivityIndicator size='small' color={Colors.yellow} />
+            ) : (
+              <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />
+            )}
+            <Utils.VerticalSpacer size='medium' />
+          </Utils.Content>
+        </Utils.Container>
+      </ScrollView>
     )
   }
 }
