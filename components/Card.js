@@ -4,7 +4,7 @@ import { Colors } from './DesignSystem'
 import * as Utils from './Utils'
 import ButtonGradient from '../components/ButtonGradient'
 
-const CardRow = ({ label, value }) => (
+export const CardRow = ({ label, value }) => (
   <View style={styles.cardRow}>
     <Utils.Text size='xsmall'>{label}:</Utils.Text>
     <Utils.Text size='xsmall' style={{ paddingLeft: '2%' }}>{value}</Utils.Text>

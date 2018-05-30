@@ -1,20 +1,11 @@
 import React, { Component } from 'react'
-<<<<<<< HEAD
-import { View, ActivityIndicator, Linking, Alert } from 'react-native'
+import { View, ActivityIndicator, Linking, Alert, ScrollView } from 'react-native'
 import qs from 'qs'
 import { Linking as ExpoLinking } from 'expo'
 import * as Utils from '../../components/Utils'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import Card, { CardRow } from './../../components/Card'
-=======
-import { ScrollView } from 'react-native'
-
-import Client from '../../src/services/client'
-import Header from '../../components/Header'
-import Card from './../../components/Card'
-import * as Utils from '../../components/Utils'
->>>>>>> 5a39ddeeee19a90a9177184748ad0a92ef1541bd
 
 class FreezeScene extends Component {
   state = {
