@@ -53,9 +53,16 @@ class Card extends Component {
         {this.renderInput()}
         {children}
 
-        <View style={styles.buttonWrapper}>
-          <ButtonGradient text={buttonLabel} onPress={() => {}} size='small' />
-        </View>
+        {
+          buttonLabel
+            ? (
+              <View style={styles.buttonWrapper}>
+                <ButtonGradient text={buttonLabel} onPress={onPress} size='small' />
+              </View>
+            )
+            : <View />
+
+        }
       </View>
     )
   }

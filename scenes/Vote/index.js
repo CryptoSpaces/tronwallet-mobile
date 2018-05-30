@@ -207,8 +207,8 @@ class VoteScene extends PureComponent {
             style={{ width: '70%', marginLeft: 15 }}
           />
           <ButtonGradient
-            size="small"
-            text="Submit"
+            size='small'
+            text='Submit'
             onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}
           />
         </Utils.Row>

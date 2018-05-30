@@ -158,7 +158,7 @@ class TransactionScene extends Component {
       Reconnect to the internet before proceduring with the transaction
       </Utils.Text>
       <Utils.VerticalSpacer size='large' />
-      <ButtonGradient text='Try again' onPress={this._loadData} size="small" />
+      <ButtonGradient text='Try again' onPress={this._loadData} size='small' />
     </Utils.Content>
   )
 

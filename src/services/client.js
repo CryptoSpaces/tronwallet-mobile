@@ -58,6 +58,7 @@ class ClientWallet {
   };
 
   async getTransactionDetails (tx) {
+    console.log(tx, '<<< TRANSACTION DETAIL')
     try {
       const { data: { transaction } } = await axios.post(`${this.api}/transaction?dry-run`, {
         transaction: tx
@@ -110,9 +111,9 @@ class ClientWallet {
 
   async freezeToken (amount) {
     const from = await this.getPublicKey()
-    const { data } = await axios.post(`${this.notifier}/freeze`, { from, amount, duration: '300' })
+    const { data: { transaction } } = await axios.post(`${this.notifier}/freeze`, { from, amount, duration: '3' })
 
-    console.log(data, '<<<<')
+    return transaction
   }
 }
 
