@@ -61,6 +61,13 @@ class SignupScene extends Component {
   render () {
     const { confirmError } = this.state
     return (
+      <KeyboardAvoidingView 
+        behavior='padding'
+        keyboardVerticalOffset={150}
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
+      <ScrollView>
       <Utils.Container
         keyboardShouldPersistTaps={'always'}
         keyboardDismissMode='interactive'
@@ -101,6 +108,8 @@ class SignupScene extends Component {
           </Utils.Text>
         </Utils.Content>
       </Utils.Container>
+      </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }

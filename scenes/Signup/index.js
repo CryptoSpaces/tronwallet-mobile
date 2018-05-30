@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Image,
   Keyboard,
+  ScrollView,
   KeyboardAvoidingView
 } from 'react-native'
 import * as Utils from '../../components/Utils'
@@ -54,17 +55,17 @@ class SignupScene extends Component {
 
   _nextInput = target => {
     if (target === 'username') {
-      this.email.focus()
+      this.email.focus();
       return
     }
 
     if (target === 'email') {
-      this.password.focus()
+      this.password.focus();
       return
     }
 
     if (target === 'password') {
-      this.signUp()
+      this.signUp();
     }
   }
 
@@ -79,13 +80,19 @@ class SignupScene extends Component {
       )
     }
 
-    return (<ButtonGradient text='SIGN UP' onPress={this.signUp} size='medium' />)
+    return (<ButtonGradient text='SIGN UP' onPress={this.signUp} size='small' />)
   }
 
   render () {
     const { signError } = this.state
     return (
-      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+      <KeyboardAvoidingView 
+        behavior='padding'
+        keyboardVerticalOffset={150}
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
+        <ScrollView>
         <Utils.Container
           keyboardShouldPersistTaps={'always'}
           keyboardDismissMode='interactive'
@@ -103,11 +110,11 @@ class SignupScene extends Component {
                 this.username = ref
               }}
               underlineColorAndroid='transparent'
-              marginBottom={40}
+              marginBottom={20}
               onChangeText={text => this.changeInput(text, 'username')}
               onSubmitEditing={() => this._nextInput('username')}
               returnKeyType={'next'}
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
 
             <Utils.Text size='xsmall' secondary>
@@ -119,13 +126,13 @@ class SignupScene extends Component {
               }}
               keyboardType='email-address'
               underlineColorAndroid='transparent'
-              marginBottom={40}
+              marginBottom={20}
               autoCapitalize='none'
               autoCorrect={false}
               onChangeText={text => this.changeInput(text, 'email')}
               onSubmitEditing={() => this._nextInput('email')}
               returnKeyType={'next'}
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
 
             <Utils.Text size='xsmall' secondary>
@@ -136,12 +143,13 @@ class SignupScene extends Component {
                 this.password = ref
               }}
               letterSpacing={10}
+              marginBottom={20}
               underlineColorAndroid='transparent'
               secureTextEntry
               onChangeText={text => this.changeInput(text, 'password')}
               onSubmitEditing={() => this._nextInput('password')}
               returnKeyType={'send'}
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
 
             {this.renderSubmitButton()}
@@ -159,6 +167,7 @@ class SignupScene extends Component {
             </Utils.Text>
           </Utils.Content>
         </Utils.Container>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }

@@ -143,21 +143,13 @@ Label.propTypes = {
 
 export const FormInput = styled.TextInput`
   color: ${Colors.primaryText};
-  /* padding: ${Spacing.medium}px; */
   padding: ${props => props.padding}px;
   font-size: ${FontSize['small']};
   margin-bottom: ${props => props.marginBottom}px;
   margin-top: ${props => props.marginTop}px;
-  /* border-bottom-width: 0.3px; */
   border-width: 0.5px;
-  /* border-bottom-color: ${Colors.secondaryText}; */
   border-color: ${Colors.secondaryText};
   border-radius: 5px;
-    /* borderWidth: 0.5, */
-    /* borderColor: Colors.secondaryText, */
-    /* minWidth: 70, */
-    /* borderRadius: 5, */
-    /* padding: 10 */
 `
 
 FormInput.defaultProps = {
