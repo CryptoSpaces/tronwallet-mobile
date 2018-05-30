@@ -14,7 +14,6 @@ import ButtonGradient from '../../components/ButtonGradient'
 import { version } from './../../package.json'
 
 class LoginScene extends Component {
-
   state = {
     email: '',
     password: '',
@@ -90,81 +89,81 @@ class LoginScene extends Component {
     const { signError } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior='padding'
         keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
         <ScrollView>
-        <Utils.Container
-          keyboardShouldPersistTaps={'always'}
-          keyboardDismissMode='interactive'
-        >
-          <Utils.Content justify='center' align='center'>
-            <Utils.VerticalSpacer size='small' />
-            <Image source={require('../../assets/login-circle.png')} />
-            <Utils.VerticalSpacer size='small' />
-            <Utils.Text size='medium'>
+          <Utils.Container
+            keyboardShouldPersistTaps={'always'}
+            keyboardDismissMode='interactive'
+          >
+            <Utils.Content justify='center' align='center'>
+              <Utils.VerticalSpacer size='small' />
+              <Image source={require('../../assets/login-circle.png')} />
+              <Utils.VerticalSpacer size='small' />
+              <Utils.Text size='medium'>
               TRONWALLET
-            </Utils.Text>
-          </Utils.Content>
-          <Utils.FormGroup>
-            <Utils.Text size='xsmall' secondary>
-              E-MAIL
-            </Utils.Text>
-            <Utils.FormInput
-              innerRef={ref => {
-                this.email = ref
-              }}
-              underlineColorAndroid='transparent'
-              keyboardType='email-address'
-              marginBottom={20}
-              autoCapitalize='none'
-              autoCorrect={false}
-              onChangeText={text => this.changeInput(text, 'email')}
-              onSubmitEditing={() => this._submit('email')}
-              returnKeyType={'next'}
-              padding={Spacing.small}
-            />
-            <Utils.Text size='xsmall' secondary>
-              PASSWORD
-            </Utils.Text>
-            <Utils.FormInput
-              innerRef={ref => {
-                this.password = ref
-              }}
-              underlineColorAndroid='transparent'
-              secureTextEntry
-              letterSpacing={10}
-              onChangeText={text => this.changeInput(text, 'password')}
-              onSubmitEditing={() => this._submit('password')}
-              returnKeyType='send'
-              padding={Spacing.small}
-            />
-            {this.renderSubmitButton()}
-          </Utils.FormGroup>
-          <Utils.Content justify='center' align='center'>
-            {ChangedPassword && (
-              <Utils.Text size='small' success>
-                Password Changed
               </Utils.Text>
-            )}
-            <Utils.Error>{signError}</Utils.Error>
-            <Utils.Text
-              onPress={() => this.props.navigation.navigate('ForgotPassword')}
-              size='small'
-              font='light'
-              secondary
-            >
+            </Utils.Content>
+            <Utils.FormGroup>
+              <Utils.Text size='xsmall' secondary>
+              E-MAIL
+              </Utils.Text>
+              <Utils.FormInput
+                innerRef={ref => {
+                  this.email = ref
+                }}
+                underlineColorAndroid='transparent'
+                keyboardType='email-address'
+                marginBottom={20}
+                autoCapitalize='none'
+                autoCorrect={false}
+                onChangeText={text => this.changeInput(text, 'email')}
+                onSubmitEditing={() => this._submit('email')}
+                returnKeyType={'next'}
+                padding={Spacing.small}
+              />
+              <Utils.Text size='xsmall' secondary>
+              PASSWORD
+              </Utils.Text>
+              <Utils.FormInput
+                innerRef={ref => {
+                  this.password = ref
+                }}
+                underlineColorAndroid='transparent'
+                secureTextEntry
+                letterSpacing={10}
+                onChangeText={text => this.changeInput(text, 'password')}
+                onSubmitEditing={() => this._submit('password')}
+                returnKeyType='send'
+                padding={Spacing.small}
+              />
+              {this.renderSubmitButton()}
+            </Utils.FormGroup>
+            <Utils.Content justify='center' align='center'>
+              {ChangedPassword && (
+                <Utils.Text size='small' success>
+                Password Changed
+                </Utils.Text>
+              )}
+              <Utils.Error>{signError}</Utils.Error>
+              <Utils.Text
+                onPress={() => this.props.navigation.navigate('ForgotPassword')}
+                size='small'
+                font='light'
+                secondary
+              >
               FORGOT PASSWORD ?
-            </Utils.Text>
-            <Utils.VerticalSpacer size='large' />
-            <Utils.Text size='xsmall' secondary>
-              {`v${version}`}
-            </Utils.Text>
-          </Utils.Content>
-        </Utils.Container>
+              </Utils.Text>
+              <Utils.VerticalSpacer size='large' />
+              <Utils.Text size='xsmall' secondary>
+                {`v${version}`}
+              </Utils.Text>
+            </Utils.Content>
+          </Utils.Container>
         </ScrollView>
       </KeyboardAvoidingView>
     )

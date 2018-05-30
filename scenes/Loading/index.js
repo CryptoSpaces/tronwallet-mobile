@@ -4,6 +4,7 @@ import { ActivityIndicator } from 'react-native'
 import { Auth } from 'aws-amplify'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
+import Client from '../../src/services/client'
 
 class LoadingScene extends Component {
   async componentDidMount () {
@@ -25,8 +26,13 @@ class LoadingScene extends Component {
   _checkSession = async () => {
     try {
       const session = await Auth.currentSession()
+      const userPublicKey = await Client.getPublicKey()
       if (session) {
-        this.props.navigation.navigate('App')
+        if(userPublicKey){
+          this.props.navigation.navigate('App')
+        }else{
+          this.props.navigation.navigate('SetPublicKey')
+        }
       }
     } catch (error) {
       this.props.navigation.navigate('Login')
