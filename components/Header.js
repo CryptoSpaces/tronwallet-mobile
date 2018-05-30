@@ -33,14 +33,6 @@ const Header = ({
       <Utils.Row align='center' justify='space-between'>
         {leftBtn}
         {children}
-        {/* <Utils.View align='center'>
-          <Utils.Text size='xsmall' secondary>{title}</Utils.Text>
-          <Utils.Text size='medium'>{description}</Utils.Text>
-        </Utils.View>
-        <Utils.View align='center'>
-          <Utils.Text size='xsmall' secondary>{title}</Utils.Text>
-          <Utils.Text size='medium'>{description}</Utils.Text>
-        </Utils.View> */}
         {rightBtn}
       </Utils.Row>
     </View>
