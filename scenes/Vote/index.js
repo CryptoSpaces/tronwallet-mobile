@@ -21,6 +21,7 @@ import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
 import VoteItem from '../../src/components/Vote/VoteItem'
 import LoadingScene from '../../components/LoadingScene'
+import ButtonGradient from '../../components/ButtonGradient'
 
 // Service
 import Client from '../../src/services/client'
@@ -203,18 +204,13 @@ class VoteScene extends PureComponent {
             onChangeText={(text) => this.onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
-            style={{ width: '70%' }}
+            style={{ width: '70%', marginLeft: 15 }}
           />
-          <TouchableOpacity onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}>
-            <LinearGradient
-              start={[0, 1]}
-              end={[1, 0]}
-              colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-              style={styles.submitButton}
-            >
-              <Utils.Text size='xsmall'>Submit</Utils.Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          <ButtonGradient
+            size="small"
+            text="Submit"
+            onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}
+          />
         </Utils.Row>
         {
           loadingList
@@ -232,7 +228,7 @@ class VoteScene extends PureComponent {
 
 const styles = StyleSheet.create({
   searchWrapper: {
-    paddingLeft: 0,
+    // paddingLeft: 0,
     paddingRight: 16
   },
   submitButton: {

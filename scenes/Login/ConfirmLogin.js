@@ -133,7 +133,7 @@ class ConfirmLogin extends Component {
             ? (<Utils.Content height={80} justify='center' align='center'>
               <ActivityIndicator size='small' color={Colors.yellow} />
             </Utils.Content>)
-            : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} />)
+            : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} size="medium" />)
           }
         </Utils.Content>
         <Utils.Content justify='center' align='center'>

@@ -186,7 +186,7 @@ class SendScene extends Component {
           {
             loadingSign || loadingData
               ? <ActivityIndicator size='small' color={Colors.yellow} />
-              : <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />
+              : <ButtonGradient text='Send Token' onPress={this.sendDeepLink} size="small" />
           }
           <Utils.VerticalSpacer size='medium' />
         </Utils.Content>

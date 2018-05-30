@@ -86,7 +86,7 @@ export default class SetPkScene extends Component {
 
   renderButtonOptions = () => {
     return <React.Fragment>
-      <ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} />
+      <ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} size="small" />
       <Utils.VerticalSpacer size='large' />
       <TouchableOpacity style={{
         alignItems: 'center',
