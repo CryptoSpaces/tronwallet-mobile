@@ -11,7 +11,7 @@ import { Colors } from '../../components/DesignSystem'
 import Header from '../../components/Header'
 import Client from '../../src/services/client'
 import LoadingScene from '../../components/LoadingScene'
-
+import ButtonGradient from '../../components/ButtonGradient'
 import formatAmount from '../../utils/formatnumber'
 
 class BalanceScene extends Component {
@@ -70,6 +70,7 @@ class BalanceScene extends Component {
   }
 
   render () {
+    const { navigation } = this.props;
     const { assetBalance, trxBalance, loading, trxPrice, error } = this.state
 
     if (loading) return <LoadingScene />
@@ -78,11 +79,6 @@ class BalanceScene extends Component {
       <Utils.Container>
         <Utils.StatusBar />
         <Header
-          leftIcon={<View />}
-          onRightPress={() => this.props.navigation.navigate('Send')}
-          rightIcon={
-            <Feather name='plus' color={Colors.primaryText} size={24} />
-          }
         >
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>
@@ -133,9 +129,14 @@ class BalanceScene extends Component {
               scrollEnabled={false}
             />
           ) : (
-            <Utils.Text size='xsmall'>
-              Tip: You can participate to other tokens
-            </Utils.Text>
+            <Utils.View align='center'>
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.Text size='small'>
+                You can participate to other TRON tokens.
+              </Utils.Text>
+              <Utils.VerticalSpacer size='medium' />
+              <ButtonGradient text='Participate' onPress={() => navigation.navigate('Tokens')} size='small' />
+            </Utils.View>
           )}
           <Utils.Error>{error}</Utils.Error>
         </Utils.Content>
