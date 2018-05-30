@@ -18,7 +18,7 @@ class LoadingScene extends Component {
       'rubik-medium': require('../../assets/fonts/Rubik-Medium.ttf'),
       'rubik-regular': require('../../assets/fonts/Rubik-Regular.ttf'),
       'rubik-light': require('../../assets/fonts/Rubik-Light.ttf'),
-      'tronwallet': require('../../assets/icons/tronwallet.ttf')
+      tronwallet: require('../../assets/icons/tronwallet.ttf')
     })
   }
 
@@ -35,7 +35,12 @@ class LoadingScene extends Component {
 
   render () {
     return (
-      <Utils.View flex={1} align='center' justify='center' background={Colors.background}>
+      <Utils.View
+        flex={1}
+        align='center'
+        justify='center'
+        background={Colors.background}
+      >
         <ActivityIndicator />
       </Utils.View>
     )

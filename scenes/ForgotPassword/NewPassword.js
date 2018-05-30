@@ -12,7 +12,6 @@ class ConfirmNewPassword extends Component {
     newPassword: '',
     forgotError: null,
     loadingForgot: false
-
   }
 
   changeInput = (text, field) => {
@@ -43,16 +42,22 @@ class ConfirmNewPassword extends Component {
           <Image source={require('../../assets/login-circle.png')} />
         </Utils.Content>
         <Utils.Content>
-          <Utils.Text size='xsmall'>We sent you an email, please submit the code with the new password</Utils.Text>
+          <Utils.Text size='xsmall'>
+            We sent you an email, please submit the code with the new password
+          </Utils.Text>
           <Utils.VerticalSpacer size='small' />
-          <Utils.Text size='xsmall' secondary>Code</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            Code
+          </Utils.Text>
           <Utils.FormInput
             autoCorrect={false}
             autoCapitalize='none'
             keyboardType='email-address'
-            onChangeText={(text) => this.changeInput(text, 'code')}
+            onChangeText={text => this.changeInput(text, 'code')}
           />
-          <Utils.Text size='xsmall' secondary>New Password</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            New Password
+          </Utils.Text>
           <Utils.FormInput
             letterSpacing={10}
             secureTextEntry
@@ -61,14 +66,27 @@ class ConfirmNewPassword extends Component {
             keyboardType='numeric'
             onChangeText={text => this.changeInput(text, 'newPassword')}
           />
-          {loadingForgot
-            ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <ButtonGradient text='Confirm new Password' size='small' onPress={this.submitNewPassword} />
-          }
+          {loadingForgot ? (
+            <ActivityIndicator size='small' color={Colors.yellow} />
+          ) : (
+            <ButtonGradient
+              text='Confirm new Password'
+              size='small'
+              onPress={this.submitNewPassword}
+            />
+          )}
         </Utils.Content>
         <Utils.Content justify='center' align='center'>
           <Utils.Error>{forgotError}</Utils.Error>
-          <Utils.Text s onPress={() => this.props.navigation.navigate('Login')} size='small' font='light' secondary>Back to Login</Utils.Text>
+          <Utils.Text
+            s
+            onPress={() => this.props.navigation.navigate('Login')}
+            size='small'
+            font='light'
+            secondary
+          >
+            Back to Login
+          </Utils.Text>
         </Utils.Content>
       </Utils.Container>
     )

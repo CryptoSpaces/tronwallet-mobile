@@ -27,9 +27,12 @@ class SignupScene extends Component {
     this.setState({ loadingConfirm: true })
     try {
       await Auth.confirmSignUp(email, code)
-      this.setState({
-        loadingConfirm: false
-      }, () => navigation.navigate('Login'))
+      this.setState(
+        {
+          loadingConfirm: false
+        },
+        () => navigation.navigate('Login')
+      )
     } catch (error) {
       this.setState({ confirmError: error.message, loadingConfirm: false })
     }
@@ -46,7 +49,13 @@ class SignupScene extends Component {
       )
     }
 
-    return (<ButtonGradient onPress={this.confirmSignup} text='CONFIRM SIGN UP' size='small' />)
+    return (
+      <ButtonGradient
+        onPress={this.confirmSignup}
+        text='CONFIRM SIGN UP'
+        size='small'
+      />
+    )
   }
 
   render () {
@@ -60,15 +69,20 @@ class SignupScene extends Component {
           <Image source={require('../../assets/login-circle.png')} />
         </Utils.Content>
         <Utils.Content>
-
-          <Utils.Text size='xsmall' secondary>EMAIL VERIFICATION CODE</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            EMAIL VERIFICATION CODE
+          </Utils.Text>
           <Utils.FormInput
             keyboardType='numeric'
-            onChangeText={(text) => this.changeInput(text, 'code')}
+            onChangeText={text => this.changeInput(text, 'code')}
             onSubmitEditing={this.confirmSignup}
             returnKeyType={'send'}
           />
-          <Utils.Text size='xsmall'>We sent you an email with the verification code from no-reply@verificationemail.com, please check your spam if you didn't find it.</Utils.Text>
+          <Utils.Text size='xsmall'>
+            We sent you an email with the verification code from
+            no-reply@verificationemail.com, please check your spam if you didn't
+            find it.
+          </Utils.Text>
           <Utils.InputError>{confirmError}</Utils.InputError>
 
           {this.renderSubmitButton()}
@@ -76,7 +90,14 @@ class SignupScene extends Component {
 
         <Utils.Content justify='center' align='center'>
           <Utils.Error>{confirmError}</Utils.Error>
-          <Utils.Text onPress={() => this.props.navigation.goBack()} size='small' font='light' secondary>Back to Sign Up</Utils.Text>
+          <Utils.Text
+            onPress={() => this.props.navigation.goBack()}
+            size='small'
+            font='light'
+            secondary
+          >
+            Back to Sign Up
+          </Utils.Text>
         </Utils.Content>
       </Utils.Container>
     )
