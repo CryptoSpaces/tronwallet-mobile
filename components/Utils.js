@@ -162,7 +162,7 @@ export const Error = styled.Text`
   font-size: ${FontSize['small']};
   color: #ff5454;
   text-align: center;
-  margin-bottom: ${Spacing.small}px;
+  margin: 5px 0;
 `
 
 export const InputError = styled.Text`

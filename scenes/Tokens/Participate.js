@@ -48,12 +48,23 @@ class ParticipateScene extends Component {
         data: response.data.transaction
       })
 
-      const url = `${DeeplinkURL}auth/${dataToSend}`
-      await Linking.openURL(url)
+      this.openDeepLink(dataToSend)
     } catch (err) {
       console.log(err)
     }
     this.setState({ loading: false })
+  }
+
+  openDeepLink = async (dataToSend) => {
+    try {
+      const url = `${DeeplinkURL}auth/${dataToSend}`
+      await Linking.openURL(url)
+      this.setState({ loading: false })
+    } catch (error) {
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
+    }
   }
 
   formatPercentage = (percentage) => numeral(percentage).format('0.[00]') + '%'

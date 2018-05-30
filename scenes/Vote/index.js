@@ -15,7 +15,7 @@ import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 // Utils
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
-import {DeeplinkURL} from '../../utils/deeplinkUtils'
+import { DeeplinkURL } from '../../utils/deeplinkUtils'
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../src/components/Vote/VoteItem'
@@ -97,15 +97,26 @@ class VoteScene extends PureComponent {
         pk: from,
         from: 'mobile',
         action: 'transaction',
-        URL: Linking.makeUrl('transaction'),
+        URL: Linking.makeUrl('/transaction'),
         data
       })
-      const url = `${DeeplinkURL}auth/${dataToSend}`
-      const supported = await Linking.canOpenURL(url)
-      if (supported) await Linking.openURL(url)
-      this.setState({ loading: false })
+      this.openDeepLink(dataToSend)
     } catch (error) {
       this.setState({ loading: false })
+    }
+  }
+
+  openDeepLink = async (dataToSend) => {
+    try {
+      const url = `${DeeplinkURL}auth/${dataToSend}`
+
+      await Linking.openURL(url)
+
+      this.setState({ loading: false })
+    } catch (error) {
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
     }
   }
 
@@ -217,7 +228,7 @@ class VoteScene extends PureComponent {
           <ButtonGradient
             size='small'
             text='Submit'
-            onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}
+            onPress={totalRemaining >= 0 ? this.onSubmit : () => { }}
           />
         </Utils.Row>
         {loadingList ? (

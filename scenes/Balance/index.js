@@ -31,7 +31,6 @@ class BalanceScene extends Component {
   componentWillUnmount () {
     this._navListener.remove()
   }
-  b
 
   loadData = async () => {
     this.setState({ loading: true })

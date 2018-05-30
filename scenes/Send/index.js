@@ -12,6 +12,7 @@ import PasteInput from '../../components/PasteInput'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import { DeeplinkURL } from '../../utils/deeplinkUtils'
+import { isAddressValid } from '../../src/services/address'
 
 class SendScene extends Component {
   state = {
@@ -20,17 +21,24 @@ class SendScene extends Component {
     amount: 0,
     token: 'Select your balance',
     balances: [],
-    signError: null,
+    error: null,
     loadingSign: false,
     loadingData: true,
     trxBalance: 0.0
   }
 
   componentDidMount () {
-    this.loadData()
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      this.loadData()
+    })
+  }
+
+  componentWillUnmount () {
+    this._navListener.remove()
   }
 
   loadData = async () => {
+    this.setState({ loading: true })
     try {
       const result = await Promise.all([
         Client.getPublicKey(),
@@ -54,17 +62,41 @@ class SendScene extends Component {
 
   changeInput = (text, field) => {
     this.setState({
-      [field]: text
+      [field]: text,
+      error: null
     })
   }
-  changeAmount = () => {
-    this.setState({
-      amount: this.state.amount + 100
-    })
+
+  submit = () => {
+    const { amount, to, balances, token } = this.state
+    const balanceSelected = balances.find(b => b.name === token)
+
+    if (!isAddressValid(to)) {
+      this.setState({ error: 'Invalid receiver address' })
+      return
+    }
+    if (!balanceSelected) {
+      this.setState({ error: 'Select a balance first' })
+      return
+    }
+
+    if (!amount || balanceSelected.balance < amount) {
+      this.setState({ error: 'Invalid amount' })
+      return
+    }
+    this.sendDeepLink()
   }
 
   onSelectToken = (value, label) => {
     this.setState({ token: value })
+  }
+
+  clearInput = () => {
+    this.setState({
+      to: '',
+      amount: 0,
+      token: 'Select your balance'
+    })
   }
 
   renderTokens = () => {
@@ -96,12 +128,23 @@ class SendScene extends Component {
         URL: ExpoLinking.makeUrl('/transaction'),
         data
       })
+      this.openDeepLink(dataToSend)
+    } catch (error) {
+      this.setState({ error: 'Error getting transaction', loadingSign: false })
+    } finally {
+      this.clearInput()
+    }
+  }
 
+  openDeepLink = async (dataToSend) => {
+    try {
       const url = `${DeeplinkURL}auth/${dataToSend}`
       await Linking.openURL(url)
       this.setState({ loadingSign: false })
     } catch (error) {
-      this.setState({ signError: error.message || error, loadingSign: false })
+      this.setState({ loadingSign: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
     }
   }
 
@@ -144,7 +187,7 @@ class SendScene extends Component {
   }
 
   render () {
-    const { loadingSign, loadingData, signError, to, trxBalance } = this.state
+    const { loadingSign, loadingData, error, to, trxBalance } = this.state
 
     return (
       <ScrollView>
@@ -197,19 +240,18 @@ class SendScene extends Component {
               <Utils.FormInput
                 underlineColorAndroid='transparent'
                 keyboardType='numeric'
-                value={String(this.state.amount)}
                 onChangeText={text => this.changeInput(text, 'amount')}
                 placeholderTextColor='#fff'
                 style={{ marginRight: 15, width: '100%' }}
               />
             </Utils.Row>
           </Utils.Content>
+          {error && <Utils.Error>{error}</Utils.Error>}
           <Utils.Content justify='center' align='center'>
-            {signError && <Utils.Error>{signError}</Utils.Error>}
             {loadingSign || loadingData ? (
-              <ActivityIndicator size='small' color={Colors.yellow} />
+              <ActivityIndicator size='small' color={Colors.primaryText} />
             ) : (
-              <ButtonGradient text='Send Token' onPress={this.sendDeepLink} size='small' />
+              <ButtonGradient text='Send Token' onPress={this.submit} size='small' />
             )}
             <Utils.VerticalSpacer size='medium' />
           </Utils.Content>

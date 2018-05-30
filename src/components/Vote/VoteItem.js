@@ -36,7 +36,7 @@ const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote }) => {
             onChangeText={(v) => onChangeVotes(v, item.address)}
             placeholderTextColor={Colors.secondaryText}
             placeholder={`${userVote || 0}`}
-            value={votes || null}
+            value={(votes || '').toString()}
             style={styles.input}
           />
         </Utils.Row>
