@@ -58,7 +58,6 @@ class ClientWallet {
   };
 
   async getTransactionDetails (tx) {
-    console.log(tx, '<<< TRANSACTION DETAIL')
     try {
       const { data: { transaction } } = await axios.post(`${this.api}/transaction?dry-run`, {
         transaction: tx
