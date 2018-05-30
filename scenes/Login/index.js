@@ -91,7 +91,8 @@ class LoginScene extends Component {
       <KeyboardAvoidingView
         behavior='padding'
         keyboardVerticalOffset={150}
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
       >
         <ScrollView>
           <Utils.Container

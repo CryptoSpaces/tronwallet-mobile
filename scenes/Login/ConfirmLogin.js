@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, ScrollView } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, KeyboardAvoidingView } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
 
@@ -134,7 +134,13 @@ class ConfirmLogin extends Component {
   render () {
     const { confirmError, loadingConfirm } = this.state
     return (
-      <ScrollView>
+      <KeyboardAvoidingView 
+        behavior='padding'
+        keyboardVerticalOffset={150}
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
+        <ScrollView>
         <Utils.Container>
           <Utils.Content height={80} justify='center' align='center'>
             <Image source={require('../../assets/login-circle.png')} />
@@ -144,6 +150,7 @@ class ConfirmLogin extends Component {
               PASTE GOOGLE AUTHENTICATOR CODE HERE
             </Utils.Text>
             <Utils.FormInput
+              padding={Spacing.small}
               underlineColorAndroid='transparent'
               onChangeText={text => this.changeInput(text, 'code')}
             />
@@ -178,7 +185,7 @@ class ConfirmLogin extends Component {
           />
         </Utils.Container>
       </ScrollView>
-
+      </KeyboardAvoidingView>
     )
   }
 }
