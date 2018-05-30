@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-import {
-  ActivityIndicator,
-  TouchableOpacity,
-  Linking
-} from 'react-native'
+import { ActivityIndicator, TouchableOpacity, Linking } from 'react-native'
 import { Linking as ExpoLinking } from 'expo'
 import Toast from 'react-native-easy-toast'
 import { Feather } from '@expo/vector-icons'
@@ -28,7 +24,7 @@ export default class SetPkScene extends Component {
     this._checkDeepLink(nextProps)
   }
 
-  _checkDeepLink = async (nextProps) => {
+  _checkDeepLink = async nextProps => {
     const { navigation } = nextProps
 
     if (navigation.state.params && navigation.state.params.data) {
@@ -82,7 +78,7 @@ export default class SetPkScene extends Component {
     }
   }
 
-  goBackLogin = () => this.props.navigation.goBack();
+  goBackLogin = () => this.props.navigation.goBack()
 
   renderButtonOptions = () => {
     return <React.Fragment>
@@ -114,11 +110,13 @@ export default class SetPkScene extends Component {
           onLeftPress={this.goBackLogin}
         />
         <Utils.Content>
-          <Utils.Text>You need to set your public key before continue</Utils.Text>
+          <Utils.Text>
+            You need to set your public key before continue
+          </Utils.Text>
           <PasteInput
             value={userPublicKey}
             field='userPublicKey'
-            onChangeText={(userPublicKey) => this.setState({ userPublicKey })}
+            onChangeText={userPublicKey => this.setState({ userPublicKey })}
           />
           {loading && this.renderLoadingView()}
           <Utils.VerticalSpacer size='medium' />

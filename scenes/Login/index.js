@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView
+} from 'react-native'
 import { Auth } from 'aws-amplify'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
@@ -45,7 +50,7 @@ class LoginScene extends Component {
     }
   }
 
-  _submit = (target) => {
+  _submit = target => {
     const { email, password } = this.state
 
     if (target === 'email' && !password) {
@@ -91,32 +96,44 @@ class LoginScene extends Component {
           </Utils.Content>
           <Utils.VerticalSpacer size='large' />
           <Utils.FormGroup>
-            <Utils.Text size='xsmall' secondary>E-MAIL</Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              E-MAIL
+            </Utils.Text>
             <Utils.FormInput
-              innerRef={ref => { this.email = ref }}
+              innerRef={ref => {
+                this.email = ref
+              }}
               underlineColorAndroid='transparent'
               keyboardType='email-address'
               marginBottom={40}
               autoCapitalize='none'
               autoCorrect={false}
-              onChangeText={(text) => this.changeInput(text, 'email')}
+              onChangeText={text => this.changeInput(text, 'email')}
               onSubmitEditing={() => this._submit('email')}
               returnKeyType={'next'}
             />
-            <Utils.Text size='xsmall' secondary>PASSWORD</Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              PASSWORD
+            </Utils.Text>
             <Utils.FormInput
-              innerRef={ref => { this.password = ref }}
+              innerRef={ref => {
+                this.password = ref
+              }}
               underlineColorAndroid='transparent'
               secureTextEntry
               letterSpacing={10}
-              onChangeText={(text) => this.changeInput(text, 'password')}
+              onChangeText={text => this.changeInput(text, 'password')}
               onSubmitEditing={() => this._submit('password')}
               returnKeyType='send'
             />
             {this.renderSubmitButton()}
           </Utils.FormGroup>
           <Utils.Content justify='center' align='center'>
-            {ChangedPassword && <Utils.Text size='small' success>Password Changed</Utils.Text>}
+            {ChangedPassword && (
+              <Utils.Text size='small' success>
+                Password Changed
+              </Utils.Text>
+            )}
             <Utils.Error>{signError}</Utils.Error>
             <Utils.Text
               onPress={() => this.props.navigation.navigate('ForgotPassword')}
