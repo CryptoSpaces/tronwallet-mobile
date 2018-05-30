@@ -114,7 +114,7 @@ class TransactionScene extends Component {
             key={ctr}
             style={{ justifyContent: 'space-between', marginVertical: 5 }}
           >
-            <Utils.Text secondary size='small'>
+            <Utils.Text secondary size='xsmall'>
               {firstLetterCapitalize(ctr)}
             </Utils.Text>
             <Utils.Text size='xsmall'>{contracts[0][ctr] / 1000000}</Utils.Text>
@@ -129,7 +129,7 @@ class TransactionScene extends Component {
             key={'votes'}
             style={{ justifyContent: 'space-between', marginVertical: 5 }}
           >
-            <Utils.Text secondary size='small'>
+            <Utils.Text secondary size='xsmall'>
               TotalVotes
             </Utils.Text>
             <Utils.Text size='xsmall'>{totalVotes}</Utils.Text>
@@ -141,7 +141,7 @@ class TransactionScene extends Component {
             key={ctr}
             style={{ justifyContent: 'space-between', marginVertical: 5 }}
           >
-            <Utils.Text secondary size='small'>
+            <Utils.Text secondary size='xsmall'>
               {firstLetterCapitalize(ctr)}
             </Utils.Text>
             <Utils.Text size='xsmall'>{contracts[0][ctr]}</Utils.Text>
@@ -154,11 +154,11 @@ class TransactionScene extends Component {
         style={{ justifyContent: 'space-between', marginVertical: 5 }}
         key={'timestamp'}
       >
-        <Utils.Text secondary size='small'>
+        <Utils.Text secondary size='xsmall'>
           Time
         </Utils.Text>
         <Utils.Text size='xsmall'>
-          {moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}
+          {moment(transactionData.timestamp / 1000000).format('MM/DD/YYYY HH:MM:SS')}
         </Utils.Text>
       </Utils.Row>
     )
