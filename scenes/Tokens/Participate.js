@@ -23,12 +23,15 @@ class ParticipateScene extends Component {
     try {
       const pk = await Client.getPublicKey()
       this.setState({ loading: true })
-      const response = await axios.post('https://tronnotifier-dev.now.sh/v1/wallet/participate', {
-        from: pk,
-        issuer: this.props.navigation.state.params.token.ownerAddress,
-        token: this.props.navigation.state.params.token.name,
-        amount: Number(this.state.value)
-      })
+      const response = await axios.post(
+        'https://tronnotifier-dev.now.sh/v1/wallet/participate',
+        {
+          from: pk,
+          issuer: this.props.navigation.state.params.token.ownerAddress,
+          token: this.props.navigation.state.params.token.name,
+          amount: Number(this.state.value)
+        }
+      )
       const dataToSend = qs.stringify({
         txDetails: {
           from: pk,
@@ -58,13 +61,16 @@ class ParticipateScene extends Component {
   formatDate = (date) => moment(date).format('YYYY-MM-DD h:mm:ss')
 
   renderConfirmButtom = () => {
-    if (this.state.loading) return (<ActivityIndicator />)
+    if (this.state.loading) return <ActivityIndicator />
 
-    return (<ButtonGradient onPress={this._confirm} text='Confirm' size='small' />)
+    return (
+      <ButtonGradient onPress={this._confirm} text='Confirm' size='small' />
+    )
   }
 
   render () {
     const token = this.props.navigation.getParam('token')
+    console.log(token)
     return (
       <KeyboardAwareScrollView>
         <Utils.StatusBar />
@@ -172,7 +178,9 @@ class ParticipateScene extends Component {
                   underlineColorAndroid='transparent'
                   returnKeyType={'send'}
                 />
-                <Utils.Text>Value: {Number(this.state.value) * token.price} TRX</Utils.Text>
+                <Utils.Text>
+                  Value: {Number(this.state.value) * token.price} TRX
+                </Utils.Text>
                 <Utils.VerticalSpacer />
                 {this.renderConfirmButtom()}
               </Utils.Content>

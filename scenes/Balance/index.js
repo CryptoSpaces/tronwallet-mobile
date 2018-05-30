@@ -31,7 +31,8 @@ class BalanceScene extends Component {
 
   componentWillUnmount () {
     this._navListener.remove()
-  }b
+  }
+  b
 
   loadData = async () => {
     this.setState({ loading: true })
@@ -39,7 +40,9 @@ class BalanceScene extends Component {
       const balances = await Client.getBalances()
       const trxBalance = balances.find(b => b.name === 'TRX')
       const assetBalance = balances.filter(b => b.name !== 'TRX')
-      const { data: { data } } = await axios.get('https://api.coinmarketcap.com/v2/ticker/1958')
+      const { data: { data } } = await axios.get(
+        'https://api.coinmarketcap.com/v2/ticker/1958'
+      )
 
       this.setState({
         trxBalance: trxBalance.balance,
@@ -77,10 +80,14 @@ class BalanceScene extends Component {
         <Header
           leftIcon={<View />}
           onRightPress={() => this.props.navigation.navigate('Send')}
-          rightIcon={<Feather name='plus' color={Colors.primaryText} size={24} />}
+          rightIcon={
+            <Feather name='plus' color={Colors.primaryText} size={24} />
+          }
         >
           <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>TRX BALANCE</Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              TRX BALANCE
+            </Utils.Text>
             <Utils.Text size='medium'>{formatAmount(trxBalance)}</Utils.Text>
           </Utils.View>
         </Header>
@@ -88,25 +95,48 @@ class BalanceScene extends Component {
           <Utils.Content>
             <LineChart
               style={{ height: 30 }}
-              data={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]}
+              data={[
+                50,
+                10,
+                40,
+                95,
+                -4,
+                -24,
+                85,
+                91,
+                35,
+                53,
+                -53,
+                24,
+                50,
+                -20,
+                -80
+              ]}
               svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
               animate
             >
               <Gradient />
             </LineChart>
           </Utils.Content>
-          <Utils.Text size='xsmall' secondary>TRX PRICE: {trxPrice}</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            TRX PRICE: {trxPrice}
+          </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
-          {assetBalance.length
-            ? <FlatList
+          {assetBalance.length ? (
+            <FlatList
               data={assetBalance}
               renderItem={this.renderTokens}
               keyExtractor={item => item.name}
-              ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
+              ItemSeparatorComponent={() => (
+                <Utils.VerticalSpacer size='large' />
+              )}
               scrollEnabled={false}
             />
-            : <Utils.Text size='xsmall'>Tip: You can participate to other tokens</Utils.Text>
-          }
+          ) : (
+            <Utils.Text size='xsmall'>
+              Tip: You can participate to other tokens
+            </Utils.Text>
+          )}
           <Utils.Error>{error}</Utils.Error>
         </Utils.Content>
       </Utils.Container>

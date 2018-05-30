@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  SafeAreaView
+} from 'react-native'
 import axios from 'axios'
-import { ActivityIndicator, FlatList, StyleSheet, SafeAreaView } from 'react-native'
 import numeral from 'numeral'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from './../../components/ButtonGradient'
@@ -34,7 +39,9 @@ class TokensScene extends Component {
 
   _loadTokens = async () => {
     try {
-      const response = await axios.get('https://api.tronscan.org/api/token?sort=-name&start=0&status=ico')
+      const response = await axios.get(
+        'https://api.tronscan.org/api/token?sort=-name&start=0&status=ico'
+      )
       this.setState({
         loading: false,
         data: response.data.data,
@@ -48,7 +55,7 @@ class TokensScene extends Component {
     }
   }
 
-  navigate = (token) => this.props.navigation.navigate('Participate', { token })
+  navigate = token => this.props.navigation.navigate('Participate', { token })
 
   format = (percentage) => numeral(percentage).format('0.[00]') + '%'
 
@@ -95,14 +102,17 @@ class TokensScene extends Component {
   )
 
   renderRefreshControl = () => (
-    <Utils.View flex={1} align='center' justify='center' background={Colors.background}>
+    <Utils.View
+      flex={1}
+      align='center'
+      justify='center'
+      background={Colors.background}
+    >
       <ActivityIndicator />
     </Utils.View>
   )
 
-  renderListEmptyComponent = () => (
-    <Utils.Container />
-  )
+  renderListEmptyComponent = () => <Utils.Container />
 
   render () {
     if (this.state.loading) return this.renderRefreshControl()

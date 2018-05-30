@@ -19,7 +19,7 @@ const ButtonGradient = ({ text, onPress, disabled, size }) => (
 
 ButtonGradient.defaultProps = {
   disabled: false,
-  size: Spacing.medium
+  size: 'medium'
 }
 
 ButtonGradient.propTypes = {

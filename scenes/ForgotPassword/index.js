@@ -10,7 +10,6 @@ class SignupScene extends Component {
     email: '',
     forgotError: null,
     loadingForgot: false
-
   }
 
   changeInput = (text, field) => {
@@ -44,22 +43,36 @@ class SignupScene extends Component {
           <Image source={require('../../assets/login-circle.png')} />
         </Utils.Content>
         <Utils.Content>
-          <Utils.Text size='xsmall' secondary>Change Password</Utils.Text>
-          <Utils.Text size='xsmall'>Provide your email to proceed with the recovery</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            Change Password
+          </Utils.Text>
+          <Utils.Text size='xsmall'>
+            Provide your email to proceed with the recovery
+          </Utils.Text>
           <Utils.FormInput
             autoCorrect={false}
             autoCapitalize='none'
             keyboardType='email-address'
-            onChangeText={(text) => this.changeInput(text, 'email')}
+            onChangeText={text => this.changeInput(text, 'email')}
           />
-          {
-            loadingForgot
-              ? <ActivityIndicator size='small' color={Colors.yellow} />
-              : <ButtonGradient text='Change Password' onPress={this.forgotPassword} size='medium' />
-          }
+          {loadingForgot ? (
+            <ActivityIndicator size='small' color={Colors.yellow} />
+          ) : (
+            <ButtonGradient
+              text='Change Password'
+              onPress={this.forgotPassword}
+            />
+          )}
         </Utils.Content>
         <Utils.Content justify='center' align='center'>
-          <Utils.Text onPress={() => this.props.navigation.goBack()} size='small' font='light' secondary>Back to Login</Utils.Text>
+          <Utils.Text
+            onPress={() => this.props.navigation.goBack()}
+            size='small'
+            font='light'
+            secondary
+          >
+            Back to Login
+          </Utils.Text>
           <Utils.Error>{forgotError}</Utils.Error>
         </Utils.Content>
       </Utils.Container>

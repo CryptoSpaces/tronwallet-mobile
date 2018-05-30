@@ -54,12 +54,7 @@ class ReceiveScreen extends PureComponent {
         <Utils.StatusBar />
         <Utils.VerticalSpacer size='large' />
         <Utils.Content align='center'>
-          {!!publicKey && (
-            <QRCode
-              value={publicKey}
-              size={width * 0.6}
-            />
-          )}
+          {!!publicKey && <QRCode value={publicKey} size={width * 0.6} />}
           <Utils.VerticalSpacer size='large' />
 
           <Utils.Label color={tint(0.9, Colors.background)}>
@@ -68,7 +63,11 @@ class ReceiveScreen extends PureComponent {
           <Utils.VerticalSpacer size='medium' />
 
           <Utils.PasteButton onPress={this._copy}>
-            <Feather name='clipboard' size={FontSize['small']} color={Colors.primaryText} />
+            <Feather
+              name='clipboard'
+              size={FontSize['small']}
+              color={Colors.primaryText}
+            />
           </Utils.PasteButton>
           <Toast
             ref='toast'

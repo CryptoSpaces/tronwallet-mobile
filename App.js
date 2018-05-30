@@ -24,7 +24,6 @@ import SetPublicKey from './scenes/SetPublicKey'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScene from './scenes/Vote'
-
 import TransactionsScene from './scenes/Transactions'
 import TransactionScreen from './scenes/Transaction'
 import TransferScene from './scenes/Transfer'
@@ -41,91 +40,108 @@ const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 Amplify.configure(awsExports)
 const prefix = Linking.makeUrl('/') // TODO - Review before release
 
-const SettingsStack = createStackNavigator({
-  SettingScene
-}, {
-  initialRouteName: 'SettingScene',
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: Colors.background,
-      elevation: 0,
-      borderColor: Colors.background
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontFamily: 'rubik-medium'
+const SettingsStack = createStackNavigator(
+  {
+    SettingScene
+  },
+  {
+    initialRouteName: 'SettingScene',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: Colors.background,
+        elevation: 0,
+        borderColor: Colors.background
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontFamily: 'rubik-medium'
+      }
     }
   }
-})
+)
 
-const VoteStack = createStackNavigator({
-  VoteScene
-}, {
-  initialRouteName: 'VoteScene'
-})
-const TransferStack = createStackNavigator({
-  TransferScene
-}, {
-  initialRouteName: 'TransferScene'
-})
-const TokensStack = createStackNavigator({
-  TokensScene
-}, {
-  initialRouteName: 'TokensScene'
-})
-
-const TransactionsStack = createStackNavigator({
-  TransactionsScene
-}, {
-  initialRouteName: 'TransactionsScene'
-})
-
-const AppTabs = createBottomTabNavigator({
-  Home: HomeScene,
-  Vote: {
-    screen: VoteStack,
-    path: 'vote'
+const VoteStack = createStackNavigator(
+  {
+    VoteScene
   },
-  Tokens: TokensStack,
-  Balance: BalanceScene,
-  Transactions: TransactionsStack,
-  Transfer: TransferStack,
-  Settings: SettingsStack
-}, {
-  navigationOptions: ({ navigation }) => ({
-    tabBarIcon: ({ focused, tintColor }) => {
-      const { routeName } = navigation.state
-      let iconName
-      if (routeName === 'Home') {
-        iconName = `graph,-bar,-chart,-statistics,-analytics`
-      } else if (routeName === 'Balance') {
-        iconName = `wallet,-money,-cash,-balance,-purse`
-      } else if (routeName === 'Transfer') {
-        iconName = `user,-person,-avtar,-profile-picture,-dp`
-      } else if (routeName === 'Vote') {
-        iconName = `shout-out,-speaker,-offer,-announcement,-loud`
-      } else if (routeName === 'Transactions') {
-        iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
-      } else if (routeName === 'Tokens') {
-        iconName = `money,-currency,-note,-cash,-capital`
-      } else if (routeName === 'Settings') {
-        iconName = `gear,-settings,-update,-setup,-config`
-      }
+  {
+    initialRouteName: 'VoteScene'
+  }
+)
+const TransferStack = createStackNavigator(
+  {
+    TransferScene
+  },
+  {
+    initialRouteName: 'TransferScene'
+  }
+)
+const TokensStack = createStackNavigator(
+  {
+    TokensScene
+  },
+  {
+    initialRouteName: 'TokensScene'
+  }
+)
 
-      return <Icon name={iconName} size={26} color={tintColor} />
-    }
-  }),
-  tabBarOptions: {
-    activeTintColor: Colors.primaryText,
-    inactiveTintColor: Colors.secondaryText,
-    style: {
-      backgroundColor: 'black'
+const TransactionsStack = createStackNavigator(
+  {
+    TransactionsScene
+  },
+  {
+    initialRouteName: 'TransactionsScene'
+  }
+)
+
+const AppTabs = createBottomTabNavigator(
+  {
+    Home: HomeScene,
+    Vote: {
+      screen: VoteStack,
+      path: 'vote'
     },
-    showLabel: false
+    Tokens: TokensStack,
+    Balance: BalanceScene,
+    Transactions: TransactionsStack,
+    Transfer: TransferStack,
+    Settings: SettingsStack
   },
-  initialRouteName: 'Balance'
+  {
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state
+        let iconName
+        if (routeName === 'Home') {
+          iconName = `graph,-bar,-chart,-statistics,-analytics`
+        } else if (routeName === 'Balance') {
+          iconName = `wallet,-money,-cash,-balance,-purse`
+        } else if (routeName === 'Transfer') {
+          iconName = `user,-person,-avtar,-profile-picture,-dp`
+        } else if (routeName === 'Vote') {
+          iconName = `shout-out,-speaker,-offer,-announcement,-loud`
+        } else if (routeName === 'Transactions') {
+          iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
+        } else if (routeName === 'Tokens') {
+          iconName = `money,-currency,-note,-cash,-capital`
+        } else if (routeName === 'Settings') {
+          iconName = `gear,-settings,-update,-setup,-config`
+        }
 
-})
+        return <Icon name={iconName} size={26} color={tintColor} />
+      }
+    }),
+    tabBarOptions: {
+      activeTintColor: Colors.primaryText,
+      inactiveTintColor: Colors.secondaryText,
+      style: {
+        backgroundColor: 'black'
+      },
+      showLabel: false
+    },
+    initialRouteName: 'Balance'
+  }
+)
 
 const SignStack = createStackNavigator(
   {
@@ -138,81 +154,91 @@ const SignStack = createStackNavigator(
       header: null,
       title: 'SIGN UP'
     }
-  })
-
-const LoginStack = createStackNavigator({
-  Login: LoginScene,
-  ConfirmLogin: ConfirmLogin,
-  ForgotPassword: ForgotPassword,
-  ConfirmNewPassword: NewPassword
-}, {
-  initialRouteName: 'Login',
-  navigationOptions: {
-    header: null
   }
-})
+)
+
+const LoginStack = createStackNavigator(
+  {
+    Login: LoginScene,
+    ConfirmLogin: ConfirmLogin,
+    ForgotPassword: ForgotPassword,
+    ConfirmNewPassword: NewPassword
+  },
+  {
+    initialRouteName: 'Login',
+    navigationOptions: {
+      header: null
+    }
+  }
+)
 
 const tabWidth = ScreenSize.width / 2
 const indicatorWidth = 15
 
-const SignTabs = createMaterialTopTabNavigator({
-  Login: {
-    screen: LoginStack,
-    navigationOptions: {
-      title: 'SIGN IN'
+const SignTabs = createMaterialTopTabNavigator(
+  {
+    Login: {
+      screen: LoginStack,
+      navigationOptions: {
+        title: 'SIGN IN'
+      }
+    },
+    Sign: {
+      screen: SignStack,
+      navigationOptions: {
+        title: 'SIGN UP'
+      }
     }
   },
-  Sign: {
-    screen: SignStack,
-    navigationOptions: {
-      title: 'SIGN UP'
+  {
+    tabBarOptions: {
+      activeTintColor: Colors.primaryText,
+      inactiveTintColor: Colors.secondaryText,
+      style: {
+        paddingTop: 60,
+        backgroundColor: Colors.background,
+        elevation: 0
+      },
+      labelStyle: {
+        fontSize: 16,
+        lineHeight: 20,
+        fontFamily: 'rubik-medium'
+      },
+      indicatorStyle: {
+        width: indicatorWidth,
+        height: 1.2,
+        marginLeft: tabWidth / 2 - indicatorWidth / 2
+      }
     }
   }
-}, {
-  tabBarOptions: {
-    activeTintColor: Colors.primaryText,
-    inactiveTintColor: Colors.secondaryText,
-    style: {
-      paddingTop: 60,
-      backgroundColor: Colors.background,
-      elevation: 0
-    },
-    labelStyle: {
-      fontSize: 16,
-      lineHeight: 20,
-      fontFamily: 'rubik-medium'
-    },
-    indicatorStyle: {
-      width: indicatorWidth,
-      height: 1.2,
-      marginLeft: ((tabWidth / 2) - (indicatorWidth / 2))
-    }
-  }
-})
+)
 
-const RootNavigator = createStackNavigator({
-  Loading: LoadingScene,
-  Welcome: WelcomeScene,
-  Auth: SignTabs,
-  App: AppTabs,
-  Send: SendScreen,
-  GetVault: GetVaultScene,
-  Participate: ParticipateScene,
-  SetPublicKey: {
-    screen: SetPublicKey,
-    path: 'getkey/:data'
+const RootNavigator = createStackNavigator(
+  {
+    Loading: LoadingScene,
+    Welcome: WelcomeScene,
+    Auth: SignTabs,
+    App: AppTabs,
+    Send: SendScreen,
+    GetVault: GetVaultScene,
+    Participate: ParticipateScene,
+    SetPublicKey: {
+      screen: SetPublicKey,
+      path: 'getkey/:data'
+    },
+    TransactionDetail: {
+      screen: TransactionScreen,
+      path: 'transaction/:tx'
+    }
   },
-  TransactionDetail: {
-    screen: TransactionScreen,
-    path: 'transaction/:tx'
+  {
+    initialRouteName: 'Loading',
+    mode: 'modal',
+    navigationOptions: {
+      header: null
+    }
   }
-}, {
-  initialRouteName: 'Loading',
-  mode: 'modal',
-  navigationOptions: {
-    header: null
-  }
-})
+)
 
 class App extends Component {
   render () {
