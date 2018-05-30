@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ActivityIndicator, Linking, Alert, ScrollView } from 'react-native'
+import { Linking, ScrollView } from 'react-native'
 import qs from 'qs'
 import { Linking as ExpoLinking } from 'expo'
 import * as Utils from '../../components/Utils'
@@ -23,7 +23,7 @@ class FreezeScene extends Component {
 
   sendDeepLink = async (data) => {
     const { from, amount } = this.state
-    const { navigation } = this.props
+    // const { navigation } = this.props
 
     try {
       // Data to deep link, same format as Tron Wallet
@@ -87,7 +87,7 @@ class FreezeScene extends Component {
   }
 
   unfreezeToken = () => {
-    const { amount } = this.state
+    // const { amount } = this.state
     // alert('UNFREEZE');
   }
 

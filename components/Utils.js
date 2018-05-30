@@ -143,9 +143,11 @@ Label.propTypes = {
 
 export const FormInput = styled.TextInput`
   color: ${Colors.primaryText};
-  padding: ${Spacing.small}px 0px;
+  /* padding: ${Spacing.medium}px; */
+  padding: ${props => props.padding}px;
   font-size: ${FontSize['small']};
   margin-bottom: ${props => props.marginBottom}px;
+  margin-top: ${props => props.marginTop}px;
   /* border-bottom-width: 0.3px; */
   border-width: 0.5px;
   /* border-bottom-color: ${Colors.secondaryText}; */
@@ -159,7 +161,9 @@ export const FormInput = styled.TextInput`
 `
 
 FormInput.defaultProps = {
-  marginBottom: Spacing.medium
+  marginBottom: Spacing.medium,
+  marginTop: Spacing.small,
+  padding: Spacing.small
 }
 
 export const FormGroup = styled.KeyboardAvoidingView`
@@ -185,7 +189,8 @@ InputError.defaultProps = {
 
 export const PasteButton = styled.TouchableOpacity`
   margin-horizontal: 5px;
-  padding: ${Spacing.medium - 5}px;
+  /* padding: ${Spacing.medium - 5}px; */
+  padding: ${Spacing.small}px;
   border-radius: 5px;
   border-width:1px;
   borderColor: ${Colors.secondaryText};

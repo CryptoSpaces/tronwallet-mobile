@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Utils from './../../../components/Utils'
-import { Colors } from './../../../components/DesignSystem'
-import { View, StyleSheet, TextInput } from 'react-native'
+import { Colors, Spacing } from './../../../components/DesignSystem'
+import { View, StyleSheet } from 'react-native'
 
 const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote }) => {
   let url = item.url
@@ -30,13 +30,14 @@ const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote }) => {
           </Utils.View>
         </Utils.Row>
         <Utils.Row align='center' justify='space-between'>
-          <TextInput
+          <Utils.FormInput
             underlineColorAndroid='transparent'
             keyboardType='numeric'
             onChangeText={(v) => onChangeVotes(v, item.address)}
             placeholderTextColor={Colors.secondaryText}
             placeholder={`${userVote || 0}`}
             value={votes || null}
+            padding={Spacing.small}
             style={styles.input}
           />
         </Utils.Row>
@@ -50,12 +51,7 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   input: {
-    color: Colors.primaryText,
-    borderWidth: 0.5,
-    borderColor: Colors.secondaryText,
-    minWidth: 70,
-    borderRadius: 5,
-    padding: 10
+    minWidth: 70
   }
 })
 
