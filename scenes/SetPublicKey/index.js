@@ -81,28 +81,18 @@ export default class SetPkScene extends Component {
   goBackLogin = () => this.props.navigation.goBack()
 
   renderButtonOptions = () => {
-    return (
-      <React.Fragment>
-        <ButtonGradient
-          text='CONFIRM PUBLIC KEY'
-          onPress={this.confirmPublicKey}
-        />
-        <Utils.VerticalSpacer size='large' />
-        <TouchableOpacity
-          style={{
-            alignItems: 'center',
-            justifyContent: 'space-around',
-            marginHorizontal: 5,
-            flexDirection: 'row'
-          }}
-          onPress={this.getKeyFromVault}
-        >
-          <Utils.Text secondary font='light' size='small'>
-            CONNECT TRON VAULT
-          </Utils.Text>
-        </TouchableOpacity>
-      </React.Fragment>
-    )
+    return <React.Fragment>
+      <ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} size='small' />
+      <Utils.VerticalSpacer size='large' />
+      <TouchableOpacity style={{
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        marginHorizontal: 5,
+        flexDirection: 'row'
+      }} onPress={this.getKeyFromVault}>
+        <Utils.Text secondary font='light' size='small'>CONNECT TRON VAULT</Utils.Text>
+      </TouchableOpacity>
+    </React.Fragment>
   }
 
   renderLoadingView = () => (

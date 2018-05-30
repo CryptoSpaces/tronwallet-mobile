@@ -4,7 +4,7 @@ import { Colors } from './DesignSystem'
 import * as Utils from './Utils'
 import ButtonGradient from '../components/ButtonGradient'
 
-const CardRow = ({ label, value }) => (
+export const CardRow = ({ label, value }) => (
   <View style={styles.cardRow}>
     <Utils.Text size='xsmall'>{label}:</Utils.Text>
     <Utils.Text size='xsmall' style={{ paddingLeft: '2%' }}>{value}</Utils.Text>
@@ -30,7 +30,8 @@ class Card extends Component {
             marginBottom={10}
             autoCapitalize='none'
             autoCorrect={false}
-            onChangeText={() => {}}
+            value={this.props.value}
+            onChangeText={(value) => this.props.onChange(value)}
             onSubmitEditing={() => {}}
             returnKeyType='send'
             style={{
@@ -45,16 +46,23 @@ class Card extends Component {
   }
 
   render () {
-    const { buttonLabel } = this.props
+    const { buttonLabel, children, onPress } = this.props
+
     return (
       <View style={styles.container}>
         {this.renderInput()}
-        <CardRow label='New Frozen TRX' value='2,000' />
-        <CardRow label='New Votes' value='2,000' />
-        <CardRow label='New BandWith' value='4,000,000,000' />
-        <View style={styles.buttonWrapper}>
-          <ButtonGradient text={buttonLabel} onPress={() => {}} size='small' />
-        </View>
+        {children}
+
+        {
+          buttonLabel
+            ? (
+              <View style={styles.buttonWrapper}>
+                <ButtonGradient text={buttonLabel} onPress={onPress} size='small' />
+              </View>
+            )
+            : <View />
+
+        }
       </View>
     )
   }

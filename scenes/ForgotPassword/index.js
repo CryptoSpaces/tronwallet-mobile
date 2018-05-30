@@ -55,14 +55,11 @@ class SignupScene extends Component {
             keyboardType='email-address'
             onChangeText={text => this.changeInput(text, 'email')}
           />
-          {loadingForgot ? (
-            <ActivityIndicator size='small' color={Colors.yellow} />
-          ) : (
-            <ButtonGradient
-              text='Change Password'
-              onPress={this.forgotPassword}
-            />
-          )}
+          {
+            loadingForgot
+              ? <ActivityIndicator size='small' color={Colors.yellow} />
+              : <ButtonGradient text='Change Password' onPress={this.forgotPassword} size='medium' />
+          }
         </Utils.Content>
         <Utils.Content justify='center' align='center'>
           <Utils.Text

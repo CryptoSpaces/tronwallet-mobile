@@ -79,7 +79,7 @@ class SignupScene extends Component {
       )
     }
 
-    return <ButtonGradient text='SIGN UP' onPress={this.signUp} />
+    return (<ButtonGradient text='SIGN UP' onPress={this.signUp} size='medium' />)
   }
 
   render () {

@@ -18,7 +18,7 @@ export default class TransferScene extends React.Component {
         <SafeAreaView style={{ backgroundColor: 'black' }}>
           <Utils.Header>
             <Utils.TitleWrapper>
-              <Utils.Title>Account</Utils.Title>
+              <Utils.Title>Transfers</Utils.Title>
             </Utils.TitleWrapper>
           </Utils.Header>
         </SafeAreaView>
@@ -42,10 +42,10 @@ export default class TransferScene extends React.Component {
   )
 
   _renderScene = SceneMap({
-    send: SendScreen,
+    send: () => <SendScreen {...this.props} />,
     receive: () => <ReceiveScreen {...this.props} />,
-    freeze: FreezeScreen
-  })
+    freeze: () => <FreezeScreen {...this.props} />
+  });
 
   render () {
     return (
@@ -55,7 +55,7 @@ export default class TransferScene extends React.Component {
         renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
         initialLayout={initialLayout}
-        style={{ backgroundColor: 'black' }}
+        style={{ backgroundColor: '#191a29' }}
       />
     )
   }

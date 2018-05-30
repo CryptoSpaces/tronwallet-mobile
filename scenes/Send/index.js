@@ -165,6 +165,7 @@ class SendScene extends Component {
               field='from'
               onChangeText={text => this.changeInput(text, 'to')}
             />
+            <Utils.VerticalSpacer size='medium' />
             <Utils.Text size='xsmall' secondary>
               Token
             </Utils.Text>
@@ -173,7 +174,7 @@ class SendScene extends Component {
               defaultText={this.state.token}
               style={{
                 borderBottomWidth: 0.5,
-                width: '50%',
+                width: '100%',
                 borderWidth: 0,
                 marginVertical: 10,
                 borderColor: Colors.secondaryText
@@ -188,7 +189,7 @@ class SendScene extends Component {
             >
               {this.renderTokens()}
             </Select>
-
+            <Utils.VerticalSpacer size='medium' />
             <Utils.Text size='xsmall' secondary>
               Amount
             </Utils.Text>
@@ -199,12 +200,8 @@ class SendScene extends Component {
                 value={String(this.state.amount)}
                 onChangeText={text => this.changeInput(text, 'amount')}
                 placeholderTextColor='#fff'
-                placeholder='0'
-                style={{ marginRight: 15, width: '50%' }}
+                style={{ marginRight: 15, width: '100%' }}
               />
-              <Utils.PlusButton onPress={this.changeAmount}>
-                <Utils.Text size='xsmall'>+</Utils.Text>
-              </Utils.PlusButton>
             </Utils.Row>
           </Utils.Content>
           <Utils.Content justify='center' align='center'>
@@ -212,7 +209,7 @@ class SendScene extends Component {
             {loadingSign || loadingData ? (
               <ActivityIndicator size='small' color={Colors.yellow} />
             ) : (
-              <ButtonGradient text='Send Token' onPress={this.sendDeepLink} />
+              <ButtonGradient text='Send Token' onPress={this.sendDeepLink} size='small' />
             )}
             <Utils.VerticalSpacer size='medium' />
           </Utils.Content>
