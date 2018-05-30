@@ -12,6 +12,7 @@ import * as Utils from '../../components/Utils'
 import { Colors } from './../../components/DesignSystem'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client from '../../src/services/client'
+import { DeeplinkURL } from '../../utils/deeplinkUtils'
 
 class ParticipateScene extends Component {
   state = {
@@ -42,16 +43,28 @@ class ParticipateScene extends Component {
         },
         pk: pk,
         from: 'mobile',
+        action: 'transaction',
         URL: Linking.makeUrl('transaction'),
         data: response.data.transaction
       })
-      const url = `tronvault://tronvault/auth/${dataToSend}`
-      const supported = await Linking.canOpenURL(url)
-      if (supported) await Linking.openURL(url)
+
+      this.openDeepLink(dataToSend)
     } catch (err) {
       console.log(err)
     }
     this.setState({ loading: false })
+  }
+
+  openDeepLink = async (dataToSend) => {
+    try {
+      const url = `${DeeplinkURL}auth/${dataToSend}`
+      await Linking.openURL(url)
+      this.setState({ loading: false })
+    } catch (error) {
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
+    }
   }
 
   formatPercentage = (percentage) => numeral(percentage).format('0.[00]') + '%'

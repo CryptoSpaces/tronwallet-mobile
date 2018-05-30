@@ -6,6 +6,7 @@ import * as Utils from '../../components/Utils'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import Card, { CardRow } from './../../components/Card'
+import { DeeplinkURL } from '../../utils/deeplinkUtils'
 
 class FreezeScene extends Component {
   state = {
@@ -14,7 +15,8 @@ class FreezeScene extends Component {
     trxBalance: 0,
     bandwidth: 0,
     total: 0,
-    amount: 0
+    amount: 0,
+    loading: true
   }
 
   componentDidMount () {
@@ -29,8 +31,7 @@ class FreezeScene extends Component {
 
   sendDeepLink = async (data) => {
     const { from, amount } = this.state
-    // const { navigation } = this.props
-
+    this.setState({ loading: true })
     try {
       // Data to deep link, same format as Tron Wallet
       const dataToSend = qs.stringify({
@@ -41,26 +42,23 @@ class FreezeScene extends Component {
         URL: ExpoLinking.makeUrl('/transaction'),
         data
       })
-
-      const url = `tronvault://auth/${dataToSend}`
-
-      // TODO: handle android and ios
-      await Linking.openURL(url)
-      // const supported = await Linking.canOpenURL(url)
-      // console.log(supported, '<<< Supported')
-      // if (supported) {
-      //   console.log('supported?', supported)
-      //   await Linking.openURL(url)
-      //   this.setState({ loadingSign: false })
-
-      // } else {
-      //   this.setState({ loadingSign: false }, () => {
-      //     this.props.navigation.navigate('GetVault')
-      //   })
-      // }
+      this.openDeepLink(dataToSend)
     } catch (error) {
-      alert(error.message)
-      this.setState({ signError: error.message || error, loadingSign: false })
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
+    }
+  }
+
+  openDeepLink = async (dataToSend) => {
+    try {
+      const url = `${DeeplinkURL}auth/${dataToSend}`
+      await Linking.openURL(url)
+      this.setState({ loading: false })
+    } catch (error) {
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
     }
   }
 
@@ -74,13 +72,14 @@ class FreezeScene extends Component {
         balances: result[1],
         trxBalance: balance,
         bandwidth: result[1].bandwidth.netRemaining,
-        total: result[1].total
+        total: result[1].total,
+        loading: false
       })
     } catch (error) {
       // console.log('ERROR', error)
       // TODO - Error handler
       this.setState({
-        loadingData: false
+        loading: false
       })
     }
   }
