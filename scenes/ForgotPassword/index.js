@@ -46,10 +46,16 @@ class SignupScene extends Component {
         <Utils.Content>
           <Utils.Text size='xsmall' secondary>Change Password</Utils.Text>
           <Utils.Text size='xsmall'>Provide your email to proceed with the recovery</Utils.Text>
-          <Utils.FormInput keyboardType='email-address' onChangeText={(text) => this.changeInput(text, 'email')} />
-          {loadingForgot
-            ? <ActivityIndicator size='small' color={Colors.yellow} />
-            : <ButtonGradient text='Change Password' onPress={this.forgotPassword} />
+          <Utils.FormInput
+            autoCorrect={false}
+            autoCapitalize='none'
+            keyboardType='email-address'
+            onChangeText={(text) => this.changeInput(text, 'email')}
+          />
+          {
+            loadingForgot
+              ? <ActivityIndicator size='small' color={Colors.yellow} />
+              : <ButtonGradient text='Change Password' onPress={this.forgotPassword} size="medium" />
           }
         </Utils.Content>
         <Utils.Content justify='center' align='center'>

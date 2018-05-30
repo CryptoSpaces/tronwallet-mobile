@@ -3,9 +3,31 @@ import styled, { css } from 'styled-components'
 import { ImageBackground } from 'react-native'
 import PropTypes from 'prop-types'
 import { Constants } from 'expo'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
+
+export const Header = styled.View`
+  height: 90px;
+  flex-direction: row;
+  align-items: center;
+  background-color: black;
+  border-bottom-width: 1px;
+  border-color: black;
+`
+
+export const Title = styled.Text`
+  color: white;
+  font-weight: 700;
+  padding-left: 16;
+  font-size: 26;
+`
+
+export const TitleWrapper = styled.View`
+	flex: 1;
+	height: 100%;
+	background-color: black;
+	justify-content: center;
+`
 
 export const View = styled.View`
   align-items: ${props => props.align};
@@ -27,14 +49,10 @@ View.propTypes = {
   flex: PropTypes.number
 }
 
-export const Container = styled.ScrollView`
-  flex: 1;
-  background-color: ${Colors.background};
-  ${props => props.darker && css`background-color: ${Colors.darkerBackground};`}
-  ${props => props.transparent && css`background-color: transparent;`}
-`
-
-export const KeyboardAwareContainer = Container.withComponent(KeyboardAwareScrollView)
+export const Container = View.extend.attrs({
+  flex: 1,
+  background: Colors.background
+})``
 
 export const Content = View.extend`
   padding: ${Spacing.big}px;
@@ -51,6 +69,10 @@ export const ContentWithBackground = Content.withComponent(ImageBackground)
 
 export const Row = View.extend`
   flex-direction: row;
+`
+
+export const Column = View.extend`
+  flex-direction: column;
 `
 
 export const HorizontalSpacer = styled.View`
@@ -79,7 +101,7 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   font-family: rubik-medium;
-  color: ${Colors.primaryText};
+  color: ${props => props.color};
   font-size: ${props => FontSize[props.size]};
   ${props => props.font && css`font-family: rubik-${props.font}`};
   ${props => props.secondary && css`color: ${Colors.secondaryText}`};
@@ -89,7 +111,8 @@ export const Text = styled.Text`
 `
 
 Text.defaultProps = {
-  size: 'small'
+  size: 'small',
+  color: Colors.primaryText
 }
 
 Text.propTypes = {
@@ -103,7 +126,7 @@ export const Item = styled.View`
   border-color: ${Colors.secondaryText};
   ${props => props.borderColor && css`border-color: ${props.borderColor}`};
   border-bottom-width: 0.2px;
-  ${props => props.lineWidth && css`border-bottom-width: ${props.lineWidth}px`};
+  ${props => props.top && css`border-top-width: 0.2px`}
 `
 
 export const Label = styled.View`
@@ -119,11 +142,12 @@ Label.propTypes = {
 export const FormInput = styled.TextInput`
   color: ${Colors.primaryText};
   padding: ${Spacing.small}px 0px;
-  font-size: ${FontSize['xsmall']};
+  font-size: ${FontSize['small']};
   margin-bottom: ${props => props.marginBottom}px;
   border-bottom-width: 0.3px;
   border-bottom-color: ${Colors.secondaryText};
 `
+
 FormInput.defaultProps = {
   marginBottom: Spacing.medium
 }
@@ -181,3 +205,10 @@ export const Button = props => (
     <Text>{props.children}</Text>
   </ButtonWrapper>
 )
+
+export const Card = styled.View`
+  padding: 10px;
+  background-color: ${Colors.darkerBackground};
+  width: 100%;
+  border-radius: 6px;
+`

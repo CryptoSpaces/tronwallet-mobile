@@ -4,10 +4,14 @@ import _ from 'lodash'
 import {
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView
 } from 'react-native'
 import { LinearGradient, Linking } from 'expo'
 import qs from 'qs'
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 // Utils
 import { Colors, Spacing } from '../../components/DesignSystem'
@@ -17,11 +21,26 @@ import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
 import VoteItem from '../../src/components/Vote/VoteItem'
 import LoadingScene from '../../components/LoadingScene'
+import ButtonGradient from '../../components/ButtonGradient'
 
 // Service
 import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
+  static navigationOptions = ({ navigation }) => {
+	  return {
+	    header: (
+        <SafeAreaView style={{ backgroundColor: 'black' }}>
+    <Utils.Header>
+            <Utils.TitleWrapper>
+        <Utils.Title>Vote</Utils.Title>
+      </Utils.TitleWrapper>
+          </Utils.Header>
+  </SafeAreaView>
+	    )
+	  }
+  }
+
   state = {
     voteList: [],
     currentItem: null,
@@ -118,13 +137,12 @@ class VoteScene extends PureComponent {
     return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
-  renderRow = (item, key) => {
+  renderRow = ({ item, index }) => {
     const { currentVotes, userVotes } = this.state
     return (
       <VoteItem
-        key={key}
         item={item}
-        index={key}
+        index={index}
         format={this.format}
         onChangeVotes={this.onChangeVotes}
         votes={currentVotes[item.address]}
@@ -133,12 +151,24 @@ class VoteScene extends PureComponent {
     )
   }
 
-  renderList = () => {
-    const { voteList } = this.state
-    return voteList.map((vote, key) => {
-      return this.renderRow(vote, key)
-    })
-  }
+  renderList = () => Platform.select({
+    ios: (
+      <KeyboardAwareFlatList
+        keyExtractor={item => item.address}
+        data={this.state.voteList}
+        renderItem={this.renderRow}
+      />
+    ),
+    android: (
+      <KeyboardAvoidingView behavior='padding'>
+        <KeyboardAwareFlatList
+          keyExtractor={item => item.address}
+          data={this.state.voteList}
+          renderItem={this.renderRow}
+        />
+      </KeyboardAvoidingView>
+    )
+  })
 
   render () {
     const {
@@ -151,60 +181,55 @@ class VoteScene extends PureComponent {
     if (loading) return <LoadingScene />
 
     return (
-      <Utils.KeyboardAwareContainer enableOnAndroid>
-        <Utils.Container>
-          <Utils.StatusBar transparent />
-          <Header>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
-              <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
-            </Utils.View>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
-              <Utils.Text
-                size='small'
-                style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
-              >
-                {this.format(totalRemaining)}
-              </Utils.Text>
-            </Utils.View>
-          </Header>
-          <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              onChangeText={(text) => this.onSearch(text, 'search')}
-              placeholder='Search'
-              placeholderTextColor='#fff'
-              style={{ width: '70%' }}
-            />
-            <TouchableOpacity onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}>
-              <LinearGradient
-                start={[0, 1]}
-                end={[1, 0]}
-                colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-                style={styles.submitButton}
-              >
-                <Utils.Text size='xsmall'>Submit</Utils.Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </Utils.Row>
-          {
-            loadingList
-              ? <Utils.Content height={200} justify='center' align='center'>
-                <ActivityIndicator size='large' color={Colors.primaryText} />
+      <Utils.Container>
+        <Utils.StatusBar transparent />
+        <Header>
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
+            <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
+          </Utils.View>
+          <Utils.View align='center'>
+            <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
+            <Utils.Text
+              size='small'
+              style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
+            >
+              {this.format(totalRemaining)}
+            </Utils.Text>
+          </Utils.View>
+        </Header>
+        <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
+          <Utils.FormInput
+            underlineColorAndroid='transparent'
+            onChangeText={(text) => this.onSearch(text, 'search')}
+            placeholder='Search'
+            placeholderTextColor='#fff'
+            style={{ width: '70%', marginLeft: 15 }}
+          />
+          <ButtonGradient
+            size="small"
+            text="Submit"
+            onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}
+          />
+        </Utils.Row>
+        {
+          loadingList
+            ? (
+              <Utils.Content height={200} justify='center' align='center'>
+                <ActivityIndicator size='large' color={Colors.yellow} />
               </Utils.Content>
-              : this.renderList()
-          }
-        </Utils.Container>
-      </Utils.KeyboardAwareContainer>
+            )
+            : this.renderList()
+        }
+      </Utils.Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
   searchWrapper: {
-    paddingLeft: 24,
-    paddingRight: 24
+    // paddingLeft: 0,
+    paddingRight: 16
   },
   submitButton: {
     padding: Spacing.small,

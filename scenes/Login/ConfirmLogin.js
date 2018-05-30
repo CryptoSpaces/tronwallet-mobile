@@ -95,7 +95,7 @@ class ConfirmLogin extends Component {
   showToast = (success) => {
     console.log(this.state.totpCode)
 
-    if (success) { this.refs.toast.show('TOTP authenticator copied to the clipboard') }
+    if (success) { this.refs.toast.show('Google Authenticator secret copied to the clipboard') }
   }
 
   renderTOTPArea = () => {
@@ -104,11 +104,13 @@ class ConfirmLogin extends Component {
 
     return (
       <React.Fragment>
-        <Utils.Text size='small' marginBottom={20} secondary>TOTP Secret</Utils.Text>
         <Utils.Text size='xsmall'>
-          You need to link your account with some TOTP authenticator. {'\n'}We recomend Google Authenticator.
+          For security reasons, you will need to link your account with Google Authenticator, please copy the code below to add to it. After add the code in your Google Authenticator, please copy the six digits code and paste it on the input above.
         </Utils.Text>
+        <Utils.VerticalSpacer size='medium' />
+        <Utils.Text size='xsmall' secondary>COPY THE CODE TO ADD TO YOUR GOOGLE AUTHENTICATOR</Utils.Text>
         <CopyInput value={totpCode} editable={false} onCopyText={this.showToast} />
+        <Utils.VerticalSpacer size='small' />
       </React.Fragment>
     )
   }
@@ -122,7 +124,7 @@ class ConfirmLogin extends Component {
         </Utils.Content>
         <Utils.Content>
 
-          <Utils.Text size='xsmall' secondary>AUTHENTICATOR CODE</Utils.Text>
+          <Utils.Text size='xsmall' secondary>PASTE GOOGLE AUTHENTICATOR CODE HERE</Utils.Text>
           <Utils.FormInput underlineColorAndroid='transparent' onChangeText={(text) => this.changeInput(text, 'code')} />
 
           {this.renderTOTPArea()}
@@ -131,10 +133,9 @@ class ConfirmLogin extends Component {
             ? (<Utils.Content height={80} justify='center' align='center'>
               <ActivityIndicator size='small' color={Colors.yellow} />
             </Utils.Content>)
-            : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} />)
+            : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} size="medium" />)
           }
         </Utils.Content>
-
         <Utils.Content justify='center' align='center'>
           <Utils.Error>{confirmError}</Utils.Error>
           <Utils.Text size='small' font='light' secondary onPress={this.goBackLogin} > Back to Login </Utils.Text>

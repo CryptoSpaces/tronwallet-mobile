@@ -108,23 +108,24 @@ class HomeScene extends Component {
         <Utils.ContentWithBackground source={require('../../assets/home-header.png')} resizeMode='contain'>
           <Utils.StatusBar transparent />
           <Utils.VerticalSpacer size='large' />
-          <Utils.View align='flex-start'>
+          <Utils.View align='center'>
             <Image source={require('../../assets/tron-logo-small.png')} resizeMode='contain' style={{height: 60}} />
+            <Utils.VerticalSpacer size='medium' />
+            <Utils.Text secondary>TRX PRICE</Utils.Text>
           </Utils.View>
-          <Utils.Row justify='flex-end'>
+          <Utils.VerticalSpacer size='small' />
+          <Utils.Row justify='center'>
             <Utils.View>
-              <Utils.Text secondary>TRX PRICE</Utils.Text>
               <Utils.Row>
                 <Utils.Text secondary />
                 <Utils.HorizontalSpacer />
-                <Utils.Text size='medium'>{price}</Utils.Text>
+                <Utils.Text size='medium'>$ {price}</Utils.Text>
               </Utils.Row>
             </Utils.View>
           </Utils.Row>
           <Utils.VerticalSpacer size='large' />
         </Utils.ContentWithBackground>
         <Utils.Content background={Colors.background} flex={1}>
-          <Utils.VerticalSpacer size='large' />
           <Utils.Row justify='space-between' align='center'>
             <Utils.View>
               <Utils.Text secondary size='xsmall' lineHeight={20}>MARKET CAP</Utils.Text>
@@ -151,7 +152,6 @@ class HomeScene extends Component {
               )
             }
           </Utils.Row>
-          <Utils.VerticalSpacer size='large' />
         </Utils.Content>
         <Utils.Row justify='space-evenly'>
           {

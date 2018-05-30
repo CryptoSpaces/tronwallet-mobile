@@ -46,9 +46,21 @@ class ConfirmNewPassword extends Component {
           <Utils.Text size='xsmall'>We sent you an email, please submit the code with the new password</Utils.Text>
           <Utils.VerticalSpacer size='small' />
           <Utils.Text size='xsmall' secondary>Code</Utils.Text>
-          <Utils.FormInput keyboardType='email-address' onChangeText={(text) => this.changeInput(text, 'code')} />
+          <Utils.FormInput
+            autoCorrect={false}
+            autoCapitalize='none'
+            keyboardType='email-address'
+            onChangeText={(text) => this.changeInput(text, 'code')}
+          />
           <Utils.Text size='xsmall' secondary>New Password</Utils.Text>
-          <Utils.FormInput letterSpacing={10} secureTextEntry keyboardType='numeric' onChangeText={(text) => this.changeInput(text, 'newPassword')} />
+          <Utils.FormInput
+            letterSpacing={10}
+            secureTextEntry
+            autoCorrect={false}
+            autoCapitalize='none'
+            keyboardType='numeric'
+            onChangeText={text => this.changeInput(text, 'newPassword')}
+          />
           {loadingForgot
             ? <ActivityIndicator size='small' color={Colors.yellow} />
             : <ButtonGradient text='Confirm new Password' size='small' onPress={this.submitNewPassword} />
