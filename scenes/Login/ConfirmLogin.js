@@ -3,7 +3,7 @@ import { ActivityIndicator, Image, ScrollView, KeyboardAvoidingView } from 'reac
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
 
-import { Colors, Spacing } from '../../components/DesignSystem'
+import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../src/services/address'

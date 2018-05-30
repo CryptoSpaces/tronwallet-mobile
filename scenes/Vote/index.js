@@ -2,11 +2,11 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import {
-  StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView
+  SafeAreaView,
+  View
 } from 'react-native'
 import { Linking } from 'expo'
 import qs from 'qs'
@@ -27,6 +27,7 @@ import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
   static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
     return {
       header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
@@ -34,6 +35,14 @@ class VoteScene extends PureComponent {
             <Utils.TitleWrapper>
               <Utils.Title>Vote</Utils.Title>
             </Utils.TitleWrapper>
+            <View style={{ marginRight: 15 }}>
+              <Utils.Text>{params.totalRemaining}</Utils.Text>
+              <ButtonGradient
+                size='small'
+                text='Submit'
+                onPress={params.onSubmit}
+              />
+            </View>
           </Utils.Header>
         </SafeAreaView>
       )
@@ -55,7 +64,14 @@ class VoteScene extends PureComponent {
   }
 
   componentDidMount () {
-    this.onLoadData()
+    this.props.navigation.setParams({ onSubmit: this.onSubmit })
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      this.onLoadData()
+    })
+  }
+
+  componentWillUnmount () {
+    this._navListener.remove()
   }
 
   onLoadData = async () => {
@@ -82,27 +98,28 @@ class VoteScene extends PureComponent {
   }
 
   onSubmit = async () => {
-    const { from, currentVotes } = this.state
-    this.setState({ loading: true })
-    _.forIn(currentVotes, function (value, key) {
-      currentVotes[key] = Number(value)
-    })
-
-    try {
-      // Transaction String
-      const data = await Client.postVotes(currentVotes)
-      // Data to deep link, same format as Tron Wallet
-      const dataToSend = qs.stringify({
-        txDetails: { from, Type: 'VOTE' },
-        pk: from,
-        from: 'mobile',
-        action: 'transaction',
-        URL: Linking.makeUrl('/transaction'),
-        data
+    const { from, currentVotes, totalRemaining } = this.state
+    if (totalRemaining >= 0) {
+      this.setState({ loading: true })
+      _.forIn(currentVotes, function (value, key) {
+        currentVotes[key] = Number(value)
       })
-      this.openDeepLink(dataToSend)
-    } catch (error) {
-      this.setState({ loading: false })
+      try {
+        // Transaction String
+        const data = await Client.postVotes(currentVotes)
+        // Data to deep link, same format as Tron Wallet
+        const dataToSend = qs.stringify({
+          txDetails: { from, Type: 'VOTE' },
+          pk: from,
+          from: 'mobile',
+          action: 'transaction',
+          URL: Linking.makeUrl('/transaction'),
+          data
+        })
+        this.openDeepLink(dataToSend)
+      } catch (error) {
+        this.setState({ loading: false })
+      }
     }
   }
 
@@ -193,8 +210,7 @@ class VoteScene extends PureComponent {
 
     return (
       <Utils.Container>
-        <Utils.StatusBar transparent />
-        <Utils.Row justify='flex-start'>
+        <Header>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>
               TOTAL VOTES
@@ -203,7 +219,7 @@ class VoteScene extends PureComponent {
           </Utils.View>
           <Utils.View align='center'>
             <Utils.Text size='xsmall' secondary>
-              TOTAL REMAINING
+              VOTES AVAILABLE
             </Utils.Text>
             <Utils.Text
               size='small'
@@ -212,26 +228,17 @@ class VoteScene extends PureComponent {
               {this.format(totalRemaining)}
             </Utils.Text>
           </Utils.View>
-        </Utils.Row>
-        <Utils.Row
-          style={styles.searchWrapper}
-          justify='space-between'
-          align='center'
-        >
+        </Header>
+        <Utils.View justify='center' align='center'>
           <Utils.FormInput
             underlineColorAndroid='transparent'
             onChangeText={text => this.onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
             marginTop={Spacing.medium}
-            style={{ width: '70%', marginLeft: 15 }}
+            style={{ width: '95%' }}
           />
-          <ButtonGradient
-            size='small'
-            text='Submit'
-            onPress={totalRemaining >= 0 ? this.onSubmit : () => { }}
-          />
-        </Utils.Row>
+        </Utils.View>
         {loadingList ? (
           <Utils.Content height={200} justify='center' align='center'>
             <ActivityIndicator size='large' color={Colors.yellow} />
@@ -243,18 +250,5 @@ class VoteScene extends PureComponent {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  searchWrapper: {
-    // paddingLeft: 0,
-    paddingRight: 16
-  },
-  submitButton: {
-    padding: Spacing.small,
-    alignItems: 'center',
-    borderRadius: 5,
-    width: '100%'
-  }
-})
 
 export default VoteScene

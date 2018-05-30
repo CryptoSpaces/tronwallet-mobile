@@ -53,7 +53,7 @@ class SignupScene extends Component {
       <ButtonGradient
         onPress={this.confirmSignup}
         text='CONFIRM SIGN UP'
-        size='small'
+        size='medium'
       />
     )
   }
