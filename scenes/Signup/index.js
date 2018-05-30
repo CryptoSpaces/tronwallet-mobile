@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Image,
   Keyboard,
+  ScrollView,
   KeyboardAvoidingView
 } from 'react-native'
 import * as Utils from '../../components/Utils'
@@ -54,17 +55,17 @@ class SignupScene extends Component {
 
   _nextInput = target => {
     if (target === 'username') {
-      this.email.focus()
+      this.email.focus();
       return
     }
 
     if (target === 'email') {
-      this.password.focus()
+      this.password.focus();
       return
     }
 
     if (target === 'password') {
-      this.signUp()
+      this.signUp();
     }
   }
 
@@ -85,7 +86,13 @@ class SignupScene extends Component {
   render () {
     const { signError } = this.state
     return (
-      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+      <KeyboardAvoidingView 
+        behavior='padding'
+        keyboardVerticalOffset={150}
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
+        <ScrollView>
         <Utils.Container
           keyboardShouldPersistTaps={'always'}
           keyboardDismissMode='interactive'
@@ -160,6 +167,7 @@ class SignupScene extends Component {
             </Utils.Text>
           </Utils.Content>
         </Utils.Container>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }
