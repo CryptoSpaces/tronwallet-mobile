@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert, View, TouchableWithoutFeedback, SafeAreaView } from 'react-native'
+import {
+  StyleSheet,
+  Alert,
+  View,
+  TouchableWithoutFeedback,
+  SafeAreaView
+} from 'react-native'
 import { Auth } from 'aws-amplify'
 import { StackActions, NavigationActions } from 'react-navigation'
 
@@ -16,17 +22,17 @@ const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 class Settings extends Component {
   static navigationOptions = ({ navigation }) => {
-	  return {
-	    header: (
+    return {
+      header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
-    <Utils.Header>
+          <Utils.Header>
             <Utils.TitleWrapper>
-        <Utils.Title>Settings</Utils.Title>
-      </Utils.TitleWrapper>
+              <Utils.Title>Settings</Utils.Title>
+            </Utils.TitleWrapper>
           </Utils.Header>
-  </SafeAreaView>
-	    )
-	  }
+        </SafeAreaView>
+      )
+    }
   }
 
   state = {
@@ -46,7 +52,9 @@ class Settings extends Component {
   }
 
   showAlert = () => {
-    Alert.alert('Logout', 'Logout',
+    Alert.alert(
+      'Logout',
+      'Logout',
       [
         {
           text: 'Cancel',
@@ -84,11 +92,19 @@ class Settings extends Component {
           <Utils.Row justify='space-between' align='center'>
             <Utils.Row justify='space-between' align='center'>
               <View style={styles.rank}>
-                <Icon name={logout.icon} size={22} color={Colors.secondaryText} />
+                <Icon
+                  name={logout.icon}
+                  size={22}
+                  color={Colors.secondaryText}
+                />
               </View>
               <Utils.View>
-                <Utils.Text lineHeight={20} size='small'>{logout.title}</Utils.Text>
-                <Utils.Text lineHeight={20} size='xsmall' secondary>{logout.description}</Utils.Text>
+                <Utils.Text lineHeight={20} size='small'>
+                  {logout.title}
+                </Utils.Text>
+                <Utils.Text lineHeight={20} size='xsmall' secondary>
+                  {logout.description}
+                </Utils.Text>
               </Utils.View>
             </Utils.Row>
             <Utils.Row align='center' justify='space-between'>
@@ -102,7 +118,9 @@ class Settings extends Component {
 
   renderList = () => {
     const { currentUser } = this.state
-    let address = `${currentUser.slice(0, 10)}...${currentUser.substr(currentUser.length - 10)}`
+    let address = `${currentUser.slice(0, 10)}...${currentUser.substr(
+      currentUser.length - 10
+    )}`
     const list = [
       {
         title: address,
@@ -120,28 +138,35 @@ class Settings extends Component {
     return list.map((item, i) => {
       const arrowIcon = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
       return (
-        <TouchableWithoutFeedback
-          onPress={item.onPress}
-          key={i}
-        >
+        <TouchableWithoutFeedback onPress={item.onPress} key={i}>
           <Utils.Item padding={16}>
             <Utils.Row justify='space-between' align='center'>
               <Utils.Row justify='space-between' align='center'>
                 <View style={styles.rank}>
-                  <Icon name={item.icon} size={22} color={Colors.secondaryText} />
+                  <Icon
+                    name={item.icon}
+                    size={22}
+                    color={Colors.secondaryText}
+                  />
                 </View>
                 <Utils.View>
-                  <Utils.Text lineHeight={20} size='small'>{item.title}</Utils.Text>
-                  <Utils.Text lineHeight={20} size='xsmall' secondary>{item.description}</Utils.Text>
+                  <Utils.Text lineHeight={20} size='small'>
+                    {item.title}
+                  </Utils.Text>
+                  <Utils.Text lineHeight={20} size='xsmall' secondary>
+                    {item.description}
+                  </Utils.Text>
                 </Utils.View>
               </Utils.Row>
-              {
-                item.onPress
-                  ? <Utils.Row align='center' justify='space-between'>
-                    <Icon name={arrowIcon} size={15} color={Colors.secondaryText} />
-                  </Utils.Row>
-                  : null
-              }
+              {item.onPress ? (
+                <Utils.Row align='center' justify='space-between'>
+                  <Icon
+                    name={arrowIcon}
+                    size={15}
+                    color={Colors.secondaryText}
+                  />
+                </Utils.Row>
+              ) : null}
             </Utils.Row>
           </Utils.Item>
         </TouchableWithoutFeedback>

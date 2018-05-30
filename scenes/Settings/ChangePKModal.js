@@ -1,4 +1,4 @@
-import React, { PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import { Modal, View } from 'react-native'
 import * as Utils from './../../components/Utils'
 import Header from '../../components/Header'
@@ -70,14 +70,18 @@ class ChangePKModal extends PureComponent {
             }
           />
           <Utils.FormGroup>
-            <Utils.Text size='xsmall' secondary>NEW PUBLIC KEY</Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              NEW PUBLIC KEY
+            </Utils.Text>
             <Utils.FormInput
-              innerRef={ref => { this.newPk = ref }}
+              innerRef={ref => {
+                this.newPk = ref
+              }}
               underlineColorAndroid='transparent'
               marginBottom={40}
               autoCapitalize='none'
               autoCorrect={false}
-              onChangeText={(v) => this.setState({ newPk: v })}
+              onChangeText={v => this.setState({ newPk: v })}
               onSubmitEditing={this.setUser}
               returnKeyType='send'
             />

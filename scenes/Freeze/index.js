@@ -18,7 +18,10 @@ class ReceiveScene extends Component {
 
   loadData = async () => {
     try {
-      const result = await Promise.all([Client.getPublicKey(), Client.getBalances()])
+      const result = await Promise.all([
+        Client.getPublicKey(),
+        Client.getBalances()
+      ])
       const { balance } = result[1].find(b => b.name === 'TRX')
       this.setState({
         from: result[0],
@@ -34,16 +37,16 @@ class ReceiveScene extends Component {
   }
 
   render () {
-    const {
-      trxBalance
-    } = this.state
+    const { trxBalance } = this.state
 
     return (
       <Utils.Container>
         <Utils.StatusBar />
         <Header>
           <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>Freeze</Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              Freeze
+            </Utils.Text>
             <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
           </Utils.View>
         </Header>
@@ -52,7 +55,7 @@ class ReceiveScene extends Component {
 
           <Card buttonLabel='Unfreeze (0)' />
         </Utils.Content>
-      </Utils.Container >
+      </Utils.Container>
     )
   }
 }

@@ -23,10 +23,10 @@ export const Title = styled.Text`
 `
 
 export const TitleWrapper = styled.View`
-	flex: 1;
-	height: 100%;
-	background-color: black;
-	justify-content: center;
+  flex: 1;
+  height: 100%;
+  background-color: black;
+  justify-content: center;
 `
 
 export const View = styled.View`

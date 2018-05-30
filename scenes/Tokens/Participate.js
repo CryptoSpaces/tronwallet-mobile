@@ -22,12 +22,15 @@ class ParticipateScene extends Component {
     try {
       const pk = await Client.getPublicKey()
       this.setState({ loading: true })
-      const response = await axios.post('https://tronnotifier-dev.now.sh/v1/wallet/participate', {
-        from: pk,
-        issuer: this.props.navigation.state.params.token.ownerAddress,
-        token: this.props.navigation.state.params.token.name,
-        amount: Number(this.state.value)
-      })
+      const response = await axios.post(
+        'https://tronnotifier-dev.now.sh/v1/wallet/participate',
+        {
+          from: pk,
+          issuer: this.props.navigation.state.params.token.ownerAddress,
+          token: this.props.navigation.state.params.token.name,
+          amount: Number(this.state.value)
+        }
+      )
       const dataToSend = qs.stringify({
         txDetails: {
           from: pk,
@@ -51,13 +54,16 @@ class ParticipateScene extends Component {
   }
 
   renderConfirmButtom = () => {
-    if (this.state.loading) return (<ActivityIndicator />)
+    if (this.state.loading) return <ActivityIndicator />
 
-    return (<ButtonGradient onPress={this._confirm} text='Confirm' size='small' />)
+    return (
+      <ButtonGradient onPress={this._confirm} text='Confirm' size='small' />
+    )
   }
 
   render () {
     const token = this.props.navigation.getParam('token')
+    console.log(token)
     return (
       <KeyboardAwareScrollView>
         <Utils.Container>
@@ -71,72 +77,98 @@ class ParticipateScene extends Component {
               <Utils.View>
                 <Utils.Text size='medium'>{token.name}</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Utils.Text size='xsmall' success>block</Utils.Text>
+                <Utils.Text size='xsmall' success>
+                  block
+                </Utils.Text>
                 <Utils.Text>{token.block}</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Utils.Text size='xsmall' success>transaction</Utils.Text>
+                <Utils.Text size='xsmall' success>
+                  transaction
+                </Utils.Text>
                 <Utils.Text>{token.transaction}</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Utils.Text size='xsmall' success>ownerAddress</Utils.Text>
+                <Utils.Text size='xsmall' success>
+                  ownerAddress
+                </Utils.Text>
                 <Utils.Text>{token.ownerAddress}</Utils.Text>
                 <Utils.VerticalSpacer />
                 <Utils.VerticalSpacer />
                 <Utils.Row style={{ justifyContent: 'space-between' }}>
                   <Utils.View>
-                    <Utils.Text size='xsmall' success>trxNum</Utils.Text>
+                    <Utils.Text size='xsmall' success>
+                      trxNum
+                    </Utils.Text>
                     <Utils.Text>{token.trxNum}</Utils.Text>
                   </Utils.View>
                   <Utils.View>
-                    <Utils.Text size='xsmall' success>num</Utils.Text>
+                    <Utils.Text size='xsmall' success>
+                      num
+                    </Utils.Text>
                     <Utils.Text>{token.num}</Utils.Text>
                   </Utils.View>
                 </Utils.Row>
                 <Utils.VerticalSpacer />
                 <Utils.Row style={{ justifyContent: 'space-between' }}>
                   <Utils.View>
-                    <Utils.Text size='xsmall' success>startTime</Utils.Text>
-                    <Utils.Text size='xsmall'>{moment(token.startTime).format('YYYY-MM-DD h:mm:ss')}</Utils.Text>
+                    <Utils.Text size='xsmall' success>
+                      startTime
+                    </Utils.Text>
+                    <Utils.Text size='xsmall'>
+                      {moment(token.startTime).format('YYYY-MM-DD h:mm:ss')}
+                    </Utils.Text>
                   </Utils.View>
                   <Utils.View>
-                    <Utils.Text size='xsmall' success>endTime</Utils.Text>
-                    <Utils.Text size='xsmall'>{moment(token.endTime).format('YYYY-MM-DD h:mm:ss')}</Utils.Text>
+                    <Utils.Text size='xsmall' success>
+                      endTime
+                    </Utils.Text>
+                    <Utils.Text size='xsmall'>
+                      {moment(token.endTime).format('YYYY-MM-DD h:mm:ss')}
+                    </Utils.Text>
                   </Utils.View>
                 </Utils.Row>
                 <Utils.VerticalSpacer />
-                <Utils.Text size='xsmall' success>voteScore</Utils.Text>
+                <Utils.Text size='xsmall' success>
+                  voteScore
+                </Utils.Text>
                 <Utils.Text>{token.voteScore}</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Utils.Text size='xsmall' success>description</Utils.Text>
+                <Utils.Text size='xsmall' success>
+                  description
+                </Utils.Text>
                 <Utils.Text>{token.description}</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Utils.Text size='xsmall' success>url</Utils.Text>
+                <Utils.Text size='xsmall' success>
+                  url
+                </Utils.Text>
                 <Utils.Text>{token.url}</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Utils.Text size='xsmall' success>dateCreated</Utils.Text>
+                <Utils.Text size='xsmall' success>
+                  dateCreated
+                </Utils.Text>
                 <Utils.Text>{token.dateCreated}</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Utils.Row style={{ justifyContent: 'space-between' }}>
-                  <Utils.View>
-                    <Utils.Text size='xsmall' success>frozen</Utils.Text>
-                    <Utils.Text>{token.frozen}</Utils.Text>
-                  </Utils.View>
-                  <Utils.View>
-                    <Utils.Text size='xsmall' success>price</Utils.Text>
-                    <Utils.Text>{token.price}</Utils.Text>
-                  </Utils.View>
-                </Utils.Row>
+                <Utils.Text size='xsmall' success>
+                  price
+                </Utils.Text>
+                <Utils.Text>{token.price} TRX</Utils.Text>
                 <Utils.VerticalSpacer />
                 <Utils.Row style={{ justifyContent: 'space-between' }}>
                   <Utils.View>
-                    <Utils.Text size='xsmall' success>percentage</Utils.Text>
+                    <Utils.Text size='xsmall' success>
+                      percentage
+                    </Utils.Text>
                     <Utils.Text>{token.percentage}%</Utils.Text>
                   </Utils.View>
                   <Utils.View>
-                    <Utils.Text size='xsmall' success>issued</Utils.Text>
+                    <Utils.Text size='xsmall' success>
+                      issued
+                    </Utils.Text>
                     <Utils.Text>{token.issued}</Utils.Text>
                   </Utils.View>
                   <Utils.View>
-                    <Utils.Text size='xsmall' success>totalSupply</Utils.Text>
+                    <Utils.Text size='xsmall' success>
+                      totalSupply
+                    </Utils.Text>
                     <Utils.Text>{token.totalSupply}</Utils.Text>
                   </Utils.View>
                 </Utils.Row>
@@ -151,7 +183,9 @@ class ParticipateScene extends Component {
                   underlineColorAndroid='transparent'
                   returnKeyType={'send'}
                 />
-                <Utils.Text>Value: {Number(this.state.value) * token.price} TRX</Utils.Text>
+                <Utils.Text>
+                  Value: {Number(this.state.value) * token.price} TRX
+                </Utils.Text>
                 <Utils.VerticalSpacer />
                 {this.renderConfirmButtom()}
               </Utils.Content>
