@@ -12,6 +12,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../src/services/address'
 import Client from '../../src/services/client'
 import qs from 'qs'
+import { DeeplinkURL } from '../../utils/deeplinkUtils'
 
 export default class SetPkScene extends Component {
   state = {
@@ -20,7 +21,7 @@ export default class SetPkScene extends Component {
     error: null
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     this._checkDeepLink(nextProps)
   }
 
@@ -62,19 +63,24 @@ export default class SetPkScene extends Component {
         action: 'getkey',
         URL: ExpoLinking.makeUrl('/getkey')
       })
-      const url = `tronvault://tronvault/auth/${dataToSend}`
-
+      
       const supported = await Linking.canOpenURL(url)
-      if (supported) {
-        await Linking.openURL(url)
-        this.setState({ loading: false })
-      } else {
-        this.setState({ loading: false }, () => {
-          this.props.navigation.navigate('GetVault')
-        })
-      }
+      this.openDeepLink(dataToSend);
     } catch (error) {
       this.setState({ error: error.message, loading: false })
+    }
+  }
+
+
+  openDeepLink = async (dataToSend) => {
+    try {
+      const url = `${DeeplinkURL}auth/${dataToSend}`
+      await Linking.openURL(url)
+      this.setState({ loading: false })
+    } catch (error) {
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
     }
   }
 
@@ -100,7 +106,7 @@ export default class SetPkScene extends Component {
       <ActivityIndicator size='small' color={Colors.yellow} />
     </Utils.Content>
   )
-  render () {
+  render() {
     const { userPublicKey, loading, error } = this.state
     return (
       <Utils.Container>
