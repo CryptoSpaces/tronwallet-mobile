@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Dimensions, Clipboard } from 'react-native'
+import { Dimensions, Clipboard, ScrollView } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import { Feather } from '@expo/vector-icons'
@@ -50,35 +50,35 @@ class ReceiveScreen extends PureComponent {
     if (loading) return <LoadingScene />
 
     return (
-      <Utils.Container>
-        <Utils.StatusBar />
-        <Utils.VerticalSpacer size='large' />
-        <Utils.Content align='center'>
-          {!!publicKey && (
-            <QRCode
-              value={publicKey}
-              size={width * 0.6}
+      <ScrollView>
+        <Utils.Container>
+          <Utils.StatusBar />
+          <Utils.Content align='center'>
+            {!!publicKey && <QRCode value={publicKey} size={width * 0.6} />}
+            <Utils.VerticalSpacer size='large' />
+
+            <Utils.Label color={tint(0.9, Colors.background)}>
+              <Utils.Text size='xsmall'>{publicKey}</Utils.Text>
+            </Utils.Label>
+            <Utils.VerticalSpacer size='medium' />
+
+            <Utils.PasteButton onPress={this._copy}>
+              <Feather
+                name='clipboard'
+                size={FontSize['small']}
+                color={Colors.primaryText}
+              />
+            </Utils.PasteButton>
+            <Toast
+              ref='toast'
+              position='center'
+              fadeInDuration={750}
+              fadeOutDuration={1000}
+              opacity={0.8}
             />
-          )}
-          <Utils.VerticalSpacer size='large' />
-
-          <Utils.Label color={tint(0.9, Colors.background)}>
-            <Utils.Text size='xsmall'>{publicKey}</Utils.Text>
-          </Utils.Label>
-          <Utils.VerticalSpacer size='medium' />
-
-          <Utils.PasteButton onPress={this._copy}>
-            <Feather name='clipboard' size={FontSize['small']} color={Colors.primaryText} />
-          </Utils.PasteButton>
-          <Toast
-            ref='toast'
-            position='center'
-            fadeInDuration={750}
-            fadeOutDuration={1000}
-            opacity={0.8}
-          />
-        </Utils.Content>
-      </Utils.Container>
+          </Utils.Content>
+        </Utils.Container>
+      </ScrollView>
     )
   }
 }

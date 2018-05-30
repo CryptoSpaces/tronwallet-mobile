@@ -13,17 +13,17 @@ const initialLayout = {
 
 export default class TransferScene extends React.Component {
   static navigationOptions = ({ navigation }) => {
-	  return {
-	    header: (
+    return {
+      header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
           <Utils.Header>
             <Utils.TitleWrapper>
-              <Utils.Title>Account</Utils.Title>
+              <Utils.Title>Transfers</Utils.Title>
             </Utils.TitleWrapper>
           </Utils.Header>
         </SafeAreaView>
-	    )
-	  }
+      )
+    }
   }
 
   state = {
@@ -33,11 +33,13 @@ export default class TransferScene extends React.Component {
       { key: 'receive', title: 'Receive' },
       { key: 'freeze', title: 'Freeze' }
     ]
-  };
+  }
 
-  _handleIndexChange = index => this.setState({ index });
+  _handleIndexChange = index => this.setState({ index })
 
-  _renderHeader = props => <TabBar {...props} style={{ backgroundColor: 'black', flex: 0.1 }} />;
+  _renderHeader = props => (
+    <TabBar {...props} style={{ backgroundColor: 'black', flex: 0.1 }} />
+  )
 
   _renderScene = SceneMap({
     send: () => <SendScreen {...this.props} />,
@@ -53,7 +55,7 @@ export default class TransferScene extends React.Component {
         renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
         initialLayout={initialLayout}
-        style={{ backgroundColor: 'black' }}
+        style={{ backgroundColor: '#191a29' }}
       />
     )
   }

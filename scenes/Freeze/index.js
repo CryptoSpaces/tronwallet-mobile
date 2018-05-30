@@ -63,7 +63,6 @@ class FreezeScene extends Component {
   loadData = async () => {
     try {
       const result = await Promise.all([Client.getPublicKey(), Client.getFreeze()])
-      
       const { balance } = result[1].balances.find(b => b.name === 'TRX')
 
       this.setState({
@@ -74,7 +73,7 @@ class FreezeScene extends Component {
         total: result[1].total
       })
     } catch (error) {
-      console.log('ERROR', error)
+      //console.log('ERROR', error)
       // TODO - Error handler
       this.setState({
         loadingData: false
@@ -108,7 +107,9 @@ class FreezeScene extends Component {
           <Utils.StatusBar />
           <Header>
             <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>Freeze</Utils.Text>
+              <Utils.Text size='xsmall' secondary>
+                Freeze
+              </Utils.Text>
               <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
             </Utils.View>
           </Header>

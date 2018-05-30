@@ -2,14 +2,13 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import {
-  TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView
 } from 'react-native'
-import { LinearGradient, Linking } from 'expo'
+import { Linking } from 'expo'
 import qs from 'qs'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
@@ -28,17 +27,17 @@ import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
   static navigationOptions = ({ navigation }) => {
-	  return {
-	    header: (
+    return {
+      header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
-    <Utils.Header>
+          <Utils.Header>
             <Utils.TitleWrapper>
-        <Utils.Title>Vote</Utils.Title>
-      </Utils.TitleWrapper>
+              <Utils.Title>Vote</Utils.Title>
+            </Utils.TitleWrapper>
           </Utils.Header>
-  </SafeAreaView>
-	    )
-	  }
+        </SafeAreaView>
+      )
+    }
   }
 
   state = {
@@ -53,7 +52,7 @@ class VoteScene extends PureComponent {
     from: '',
     currentVotes: {},
     userVotes: {}
-  };
+  }
 
   componentDidMount () {
     this.onLoadData()
@@ -112,9 +111,13 @@ class VoteScene extends PureComponent {
   onChangeVotes = (value, address) => {
     const { currentVotes, totalTrx } = this.state
     const newVotes = { ...currentVotes, [address]: value }
-    const totalUserVotes = _.reduce(newVotes, function (result, value, key) {
-      return Number(result) + Number(value)
-    }, 0)
+    const totalUserVotes = _.reduce(
+      newVotes,
+      function (result, value, key) {
+        return Number(result) + Number(value)
+      },
+      0
+    )
     const totalRemaining = totalTrx - totalUserVotes
     this.setState({ currentVotes: newVotes, totalRemaining })
   }
@@ -124,7 +127,7 @@ class VoteScene extends PureComponent {
     if (value) {
       this.setState({ loadingList: true })
       const regex = new RegExp(value, 'i')
-      const votesFilter = voteList.filter((vote) => vote.url.match(regex))
+      const votesFilter = voteList.filter(vote => vote.url.match(regex))
       this.setState({ voteList: votesFilter, loadingList: false })
     } else {
       this.setState({ loadingList: true })
@@ -133,7 +136,7 @@ class VoteScene extends PureComponent {
     }
   }
 
-  format = (value) => {
+  format = value => {
     return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
@@ -151,32 +154,28 @@ class VoteScene extends PureComponent {
     )
   }
 
-  renderList = () => Platform.select({
-    ios: (
-      <KeyboardAwareFlatList
-        keyExtractor={item => item.address}
-        data={this.state.voteList}
-        renderItem={this.renderRow}
-      />
-    ),
-    android: (
-      <KeyboardAvoidingView behavior='padding'>
+  renderList = () =>
+    Platform.select({
+      ios: (
         <KeyboardAwareFlatList
           keyExtractor={item => item.address}
           data={this.state.voteList}
           renderItem={this.renderRow}
         />
-      </KeyboardAvoidingView>
-    )
-  })
+      ),
+      android: (
+        <KeyboardAvoidingView behavior='padding'>
+          <KeyboardAwareFlatList
+            keyExtractor={item => item.address}
+            data={this.state.voteList}
+            renderItem={this.renderRow}
+          />
+        </KeyboardAvoidingView>
+      )
+    })
 
   render () {
-    const {
-      loading,
-      totalVotes,
-      loadingList,
-      totalRemaining
-    } = this.state
+    const { loading, totalVotes, loadingList, totalRemaining } = this.state
 
     if (loading) return <LoadingScene />
 
@@ -185,11 +184,15 @@ class VoteScene extends PureComponent {
         <Utils.StatusBar transparent />
         <Header>
           <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>TOTAL VOTES</Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              TOTAL VOTES
+            </Utils.Text>
             <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
           </Utils.View>
           <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>TOTAL REMAINING</Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              TOTAL REMAINING
+            </Utils.Text>
             <Utils.Text
               size='small'
               style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
@@ -198,29 +201,31 @@ class VoteScene extends PureComponent {
             </Utils.Text>
           </Utils.View>
         </Header>
-        <Utils.Row style={styles.searchWrapper} justify='space-between' align='center'>
+        <Utils.Row
+          style={styles.searchWrapper}
+          justify='space-between'
+          align='center'
+        >
           <Utils.FormInput
             underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onSearch(text, 'search')}
+            onChangeText={text => this.onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
             style={{ width: '70%', marginLeft: 15 }}
           />
           <ButtonGradient
-            size="small"
-            text="Submit"
+            size='small'
+            text='Submit'
             onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}
           />
         </Utils.Row>
-        {
-          loadingList
-            ? (
-              <Utils.Content height={200} justify='center' align='center'>
-                <ActivityIndicator size='large' color={Colors.yellow} />
-              </Utils.Content>
-            )
-            : this.renderList()
-        }
+        {loadingList ? (
+          <Utils.Content height={200} justify='center' align='center'>
+            <ActivityIndicator size='large' color={Colors.yellow} />
+          </Utils.Content>
+        ) : (
+          this.renderList()
+        )}
       </Utils.Container>
     )
   }
