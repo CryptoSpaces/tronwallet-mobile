@@ -38,6 +38,7 @@ class VoteScene extends PureComponent {
             <View style={{ marginRight: 15 }}>
               <Utils.Text>{params.totalRemaining}</Utils.Text>
               <ButtonGradient
+                disabled={params.disabled}
                 size='small'
                 text='Submit'
                 onPress={params.onSubmit}
@@ -64,7 +65,7 @@ class VoteScene extends PureComponent {
   }
 
   componentDidMount () {
-    this.props.navigation.setParams({ onSubmit: this.onSubmit })
+    this.props.navigation.setParams({ onSubmit: this.onSubmit, disabled: true })
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this.onLoadData()
     })
@@ -99,6 +100,7 @@ class VoteScene extends PureComponent {
 
   onSubmit = async () => {
     const { from, currentVotes, totalRemaining } = this.state
+
     if (totalRemaining >= 0) {
       this.setState({ loading: true })
       _.forIn(currentVotes, function (value, key) {
@@ -138,7 +140,9 @@ class VoteScene extends PureComponent {
   }
 
   onChangeVotes = (value, address) => {
+    const { navigation } = this.props
     const { currentVotes, totalTrx } = this.state
+
     const newVotes = { ...currentVotes, [address]: value }
     const totalUserVotes = _.reduce(
       newVotes,
@@ -147,6 +151,7 @@ class VoteScene extends PureComponent {
       },
       0
     )
+    navigation.setParams({ disabled: totalUserVotes <= 0 })
     const totalRemaining = totalTrx - totalUserVotes
     this.setState({ currentVotes: newVotes, totalRemaining })
   }

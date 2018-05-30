@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
-import { FlatList, Image, TouchableOpacity } from 'react-native'
+import { FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
 import axios from 'axios'
 
 import Gradient from '../../components/Gradient'
@@ -76,84 +76,86 @@ class BalanceScene extends Component {
     return (
       <Utils.Container>
         <Utils.StatusBar />
+        <ScrollView>
           <Utils.VerticalSpacer size='large' />
           <Utils.Row justify='center'>
-          <Utils.View align='center'>
-            <Image
-              source={require('../../assets/tron-logo-small.png')}
-              resizeMode='contain'
-              style={{ height: 60 }}
-            />
-            <Utils.VerticalSpacer size='medium' />
-            <Utils.Text secondary>BALANCE</Utils.Text>
-            <Utils.Text size='medium'>{formatAmount(trxBalance)} TRX</Utils.Text>
-          </Utils.View>             
-          </Utils.Row>     
-        <Utils.Content>
-          <Utils.Content>
-            <LineChart
-              style={{ height: 30 }}
-              data={[
-                50,
-                10,
-                40,
-                95,
-                -4,
-                -24,
-                85,
-                91,
-                35,
-                53,
-                -53,
-                24,
-                50,
-                -20,
-                -80
-              ]}
-              svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
-              animate
-            >
-              <Gradient />
-            </LineChart>
-          </Utils.Content>
-          <Utils.Text size='xsmall' secondary>
-            $ {trxPrice}
-          </Utils.Text>
-          <Utils.VerticalSpacer size='medium' />
-          {assetBalance.length ? (
-            <FlatList
-              data={assetBalance}
-              renderItem={this.renderTokens}
-              keyExtractor={item => item.name}
-              ItemSeparatorComponent={() => (
-                <Utils.VerticalSpacer size='large' />
-              )}
-              scrollEnabled={false}
-            />
-          ) : (
             <Utils.View align='center'>
-              <Utils.VerticalSpacer size='big' />
-              {/* <Image
+              <Image
+                source={require('../../assets/tron-logo-small.png')}
+                resizeMode='contain'
+                style={{ height: 60 }}
+              />
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.Text secondary>BALANCE</Utils.Text>
+              <Utils.Text size='medium'>{formatAmount(trxBalance)} TRX</Utils.Text>
+            </Utils.View>
+          </Utils.Row>
+          <Utils.Content>
+            <Utils.Content>
+              <LineChart
+                style={{ height: 30 }}
+                data={[
+                  50,
+                  10,
+                  40,
+                  95,
+                  -4,
+                  -24,
+                  85,
+                  91,
+                  35,
+                  53,
+                  -53,
+                  24,
+                  50,
+                  -20,
+                  -80
+                ]}
+                svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
+                animate
+              >
+                <Gradient />
+              </LineChart>
+            </Utils.Content>
+            <Utils.Text size='xsmall' secondary>
+              $ {trxPrice}
+            </Utils.Text>
+            <Utils.VerticalSpacer size='medium' />
+            {assetBalance.length ? (
+              <FlatList
+                data={assetBalance}
+                renderItem={this.renderTokens}
+                keyExtractor={item => item.name}
+                ItemSeparatorComponent={() => (
+                  <Utils.VerticalSpacer size='large' />
+                )}
+                scrollEnabled
+              />
+            ) : (
+              <Utils.View align='center'>
+                <Utils.VerticalSpacer size='big' />
+                {/* <Image
                 source={require('../../assets/empty.png')}
                 resizeMode='contain'
                 style={{ height: 220 }}
               /> */}
-              <Utils.VerticalSpacer size='medium' />
-              <TouchableOpacity 
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                  marginHorizontal: 5,
-                  flexDirection: 'row'
-                }}
-                onPress={() => navigation.navigate('Tokens')}
-              >
-                <Utils.Text secondary font='light' size='small'>Click here to participate in other tokens.</Utils.Text>
-              </TouchableOpacity>              
-            </Utils.View>
-          )}
-          <Utils.Error>{error}</Utils.Error>
-        </Utils.Content>
+                <Utils.VerticalSpacer size='medium' />
+                <TouchableOpacity
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    marginHorizontal: 5,
+                    flexDirection: 'row'
+                  }}
+                  onPress={() => navigation.navigate('Tokens')}
+                >
+                  <Utils.Text secondary font='light' size='small'>Click here to participate in other tokens.</Utils.Text>
+                </TouchableOpacity>
+              </Utils.View>
+            )}
+            <Utils.Error>{error}</Utils.Error>
+          </Utils.Content>
+        </ScrollView>
       </Utils.Container>
     )
   }
