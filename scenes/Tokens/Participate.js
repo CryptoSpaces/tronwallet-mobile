@@ -24,6 +24,7 @@ class ParticipateScene extends Component {
     try {
       const pk = await Client.getPublicKey()
       this.setState({ loading: true })
+
       const response = await axios.post(
         'https://tronnotifier-dev.now.sh/v1/wallet/participate',
         {
@@ -83,7 +84,6 @@ class ParticipateScene extends Component {
 
   render () {
     const token = this.props.navigation.getParam('token')
-    console.log(token)
     return (
       <KeyboardAwareScrollView>
         <Utils.StatusBar />
@@ -157,7 +157,7 @@ class ParticipateScene extends Component {
                 <Utils.Row justify='space-between'>
                   <Utils.View width='50%'>
                     <Utils.Text size='xsmall' success>FROZEN</Utils.Text>
-                    <Utils.Text>{token.frozen}</Utils.Text>
+                    <Utils.Text>{token.frozen[0] ? token.frozen[0].amount : 0}</Utils.Text>
                   </Utils.View>
                   <Utils.View width='50%'>
                     <Utils.Text size='xsmall' success>PRICE</Utils.Text>

@@ -61,54 +61,54 @@ class SignupScene extends Component {
   render () {
     const { confirmError } = this.state
     return (
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior='padding'
         keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
-      <ScrollView>
-      <Utils.Container
-        keyboardShouldPersistTaps={'always'}
-        keyboardDismissMode='interactive'
-      >
-        <Utils.Content height={80} justify='center' align='center'>
-          <Image source={require('../../assets/login-circle.png')} />
-        </Utils.Content>
-        <Utils.Content>
-          <Utils.Text size='xsmall' secondary>
+        <ScrollView>
+          <Utils.Container
+            keyboardShouldPersistTaps={'always'}
+            keyboardDismissMode='interactive'
+          >
+            <Utils.Content height={80} justify='center' align='center'>
+              <Image source={require('../../assets/login-circle.png')} />
+            </Utils.Content>
+            <Utils.Content>
+              <Utils.Text size='xsmall' secondary>
             EMAIL VERIFICATION CODE
-          </Utils.Text>
-          <Utils.FormInput
-            keyboardType='numeric'
-            onChangeText={text => this.changeInput(text, 'code')}
-            onSubmitEditing={this.confirmSignup}
-            returnKeyType={'send'}
-            padding={Spacing.medium}
-          />
-          <Utils.Text size='xsmall'>
+              </Utils.Text>
+              <Utils.FormInput
+                keyboardType='numeric'
+                onChangeText={text => this.changeInput(text, 'code')}
+                onSubmitEditing={this.confirmSignup}
+                returnKeyType={'send'}
+                padding={Spacing.medium}
+              />
+              <Utils.Text size='xsmall'>
             We sent you an email with the verification code from
             no-reply@verificationemail.com, please check your spam if you didn't
             find it.
-          </Utils.Text>
-          <Utils.InputError>{confirmError}</Utils.InputError>
+              </Utils.Text>
+              <Utils.InputError>{confirmError}</Utils.InputError>
 
-          {this.renderSubmitButton()}
-        </Utils.Content>
+              {this.renderSubmitButton()}
+            </Utils.Content>
 
-        <Utils.Content justify='center' align='center'>
-          <Utils.Error>{confirmError}</Utils.Error>
-          <Utils.Text
-            onPress={() => this.props.navigation.goBack()}
-            size='small'
-            font='light'
-            secondary
-          >
+            <Utils.Content justify='center' align='center'>
+              <Utils.Error>{confirmError}</Utils.Error>
+              <Utils.Text
+                onPress={() => this.props.navigation.goBack()}
+                size='small'
+                font='light'
+                secondary
+              >
             Back to Sign Up
-          </Utils.Text>
-        </Utils.Content>
-      </Utils.Container>
-      </ScrollView>
+              </Utils.Text>
+            </Utils.Content>
+          </Utils.Container>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }

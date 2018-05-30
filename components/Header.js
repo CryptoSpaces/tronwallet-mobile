@@ -12,7 +12,7 @@ const Header = ({
   rightIcon = <Text style={{ color: Colors.primaryText }}>RIGHT</Text>,
   children,
   top = 20,
-  bottom = 10,
+  bottom = 10
 }) => {
   const placeholder = <View />
 

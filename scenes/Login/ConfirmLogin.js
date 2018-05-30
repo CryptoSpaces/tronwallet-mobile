@@ -134,57 +134,57 @@ class ConfirmLogin extends Component {
   render () {
     const { confirmError, loadingConfirm } = this.state
     return (
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior='padding'
         keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
         <ScrollView>
-        <Utils.Container>
-          <Utils.Content height={80} justify='center' align='center'>
-            <Image source={require('../../assets/login-circle.png')} />
-          </Utils.Content>
-          <Utils.Content>
-            <Utils.Text size='xsmall' secondary>
+          <Utils.Container>
+            <Utils.Content height={80} justify='center' align='center'>
+              <Image source={require('../../assets/login-circle.png')} />
+            </Utils.Content>
+            <Utils.Content>
+              <Utils.Text size='xsmall' secondary>
               PASTE GOOGLE AUTHENTICATOR CODE HERE
-            </Utils.Text>
-            <Utils.FormInput
-              padding={Spacing.small}
-              underlineColorAndroid='transparent'
-              onChangeText={text => this.changeInput(text, 'code')}
-            />
+              </Utils.Text>
+              <Utils.FormInput
+                padding={Spacing.small}
+                underlineColorAndroid='transparent'
+                onChangeText={text => this.changeInput(text, 'code')}
+              />
 
-            {this.renderTOTPArea()}
+              {this.renderTOTPArea()}
 
-            {loadingConfirm ? (
-              <Utils.Content height={80} justify='center' align='center'>
-                <ActivityIndicator size='small' color={Colors.yellow} />
-              </Utils.Content>)
-              : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} size='medium' />)
-            }
-          </Utils.Content>
-          <Utils.Content justify='center' align='center'>
+              {loadingConfirm ? (
+                <Utils.Content height={80} justify='center' align='center'>
+                  <ActivityIndicator size='small' color={Colors.yellow} />
+                </Utils.Content>)
+                : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} size='medium' />)
+              }
+            </Utils.Content>
             <Utils.Error>{confirmError}</Utils.Error>
-            <Utils.Text
-              size='small'
-              font='light'
-              secondary
-              onPress={this.goBackLogin}
-            >
-              {' '}
+            <Utils.Content justify='center' align='center'>
+              <Utils.Text
+                size='small'
+                font='light'
+                secondary
+                onPress={this.goBackLogin}
+              >
+                {' '}
               Back to Login{' '}
-            </Utils.Text>
-          </Utils.Content>
-          <Toast
-            ref='toast'
-            position='center'
-            fadeInDuration={750}
-            fadeOutDuration={1000}
-            opacity={0.8}
-          />
-        </Utils.Container>
-      </ScrollView>
+              </Utils.Text>
+            </Utils.Content>
+            <Toast
+              ref='toast'
+              position='center'
+              fadeInDuration={750}
+              fadeOutDuration={1000}
+              opacity={0.8}
+            />
+          </Utils.Container>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }

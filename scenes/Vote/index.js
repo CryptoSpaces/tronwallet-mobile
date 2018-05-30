@@ -27,7 +27,7 @@ import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
   static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {};
+    const params = navigation.state.params || {}
     return {
       header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
