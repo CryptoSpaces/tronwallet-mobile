@@ -28,9 +28,9 @@ class LoadingScene extends Component {
       const session = await Auth.currentSession()
       const userPublicKey = await Client.getPublicKey()
       if (session) {
-        if(userPublicKey){
+        if (userPublicKey) {
           this.props.navigation.navigate('App')
-        }else{
+        } else {
           this.props.navigation.navigate('SetPublicKey')
         }
       }
