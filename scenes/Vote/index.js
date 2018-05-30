@@ -2,14 +2,13 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import {
-  TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView
 } from 'react-native'
-import { LinearGradient, Linking } from 'expo'
+import { Linking } from 'expo'
 import qs from 'qs'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
@@ -28,17 +27,17 @@ import Client from '../../src/services/client'
 
 class VoteScene extends PureComponent {
   static navigationOptions = ({ navigation }) => {
-	  return {
-	    header: (
+    return {
+      header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
-    <Utils.Header>
+          <Utils.Header>
             <Utils.TitleWrapper>
-        <Utils.Title>Vote</Utils.Title>
-      </Utils.TitleWrapper>
+              <Utils.Title>Vote</Utils.Title>
+            </Utils.TitleWrapper>
           </Utils.Header>
-  </SafeAreaView>
-	    )
-	  }
+        </SafeAreaView>
+      )
+    }
   }
 
   state = {
@@ -207,8 +206,8 @@ class VoteScene extends PureComponent {
             style={{ width: '70%', marginLeft: 15 }}
           />
           <ButtonGradient
-            size="small"
-            text="Submit"
+            size='small'
+            text='Submit'
             onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}
           />
         </Utils.Row>

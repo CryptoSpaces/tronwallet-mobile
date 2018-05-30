@@ -16,17 +16,17 @@ const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 class Settings extends Component {
   static navigationOptions = ({ navigation }) => {
-	  return {
-	    header: (
+    return {
+      header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
-    <Utils.Header>
+          <Utils.Header>
             <Utils.TitleWrapper>
-        <Utils.Title>Settings</Utils.Title>
-      </Utils.TitleWrapper>
+              <Utils.Title>Settings</Utils.Title>
+            </Utils.TitleWrapper>
           </Utils.Header>
-  </SafeAreaView>
-	    )
-	  }
+        </SafeAreaView>
+      )
+    }
   }
 
   state = {

@@ -24,7 +24,7 @@ import SetPublicKey from './scenes/SetPublicKey'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScene from './scenes/Vote'
-import ReceiveScene from './scenes/Receive'
+
 import TransactionsScene from './scenes/Transactions'
 import TransactionScreen from './scenes/Transaction'
 import TransferScene from './scenes/Transfer'

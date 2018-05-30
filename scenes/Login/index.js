@@ -74,7 +74,7 @@ class LoginScene extends Component {
       )
     }
 
-    return (<ButtonGradient text='SIGN IN' onPress={this.signIn} size="medium" />)
+    return (<ButtonGradient text='SIGN IN' onPress={this.signIn} size='medium' />)
   }
 
   render () {
