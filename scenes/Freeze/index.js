@@ -38,8 +38,9 @@ class FreezeScene extends Component {
         data
       })
 
-      const url = `tronvault2://auth/${dataToSend}`
+      const url = `tronvault://auth/${dataToSend}`
       
+      // TODO: handle android and ios
       await Linking.openURL(url)
       console.log(url);
       // const supported = await Linking.canOpenURL(url)
