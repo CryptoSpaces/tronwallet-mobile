@@ -5,7 +5,7 @@ import Header from '../../components/Header'
 import Card from './../../components/Card'
 import * as Utils from '../../components/Utils'
 
-class ReceiveScene extends Component {
+class FreezeScene extends Component {
   state = {
     from: '',
     balances: [],
@@ -49,7 +49,6 @@ class ReceiveScene extends Component {
         </Header>
         <Utils.Content style={{ backgroundColor: 'transparent' }}>
           <Card isEditable buttonLabel='Freeze' />
-
           <Card buttonLabel='Unfreeze (0)' />
         </Utils.Content>
       </Utils.Container >
@@ -57,4 +56,4 @@ class ReceiveScene extends Component {
   }
 }
 
-export default ReceiveScene
+export default FreezeScene

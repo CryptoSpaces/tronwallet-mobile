@@ -81,7 +81,7 @@ class ChangePKModal extends PureComponent {
               onSubmitEditing={this.setUser}
               returnKeyType='send'
             />
-            <ButtonGradient text='OK' onPress={this.setUser} />
+            <ButtonGradient text='OK' onPress={this.setUser} size='small' />
           </Utils.FormGroup>
           <Utils.Content justify='center' align='center'>
             <Utils.Error>{errorMessage}</Utils.Error>
