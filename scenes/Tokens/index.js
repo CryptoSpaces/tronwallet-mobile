@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
   SafeAreaView
 } from 'react-native'
+import axios from 'axios'
+import numeral from 'numeral'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from './../../components/ButtonGradient'
 import { Spacing, Colors } from './../../components/DesignSystem'
@@ -56,30 +57,47 @@ class TokensScene extends Component {
 
   navigate = token => this.props.navigation.navigate('Participate', { token })
 
-  renderCard = item => (
+  format = (percentage) => numeral(percentage).format('0.[00]') + '%'
+
+  renderCardFooter = (item) => {
+    if (item.percentage < 100) {
+      return (
+        <ButtonGradient
+          size='small'
+          onPress={() => this.navigate(item)}
+          text='PARTICIPATE'
+        />
+      )
+    }
+
+    return (
+      <Utils.View
+        align='center'
+        justify='center'
+      >
+        <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
+      </Utils.View>
+    )
+  }
+
+  renderCard = (item) => (
     <Utils.Card>
       <Utils.Text size='medium'>{item.name}</Utils.Text>
       <Utils.VerticalSpacer size='medium' />
 
-      <Utils.Text ellipsizeMode='tail' numberOfLines={2} size='xsmall'>
-        {item.url}
-      </Utils.Text>
-      <Utils.VerticalSpacer />
+      <Utils.Text ellipsizeMode='tail' numberOfLines={2} size='xsmall' >{item.url}</Utils.Text>
+      <Utils.VerticalSpacer size='medium' />
 
       <Utils.Row style={{ justifyContent: 'space-between', marginBottom: 5 }}>
-        <Utils.Text>{Number(item.percentage).toFixed(2)}%</Utils.Text>
+        <Utils.Text>{this.format(item.percentage)}</Utils.Text>
         <Utils.Text>
           <Utils.Text color={Colors.yellow}>{item.issued}</Utils.Text>
           /{item.totalSupply}
         </Utils.Text>
       </Utils.Row>
-      <Utils.VerticalSpacer />
+      <Utils.VerticalSpacer size='large' />
 
-      <ButtonGradient
-        size='small'
-        onPress={() => this.navigate(item)}
-        text='PARTICIPATE'
-      />
+      {this.renderCardFooter(item)}
     </Utils.Card>
   )
 
@@ -101,7 +119,6 @@ class TokensScene extends Component {
 
     return (
       <Utils.Container>
-        <Utils.StatusBar />
         <FlatList
           contentContainerStyle={styles.list}
           data={this.state.data}

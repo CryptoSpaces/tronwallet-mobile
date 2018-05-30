@@ -206,7 +206,7 @@ class TransactionScene extends Component {
         proceduring with the transaction
       </Utils.Text>
       <Utils.VerticalSpacer size='large' />
-      <ButtonGradient text='Try again' onPress={this._loadData} />
+      <ButtonGradient text='Try again' onPress={this._loadData} size='small' />
     </Utils.Content>
   )
 

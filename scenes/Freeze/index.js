@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
+import { ScrollView } from 'react-native'
 
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
 import Card from './../../components/Card'
 import * as Utils from '../../components/Utils'
 
-class ReceiveScene extends Component {
+class FreezeScene extends Component {
   state = {
     from: '',
     balances: [],
@@ -40,24 +41,26 @@ class ReceiveScene extends Component {
     const { trxBalance } = this.state
 
     return (
-      <Utils.Container>
-        <Utils.StatusBar />
-        <Header>
-          <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>
-              Freeze
-            </Utils.Text>
-            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-          </Utils.View>
-        </Header>
-        <Utils.Content style={{ backgroundColor: 'transparent' }}>
-          <Card isEditable buttonLabel='Freeze' />
+      <ScrollView>
+        <Utils.Container>
+          <Utils.StatusBar />
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>
+                Freeze
+              </Utils.Text>
+              <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+            </Utils.View>
+          </Header>
+          <Utils.Content style={{ backgroundColor: 'transparent' }}>
+            <Card isEditable buttonLabel='Freeze' />
 
-          <Card buttonLabel='Unfreeze (0)' />
-        </Utils.Content>
-      </Utils.Container>
+            <Card buttonLabel='Unfreeze (0)' />
+          </Utils.Content>
+        </Utils.Container>
+      </ScrollView>
     )
   }
 }
 
-export default ReceiveScene
+export default FreezeScene

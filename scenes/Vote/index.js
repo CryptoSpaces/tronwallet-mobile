@@ -2,14 +2,13 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import {
-  TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView
 } from 'react-native'
-import { LinearGradient, Linking } from 'expo'
+import { Linking } from 'expo'
 import qs from 'qs'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
@@ -21,6 +20,7 @@ import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
 import VoteItem from '../../src/components/Vote/VoteItem'
 import LoadingScene from '../../components/LoadingScene'
+import ButtonGradient from '../../components/ButtonGradient'
 
 // Service
 import Client from '../../src/services/client'
@@ -211,20 +211,13 @@ class VoteScene extends PureComponent {
             onChangeText={text => this.onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
-            style={{ width: '70%' }}
+            style={{ width: '70%', marginLeft: 15 }}
           />
-          <TouchableOpacity
+          <ButtonGradient
+            size='small'
+            text='Submit'
             onPress={totalRemaining >= 0 ? this.onSubmit : () => {}}
-          >
-            <LinearGradient
-              start={[0, 1]}
-              end={[1, 0]}
-              colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-              style={styles.submitButton}
-            >
-              <Utils.Text size='xsmall'>Submit</Utils.Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          />
         </Utils.Row>
         {loadingList ? (
           <Utils.Content height={200} justify='center' align='center'>
@@ -240,7 +233,7 @@ class VoteScene extends PureComponent {
 
 const styles = StyleSheet.create({
   searchWrapper: {
-    paddingLeft: 0,
+    // paddingLeft: 0,
     paddingRight: 16
   },
   submitButton: {

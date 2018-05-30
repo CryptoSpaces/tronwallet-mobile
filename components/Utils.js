@@ -54,8 +54,10 @@ export const Container = View.extend.attrs({
   background: Colors.background
 })``
 
-export const Content = View.extend`
-  padding: ${Spacing.big}px;
+export const Content = View.extend.attrs({
+  paddingSize: 'big'
+})`
+  padding: ${props => Spacing[props.paddingSize]}px;
   ${props => props.background && css`background-color: ${props.background};`}
 `
 
@@ -207,8 +209,12 @@ export const Button = props => (
 )
 
 export const Card = styled.View`
-  padding: 10px;
+  padding: ${props => Spacing[props.paddingSize]}px;
   background-color: ${Colors.darkerBackground};
   width: 100%;
   border-radius: 6px;
 `
+
+Card.defaultProps = {
+  paddingSize: 'large'
+}
