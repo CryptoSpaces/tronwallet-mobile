@@ -12,6 +12,7 @@ import * as Utils from '../../components/Utils'
 import { Colors } from './../../components/DesignSystem'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client from '../../src/services/client'
+import { DeeplinkURL } from '../../utils/deeplinkUtils'
 
 class ParticipateScene extends Component {
   state = {
@@ -42,12 +43,13 @@ class ParticipateScene extends Component {
         },
         pk: pk,
         from: 'mobile',
+        action: 'transaction',
         URL: Linking.makeUrl('transaction'),
         data: response.data.transaction
       })
-      const url = `tronvault://tronvault/auth/${dataToSend}`
-      const supported = await Linking.canOpenURL(url)
-      if (supported) await Linking.openURL(url)
+
+      const url = `${DeeplinkURL}auth/${dataToSend}`
+      await Linking.openURL(url)
     } catch (err) {
       console.log(err)
     }

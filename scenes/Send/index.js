@@ -11,7 +11,7 @@ import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
-import {DeeplinkURL} from '../../utils/deeplinkUtils'
+import { DeeplinkURL } from '../../utils/deeplinkUtils'
 
 class SendScene extends Component {
   state = {
@@ -79,7 +79,6 @@ class SendScene extends Component {
   sendDeepLink = async () => {
     const { from, to, amount, token } = this.state
     this.setState({ loadingSign: true })
-    const deepURL = DeeplinkURL()
     try {
       // Transaction String
       const data = await Client.getTransactionString({
@@ -98,7 +97,7 @@ class SendScene extends Component {
         data
       })
 
-      const url = `${deepURL}/auth/${dataToSend}`
+      const url = `${DeeplinkURL}auth/${dataToSend}`
       await Linking.openURL(url)
       this.setState({ loadingSign: false })
     } catch (error) {
@@ -147,7 +146,6 @@ class SendScene extends Component {
   render () {
     const { loadingSign, loadingData, signError, to, trxBalance } = this.state
 
-    console.log('>>>>', DeeplinkURL())
     return (
       <ScrollView>
         <Utils.Container>
