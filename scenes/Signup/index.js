@@ -79,7 +79,7 @@ class SignupScene extends Component {
       )
     }
 
-    return (<ButtonGradient text='SIGN UP' onPress={this.signUp} size='medium' />)
+    return (<ButtonGradient text='SIGN UP' onPress={this.signUp} size='small' />)
   }
 
   render () {
@@ -103,11 +103,11 @@ class SignupScene extends Component {
                 this.username = ref
               }}
               underlineColorAndroid='transparent'
-              marginBottom={40}
+              marginBottom={20}
               onChangeText={text => this.changeInput(text, 'username')}
               onSubmitEditing={() => this._nextInput('username')}
               returnKeyType={'next'}
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
 
             <Utils.Text size='xsmall' secondary>
@@ -119,13 +119,13 @@ class SignupScene extends Component {
               }}
               keyboardType='email-address'
               underlineColorAndroid='transparent'
-              marginBottom={40}
+              marginBottom={20}
               autoCapitalize='none'
               autoCorrect={false}
               onChangeText={text => this.changeInput(text, 'email')}
               onSubmitEditing={() => this._nextInput('email')}
               returnKeyType={'next'}
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
 
             <Utils.Text size='xsmall' secondary>
@@ -136,12 +136,13 @@ class SignupScene extends Component {
                 this.password = ref
               }}
               letterSpacing={10}
+              marginBottom={20}
               underlineColorAndroid='transparent'
               secureTextEntry
               onChangeText={text => this.changeInput(text, 'password')}
               onSubmitEditing={() => this._nextInput('password')}
               returnKeyType={'send'}
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
 
             {this.renderSubmitButton()}

@@ -3,7 +3,9 @@ import {
   ActivityIndicator,
   Image,
   Keyboard,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  SafeAreaView,
+  ScrollView
 } from 'react-native'
 import { Auth } from 'aws-amplify'
 import * as Utils from '../../components/Utils'
@@ -11,6 +13,7 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class LoginScene extends Component {
+
   state = {
     email: '',
     password: '',
@@ -79,14 +82,19 @@ class LoginScene extends Component {
       )
     }
 
-    return (<ButtonGradient text='SIGN IN' onPress={this.signIn} size='medium' />)
+    return (<ButtonGradient text='SIGN IN' onPress={this.signIn} size='small' />)
   }
 
   render () {
     const { signError } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
-      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+      <KeyboardAvoidingView 
+        behavior='padding'
+        keyboardVerticalOffset={150}
+        style={{ flex: 1 }}
+      >
+        <ScrollView>
         <Utils.Container
           keyboardShouldPersistTaps={'always'}
           keyboardDismissMode='interactive'
@@ -105,13 +113,13 @@ class LoginScene extends Component {
               }}
               underlineColorAndroid='transparent'
               keyboardType='email-address'
-              marginBottom={40}
+              marginBottom={20}
               autoCapitalize='none'
               autoCorrect={false}
               onChangeText={text => this.changeInput(text, 'email')}
               onSubmitEditing={() => this._submit('email')}
               returnKeyType={'next'}
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
             <Utils.Text size='xsmall' secondary>
               PASSWORD
@@ -126,7 +134,7 @@ class LoginScene extends Component {
               onChangeText={text => this.changeInput(text, 'password')}
               onSubmitEditing={() => this._submit('password')}
               returnKeyType='send'
-              padding={Spacing.medium}
+              padding={Spacing.small}
             />
             {this.renderSubmitButton()}
           </Utils.FormGroup>
@@ -147,6 +155,7 @@ class LoginScene extends Component {
             </Utils.Text>
           </Utils.Content>
         </Utils.Container>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }
