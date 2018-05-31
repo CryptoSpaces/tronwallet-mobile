@@ -11,7 +11,7 @@ import { Colors } from './../../components/DesignSystem'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client from '../../src/services/client'
 import { DeeplinkURL } from '../../utils/deeplinkUtils'
-import { Ionicons } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 
 class ParticipateScene extends Component {
 
@@ -25,7 +25,7 @@ class ParticipateScene extends Component {
             </Utils.TitleWrapper>
 						<Utils.LoadButtonWrapper>
 							<Utils.LoadButton onPress={()=> navigation.goBack()}>
-								<Ionicons name="ios-close" color="white" size={32} />
+								<Feather name="x" color="white" size={32} />
 							</Utils.LoadButton>
 						</Utils.LoadButtonWrapper>
           </Utils.Header>

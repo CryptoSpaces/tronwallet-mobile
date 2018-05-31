@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, NetInfo } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { ActivityIndicator, NetInfo, SafeAreaView } from 'react-native'
+import { Feather } from '@expo/vector-icons'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -12,6 +12,26 @@ import moment from 'moment'
 const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 class TransactionScene extends Component {
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: (
+        <SafeAreaView style={{ backgroundColor: 'black' }}>
+          <Utils.Header>
+            <Utils.TitleWrapper>
+              <Utils.Title>Transaction Detail</Utils.Title>
+            </Utils.TitleWrapper>
+						<Utils.LoadButtonWrapper>
+							<Utils.LoadButton onPress={()=> navigation.navigate('Balance')}>
+								<Feather name="x" color="white" size={32} />
+							</Utils.LoadButton>
+						</Utils.LoadButtonWrapper>
+          </Utils.Header>
+        </SafeAreaView>
+      )
+    }
+  }
+
   state = {
     loadingData: true,
     loadingSubmit: false,
@@ -186,9 +206,9 @@ class TransactionScene extends Component {
     if (success) {
       return (
         <Utils.Content align='center' justify='center'>
-          <Ionicons
+          <Feather
             style={{ marginVertical: 5 }}
-            name='md-checkmark-circle-outline'
+            name='check-circle'
             size={FontSize['large']}
             color={Colors.green}
           />
@@ -218,17 +238,6 @@ class TransactionScene extends Component {
 
     return (
       <Utils.Container>
-        <Utils.StatusBar transparent />
-        <Header
-          onLeftPress={() => this.props.navigation.navigate('Home')}
-          leftIcon={
-            <Ionicons name='ios-close' color={Colors.primaryText} size={40} />
-          }
-        >
-          <Utils.View align='center'>
-            <Utils.Text size='medium'>Transaction Details</Utils.Text>
-          </Utils.View>
-        </Header>
         {!isConnected && this.renderRetryConnection()}
         {isConnected && this.renderContracts()}
         {isConnected && this.renderSubmitionView()}
