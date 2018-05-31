@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert, ScrollView } from 'react-native'
+import { ActivityIndicator, Linking, Alert, ScrollView, KeyboardAvoidingView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
@@ -190,6 +190,12 @@ class SendScene extends Component {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
 
     return (
+      <KeyboardAvoidingView
+      behavior='padding'
+      keyboardVerticalOffset={150}
+      style={{ flex: 1}}
+      enabled
+      >
       <ScrollView>
         <Utils.Container>
           <Utils.StatusBar />
@@ -258,6 +264,7 @@ class SendScene extends Component {
           </Utils.Content>
         </Utils.Container>
       </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
