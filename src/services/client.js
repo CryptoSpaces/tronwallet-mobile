@@ -114,6 +114,34 @@ class ClientWallet {
 
     return transaction
   }
+
+  async getTransactionList () {
+    const owner = await this.getPublicKey()
+    const tx = () => axios.get(`${this.api}/transaction?sort=-timestamp&limit=50&address=${owner}`)
+    const tf = () => axios.get(`${this.api}/transfer?sort=-timestamp&limit=50&address=${owner}`)
+    const transactions = await Promise.all([tx(), tf()])
+    const txs = transactions[0].data.data.filter(d => d.contractType !== 1)
+    const trfs = transactions[1].data.data.map(d => ({ ...d, contractType: 1, ownerAddress: owner }))
+    let sortedTxs = [...txs, ...trfs].sort((a, b) => (b.timestamp - a.timestamp))
+    sortedTxs = sortedTxs.map(t => ({
+      type: this.getContractType(t.contractType),
+      ...t
+    }))
+    return sortedTxs
+  }
+
+  getContractType = (number) => {
+    switch (number) {
+      case 1: return 'Transfer'
+      case 2: return 'Transfer Asset'
+      case 4: return 'Vote'
+      case 6: return 'Create'
+      case 9: return 'Participate'
+      case 11: return 'Freeze'
+      case 12: return 'Unfreeze'
+      default: return 'Unregistred Name'
+    }
+  }
 }
 
 export default new ClientWallet()

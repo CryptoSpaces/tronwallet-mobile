@@ -11,7 +11,7 @@ import moment from 'moment'
 
 const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
-class TransactionScene extends Component {
+class TransactionDetail extends Component {
   state = {
     loadingData: true,
     loadingSubmit: false,
@@ -241,4 +241,4 @@ class TransactionScene extends Component {
     )
   }
 }
-export default TransactionScene
+export default TransactionDetail

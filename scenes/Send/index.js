@@ -191,79 +191,79 @@ class SendScene extends Component {
 
     return (
       <KeyboardAvoidingView
-      behavior='padding'
-      keyboardVerticalOffset={150}
-      style={{ flex: 1}}
-      enabled
+        behavior='padding'
+        keyboardVerticalOffset={150}
+        style={{ flex: 1 }}
+        enabled
       >
-      <ScrollView>
-        <Utils.Container>
-          <Utils.StatusBar />
-          <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>
-              Send Transaction
-            </Utils.Text>
-            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-          </Utils.View>
-          <Utils.Content>
-            <Utils.Text size='xsmall' secondary>
-              To
-            </Utils.Text>
-            <PasteInput
-              value={to}
-              field='from'
-              onChangeText={text => this.changeInput(text, 'to')}
-            />
-            <Utils.VerticalSpacer size='medium' />
-            <Utils.Text size='xsmall' secondary>
-              Token
-            </Utils.Text>
-            <Select
-              onSelect={this.onSelectToken}
-              defaultText={this.state.token}
-              style={{
-                width: '100%',
-                borderWidth: 0.5,
-                marginVertical: 10,
-                borderRadius: 5,
-                padding: 12,
-                borderColor: Colors.secondaryText
-              }}
-              textStyle={{ color: Colors.primaryText }}
-              transparent
-              animationType='fade'
-              optionListStyle={{
-                borderRadius: 10,
-                backgroundColor: Colors.secondaryText
-              }}
-            >
-              {this.renderTokens()}
-            </Select>
-            <Utils.VerticalSpacer size='medium' />
-            <Utils.Text size='xsmall' secondary>
-              Amount
-            </Utils.Text>
-            <Utils.Row align='center' justify='flex-start'>
-              <Utils.FormInput
-                underlineColorAndroid='transparent'
-                keyboardType='numeric'
-                onChangeText={text => this.changeInput(text, 'amount')}
-                placeholderTextColor='#fff'
-                style={{ marginRight: 15, width: '100%' }}
+        <ScrollView>
+          <Utils.Container>
+            <Utils.StatusBar />
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>
+                Send Transaction
+              </Utils.Text>
+              <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+            </Utils.View>
+            <Utils.Content>
+              <Utils.Text size='xsmall' secondary>
+                To
+              </Utils.Text>
+              <PasteInput
+                value={to}
+                field='from'
+                onChangeText={text => this.changeInput(text, 'to')}
               />
-            </Utils.Row>
-          </Utils.Content>
-          {error && <Utils.Error>{error}</Utils.Error>}
-          <Utils.Content justify='center' align='center'>
-            {loadingSign || loadingData ? (
-              <ActivityIndicator size='small' color={Colors.primaryText} />
-            ) : (
-              <ButtonGradient text='Send Token' onPress={this.submit} size='small' />
-            )}
-            <Utils.VerticalSpacer size='medium' />
-          </Utils.Content>
-        </Utils.Container>
-      </ScrollView>
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.Text size='xsmall' secondary>
+                Token
+              </Utils.Text>
+              <Select
+                onSelect={this.onSelectToken}
+                defaultText={this.state.token}
+                style={{
+                  width: '100%',
+                  borderWidth: 0.5,
+                  marginVertical: 10,
+                  borderRadius: 5,
+                  padding: 12,
+                  borderColor: Colors.secondaryText
+                }}
+                textStyle={{ color: Colors.primaryText }}
+                transparent
+                animationType='fade'
+                optionListStyle={{
+                  borderRadius: 10,
+                  backgroundColor: Colors.secondaryText
+                }}
+              >
+                {this.renderTokens()}
+              </Select>
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.Text size='xsmall' secondary>
+                Amount
+              </Utils.Text>
+              <Utils.Row align='center' justify='flex-start'>
+                <Utils.FormInput
+                  underlineColorAndroid='transparent'
+                  keyboardType='numeric'
+                  onChangeText={text => this.changeInput(text, 'amount')}
+                  placeholderTextColor='#fff'
+                  style={{ marginRight: 15, width: '100%' }}
+                />
+              </Utils.Row>
+            </Utils.Content>
+            {error && <Utils.Error>{error}</Utils.Error>}
+            <Utils.Content justify='center' align='center'>
+              {loadingSign || loadingData ? (
+                <ActivityIndicator size='small' color={Colors.primaryText} />
+              ) : (
+                <ButtonGradient text='Send Token' onPress={this.submit} size='small' />
+              )}
+              <Utils.VerticalSpacer size='medium' />
+            </Utils.Content>
+          </Utils.Container>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }

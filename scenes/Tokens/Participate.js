@@ -75,7 +75,7 @@ class ParticipateScene extends Component {
   formatDate = (date) => moment(date).format('YYYY-MM-DD h:mm:ss')
 
   renderConfirmButtom = () => {
-    if (this.state.loading) return <ActivityIndicator color={"#ffffff"} />
+    if (this.state.loading) return <ActivityIndicator color={'#ffffff'} />
 
     return (
       <ButtonGradient onPress={this._confirm} text='Confirm' size='small' />
