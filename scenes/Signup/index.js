@@ -75,7 +75,7 @@ class SignupScene extends Component {
     if (loadingSign) {
       return (
         <Utils.Content height={80} justify='center' align='center'>
-          <ActivityIndicator size='small' color={Colors.yellow} />
+          <ActivityIndicator size='small' color={"#ffffff"}/>
         </Utils.Content>
       )
     }
