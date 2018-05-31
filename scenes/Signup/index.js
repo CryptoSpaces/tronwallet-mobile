@@ -160,17 +160,16 @@ class SignupScene extends Component {
 
               {this.renderSubmitButton()}
             </Utils.FormGroup>
-
+            <Utils.Error>{signError}</Utils.Error>
             <Utils.Content justify='center' align='center'>
-              <Utils.Error>{signError}</Utils.Error>
-              <Utils.Text
+              {/* <Utils.Text
                 onPress={() => this.props.navigation.navigate('ForgotPassword')}
                 size='small'
                 font='light'
                 secondary
               >
               PRIVACY POLICY
-              </Utils.Text>
+              </Utils.Text> */}
             </Utils.Content>
           </Utils.Container>
         </ScrollView>
