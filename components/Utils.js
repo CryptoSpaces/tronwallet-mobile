@@ -67,6 +67,20 @@ export const StatusBar = styled.View`
   ${props => props.transparent && css`background-color: transparent;`}
 `
 
+export const LoadButton = styled.TouchableOpacity`
+  height: 32px;
+  width: 32px;
+  border-radius: 10px;
+`
+
+export const LoadButtonWrapper = styled.View`
+  height: 50px;
+  width: 50px;
+	align-self: center;
+	justify-content: center;
+`
+
+
 export const ContentWithBackground = Content.withComponent(ImageBackground)
 
 export const Row = View.extend`

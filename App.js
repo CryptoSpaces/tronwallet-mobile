@@ -97,11 +97,11 @@ const TransactionsStack = createStackNavigator(
 const AppTabs = createBottomTabNavigator(
   {
     Home: HomeScene,
+    Tokens: TokensStack,
     Vote: {
       screen: VoteStack,
       path: 'vote'
     },
-    Tokens: TokensStack,
     Balance: BalanceScene,
     Transactions: TransactionsStack,
     Transfer: TransferStack,
