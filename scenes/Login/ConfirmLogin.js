@@ -87,10 +87,19 @@ class ConfirmLogin extends Component {
       }
     } catch (error) {
       let message = error.message
+
+      if (error.code === 'NotAuthorizedException') {
+        this.setState({ confirmError: message, loadingConfirm: false }, () => {
+          this.props.navigation.navigate('Login', {totpError: true})
+        })
+        return
+      }
+
       if (error.code === 'EnableSoftwareTokenMFAException') {
         message =
           'Wrong code. Try set up your athenticator again with the code above'
       }
+
       this.setState({ confirmError: message, loadingConfirm: false })
     }
   }
@@ -147,11 +156,12 @@ class ConfirmLogin extends Component {
             </Utils.Content>
             <Utils.Content>
               <Utils.Text size='xsmall' secondary>
-              PASTE GOOGLE AUTHENTICATOR CODE HERE
+                PASTE GOOGLE AUTHENTICATOR CODE HERE
               </Utils.Text>
               <Utils.FormInput
                 padding={Spacing.small}
                 underlineColorAndroid='transparent'
+                onSubmitEditing={this.confirmLogin}
                 onChangeText={text => this.changeInput(text, 'code')}
               />
 
@@ -173,7 +183,7 @@ class ConfirmLogin extends Component {
                 onPress={this.goBackLogin}
               >
                 {' '}
-              Back to Login{' '}
+                Back to Login{' '}
               </Utils.Text>
             </Utils.Content>
             <Toast
