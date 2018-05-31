@@ -108,7 +108,7 @@ class FreezeScene extends Component {
       <KeyboardAvoidingView
         behavior='padding'
         keyboardVerticalOffset={150}
-        style={{ flex: 1}}
+        style={{ flex: 1 }}
         enabled
       >
         <ScrollView>

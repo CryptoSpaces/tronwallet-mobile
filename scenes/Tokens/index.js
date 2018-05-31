@@ -59,11 +59,15 @@ class TokensScene extends Component {
 
   format = (percentage) => numeral(percentage).format('0.[00]') + '%'
 
+  formatAmount = value => {
+    return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  }
+
   renderCardFooter = (item) => {
     if (item.percentage < 100) {
       return (
         <ButtonGradient
-          size='xsmall'
+          size='small'
           onPress={() => this.navigate(item)}
           text='Participate'
         />
@@ -82,22 +86,28 @@ class TokensScene extends Component {
 
   renderCard = (item) => (
     <Utils.Card>
-      <Utils.Text size='medium' secondary>{item.name}</Utils.Text>
+      <Utils.Row justify='space-between'>
+        <Utils.Text size='small' secondary>{item.name}</Utils.Text>
+        <Utils.Text>{this.format(item.percentage)}</Utils.Text>
+      </Utils.Row>
       <Utils.VerticalSpacer size='medium' />
 
-      <Utils.Text ellipsizeMode='tail' numberOfLines={2} size='small' >{item.url}</Utils.Text>
-      <Utils.VerticalSpacer size='medium' />
+      <Utils.Text ellipsizeMode='tail' numberOfLines={2} size='xsmall' style={{ width: '100%' }}>
+        {item.url}
+      </Utils.Text>
+      <Utils.VerticalSpacer size='small' />
 
       <Utils.Row style={{ justifyContent: 'space-between', marginBottom: 5 }}>
-        <Utils.Text>{this.format(item.percentage)}</Utils.Text>
-        <Utils.Text>
-          <Utils.Text color={Colors.yellow}>{item.issued}</Utils.Text>
-          /{item.totalSupply}
+        {/* <Utils.Text>{this.format(item.percentage)}</Utils.Text> */}
+        <Utils.Text size='small'>
+          <Utils.Text color={Colors.secondaryText} size='small'>{this.formatAmount(item.issued)} </Utils.Text>
+          / {this.formatAmount(item.totalSupply)}
         </Utils.Text>
       </Utils.Row>
-      <Utils.VerticalSpacer size='large' />
-
-      {this.renderCardFooter(item)}
+      <Utils.VerticalSpacer size='medium' />
+      <Utils.View justify='center' align='center'>
+        {this.renderCardFooter(item)}
+      </Utils.View>
     </Utils.Card>
   )
 

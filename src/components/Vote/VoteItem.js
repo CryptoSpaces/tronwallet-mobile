@@ -5,9 +5,11 @@ import { View, StyleSheet } from 'react-native'
 
 const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote }) => {
   let url = item.url
-  let address = `${item.address.slice(0, 10)}...${item.address.substr(item.address.length - 8)}`
-  if (url.length > 25) {
-    url = `${url.slice(0, 20)}...`
+  let address = `${item.address.slice(0, 12)}...${item.address.substr(item.address.length - 12)}`
+  // url = url.replace(/(^\w+:|^)\/\//, '')
+  url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
+  if (url.length > 35) {
+    url = `${url.slice(0, 32)}...`
   }
 
   return (
@@ -18,9 +20,11 @@ const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote }) => {
             <Utils.Text secondary>#{index + 1}</Utils.Text>
           </View>
           <Utils.View>
-            <Utils.Text lineHeight={20}>{url}</Utils.Text>
+            <Utils.View style={{ width: '100%' }}>
+              <Utils.Text lineHeight={20} size='xsmall'>{url}</Utils.Text>
+            </Utils.View>
             <Utils.Row>
-              <Utils.Text lineHeight={20} size='xsmall' secondary>Issuer: </Utils.Text>
+              {/* <Utils.Text lineHeight={20} size='xsmall' secondary>Issuer: </Utils.Text> */}
               <Utils.Text lineHeight={20} size='xsmall'>{address}</Utils.Text>
             </Utils.Row>
             <Utils.Row>
