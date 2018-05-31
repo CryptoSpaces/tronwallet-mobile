@@ -7,10 +7,8 @@ import axios from 'axios'
 import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
-import Header from '../../components/Header'
 import Client from '../../src/services/client'
 import LoadingScene from '../../components/LoadingScene'
-import ButtonGradient from '../../components/ButtonGradient'
 import formatAmount from '../../utils/formatnumber'
 
 class BalanceScene extends Component {

@@ -151,6 +151,12 @@ export const Label = styled.View`
   background-color: ${props => props.color};
 `
 
+export const Tag = styled.View`
+  padding: ${Spacing.xsmall}px;
+  border-radius: 4px;
+  background-color: ${props => props.color};
+`
+
 Label.propTypes = {
   color: PropTypes.string.isRequired
 }
@@ -229,6 +235,12 @@ export const Button = props => (
 
 export const Card = styled.View`
   padding: ${props => Spacing[props.paddingSize]}px;
+  background-color: ${Colors.darkerBackground};
+  width: 100%;
+  border-radius: 6px;
+`
+export const TransactionCard = styled.View`
+  padding: ${Spacing.xsmall}px;
   background-color: ${Colors.darkerBackground};
   width: 100%;
   border-radius: 6px;

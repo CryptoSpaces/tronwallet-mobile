@@ -13,7 +13,7 @@ import qs from 'qs'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 // Utils
-import { Colors, Spacing } from '../../components/DesignSystem'
+import { Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import { DeeplinkURL } from '../../utils/deeplinkUtils'
 // Components
@@ -246,7 +246,7 @@ class VoteScene extends PureComponent {
         </Utils.View>
         {loadingList ? (
           <Utils.Content height={200} justify='center' align='center'>
-            <ActivityIndicator size='large' color={"#ffffff"} />
+            <ActivityIndicator size='large' color={'#ffffff'} />
           </Utils.Content>
         ) : (
           this.renderList()
