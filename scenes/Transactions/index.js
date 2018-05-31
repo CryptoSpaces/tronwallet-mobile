@@ -9,7 +9,7 @@ import TransferCard from './Transfer'
 import ParticipateCard from './Participate'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
-
+import Default from './Default'
 // const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 class TransactionsScene extends Component {
@@ -58,6 +58,7 @@ class TransactionsScene extends Component {
       case 'Freeze': return <FreezeCard item={item} />
       case 'Vote': return <VoteCard item={item} />
       case 'Participate': return <ParticipateCard item={item} />
+      default: return <Default item={item} />
     }
   }
 
