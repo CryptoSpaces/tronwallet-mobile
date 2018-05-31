@@ -4,7 +4,6 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
-  SafeAreaView,
   ScrollView
 } from 'react-native'
 import { Auth } from 'aws-amplify'

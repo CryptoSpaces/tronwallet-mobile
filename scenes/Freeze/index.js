@@ -19,13 +19,13 @@ class FreezeScene extends Component {
     loading: true
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this.loadData()
     })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
@@ -96,7 +96,7 @@ class FreezeScene extends Component {
     // alert('UNFREEZE');
   }
 
-  render() {
+  render () {
     const {
       total,
       bandwidth,
@@ -118,7 +118,7 @@ class FreezeScene extends Component {
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
                   Freeze
-              </Utils.Text>
+                </Utils.Text>
                 <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
               </Utils.View>
             </Header>

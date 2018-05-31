@@ -24,8 +24,8 @@ import SetPublicKey from './scenes/SetPublicKey'
 import HomeScene from './scenes/Home'
 import BalanceScene from './scenes/Balance'
 import VoteScene from './scenes/Vote'
-import TransactionsScene from './scenes/Transactions'
-import TransactionScreen from './scenes/Transaction'
+import TransactionListScene from './scenes/Transactions'
+import TransactionDetailScene from './scenes/TransactionDetail'
 import TransferScene from './scenes/Transfer'
 import SettingScene from './scenes/Settings'
 import TokensScene from './scenes/Tokens'
@@ -85,12 +85,11 @@ const TokensStack = createStackNavigator(
   }
 )
 
-const TransactionsStack = createStackNavigator(
+const TransactionList = createStackNavigator(
   {
-    TransactionsScene
-  },
-  {
-    initialRouteName: 'TransactionsScene'
+    TransactionListScene
+  }, {
+    initialRouteName: 'TransactionListScene'
   }
 )
 
@@ -103,7 +102,7 @@ const AppTabs = createBottomTabNavigator(
       path: 'vote'
     },
     Balance: BalanceScene,
-    Transactions: TransactionsStack,
+    Transactions: TransactionList,
     Transfer: TransferStack,
     Settings: SettingsStack
   },
@@ -227,7 +226,7 @@ const RootNavigator = createStackNavigator(
       path: 'getkey/:data'
     },
     TransactionDetail: {
-      screen: TransactionScreen,
+      screen: TransactionDetailScene,
       path: 'transaction/:tx'
     }
   },
