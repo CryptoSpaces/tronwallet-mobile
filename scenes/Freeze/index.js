@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Linking, ScrollView } from 'react-native'
+import { Linking, ScrollView, KeyboardAvoidingView } from 'react-native'
 import qs from 'qs'
 import { Linking as ExpoLinking } from 'expo'
 import * as Utils from '../../components/Utils'
@@ -19,13 +19,13 @@ class FreezeScene extends Component {
     loading: true
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this.loadData()
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
   }
 
@@ -96,7 +96,7 @@ class FreezeScene extends Component {
     // alert('UNFREEZE');
   }
 
-  render () {
+  render() {
     const {
       total,
       bandwidth,
@@ -105,29 +105,36 @@ class FreezeScene extends Component {
     } = this.state
 
     return (
-      <ScrollView>
-        <Utils.Container>
-          <Utils.StatusBar />
-          <Header>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>
-                Freeze
+      <KeyboardAvoidingView
+        behavior='padding'
+        keyboardVerticalOffset={150}
+        style={{ flex: 1}}
+        enabled
+      >
+        <ScrollView>
+          <Utils.Container>
+            <Utils.StatusBar />
+            <Header>
+              <Utils.View align='center'>
+                <Utils.Text size='xsmall' secondary>
+                  Freeze
               </Utils.Text>
-              <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-            </Utils.View>
-          </Header>
-          <Utils.Content style={{ backgroundColor: 'transparent' }}>
-            <Card isEditable buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
-              <CardRow label='New Frozen TRX' value={amount + total} />
-            </Card>
-            {/* <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}> */}
-            <Card>
-              <CardRow label='Frozen TRX' value={total} />
-              <CardRow label='Current Bandwidth' value={bandwidth} />
-            </Card>
-          </Utils.Content>
-        </Utils.Container>
-      </ScrollView>
+                <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+              </Utils.View>
+            </Header>
+            <Utils.Content style={{ backgroundColor: 'transparent' }}>
+              <Card isEditable buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
+                <CardRow label='New Frozen TRX' value={amount + total} />
+              </Card>
+              {/* <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}> */}
+              <Card>
+                <CardRow label='Frozen TRX' value={total} />
+                <CardRow label='Current Bandwidth' value={bandwidth} />
+              </Card>
+            </Utils.Content>
+          </Utils.Container>
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }

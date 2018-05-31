@@ -246,7 +246,7 @@ class VoteScene extends PureComponent {
         </Utils.View>
         {loadingList ? (
           <Utils.Content height={200} justify='center' align='center'>
-            <ActivityIndicator size='large' color={Colors.yellow} />
+            <ActivityIndicator size='large' color={"#ffffff"} />
           </Utils.Content>
         ) : (
           this.renderList()
