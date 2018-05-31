@@ -240,12 +240,12 @@ export const Card = styled.View`
   border-radius: 6px;
 `
 export const TransactionCard = styled.View`
-  padding: ${Spacing.xsmall}px;
-  background-color: ${Colors.darkerBackground};
+  padding-top: ${Spacing.medium}
+  background-color: ${Colors.background};
   width: 100%;
   border-radius: 6px;
 `
 
 Card.defaultProps = {
-  paddingSize: 'large'
+  paddingSize: 'xsmall'
 }
