@@ -7,6 +7,8 @@ import {
   ScrollView
 } from 'react-native'
 import { Auth } from 'aws-amplify'
+import Toast from 'react-native-easy-toast'
+45
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -17,6 +19,13 @@ class LoginScene extends Component {
     email: '',
     password: '',
     signError: null
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { navigation } = nextProps
+    if (navigation.state.params && navigation.state.params.totpError) {
+      this.refs.toast.show('Session expired, try again')
+    }
   }
 
   changeInput = (text, field) => {
@@ -35,7 +44,6 @@ class LoginScene extends Component {
 
     try {
       const user = await Auth.signIn(email, password)
-      console.log('login ==>', user)
       navigation.navigate('ConfirmLogin', { user })
       this.setState({ signError: null, loadingSign: false })
     } catch (error) {
@@ -104,12 +112,12 @@ class LoginScene extends Component {
               <Image source={require('../../assets/login-circle.png')} />
               <Utils.VerticalSpacer size='small' />
               <Utils.Text size='medium'>
-              TRONWALLET
+                TRONWALLET
               </Utils.Text>
             </Utils.Content>
             <Utils.FormGroup>
               <Utils.Text size='xsmall' secondary>
-              E-MAIL
+                E-MAIL
               </Utils.Text>
               <Utils.FormInput
                 innerRef={ref => {
@@ -126,7 +134,7 @@ class LoginScene extends Component {
                 padding={Spacing.small}
               />
               <Utils.Text size='xsmall' secondary>
-              PASSWORD
+                PASSWORD
               </Utils.Text>
               <Utils.FormInput
                 innerRef={ref => {
@@ -145,7 +153,7 @@ class LoginScene extends Component {
             <Utils.Content justify='center' align='center'>
               {ChangedPassword && (
                 <Utils.Text size='small' success>
-                Password Changed
+                  Password Changed
                 </Utils.Text>
               )}
               <Utils.Error>{signError}</Utils.Error>
@@ -155,13 +163,20 @@ class LoginScene extends Component {
                 font='light'
                 secondary
               >
-              FORGOT PASSWORD ?
+                FORGOT PASSWORD ?
               </Utils.Text>
               <Utils.VerticalSpacer size='large' />
               <Utils.Text size='xsmall' secondary>
                 {`v${version}`}
               </Utils.Text>
             </Utils.Content>
+            <Toast
+              ref='toast'
+              position='center'
+              fadeInDuration={750}
+              fadeOutDuration={1000}
+              opacity={0.8}
+            />
           </Utils.Container>
         </ScrollView>
       </KeyboardAvoidingView>
