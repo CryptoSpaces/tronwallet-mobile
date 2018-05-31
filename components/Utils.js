@@ -76,10 +76,9 @@ export const LoadButton = styled.TouchableOpacity`
 export const LoadButtonWrapper = styled.View`
   height: 50px;
   width: 50px;
-	align-self: center;
-	justify-content: center;
+  align-self: center;
+  justify-content: center;
 `
-
 
 export const ContentWithBackground = Content.withComponent(ImageBackground)
 
@@ -241,5 +240,5 @@ export const TransactionCard = styled.View`
 `
 
 Card.defaultProps = {
-  paddingSize: 'large'
+  paddingSize: 'medium'
 }
