@@ -96,15 +96,15 @@ const TransactionsStack = createStackNavigator(
 
 const AppTabs = createBottomTabNavigator(
   {
-    Balance: BalanceScene,
     Home: HomeScene,
     Vote: {
       screen: VoteStack,
       path: 'vote'
     },
     Tokens: TokensStack,
-    Transactions: TransferStack,
-    // Transfer: TransferStack,
+    Balance: BalanceScene,
+    Transactions: TransactionsStack,
+    Transfer: TransferStack,
     Settings: SettingsStack
   },
   {
@@ -117,8 +117,7 @@ const AppTabs = createBottomTabNavigator(
         } else if (routeName === 'Balance') {
           iconName = `wallet,-money,-cash,-balance,-purse`
         } else if (routeName === 'Transfer') {
-          // iconName = `user,-person,-avtar,-profile-picture,-dp`
-          iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
+          iconName = `fly,-send,-paper,-submit,-plane`
         } else if (routeName === 'Vote') {
           iconName = `shout-out,-speaker,-offer,-announcement,-loud`
         } else if (routeName === 'Transactions') {
