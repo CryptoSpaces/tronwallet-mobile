@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { Colors } from './DesignSystem'
 import * as Utils from './Utils'
 import ButtonGradient from '../components/ButtonGradient'
@@ -14,6 +14,10 @@ export const CardRow = ({ label, value }) => (
 class Card extends Component {
   constructor (props) {
     super()
+  }
+
+  static defaultProps = {
+    loading: false
   }
 
   renderInput = () => {
@@ -32,7 +36,7 @@ class Card extends Component {
             autoCorrect={false}
             value={this.props.value}
             onChangeText={(value) => this.props.onChange(value)}
-            onSubmitEditing={() => {}}
+            onSubmitEditing={() => { }}
             returnKeyType='send'
             style={{
               color: Colors.secondaryText
@@ -46,7 +50,7 @@ class Card extends Component {
   }
 
   render () {
-    const { buttonLabel, children, onPress } = this.props
+    const { buttonLabel, children, onPress, loading } = this.props
 
     return (
       <View style={styles.container}>
@@ -57,7 +61,8 @@ class Card extends Component {
           buttonLabel
             ? (
               <View style={styles.buttonWrapper}>
-                <ButtonGradient text={buttonLabel} onPress={onPress} size='small' />
+                {loading ? <ActivityIndicator size='small' color={Colors.primaryText} />
+                  : <ButtonGradient text={buttonLabel} onPress={onPress} size='small' />}
               </View>
             )
             : <View />
