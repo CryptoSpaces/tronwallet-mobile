@@ -1,4 +1,4 @@
-##  TronWallet Hot Wallet - High secure crypto wallet for TRON
+##  TronWallet - High secure crypto wallet for TRON
 
 Many crypto wallets ask for your private keys, some of them store it on their server. When this happens, you are giving to a third party access to all your assets. This is the same situation that thousands already have been hacked and lost their tokens. Because of that problem we have created TronVault and TronWallet, a cold and hot wallet for TRON that only work with an offline signature process.
 
