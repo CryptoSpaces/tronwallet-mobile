@@ -14,6 +14,7 @@ import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import { version } from './../../package.json'
+import Client from '../../src/services/client'
 
 class LoginScene extends Component {
   state = {
@@ -48,15 +49,30 @@ class LoginScene extends Component {
       await Auth.signIn(username, password)
       this.setState({ signError: null, loadingSign: false })
 
-      const confirmSignIn = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'App' })],
-        key: null
-      })
-      navigation.dispatch(confirmSignIn)
+      const userPublicKey = await Client.getPublicKey()
+      if (userPublicKey) {
+        this.setState(
+          {
+            loadingSign: false,
+            confirmError: null
+          },
+          () => {
+            const confirmSignIn = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'App' })],
+              key: null
+            })
+            navigation.dispatch(confirmSignIn)
+          }
+        )
+      } else {
+        this.setState({ loadingSign: false }, () => {
+          this.props.navigation.navigate('SetPublicKey')
+        })
+      }
     } catch (error) {
       if (error.code === 'UserNotConfirmedException') {
-        navigation.navigate('ConfirmSignup', { username })
+        navigation.navigate('ConfirmSignup', { username, password })
         this.setState({ loadingSign: false })
         return
       }
