@@ -1,38 +1,50 @@
-This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
+##  TronWallet Hot Wallet - High secure crypto wallet for your #TRON
 
-Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
+Many crypto wallets ask for your private keys, some of them store it on their server. When this happens, you are giving to a third party access to all your assets. This is the same situation that thousands already have been hacked and lost their tokens. Because of that problem we have created TronVault and TronWallet, a cold and hot wallet for TRON that only work with an offline signature process.
 
-## Table of Contents
+TronWallet was built with security in mind. With a powerful 2 Factor Authentication using AWS Cognito, we provide a secure way for user create, sign, send, vote and participate on TRON Network.
 
-* [Updating to New Releases](#updating-to-new-releases)
-* [Available Scripts](#available-scripts)
-  * [npm start](#npm-start)
-  * [npm test](#npm-test)
-  * [npm run ios](#npm-run-ios)
-  * [npm run android](#npm-run-android)
-  * [npm run eject](#npm-run-eject)
-* [Writing and Running Tests](#writing-and-running-tests)
-* [Environment Variables](#environment-variables)
-  * [Configuring Packager IP Address](#configuring-packager-ip-address)
-* [Customizing App Display Name and Icon](#customizing-app-display-name-and-icon)
-* [Sharing and Deployment](#sharing-and-deployment)
-  * [Publishing to Expo's React Native Community](#publishing-to-expos-react-native-community)
-  * [Building an Expo "standalone" app](#building-an-expo-standalone-app)
-  * [Ejecting from Create React Native App](#ejecting-from-create-react-native-app)
-    * [Build Dependencies (Xcode & Android Studio)](#build-dependencies-xcode-android-studio)
-    * [Should I Use ExpoKit?](#should-i-use-expokit)
-* [Troubleshooting](#troubleshooting)
-  * [Networking](#networking)
-  * [iOS Simulator won't open](#ios-simulator-wont-open)
-  * [QR Code does not scan](#qr-code-does-not-scan)
+TronWallet is available for iOS, Android, Windows, MacOS, Linux, and Web.
 
-## Updating to New Releases
+For the desktop and web versions, TronWallet sign with sign offline transactions using TronVault and a QR Code reader using the pc or notebook camera.
 
-You should only need to update the global installation of `create-react-native-app` very rarely, ideally never.
+For the iOS and Android version, TronWallet works sign offline transactions TronVault deep link technology.
 
-Updating the `react-native-scripts` dependency of your app should be as simple as bumping the version number in `package.json` and reinstalling your project's dependencies.
+### TronWallet Features:
 
-Upgrading to a new version of React Native requires updating the `react-native`, `react`, and `expo` package versions, and setting the correct `sdkVersion` in `app.json`. See the [versioning guide](https://github.com/react-community/create-react-native-app/blob/master/VERSIONS.md) for up-to-date information about package version compatibility.
+- Login / Signup
+- MFA - 2 Factor Authentication
+- Send (Offline sign with TronVault)
+- Vote  (Offline sign with TronVault)
+- Freeze  (Offline sign with TronVault)
+- Unfreeze  (Offline sign with TronVault)
+- Official news from Justin Sun Twitter
+- User Dashboard
+- Balances widget
+- Frozen Tokens widget
+- Entropy widget
+- Receive widget
+- Transactions list widget
+- User Tokens widget
+- TRX price chart widget
+- TronWallet Notifier Micro App
+- TronWallet Notifier API
+- List Tokens
+- Create Tokens (Only Desktop)
+- Participate Tokens
+
+The TronWallet team is working hard to provide a seamless way to sign offline transactions and empower TRON users to do more without risk to lose their assets. 
+
+TronWallet is aiming to become a first citizen wallet for TRON and provide in the future features like:
+Import Contacts (iOS, Android)
+
+### TronWallet Roadmap:
+
+Fast Send (For trusted contacts)
+KYC / AML Compliance
+TRON E-commerce
+TRON Services Marketplace 
+TRON DEX - Decentralized Exchange
 
 ## Available Scripts
 
@@ -74,20 +86,6 @@ Like `npm start`, but also attempts to open your app on a connected Android devi
 1. Find Genymotion’s copy of adb. On macOS for example, this is normally `/Applications/Genymotion.app/Contents/MacOS/tools/`.
 2. Add the Genymotion tools directory to your path (instructions for [Mac](http://osxdaily.com/2014/08/14/add-new-path-to-path-command-line/), [Linux](http://www.computerhope.com/issues/ch001647.htm), and [Windows](https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/)).
 3. Make sure that you can run adb from your terminal.
-
-#### `npm run eject`
-
-This will start the process of "ejecting" from Create React Native App's build scripts. You'll be asked a couple of questions about how you'd like to build your project.
-
-**Warning:** Running eject is a permanent action (aside from whatever version control system you use). An ejected app will require you to have an [Xcode and/or Android Studio environment](https://facebook.github.io/react-native/docs/getting-started.html) set up.
-
-## Customizing App Display Name and Icon
-
-You can edit `app.json` to include [configuration keys](https://docs.expo.io/versions/latest/guides/configuration.html) under the `expo` key.
-
-To change your app's display name, set the `expo.name` key in `app.json` to an appropriate string.
-
-To set an app icon, set the `expo.icon` key in `app.json` to be either a local path or a URL. It's recommended that you use a 512x512 png file with transparency.
 
 ## Writing and Running Tests
 
