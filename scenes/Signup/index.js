@@ -3,11 +3,12 @@ import {
   ActivityIndicator,
   Image,
   Keyboard,
-  ScrollView,
   KeyboardAvoidingView
 } from 'react-native'
-import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
@@ -87,17 +88,17 @@ class SignupScene extends Component {
     const { signError } = this.state
     return (
       <KeyboardAvoidingView
-        behavior='padding'
-        keyboardVerticalOffset={150}
+        // behavior='padding'
+        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
-        <ScrollView>
+        <KeyboardAwareScrollView>
+          <Utils.StatusBar />
           <Utils.Container
             keyboardShouldPersistTaps={'always'}
             keyboardDismissMode='interactive'
           >
-
             <Utils.Content justify='center' align='center'>
               <Utils.VerticalSpacer size='medium' />
               <Image source={require('../../assets/login-circle.png')} />
@@ -106,7 +107,6 @@ class SignupScene extends Component {
               TRONWALLET
               </Utils.Text>
             </Utils.Content>
-
             <Utils.FormGroup>
               <Utils.Text size='xsmall' secondary>
               NAME
@@ -122,9 +122,8 @@ class SignupScene extends Component {
                 returnKeyType={'next'}
                 padding={Spacing.small}
               />
-
               <Utils.Text size='xsmall' secondary>
-              E-MAIL
+                E-MAIL
               </Utils.Text>
               <Utils.FormInput
                 innerRef={ref => {
@@ -140,7 +139,6 @@ class SignupScene extends Component {
                 returnKeyType={'next'}
                 padding={Spacing.small}
               />
-
               <Utils.Text size='xsmall' secondary>
               PASSWORD
               </Utils.Text>
@@ -157,7 +155,6 @@ class SignupScene extends Component {
                 returnKeyType={'send'}
                 padding={Spacing.small}
               />
-
               {this.renderSubmitButton()}
             </Utils.FormGroup>
             <Utils.Error>{signError}</Utils.Error>
@@ -172,7 +169,7 @@ class SignupScene extends Component {
               </Utils.Text> */}
             </Utils.Content>
           </Utils.Container>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
     )
   }

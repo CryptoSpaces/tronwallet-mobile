@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, ScrollView } from 'react-native'
-import * as Utils from '../../components/Utils'
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView } from 'react-native'
 import { Auth } from 'aws-amplify'
-import { Colors, Spacing } from '../../components/DesignSystem'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 import ButtonGradient from '../../components/ButtonGradient'
+import * as Utils from '../../components/Utils'
+import { Colors, Spacing } from '../../components/DesignSystem'
 
 class SignupScene extends Component {
   state = {
@@ -62,12 +64,13 @@ class SignupScene extends Component {
     const { confirmError } = this.state
     return (
       <KeyboardAvoidingView
-        behavior='padding'
-        keyboardVerticalOffset={150}
+        // behavior='padding'
+        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
-        <ScrollView>
+        <KeyboardAwareScrollView>
+          <Utils.StatusBar />
           <Utils.Container
             keyboardShouldPersistTaps={'always'}
             keyboardDismissMode='interactive'
@@ -77,7 +80,7 @@ class SignupScene extends Component {
             </Utils.Content>
             <Utils.Content>
               <Utils.Text size='xsmall' secondary>
-            EMAIL VERIFICATION CODE
+                EMAIL VERIFICATION CODE
               </Utils.Text>
               <Utils.FormInput
                 keyboardType='numeric'
@@ -87,15 +90,13 @@ class SignupScene extends Component {
                 padding={Spacing.medium}
               />
               <Utils.Text size='xsmall'>
-            We sent you an email with the verification code from
-            no-reply@verificationemail.com, please check your spam if you didn't
-            find it.
+                We sent you an email with the verification code from
+                no-reply@verificationemail.com, please check your spam if you didn't
+                find it.
               </Utils.Text>
               <Utils.InputError>{confirmError}</Utils.InputError>
-
               {this.renderSubmitButton()}
             </Utils.Content>
-
             <Utils.Content justify='center' align='center'>
               <Utils.Error>{confirmError}</Utils.Error>
               <Utils.Text
@@ -104,11 +105,11 @@ class SignupScene extends Component {
                 font='light'
                 secondary
               >
-            Back to Sign Up
+                Back to Sign Up
               </Utils.Text>
             </Utils.Content>
           </Utils.Container>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
     )
   }

@@ -1,9 +1,10 @@
 {
   "expo": {
     "name": "TronWallet",
-    "version": "1.6.10",
+    "version": "2.0.1",
     "sdkVersion": "27.0.0",
     "slug": "tronwallet",
+    "icon": "./assets/icon.png",
     "androidStatusBar": {
       "barStyle": "light-content"
     },
