@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Linking } from 'expo'
 import qs from 'qs'
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 // Utils
 import { Spacing } from '../../components/DesignSystem'
@@ -151,8 +151,8 @@ class VoteScene extends PureComponent {
       },
       0
     )
-    navigation.setParams({ disabled: totalUserVotes <= 0 })
     const totalRemaining = totalTrx - totalUserVotes
+    navigation.setParams({ disabled: totalRemaining <= 0 })
     this.setState({ currentVotes: newVotes, totalRemaining })
   }
 
@@ -234,23 +234,25 @@ class VoteScene extends PureComponent {
             </Utils.Text>
           </Utils.View>
         </Header>
-        <Utils.View justify='center' align='center'>
-          <Utils.FormInput
-            underlineColorAndroid='transparent'
-            onChangeText={text => this.onSearch(text, 'search')}
-            placeholder='Search'
-            placeholderTextColor='#fff'
-            marginTop={Spacing.medium}
-            style={{ width: '95%' }}
-          />
-        </Utils.View>
-        {loadingList ? (
-          <Utils.Content height={200} justify='center' align='center'>
-            <ActivityIndicator size='large' color={'#ffffff'} />
-          </Utils.Content>
-        ) : (
-          this.renderList()
-        )}
+        <KeyboardAwareScrollView>
+          <Utils.View justify='center' align='center'>
+            <Utils.FormInput
+              underlineColorAndroid='transparent'
+              onChangeText={text => this.onSearch(text, 'search')}
+              placeholder='Search'
+              placeholderTextColor='#fff'
+              marginTop={Spacing.medium}
+              style={{ width: '95%' }}
+            />
+          </Utils.View>
+          {loadingList ? (
+            <Utils.Content height={200} justify='center' align='center'>
+              <ActivityIndicator size='large' color={'#ffffff'} />
+            </Utils.Content>
+          ) : (
+            this.renderList()
+          )}
+        </KeyboardAwareScrollView>
       </Utils.Container>
     )
   }
