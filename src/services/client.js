@@ -98,7 +98,7 @@ class ClientWallet {
 
   async getFreeze () {
     const owner = await this.getPublicKey()
-    const { data: { frozen, bandwidth, balances }, data } = await axios.get(`${this.api}/account/${owner}`)
+    const { data: { frozen, bandwidth, balances } } = await axios.get(`${this.api}/account/${owner}`)
     return { ...frozen, total: frozen.total / ONE_TRX, bandwidth, balances }
   }
 

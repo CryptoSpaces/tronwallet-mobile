@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Linking, ScrollView, KeyboardAvoidingView } from 'react-native'
-import qs from 'qs'
+import { Linking, KeyboardAvoidingView } from 'react-native'
 import { Linking as ExpoLinking } from 'expo'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import qs from 'qs'
+
 import * as Utils from '../../components/Utils'
 import Client from '../../src/services/client'
 import Header from '../../components/Header'
@@ -106,12 +108,13 @@ class FreezeScene extends Component {
 
     return (
       <KeyboardAvoidingView
-        behavior='padding'
-        keyboardVerticalOffset={150}
+        // behavior='padding'
+        // keyboardVerticalOffset={150}
         style={{ flex: 1 }}
         enabled
       >
-        <ScrollView>
+        <KeyboardAwareScrollView>
+          <Utils.StatusBar />
           <Utils.Container>
             <Utils.StatusBar />
             <Header>
@@ -133,7 +136,7 @@ class FreezeScene extends Component {
               </Card>
             </Utils.Content>
           </Utils.Container>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
     )
   }

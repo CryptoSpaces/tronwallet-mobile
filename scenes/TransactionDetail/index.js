@@ -12,7 +12,6 @@ import moment from 'moment'
 const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 class TransactionDetail extends Component {
-
   static navigationOptions = ({ navigation }) => {
     return {
       header: (
@@ -21,11 +20,11 @@ class TransactionDetail extends Component {
             <Utils.TitleWrapper>
               <Utils.Title>Transaction Detail</Utils.Title>
             </Utils.TitleWrapper>
-						<Utils.LoadButtonWrapper>
-							<Utils.LoadButton onPress={()=> navigation.navigate('Balance')}>
-								<Feather name="x" color="white" size={32} />
-							</Utils.LoadButton>
-						</Utils.LoadButtonWrapper>
+            <Utils.LoadButtonWrapper>
+              <Utils.LoadButton onPress={() => navigation.navigate('Balance')}>
+                <Feather name='x' color='white' size={32} />
+              </Utils.LoadButton>
+            </Utils.LoadButtonWrapper>
           </Utils.Header>
         </SafeAreaView>
       )

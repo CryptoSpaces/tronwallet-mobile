@@ -21,11 +21,11 @@ class ParticipateScene extends Component {
             <Utils.TitleWrapper>
               <Utils.Title>Participate</Utils.Title>
             </Utils.TitleWrapper>
-						<Utils.LoadButtonWrapper>
-							<Utils.LoadButton onPress={()=> navigation.goBack()}>
-								<Feather name="x" color="white" size={32} />
-							</Utils.LoadButton>
-						</Utils.LoadButtonWrapper>
+            <Utils.LoadButtonWrapper>
+              <Utils.LoadButton onPress={() => navigation.goBack()}>
+                <Feather name='x' color='white' size={32} />
+              </Utils.LoadButton>
+            </Utils.LoadButtonWrapper>
           </Utils.Header>
         </SafeAreaView>
       )

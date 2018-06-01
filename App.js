@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { StatusBar } from 'react-native'
-import { Linking } from 'expo'
+import { Linking, Constants } from 'expo'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -173,6 +173,7 @@ const LoginStack = createStackNavigator(
 
 const tabWidth = ScreenSize.width / 2
 const indicatorWidth = 15
+const LoginTabsPadding = 20 + Constants.statusBarHeight
 
 const SignTabs = createMaterialTopTabNavigator(
   {
@@ -194,7 +195,7 @@ const SignTabs = createMaterialTopTabNavigator(
       activeTintColor: Colors.primaryText,
       inactiveTintColor: Colors.secondaryText,
       style: {
-        paddingTop: 60,
+        paddingTop: LoginTabsPadding,
         backgroundColor: Colors.background,
         elevation: 0
       },

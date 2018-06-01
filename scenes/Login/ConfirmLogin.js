@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, ScrollView, KeyboardAvoidingView } from 'react-native'
+import { ActivityIndicator, Image, KeyboardAvoidingView } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
@@ -105,8 +106,6 @@ class ConfirmLogin extends Component {
   }
 
   showToast = success => {
-    console.log(this.state.totpCode)
-
     if (success) {
       this.refs.toast.show(
         'Google Authenticator secret copied to the clipboard'
@@ -144,12 +143,13 @@ class ConfirmLogin extends Component {
     const { confirmError, loadingConfirm } = this.state
     return (
       <KeyboardAvoidingView
-        behavior='padding'
-        keyboardVerticalOffset={150}
+        // behavior='padding'
+        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
-        <ScrollView>
+        <KeyboardAwareScrollView>
+          <Utils.StatusBar />
           <Utils.Container>
             <Utils.Content height={80} justify='center' align='center'>
               <Image source={require('../../assets/login-circle.png')} />
@@ -182,8 +182,7 @@ class ConfirmLogin extends Component {
                 secondary
                 onPress={this.goBackLogin}
               >
-                {' '}
-                Back to Login{' '}
+                Back to Login
               </Utils.Text>
             </Utils.Content>
             <Toast
@@ -194,7 +193,7 @@ class ConfirmLogin extends Component {
               opacity={0.8}
             />
           </Utils.Container>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
     )
   }

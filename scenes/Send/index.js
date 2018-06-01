@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert, ScrollView, KeyboardAvoidingView } from 'react-native'
+import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
 import { Linking as ExpoLinking } from 'expo'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../src/services/client'
@@ -191,12 +192,13 @@ class SendScene extends Component {
 
     return (
       <KeyboardAvoidingView
-        behavior='padding'
-        keyboardVerticalOffset={150}
+        // behavior='padding'
+        // keyboardVerticalOffset={150}
         style={{ flex: 1 }}
         enabled
       >
-        <ScrollView>
+        <KeyboardAwareScrollView>
+          <Utils.StatusBar />
           <Utils.Container>
             <Utils.StatusBar />
             <Utils.View align='center'>
@@ -263,7 +265,7 @@ class SendScene extends Component {
               <Utils.VerticalSpacer size='medium' />
             </Utils.Content>
           </Utils.Container>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
     )
   }

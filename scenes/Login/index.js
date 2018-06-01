@@ -3,12 +3,12 @@ import {
   ActivityIndicator,
   Image,
   Keyboard,
-  KeyboardAvoidingView,
-  ScrollView
+  KeyboardAvoidingView
 } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
-45
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -97,12 +97,13 @@ class LoginScene extends Component {
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
       <KeyboardAvoidingView
-        behavior='padding'
-        keyboardVerticalOffset={150}
+        // behavior='padding'
+        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
-        <ScrollView>
+        <KeyboardAwareScrollView>
+          <Utils.StatusBar />
           <Utils.Container
             keyboardShouldPersistTaps={'always'}
             keyboardDismissMode='interactive'
@@ -178,7 +179,7 @@ class LoginScene extends Component {
               opacity={0.8}
             />
           </Utils.Container>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
     )
   }

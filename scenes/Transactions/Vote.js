@@ -11,20 +11,20 @@ export default ({ item }) => {
     <Utils.TransactionCard>
       <Utils.Row align='center' justify='space-between'>
         <Utils.Tag color={tint(0.9, '#bd1dc6')}>
-          <Utils.Text size="xsmall">{item.type}</Utils.Text>
+          <Utils.Text size='xsmall'>{item.type}</Utils.Text>
         </Utils.Tag>
         <Utils.View>
-          <Utils.Text size="small">{voteCount}  <Feather name='thumbs-up' size={20} color='#ffffff' /></Utils.Text>
+          <Utils.Text size='small'>{voteCount}  <Feather name='thumbs-up' size={20} color='#ffffff' /></Utils.Text>
         </Utils.View>
       </Utils.Row>
       <Utils.VerticalSpacer size='xsmall' />
       <Utils.Row>
-      <Utils.View>
-        <Utils.VerticalSpacer size='xsmall' />
-        <Utils.Text size="xsmall" secondary>{moment(item.timestamp).fromNow()}</Utils.Text>
-      </Utils.View>
-      </Utils.Row>      
-    </Utils.TransactionCard>    
+        <Utils.View>
+          <Utils.VerticalSpacer size='xsmall' />
+          <Utils.Text size='xsmall' secondary>{moment(item.timestamp).fromNow()}</Utils.Text>
+        </Utils.View>
+      </Utils.Row>
+    </Utils.TransactionCard>
   )
 
   // return <Utils.TransactionCard>
