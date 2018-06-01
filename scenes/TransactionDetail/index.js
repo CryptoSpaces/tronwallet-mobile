@@ -5,7 +5,6 @@ import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../src/services/client'
-import Header from '../../components/Header'
 import LoadingScene from '../../components/LoadingScene'
 import moment from 'moment'
 

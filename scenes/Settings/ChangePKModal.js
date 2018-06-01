@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react'
 import { Modal, View } from 'react-native'
 import * as Utils from './../../components/Utils'
 import Header from '../../components/Header'
-import { Colors, Spacing } from '../../components/DesignSystem'
+import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../src/services/address'
 import Client from '../../src/services/client'
 
 import { createIconSetFromFontello } from '@expo/vector-icons'
 import fontelloConfig from '../../assets/icons/config.json'
+import PasteInput from '../../components/PasteInput'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
@@ -45,13 +46,13 @@ class ChangePKModal extends PureComponent {
 
   render () {
     const { visible } = this.props
-    const { errorMessage } = this.state
+    const { errorMessage, newPk } = this.state
     return (
       <Modal
         animationType='slide'
         transparent={false}
         visible={visible}
-        onRequestClose={() => {}}
+        onRequestClose={() => { }}
       >
         <Utils.Container
           keyboardShouldPersistTaps={'always'}
@@ -73,17 +74,10 @@ class ChangePKModal extends PureComponent {
             <Utils.Text size='xsmall' secondary>
               NEW PUBLIC KEY
             </Utils.Text>
-            <Utils.FormInput
-              innerRef={ref => {
-                this.newPk = ref
-              }}
-              underlineColorAndroid='transparent'
-              autoCapitalize='none'
-              autoCorrect={false}
-              onChangeText={v => this.setState({ newPk: v })}
-              onSubmitEditing={this.setUser}
-              returnKeyType='send'
-              padding={Spacing.medium}
+            <PasteInput
+              value={newPk}
+              field='from'
+              onChangeText={text => this.setState({newPk: text, errorMessage: null})}
             />
             <ButtonGradient text='OK' onPress={this.setUser} size='medium' />
           </Utils.FormGroup>

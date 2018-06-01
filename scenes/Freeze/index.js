@@ -33,7 +33,6 @@ class FreezeScene extends Component {
 
   sendDeepLink = async (data) => {
     const { from, amount } = this.state
-    this.setState({ loading: true })
     try {
       // Data to deep link, same format as Tron Wallet
       const dataToSend = qs.stringify({
@@ -88,7 +87,7 @@ class FreezeScene extends Component {
 
   freezeToken = async () => {
     const { amount } = this.state
-
+    this.setState({ loading: true })
     const transaction = await Client.freezeToken(amount)
     this.sendDeepLink(transaction)
   }
@@ -103,7 +102,8 @@ class FreezeScene extends Component {
       total,
       bandwidth,
       trxBalance,
-      amount
+      amount,
+      loading
     } = this.state
 
     return (
@@ -126,7 +126,7 @@ class FreezeScene extends Component {
               </Utils.View>
             </Header>
             <Utils.Content style={{ backgroundColor: 'transparent' }}>
-              <Card isEditable buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
+              <Card isEditable loading={loading} buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
                 <CardRow label='New Frozen TRX' value={amount + total} />
               </Card>
               {/* <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}> */}
