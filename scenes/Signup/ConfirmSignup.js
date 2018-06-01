@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView } from 'react-native'
 import { Auth } from 'aws-amplify'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { StackActions, NavigationActions } from 'react-navigation'
+import Toast from 'react-native-easy-toast'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
@@ -25,17 +27,27 @@ class SignupScene extends Component {
     const { navigation } = this.props
     Keyboard.dismiss()
 
-    const email = navigation.getParam('email')
+    const username = navigation.getParam('username')
+    const password = navigation.getParam('password')
+
     this.setState({ loadingConfirm: true })
     try {
-      await Auth.confirmSignUp(email, code)
-      this.setState(
-        {
-          loadingConfirm: false
-        },
-        () => navigation.navigate('Login')
-      )
+      await Auth.confirmSignUp(username, code)
+      await Auth.signIn(username, password)
+      this.setState({ loadingConfirm: false })
+      const confirmSignAndLogin = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'SetPublicKey' })],
+        key: null
+      })
+      navigation.dispatch(confirmSignAndLogin)
     } catch (error) {
+      if (error.code === 'NotAuthorizedException') {
+        this.setState({ loadingConfirm: false })
+        this.refs.toast.show('Email confirmed but credentials failed. Redirecting...')
+        setTimeout(() => navigation.navigate('Login'), 2000)
+        return
+      }
       this.setState({ confirmError: error.message, loadingConfirm: false })
     }
   }
@@ -46,7 +58,7 @@ class SignupScene extends Component {
     if (loadingConfirm) {
       return (
         <Utils.Content height={80} justify='center' align='center'>
-          <ActivityIndicator size='small' color={Colors.yellow} />
+          <ActivityIndicator size='small' color={Colors.primaryText} />
         </Utils.Content>
       )
     }
@@ -94,22 +106,28 @@ class SignupScene extends Component {
                 no-reply@verificationemail.com, please check your spam if you didn't
                 find it.
               </Utils.Text>
-              <Utils.InputError>{confirmError}</Utils.InputError>
               {this.renderSubmitButton()}
             </Utils.Content>
+            <Utils.Error>{confirmError}</Utils.Error>
             <Utils.Content justify='center' align='center'>
-              <Utils.Error>{confirmError}</Utils.Error>
               <Utils.Text
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() => this.props.navigation.navigate('Login')}
                 size='small'
                 font='light'
                 secondary
               >
-                Back to Sign Up
+                Go back
               </Utils.Text>
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>
+        <Toast
+          ref='toast'
+          position='center'
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+          opacity={0.8}
+        />
       </KeyboardAvoidingView>
     )
   }
