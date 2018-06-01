@@ -3,7 +3,6 @@ import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView } from 'react-
 import { Auth } from 'aws-amplify'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StackActions, NavigationActions } from 'react-navigation'
-import Toast from 'react-native-easy-toast'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
@@ -29,7 +28,6 @@ class SignupScene extends Component {
 
     const username = navigation.getParam('username')
     const password = navigation.getParam('password')
-
     this.setState({ loadingConfirm: true })
     try {
       await Auth.confirmSignUp(username, code)
@@ -43,9 +41,8 @@ class SignupScene extends Component {
       navigation.dispatch(confirmSignAndLogin)
     } catch (error) {
       if (error.code === 'NotAuthorizedException') {
-        this.setState({ loadingConfirm: false })
-        this.refs.toast.show('Email confirmed but credentials failed. Redirecting...')
-        setTimeout(() => navigation.navigate('Login'), 2000)
+        this.setState({ loadingConfirm: false, confirmError: 'Incorrect credentials, try again..' })
+        setTimeout(() => navigation.navigate('Login'), 1500)
         return
       }
       this.setState({ confirmError: error.message, loadingConfirm: false })
@@ -121,13 +118,7 @@ class SignupScene extends Component {
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>
-        <Toast
-          ref='toast'
-          position='center'
-          fadeInDuration={750}
-          fadeOutDuration={1000}
-          opacity={0.8}
-        />
+
       </KeyboardAvoidingView>
     )
   }
