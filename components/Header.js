@@ -29,7 +29,7 @@ const Header = ({
   ) : placeholder
 
   return (
-    <View style={{ paddingTop: top, paddingBottom: bottom, paddingHorizontal: 10}}>
+    <View style={{paddingTop: top, paddingBottom: bottom, paddingHorizontal: 10}}>
       <Utils.Row align='center' justify='space-between'>
         {leftBtn}
         {children}

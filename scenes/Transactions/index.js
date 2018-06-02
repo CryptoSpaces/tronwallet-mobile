@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { SafeAreaView, FlatList, StyleSheet, RefreshControl, Image } from 'react-native'
 
 import * as Utils from '../../components/Utils'
-import { Spacing } from './../../components/DesignSystem'
+import { Spacing, Colors } from './../../components/DesignSystem'
 import Client from '../../src/services/client'
 import LoadingScene from '../../components/LoadingScene'
 import TransferCard from './Transfer'
@@ -10,6 +10,7 @@ import ParticipateCard from './Participate'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
+
 // const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 class TransactionsScene extends Component {
@@ -65,7 +66,7 @@ class TransactionsScene extends Component {
   renderListEmptyComponent = () => <Utils.Container />
 
   render () {
-    const { firstLoading, refreshing, transactions } = this.state;
+    const { firstLoading, refreshing, transactions } = this.state
 
     if (firstLoading) {
       return <LoadingScene />
