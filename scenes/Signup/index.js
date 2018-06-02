@@ -34,11 +34,10 @@ class SignupScene extends Component {
     )
     try {
       await Auth.signUp({
-        username: email,
+        username,
         password,
         attributes: {
-          email,
-          nickname: username
+          email
         },
         validationData: []
       })
@@ -47,7 +46,7 @@ class SignupScene extends Component {
           signError: null,
           loadingSign: false
         },
-        () => this.props.navigation.navigate('ConfirmSignup', { email })
+        () => this.props.navigation.navigate('ConfirmSignup', { username, password })
       )
     } catch (error) {
       this.setState({ signError: error.message, loadingSign: false })
@@ -104,12 +103,12 @@ class SignupScene extends Component {
               <Image source={require('../../assets/login-circle.png')} />
               <Utils.VerticalSpacer size='small' />
               <Utils.Text size='medium'>
-              TRONWALLET
+                TRONWALLET
               </Utils.Text>
             </Utils.Content>
             <Utils.FormGroup>
               <Utils.Text size='xsmall' secondary>
-              NAME
+                NAME
               </Utils.Text>
               <Utils.FormInput
                 innerRef={ref => {
@@ -140,7 +139,7 @@ class SignupScene extends Component {
                 padding={Spacing.small}
               />
               <Utils.Text size='xsmall' secondary>
-              PASSWORD
+                PASSWORD
               </Utils.Text>
               <Utils.FormInput
                 innerRef={ref => {
