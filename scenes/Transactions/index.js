@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SafeAreaView, FlatList, StyleSheet, RefreshControl } from 'react-native'
+import { SafeAreaView, FlatList, StyleSheet, RefreshControl, Image } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import { Spacing } from './../../components/DesignSystem'
@@ -10,6 +10,7 @@ import ParticipateCard from './Participate'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
+import { Colors } from '../../components/DesignSystem'
 // const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 class TransactionsScene extends Component {
@@ -65,10 +66,26 @@ class TransactionsScene extends Component {
   renderListEmptyComponent = () => <Utils.Container />
 
   render () {
-    const { firstLoading, refreshing } = this.state
+    const { firstLoading, refreshing, transactions } = this.state;
+
     if (firstLoading) {
       return <LoadingScene />
     }
+
+    if (transactions.length === 0) {
+      return (
+        <Utils.View style={{ backgroundColor: Colors.background }} flex={1} justify='center' align='center'>
+          <Image
+            source={require('../../assets/empty.png')}
+            resizeMode='contain'
+            style={{ width: '60%' }}
+          />
+          <Utils.VerticalSpacer size='medium' />
+          <Utils.Text secondary font='light' size='small'>No transactions found.</Utils.Text>
+        </Utils.View>
+      )
+    }
+
     return <Utils.Container>
       <FlatList
         refreshControl={
@@ -78,7 +95,7 @@ class TransactionsScene extends Component {
           />
         }
         contentContainerStyle={styles.list}
-        data={this.state.transactions}
+        data={transactions}
         keyExtractor={item => item.hash || item.transactionHash}
         renderItem={({ item, index }) => this.renderCard(item, index)}
         ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
