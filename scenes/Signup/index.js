@@ -108,7 +108,7 @@ class SignupScene extends Component {
             </Utils.Content>
             <Utils.FormGroup>
               <Utils.Text size='xsmall' secondary>
-                NAME
+                USERNAME
               </Utils.Text>
               <Utils.FormInput
                 innerRef={ref => {
@@ -116,6 +116,8 @@ class SignupScene extends Component {
                 }}
                 underlineColorAndroid='transparent'
                 marginBottom={20}
+                autoCapitalize='none'
+                autoCorrect={false}
                 onChangeText={text => this.changeInput(text, 'username')}
                 onSubmitEditing={() => this._nextInput('username')}
                 returnKeyType={'next'}
