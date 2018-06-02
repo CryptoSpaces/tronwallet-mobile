@@ -10,7 +10,6 @@ import ParticipateCard from './Participate'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
-import { Colors } from '../../components/DesignSystem'
 // const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 class TransactionsScene extends Component {
