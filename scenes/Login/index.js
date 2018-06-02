@@ -8,14 +8,17 @@ import {
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import { version } from './../../package.json'
+import Client from '../../src/services/client'
 
 class LoginScene extends Component {
   state = {
+    username: '',
     email: '',
     password: '',
     signError: null
@@ -37,18 +40,39 @@ class LoginScene extends Component {
 
   signIn = async () => {
     const { navigation } = this.props
-    const { email, password } = this.state
+    const { username, password } = this.state
     Keyboard.dismiss()
 
     this.setState({ loadingSign: true, signError: null })
 
     try {
-      const user = await Auth.signIn(email, password)
-      navigation.navigate('ConfirmLogin', { user })
+      await Auth.signIn(username, password)
       this.setState({ signError: null, loadingSign: false })
+
+      const userPublicKey = await Client.getPublicKey()
+      if (userPublicKey) {
+        this.setState(
+          {
+            loadingSign: false,
+            confirmError: null
+          },
+          () => {
+            const confirmSignIn = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'App' })],
+              key: null
+            })
+            navigation.dispatch(confirmSignIn)
+          }
+        )
+      } else {
+        this.setState({ loadingSign: false }, () => {
+          this.props.navigation.navigate('SetPublicKey')
+        })
+      }
     } catch (error) {
       if (error.code === 'UserNotConfirmedException') {
-        navigation.navigate('ConfirmSignup', { email })
+        navigation.navigate('ConfirmSignup', { username, password })
         this.setState({ loadingSign: false })
         return
       }
@@ -61,19 +85,19 @@ class LoginScene extends Component {
   }
 
   _submit = target => {
-    const { email, password } = this.state
+    const { username, password } = this.state
 
-    if (target === 'email' && !password) {
+    if (target === 'username' && !password) {
       this.password.focus()
       return
     }
 
-    if (target === 'password' && !email) {
+    if (target === 'password' && !username) {
       this.email.focus()
       return
     }
 
-    if (email && password) {
+    if (username && password) {
       return this.signIn()
     }
   }
@@ -84,7 +108,7 @@ class LoginScene extends Component {
     if (loadingSign) {
       return (
         <Utils.Content height={80} justify='center' align='center'>
-          <ActivityIndicator size='small' color={Colors.yellow} />
+          <ActivityIndicator size='small' color={Colors.primaryText} />
         </Utils.Content>
       )
     }
@@ -118,7 +142,7 @@ class LoginScene extends Component {
             </Utils.Content>
             <Utils.FormGroup>
               <Utils.Text size='xsmall' secondary>
-                E-MAIL
+                USERNAME
               </Utils.Text>
               <Utils.FormInput
                 innerRef={ref => {
@@ -129,8 +153,8 @@ class LoginScene extends Component {
                 marginBottom={20}
                 autoCapitalize='none'
                 autoCorrect={false}
-                onChangeText={text => this.changeInput(text, 'email')}
-                onSubmitEditing={() => this._submit('email')}
+                onChangeText={text => this.changeInput(text, 'username')}
+                onSubmitEditing={() => this._submit('username')}
                 returnKeyType={'next'}
                 padding={Spacing.small}
               />
