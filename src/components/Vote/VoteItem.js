@@ -1,6 +1,6 @@
 import React from 'react'
-import * as Utils from './../../../components/Utils'
-import { Colors, Spacing } from './../../../components/DesignSystem'
+import * as Utils from '../Utils'
+import { Colors, Spacing } from '../DesignSystem'
 import { View, StyleSheet } from 'react-native'
 
 const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote }) => {
