@@ -3,8 +3,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 // Utils
-import { Row, FormInput } from '../../../components/Utils'
-import { Colors } from '../../../components/DesignSystem'
+import { Row, FormInput } from '../Utils'
+import { Colors } from '../DesignSystem'
 
 const InputAmount = ({ input, onOutput, id }) => (
   <Row align='center' justify='space-between'>

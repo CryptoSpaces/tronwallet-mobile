@@ -1,6 +1,6 @@
 {
   "name": "tron-wallet-mobile",
-  "version": "1.6.13",
+  "version": "1.6.15",
   "private": true,
   "devDependencies": {
     "babel-eslint": "^8.2.3",
