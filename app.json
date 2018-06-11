@@ -4,12 +4,12 @@
     "version": "1.6.12",
     "sdkVersion": "27.0.0",
     "slug": "tronwallet",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/icon.png",
     "androidStatusBar": {
       "barStyle": "light-content"
     },
     "splash": {
-      "image": "./assets/splashscreen.png",
+      "image": "./src/assets/splashscreen.png",
       "backgroundColor": "#191A2A",
       "resizeMode": "cover",
       "barStyle": "light-content"
