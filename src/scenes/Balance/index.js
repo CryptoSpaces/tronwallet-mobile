@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
-import { FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { FlatList, Image, TouchableOpacity, ScrollView, View } from 'react-native'
 import moment from 'moment'
 import axios from 'axios'
 
@@ -61,11 +61,9 @@ class BalanceScene extends Component {
   renderParticipateButton = item => {
     const now = moment()
     if (item.percentage >= 100 || moment(item.startTime).isAfter(now) || moment(item.endTime).isBefore(now)) {
-      return <Utils.View
-        align='center'
-        justify='center'>
+      return <View style={{ justifyContent: 'center', paddingHorizontal: 12 }}>
         <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
-      </Utils.View>
+      </View>
     } else {
       return <ButtonGradient
         size='small'
