@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { LineChart } from 'react-native-svg-charts'
 import { tint } from 'polished'
 import { FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
+import moment from 'moment'
 import axios from 'axios'
 
 import Gradient from '../../components/Gradient'
@@ -10,6 +11,7 @@ import { Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
 import LoadingScene from '../../components/LoadingScene'
 import formatAmount from '../../utils/formatnumber'
+import ButtonGradient from '../../components/ButtonGradient'
 
 class BalanceScene extends Component {
   state = {
@@ -21,7 +23,7 @@ class BalanceScene extends Component {
   }
 
   componentDidMount () {
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
+    this._navListener = this.props.navigation.addListener('willFocus', () => {
       this.loadData()
     })
   }
@@ -33,16 +35,19 @@ class BalanceScene extends Component {
   loadData = async () => {
     this.setState({ loading: true })
     try {
-      const balances = await Client.getBalances()
+      const getData = await Promise.all([Client.getBalances(), Client.getTokenList()])
+      const balances = getData[0]
+      const tokenList = getData[1]
       const trxBalance = balances.find(b => b.name === 'TRX')
       const assetBalance = balances.filter(b => b.name !== 'TRX')
+      const assetList = tokenList.filter(t => !balances.find(b => t.name === b.name))
       const { data: { data } } = await axios.get(
         'https://api.coinmarketcap.com/v2/ticker/1958'
       )
 
       this.setState({
         trxBalance: trxBalance.balance,
-        assetBalance,
+        assetBalance: [...assetBalance, ...assetList],
         loading: false,
         trxPrice: data.quotes.USD.price
       })
@@ -51,16 +56,38 @@ class BalanceScene extends Component {
     }
   }
 
+  navigateToParticipate = token => this.props.navigation.navigate('Participate', { token })
+
+  renderParticipateButton = item => {
+    const now = moment()
+    if (item.percentage >= 100 || moment(item.startTime).isAfter(now) || moment(item.endTime).isBefore(now)) {
+      return <Utils.View
+        align='center'
+        justify='center'>
+        <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
+      </Utils.View>
+    } else {
+      return <ButtonGradient
+        size='small'
+        onPress={() => this.navigateToParticipate(item)}
+        text='Participate'
+      />
+    }
+  }
+
   renderTokens = ({ item }) => {
     const { assetBalance } = this.state
     if (!assetBalance.length) return
-
     return (
       <Utils.Row align='center' justify='space-between'>
         <Utils.Label color={tint(0.9, Colors.background)}>
           <Utils.Text>{item.name}</Utils.Text>
         </Utils.Label>
-        <Utils.Text>{`${formatAmount(item.balance)}`}</Utils.Text>
+        {
+          item.balance
+            ? <Utils.Text>{`${formatAmount(item.balance)}`}</Utils.Text>
+            : this.renderParticipateButton(item)
+        }
       </Utils.Row>
     )
   }

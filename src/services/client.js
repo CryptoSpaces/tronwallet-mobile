@@ -114,6 +114,14 @@ class ClientWallet {
 
     return transaction
   }
+  async getTokenList () {
+    try {
+      const { data: { data } } = await axios.get(`${this.api}/token?sort=-name&start=0&status=ico`)
+      return data
+    } catch (error) {
+      throw new Error(error.message || error)
+    }
+  }
 
   async getTransactionList () {
     const owner = await this.getPublicKey()
