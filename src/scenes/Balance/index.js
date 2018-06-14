@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { LineChart } from 'react-native-svg-charts'
-import { tint } from 'polished'
-import { FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { FlatList, Image, ScrollView, View } from 'react-native'
+import moment from 'moment'
 import axios from 'axios'
+import { ListItem } from 'react-native-elements'
 
 import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
@@ -10,6 +11,7 @@ import { Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
 import LoadingScene from '../../components/LoadingScene'
 import formatAmount from '../../utils/formatnumber'
+import ButtonGradient from '../../components/ButtonGradient'
 
 class BalanceScene extends Component {
   state = {
@@ -21,7 +23,7 @@ class BalanceScene extends Component {
   }
 
   componentDidMount () {
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
+    this._navListener = this.props.navigation.addListener('willFocus', () => {
       this.loadData()
     })
   }
@@ -32,10 +34,19 @@ class BalanceScene extends Component {
 
   loadData = async () => {
     this.setState({ loading: true })
+    const now = moment()
     try {
-      const balances = await Client.getBalances()
+      const getData = await Promise.all([Client.getBalances(), Client.getTokenList()])
+      const balances = getData[0]
+      const tokenList = getData[1]
       const trxBalance = balances.find(b => b.name === 'TRX')
-      const assetBalance = balances.filter(b => b.name !== 'TRX')
+
+      const assetBalance = balances.filter(b => b.name !== 'TRX').map(a => {
+        let tokenDetail = tokenList.find(t => t.name === a.name)
+        if (tokenDetail) return { ...tokenDetail, balance: a.balance }
+        else return a
+      })
+      const assetList = tokenList.filter(t => t.percentage < 100 && moment(t.startTime).isBefore(now) && moment(t.endTime).isAfter(now) && !balances.find(b => t.name === b.name))
       const { data: { data } } = await axios.get(
         'https://api.coinmarketcap.com/v2/ticker/1958'
       )
@@ -43,6 +54,7 @@ class BalanceScene extends Component {
       this.setState({
         trxBalance: trxBalance.balance,
         assetBalance,
+        assetList,
         loading: false,
         trxPrice: data.quotes.USD.price
       })
@@ -51,23 +63,48 @@ class BalanceScene extends Component {
     }
   }
 
-  renderTokens = ({ item }) => {
+  navigateToParticipate = token => this.props.navigation.navigate('Participate', { token })
+
+  listHeader = (text) => (
+    <Utils.View align='center'>
+      <Utils.Text size='small' color={Colors.secondaryText}>{text}</Utils.Text>
+    </Utils.View>
+  )
+
+  renderParticipateButton = item => {
+    const now = moment()
+    if (item.percentage >= 100 || moment(item.startTime).isAfter(now) || moment(item.endTime).isBefore(now)) {
+      return <View style={{ justifyContent: 'center', paddingHorizontal: 12 }}>
+        <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
+      </View>
+    } else {
+      return <ButtonGradient
+        size='xsmall'
+        onPress={() => this.navigateToParticipate(item)}
+        text='Participate'
+      />
+    }
+  }
+
+  renderTokenList = ({ item }) => {
     const { assetBalance } = this.state
     if (!assetBalance.length) return
-
     return (
-      <Utils.Row align='center' justify='space-between'>
-        <Utils.Label color={tint(0.9, Colors.background)}>
-          <Utils.Text>{item.name}</Utils.Text>
-        </Utils.Label>
-        <Utils.Text>{`${formatAmount(item.balance)}`}</Utils.Text>
-      </Utils.Row>
+      <ListItem
+        onPress={() => this.navigateToParticipate(item)}
+        key={item.name}
+        titleStyle={{ color: Colors.primaryText }}
+        containerStyle={{ borderBottomColor: Colors.secondaryText, flex: 1, marginHorizontal: 0 }}
+        underlayColor='rgba(0,0,0,0.2)'
+        title={item.name}
+        hideChevron
+        badge={{ value: item.balance || 'Participate', textStyle: { color: Colors.primaryText }, containerStyle: { marginTop: -10 } }}
+      />
     )
   }
 
   render () {
-    const { navigation } = this.props
-    const { assetBalance, trxBalance, loading, trxPrice, error } = this.state
+    const { assetBalance, trxBalance, loading, trxPrice, error, assetList } = this.state
 
     if (loading) return <LoadingScene />
 
@@ -119,38 +156,33 @@ class BalanceScene extends Component {
               $ {trxPrice}
             </Utils.Text>
             <Utils.VerticalSpacer size='medium' />
-            {assetBalance.length ? (
+            {assetBalance.length &&
               <FlatList
+                ListHeaderComponent={this.listHeader('My Tokens')}
                 data={assetBalance}
-                renderItem={this.renderTokens}
+                renderItem={this.renderTokenList}
                 keyExtractor={item => item.name}
                 ItemSeparatorComponent={() => (
                   <Utils.VerticalSpacer size='large' />
                 )}
                 scrollEnabled
+                ListFooterComponent={<Utils.VerticalSpacer size='large' />}
               />
-            ) : (
-              <Utils.View align='center'>
-                <Utils.VerticalSpacer size='big' />
-                {/* <Image
-                source={require('../../assets/empty.png')}
-                resizeMode='contain'
-                style={{ height: 220 }}
-              /> */}
-                <Utils.VerticalSpacer size='medium' />
-                <TouchableOpacity
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'space-around',
-                    marginHorizontal: 5,
-                    flexDirection: 'row'
-                  }}
-                  onPress={() => navigation.navigate('Tokens')}
-                >
-                  <Utils.Text secondary font='light' size='small'>Click here to participate in other tokens.</Utils.Text>
-                </TouchableOpacity>
-              </Utils.View>
-            )}
+            }
+            {
+              assetList.length &&
+              <FlatList
+                ListHeaderComponent={this.listHeader('Token List')}
+                data={assetList}
+                renderItem={this.renderTokenList}
+                keyExtractor={item => item.name}
+                ItemSeparatorComponent={() => (
+                  <Utils.VerticalSpacer size='large' />
+                )}
+                scrollEnabled
+                ListFooterComponent={<Utils.VerticalSpacer size='large' />}
+              />
+            }
             <Utils.Error>{error}</Utils.Error>
           </Utils.Content>
         </ScrollView>
