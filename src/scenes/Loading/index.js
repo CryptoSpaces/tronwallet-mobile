@@ -25,14 +25,17 @@ class LoadingScene extends Component {
 
   _checkSession = async () => {
     try {
-      const session = await Auth.currentSession()
       const userPublicKey = await Client.getPublicKey()
-      if (session) {
-        if (userPublicKey) {
-          this.props.navigation.navigate('App')
-        } else {
-          this.props.navigation.navigate('SetPublicKey')
-        }
+
+      await Promise.race([
+        Auth.currentSession(),
+        new Promise((resolve, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+      ])
+
+      if (userPublicKey) {
+        this.props.navigation.navigate('App')
+      } else {
+        this.props.navigation.navigate('SetPublicKey')
       }
     } catch (error) {
       this.props.navigation.navigate('Login')
