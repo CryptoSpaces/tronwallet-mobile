@@ -12,6 +12,7 @@
 .env.test.local
 .env.production.local
 bfg-1.13.0.jar
+..bfg-report/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
