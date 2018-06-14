@@ -47,23 +47,6 @@ class ConfirmLogin extends Component {
       confirmError: null
     })
   }
-
-  // confirmPublicKey = async () => {
-  //   const { userPublicKey } = this.state
-  //   const { navigation } = this.props
-  //   this.setState({ loadingConfirm: true })
-  //   try {
-  //     if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
-  //     await Client.setUserPk(userPublicKey)
-  //     this.setState({ loadingConfirm: false }, () => navigation.navigate('App'))
-  //   } catch (error) {
-  //     this.setState({
-  //       confirmError: error.message || error,
-  //       loadingConfirm: false
-  //     })
-  //   }
-  // }
-
   confirmLogin = async () => {
     const { totpCode, user, code } = this.state
     const { navigation } = this.props
@@ -110,41 +93,6 @@ class ConfirmLogin extends Component {
       this.setState({ confirmError: message, loadingConfirm: false })
     }
   }
-
-  // showToast = success => {
-  //   if (success) {
-  //     this.refs.toast.show(
-  //       'Google Authenticator secret copied to the clipboard'
-  //     )
-  //   }
-  // }
-
-  // renderTOTPArea = () => {
-  //   const { totpCode } = this.state
-  //   if (!totpCode) return null
-
-  //   return (
-  //     <React.Fragment>
-  //       <Utils.Text size='xsmall'>
-  //         For security reasons, you will need to link your account with Google
-  //         Authenticator, please copy the code below to add to it. After add the
-  //         code in your Google Authenticator, please copy the six digits code and
-  //         paste it on the input above.
-  //       </Utils.Text>
-  //       <Utils.VerticalSpacer size='medium' />
-  //       <Utils.Text size='xsmall' secondary>
-  //         COPY THE CODE TO ADD TO YOUR GOOGLE AUTHENTICATOR
-  //       </Utils.Text>
-  //       <CopyInput
-  //         value={totpCode}
-  //         editable={false}
-  //         onCopyText={this.showToast}
-  //       />
-  //       <Utils.VerticalSpacer size='small' />
-  //     </React.Fragment>
-  //   )
-  // }
-
   render () {
     const { confirmError, loadingConfirm } = this.state
     return (
