@@ -28,7 +28,6 @@ import TransactionListScene from './src/scenes/Transactions'
 import TransactionDetailScene from './src/scenes/TransactionDetail'
 import TransferScene from './src/scenes/Transfer'
 import SettingScene from './src/scenes/Settings'
-import TokensScene from './src/scenes/Tokens'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault/GetVault'
 
@@ -76,14 +75,6 @@ const TransferStack = createStackNavigator(
     initialRouteName: 'TransferScene'
   }
 )
-const TokensStack = createStackNavigator(
-  {
-    TokensScene
-  },
-  {
-    initialRouteName: 'TokensScene'
-  }
-)
 
 const TransactionList = createStackNavigator(
   {
@@ -96,7 +87,6 @@ const TransactionList = createStackNavigator(
 const AppTabs = createBottomTabNavigator(
   {
     Home: HomeScene,
-    Tokens: TokensStack,
     Vote: {
       screen: VoteStack,
       path: 'vote'
@@ -121,8 +111,6 @@ const AppTabs = createBottomTabNavigator(
           iconName = `shout-out,-speaker,-offer,-announcement,-loud`
         } else if (routeName === 'Transactions') {
           iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
-        } else if (routeName === 'Tokens') {
-          iconName = `money,-currency,-note,-cash,-capital`
         } else if (routeName === 'Settings') {
           iconName = `gear,-settings,-update,-setup,-config`
         }
