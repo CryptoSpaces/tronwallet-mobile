@@ -3,13 +3,12 @@ import { ActivityIndicator, Image, KeyboardAvoidingView } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
-import { isAddressValid } from '../../services/address'
 import Client from '../../services/client'
-import CopyInput from '../../components/CopyInput'
 
 class ConfirmLogin extends Component {
   state = {
@@ -44,28 +43,30 @@ class ConfirmLogin extends Component {
 
   changeInput = (text, field) => {
     this.setState({
-      [field]: text
+      [field]: text,
+      confirmError: null
     })
   }
 
-  confirmPublicKey = async () => {
-    const { userPublicKey } = this.state
-    const { navigation } = this.props
-    this.setState({ loadingConfirm: true })
-    try {
-      if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
-      await Client.setUserPk(userPublicKey)
-      this.setState({ loadingConfirm: false }, () => navigation.navigate('App'))
-    } catch (error) {
-      this.setState({
-        confirmError: error.message || error,
-        loadingConfirm: false
-      })
-    }
-  }
+  // confirmPublicKey = async () => {
+  //   const { userPublicKey } = this.state
+  //   const { navigation } = this.props
+  //   this.setState({ loadingConfirm: true })
+  //   try {
+  //     if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
+  //     await Client.setUserPk(userPublicKey)
+  //     this.setState({ loadingConfirm: false }, () => navigation.navigate('App'))
+  //   } catch (error) {
+  //     this.setState({
+  //       confirmError: error.message || error,
+  //       loadingConfirm: false
+  //     })
+  //   }
+  // }
 
   confirmLogin = async () => {
     const { totpCode, user, code } = this.state
+    const { navigation } = this.props
     this.setState({ loadingConfirm: true, confirmError: null })
     try {
       totpCode
@@ -79,11 +80,17 @@ class ConfirmLogin extends Component {
             loadingConfirm: false,
             confirmError: null
           },
-          () => this.props.navigation.navigate('App')
-        )
+          () => {
+            const signToAp = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'App' })],
+              key: null
+            })
+            navigation.dispatch(signToAp)
+          })
       } else {
         this.setState({ loadingConfirm: false }, () => {
-          this.props.navigation.navigate('SetPublicKey')
+          navigation.navigate('SetPublicKey')
         })
       }
     } catch (error) {
@@ -91,53 +98,52 @@ class ConfirmLogin extends Component {
 
       if (error.code === 'NotAuthorizedException') {
         this.setState({ confirmError: message, loadingConfirm: false }, () => {
-          this.props.navigation.navigate('Login', {totpError: true})
+          navigation.navigate('Login', { totpError: true })
         })
         return
       }
 
       if (error.code === 'EnableSoftwareTokenMFAException') {
-        message =
-          'Wrong code. Try set up your athenticator again with the code above'
+        message = 'Wrong code. Try set up your athenticator again with the code above'
       }
 
       this.setState({ confirmError: message, loadingConfirm: false })
     }
   }
 
-  showToast = success => {
-    if (success) {
-      this.refs.toast.show(
-        'Google Authenticator secret copied to the clipboard'
-      )
-    }
-  }
+  // showToast = success => {
+  //   if (success) {
+  //     this.refs.toast.show(
+  //       'Google Authenticator secret copied to the clipboard'
+  //     )
+  //   }
+  // }
 
-  renderTOTPArea = () => {
-    const { totpCode } = this.state
-    if (!totpCode) return null
+  // renderTOTPArea = () => {
+  //   const { totpCode } = this.state
+  //   if (!totpCode) return null
 
-    return (
-      <React.Fragment>
-        <Utils.Text size='xsmall'>
-          For security reasons, you will need to link your account with Google
-          Authenticator, please copy the code below to add to it. After add the
-          code in your Google Authenticator, please copy the six digits code and
-          paste it on the input above.
-        </Utils.Text>
-        <Utils.VerticalSpacer size='medium' />
-        <Utils.Text size='xsmall' secondary>
-          COPY THE CODE TO ADD TO YOUR GOOGLE AUTHENTICATOR
-        </Utils.Text>
-        <CopyInput
-          value={totpCode}
-          editable={false}
-          onCopyText={this.showToast}
-        />
-        <Utils.VerticalSpacer size='small' />
-      </React.Fragment>
-    )
-  }
+  //   return (
+  //     <React.Fragment>
+  //       <Utils.Text size='xsmall'>
+  //         For security reasons, you will need to link your account with Google
+  //         Authenticator, please copy the code below to add to it. After add the
+  //         code in your Google Authenticator, please copy the six digits code and
+  //         paste it on the input above.
+  //       </Utils.Text>
+  //       <Utils.VerticalSpacer size='medium' />
+  //       <Utils.Text size='xsmall' secondary>
+  //         COPY THE CODE TO ADD TO YOUR GOOGLE AUTHENTICATOR
+  //       </Utils.Text>
+  //       <CopyInput
+  //         value={totpCode}
+  //         editable={false}
+  //         onCopyText={this.showToast}
+  //       />
+  //       <Utils.VerticalSpacer size='small' />
+  //     </React.Fragment>
+  //   )
+  // }
 
   render () {
     const { confirmError, loadingConfirm } = this.state
@@ -164,9 +170,6 @@ class ConfirmLogin extends Component {
                 onSubmitEditing={this.confirmLogin}
                 onChangeText={text => this.changeInput(text, 'code')}
               />
-
-              {this.renderTOTPArea()}
-
               {loadingConfirm ? (
                 <Utils.Content height={80} justify='center' align='center'>
                   <ActivityIndicator size='small' color={Colors.yellow} />
