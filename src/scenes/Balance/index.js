@@ -87,9 +87,14 @@ class BalanceScene extends Component {
     }
   }
 
+  emptyListComponent = (title) => (
+    <Utils.View align='center'>
+      <Utils.VerticalSpacer size='medium' />
+      <Utils.Text size='xsmall' font='light' color={Colors.secondaryText}>{title}</Utils.Text>
+    </Utils.View>
+  )
+
   renderTokenList = ({ item }) => {
-    const { assetBalance } = this.state
-    if (!assetBalance.length) return
     return (
       <ListItem
         onPress={() => this.navigateToParticipate(item)}
@@ -106,7 +111,6 @@ class BalanceScene extends Component {
 
   render () {
     const { assetBalance, trxBalance, loading, trxPrice, error, assetList } = this.state
-
     if (loading) return <LoadingScene />
 
     return (
@@ -157,31 +161,30 @@ class BalanceScene extends Component {
               $ {trxPrice}
             </Utils.Text>
             <Utils.VerticalSpacer size='medium' />
-            {assetBalance.length
-              ? <FlatList
-                ListHeaderComponent={this.listHeader('My Tokens')}
-                data={assetBalance}
-                renderItem={this.renderTokenList}
-                keyExtractor={item => item.name}
-                ItemSeparatorComponent={() => (
-                  <Utils.VerticalSpacer size='large' />
-                )}
-                scrollEnabled
-                ListFooterComponent={<Utils.VerticalSpacer size='large' />}
-              />
-              : null}
-            {assetList.length
-              ? <FlatList
-                ListHeaderComponent={this.listHeader('Token List')}
-                data={assetList}
-                renderItem={this.renderTokenList}
-                keyExtractor={item => item.name}
-                ItemSeparatorComponent={() => (
-                  <Utils.VerticalSpacer size='large' />
-                )}
-                scrollEnabled
-                ListFooterComponent={<Utils.VerticalSpacer size='large' />}
-              /> : null}
+            <FlatList
+              ListEmptyComponent={this.emptyListComponent('Participate to a token')}
+              ListHeaderComponent={this.listHeader('My Tokens')}
+              data={assetBalance}
+              renderItem={this.renderTokenList}
+              keyExtractor={item => item.name}
+              ItemSeparatorComponent={() => (
+                <Utils.VerticalSpacer size='large' />
+              )}
+              scrollEnabled
+              ListFooterComponent={<Utils.VerticalSpacer size='large' />}
+            />
+            <FlatList
+              ListEmptyComponent={this.emptyListComponent('No tokens to Participate')}
+              ListHeaderComponent={this.listHeader('Token List')}
+              data={assetList}
+              renderItem={this.renderTokenList}
+              keyExtractor={item => item.name}
+              ItemSeparatorComponent={() => (
+                <Utils.VerticalSpacer size='large' />
+              )}
+              scrollEnabled
+              ListFooterComponent={<Utils.VerticalSpacer size='large' />}
+            />
             <Utils.Error>{error}</Utils.Error>
           </Utils.Content>
         </ScrollView>
