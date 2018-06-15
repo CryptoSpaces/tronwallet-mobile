@@ -46,8 +46,18 @@ class LoginScene extends Component {
     this.setState({ loadingSign: true, signError: null })
 
     try {
-      await Auth.signIn(username, password)
-      this.setState({ signError: null, loadingSign: false })
+      const user = await Auth.signIn(username, password)
+      if (user.challengeName && user.challengeName === 'SOFTWARE_TOKEN_MFA') {
+        this.setState(
+          {
+            loadingSign: false,
+            signError: null
+          },
+          () => {
+            navigation.navigate('ConfirmLogin', { user })
+          })
+        return
+      }
 
       const userPublicKey = await Client.getPublicKey()
       if (userPublicKey) {
@@ -57,17 +67,17 @@ class LoginScene extends Component {
             confirmError: null
           },
           () => {
-            const confirmSignIn = StackActions.reset({
+            const signToApp = StackActions.reset({
               index: 0,
               actions: [NavigationActions.navigate({ routeName: 'App' })],
               key: null
             })
-            navigation.dispatch(confirmSignIn)
+            navigation.dispatch(signToApp)
           }
         )
       } else {
-        this.setState({ loadingSign: false }, () => {
-          this.props.navigation.navigate('SetPublicKey')
+        this.setState({ loadingSign: false, signError: null }, () => {
+          navigation.navigate('SetPublicKey')
         })
       }
     } catch (error) {
