@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { Feather } from 'react-native-vector-icons'
+import Feather from 'react-native-vector-icons/Feather'
 
 import * as Utils from '../../components/Utils'
 

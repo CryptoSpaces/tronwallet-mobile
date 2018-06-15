@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { Feather } from 'react-native-vector-icons'
+import Feather from 'react-native-vector-icons/Feather'
 import { tint } from 'polished'
 import * as Utils from '../../components/Utils'
 import { ONE_TRX } from '../../services/client'
