@@ -8,7 +8,6 @@ import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.amazonaws.amplify.pushnotification.RNPushNotificationPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -33,8 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RealmReactPackage(),
             new VectorIconsPackage(),
             new SvgPackage(),
-            new LinearGradientPackage(),
-            new RNPushNotificationPackage()
+            new LinearGradientPackage()
       );
     }
 
