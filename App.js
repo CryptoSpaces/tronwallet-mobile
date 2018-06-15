@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { StatusBar } from 'react-native'
-//import { Linking, Constants } from 'expo'
+import { StatusBar, Platform } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -37,7 +36,6 @@ import fontelloConfig from './src/assets/icons/config.json'
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet');
 
 Amplify.configure(awsExports)
-//const prefix = Linking.makeUrl('/') // TODO - Review before release
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
@@ -230,12 +228,13 @@ const RootNavigator = createStackNavigator(
   }
 );
 
+const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://';
 class App extends Component {
-  render () {
+  render() {
     return (
       <Fragment>
         <StatusBar barStyle='light-content' />
-        <RootNavigator uriPrefix={'tronwallet'} />
+        <RootNavigator uriPrefix={prefix} />
       </Fragment>
     )
   }
