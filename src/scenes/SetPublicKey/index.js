@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, TouchableOpacity, Linking } from 'react-native'
 import Toast from 'react-native-easy-toast'
-import { Feather } from 'react-native-vector-icons'
+import Feather from 'react-native-vector-icons/Feather'
 import { Auth } from 'aws-amplify'
 
 import Header from '../../components/Header'
@@ -12,7 +12,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../services/address'
 import Client from '../../services/client'
 import qs from 'qs'
-import { DeeplinkURL } from '../../utils/deeplinkUtils'
+import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 
 export default class SetPkScene extends Component {
   state = {
@@ -21,7 +21,7 @@ export default class SetPkScene extends Component {
     error: null
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     this._checkDeepLink(nextProps)
   }
 
@@ -61,7 +61,7 @@ export default class SetPkScene extends Component {
     try {
       const dataToSend = qs.stringify({
         action: 'getkey',
-        URL: ExpoLinking.makeUrl('/getkey')
+        URL: MakeTronMobileURL('getkey')
       })
 
       this.openDeepLink(dataToSend)
@@ -72,7 +72,7 @@ export default class SetPkScene extends Component {
 
   openDeepLink = async (dataToSend) => {
     try {
-      const url = `${DeeplinkURL}auth/${dataToSend}`
+      const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
       this.setState({ loading: false })
     } catch (error) {
@@ -107,7 +107,7 @@ export default class SetPkScene extends Component {
       <ActivityIndicator size='small' color={Colors.yellow} />
     </Utils.Content>
   )
-  render () {
+  render() {
     const { userPublicKey, loading, error } = this.state
     return (
       <Utils.Container>

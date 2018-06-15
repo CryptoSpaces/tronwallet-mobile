@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView } from 'react-native'
-import { Ionicons } from 'react-native-vector-icons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
 
@@ -12,7 +12,7 @@ import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
-import { DeeplinkURL } from '../../utils/deeplinkUtils'
+import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
 
 class SendScene extends Component {
@@ -95,9 +95,8 @@ class SendScene extends Component {
   clearInput = () => {
     this.setState({
       to: '',
-      amount: 0,
       token: 'Select your balance'
-    })
+    });
   }
 
   renderTokens = () => {
@@ -126,7 +125,7 @@ class SendScene extends Component {
         pk: from,
         action: 'transaction',
         from: 'mobile',
-        URL: '',//ExpoLinking.makeUrl('/transaction'),
+        URL: MakeTronMobileURL('transaction'),
         data
       })
       this.openDeepLink(dataToSend)
@@ -139,7 +138,7 @@ class SendScene extends Component {
 
   openDeepLink = async (dataToSend) => {
     try {
-      const url = `${DeeplinkURL}auth/${dataToSend}`
+      const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
       this.setState({ loadingSign: false })
     } catch (error) {
@@ -189,7 +188,6 @@ class SendScene extends Component {
 
   render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
-
     return (
       <KeyboardAvoidingView
         // behavior='padding'
@@ -247,6 +245,7 @@ class SendScene extends Component {
               </Utils.Text>
               <Utils.Row align='center' justify='flex-start'>
                 <Utils.FormInput
+                  ref={i => this.amount = i}
                   underlineColorAndroid='transparent'
                   keyboardType='numeric'
                   onChangeText={text => this.changeInput(text, 'amount')}

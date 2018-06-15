@@ -7,7 +7,7 @@ import * as Utils from '../../components/Utils'
 import Client from '../../services/client'
 import Header from '../../components/Header'
 import Card, { CardRow } from '../../components/Card'
-import { DeeplinkURL } from '../../utils/deeplinkUtils'
+import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 
 class FreezeScene extends Component {
   state = {
@@ -39,7 +39,7 @@ class FreezeScene extends Component {
         pk: from,
         action: 'transaction',
         from: 'mobile',
-        URL: ExpoLinking.makeUrl('/transaction'),
+        URL: MakeTronMobileURL('transaction'),
         data
       })
       this.openDeepLink(dataToSend)
@@ -52,7 +52,7 @@ class FreezeScene extends Component {
 
   openDeepLink = async (dataToSend) => {
     try {
-      const url = `${DeeplinkURL}auth/${dataToSend}`
+      const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
       this.setState({ loading: false })
     } catch (error) {

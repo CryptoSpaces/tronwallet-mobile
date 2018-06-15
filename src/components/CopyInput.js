@@ -2,7 +2,7 @@ import React from 'react'
 import { Clipboard } from 'react-native'
 import { Colors, FontSize } from './DesignSystem'
 import * as Utils from './Utils'
-import { Ionicons } from 'react-native-vector-icons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 
 const CopyInput = ({ onCopyText, value }) => {

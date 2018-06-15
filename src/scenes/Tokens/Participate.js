@@ -8,7 +8,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client from '../../services/client'
-import { DeeplinkURL } from '../../utils/deeplinkUtils'
+import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import Feather from 'react-native-vector-icons/Feather'
 
 class ParticipateScene extends Component {
@@ -61,7 +61,7 @@ class ParticipateScene extends Component {
         pk: pk,
         from: 'mobile',
         action: 'transaction',
-        URL: Linking.makeUrl('transaction'),
+        URL: MakeTronMobileURL('transaction'),
         data: response.data.transaction
       })
 
@@ -74,7 +74,7 @@ class ParticipateScene extends Component {
 
   openDeepLink = async (dataToSend) => {
     try {
-      const url = `${DeeplinkURL}auth/${dataToSend}`
+      const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
       this.setState({ loading: false })
     } catch (error) {
@@ -98,7 +98,7 @@ class ParticipateScene extends Component {
     )
   }
 
-  render () {
+  render() {
     const token = this.props.navigation.getParam('token')
     return (
       <KeyboardAwareScrollView>
@@ -112,7 +112,7 @@ class ParticipateScene extends Component {
                 </Utils.Row>
                 <Utils.VerticalSpacer size='medium' />
                 <Utils.Text size='xsmall' secondary>
-                    AMOUNT
+                  AMOUNT
                 </Utils.Text>
                 <Utils.FormInput
                   keyboardType='numeric'

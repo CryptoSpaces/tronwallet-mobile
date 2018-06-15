@@ -15,7 +15,7 @@ import { KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-key
 // Utils
 import { Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
-import { DeeplinkURL } from '../../utils/deeplinkUtils'
+import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../components/Vote/VoteItem'
@@ -115,7 +115,7 @@ class VoteScene extends PureComponent {
           pk: from,
           from: 'mobile',
           action: 'transaction',
-          URL: Linking.makeUrl('/transaction'),
+          URL: MakeTronMobileURL('transaction'),
           data
         })
         this.openDeepLink(dataToSend)
@@ -127,7 +127,7 @@ class VoteScene extends PureComponent {
 
   openDeepLink = async (dataToSend) => {
     try {
-      const url = `${DeeplinkURL}auth/${dataToSend}`
+      const url = `${TronVaultURL}auth/${dataToSend}`
 
       await Linking.openURL(url)
 

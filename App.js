@@ -29,7 +29,7 @@ import TransactionDetailScene from './src/scenes/TransactionDetail'
 import TransferScene from './src/scenes/Transfer'
 import SettingScene from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
-import GetVaultScene from './src/scenes/GetVault/GetVault'
+import GetVaultScene from './src/scenes/GetVault'
 
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from './src/assets/icons/config.json'
