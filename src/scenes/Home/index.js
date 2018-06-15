@@ -219,8 +219,8 @@ class HomeScene extends Component {
               animate
             >
               <Grid svg={{ stroke: '#FFF', strokeOpacity: 0.1 }} />
-              <Gradient />
-              <Line />
+              {/*<Gradient />*/}
+              {/*<Line />*/}
             </AreaChart>
           </View>
         )}
