@@ -4,7 +4,6 @@ import { FlatList, Image, ScrollView, View } from 'react-native'
 import moment from 'moment'
 import axios from 'axios'
 import { ListItem } from 'react-native-elements'
-import Realm from 'realm';
 import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
@@ -24,7 +23,6 @@ class BalanceScene extends Component {
   }
 
   componentDidMount () {
-    console.warn('Realm', Realm)
     this._navListener = this.props.navigation.addListener('willFocus', () => {
       this.loadData()
     })
@@ -133,7 +131,7 @@ class BalanceScene extends Component {
           </Utils.Row>
           <Utils.Content>
             <Utils.Content>
-              <LineChart
+                {/*<LineChart
                 style={{ height: 30 }}
                 data={[
                   50,
@@ -156,7 +154,7 @@ class BalanceScene extends Component {
                 animate
               >
                 <Gradient />
-              </LineChart>
+              </LineChart>*/}
             </Utils.Content>
             <Utils.Text size='xsmall' secondary>
               $ {trxPrice}

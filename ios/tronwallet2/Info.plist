@@ -61,9 +61,20 @@
 		<string>Ionicons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
 		<string>MaterialIcons.ttf</string>
+		<string>Rubik-BlackItalic.ttf</string>
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Rubik-Black.ttf</string>
+		<string>Rubik-Bold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+		<string>tronwallet.ttf</string>
 	</array>
 </dict>
 </plist>

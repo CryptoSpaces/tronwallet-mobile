@@ -38,6 +38,8 @@ const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet');
 
 Amplify.configure(awsExports)
 //const prefix = Linking.makeUrl('/') // TODO - Review before release
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 const SettingsStack = createStackNavigator(
   {

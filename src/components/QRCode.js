@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import PropTypes from 'prop-types'
-import { LinearGradient } from 'react-native-linear-gradient'
+import LinearGradient from 'react-native-linear-gradient'
 import RNQRCode from 'react-native-qrcode'
 import { Colors } from './DesignSystem'
 
@@ -14,8 +14,8 @@ const QRCode = ({ size, value, bgColor, fgColor }) => (
     }}
   >
     <LinearGradient
-      start={[0, 1]}
-      end={[1, 0]}
+      start={{x: 0, y: 1}}
+      end={{x: 1, y: 0}}
       colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
       style={{ padding: 1, borderRadius: 10 }}
     >
