@@ -131,30 +131,14 @@ class BalanceScene extends Component {
           </Utils.Row>
           <Utils.Content>
             <Utils.Content>
-                {/*<LineChart
+              <LineChart
                 style={{ height: 30 }}
-                data={[
-                  50,
-                  10,
-                  40,
-                  95,
-                  -4,
-                  -24,
-                  85,
-                  91,
-                  35,
-                  53,
-                  -53,
-                  24,
-                  50,
-                  -20,
-                  -80
-                ]}
+                data={[ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]}
                 svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
                 animate
               >
                 <Gradient />
-              </LineChart>*/}
+              </LineChart>
             </Utils.Content>
             <Utils.Text size='xsmall' secondary>
               $ {trxPrice}

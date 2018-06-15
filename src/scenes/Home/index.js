@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { AreaChart, Grid } from 'react-native-svg-charts'
-import { Svg } from 'react-native-svg';
+import { Path } from 'react-native-svg'
 import { ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import { View } from 'react-native-animatable'
 import * as shape from 'd3-shape'
@@ -11,7 +11,7 @@ import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 
 const Line = ({ line }) => (
-  <Svg.Path
+  <Path
     key={'line'}
     d={line}
     stroke={'url(#gradient)'}
@@ -219,8 +219,8 @@ class HomeScene extends Component {
               animate
             >
               <Grid svg={{ stroke: '#FFF', strokeOpacity: 0.1 }} />
-              {/*<Gradient />*/}
-              {/*<Line />*/}
+              <Gradient />
+              <Line />
             </AreaChart>
           </View>
         )}
