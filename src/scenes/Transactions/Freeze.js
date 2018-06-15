@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from 'react-native-vector-icons'
 import { tint } from 'polished'
 import * as Utils from '../../components/Utils'
 import { ONE_TRX } from '../../services/client'

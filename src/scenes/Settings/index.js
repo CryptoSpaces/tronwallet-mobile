@@ -15,7 +15,7 @@ import Client from '../../services/client'
 import LoadingScene from '../../components/LoadingScene'
 import ChangePKModal from './ChangePKModal'
 
-import { createIconSetFromFontello } from '@expo/vector-icons'
+import { createIconSetFromFontello } from 'react-native-vector-icons'
 import fontelloConfig from '../../assets/icons/config.json'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')

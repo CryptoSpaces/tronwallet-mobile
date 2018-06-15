@@ -7,7 +7,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../services/address'
 import Client from '../../services/client'
 
-import { createIconSetFromFontello } from '@expo/vector-icons'
+import { createIconSetFromFontello } from 'react-native-vector-icons'
 import fontelloConfig from '../../assets/icons/config.json'
 import PasteInput from '../../components/PasteInput'
 
