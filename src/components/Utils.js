@@ -160,7 +160,9 @@ Label.propTypes = {
   color: PropTypes.string.isRequired
 }
 
-export const FormInput = styled.TextInput`
+export const FormInput = styled.TextInput.attrs({
+  placeholderTextColor: Colors.primaryText
+})`
   color: ${Colors.primaryText};
   padding: ${props => props.padding}px;
   font-size: ${FontSize['small']};
