@@ -1,6 +1,6 @@
 // Dependencies
 import React, { PureComponent } from 'react'
-import _ from 'lodash'
+import { forIn, reduce, union, clamp } from 'lodash'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -19,11 +19,14 @@ import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../components/Vote/VoteItem'
-import LoadingScene from '../../components/LoadingScene'
 import ButtonGradient from '../../components/ButtonGradient'
 
 // Service
 import Client from '../../services/client'
+
+import getCandidateStore from '../../store/candidates'
+
+const LIST_STEP_SIZE = 20
 
 class VoteScene extends PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -56,54 +59,76 @@ class VoteScene extends PureComponent {
     search: '',
     loading: true,
     loadingList: false,
-    totalVotes: 0,
-    totalRemaining: 0,
-    totalTrx: 0,
+    totalVotes: null,
+    totalRemaining: null,
+    refreshing: false,
     from: '',
     currentVotes: {},
-    userVotes: {}
+    userVotes: {},
+    offset: 0
   }
 
   componentDidMount () {
-    this.props.navigation.setParams({ onSubmit: this.onSubmit, disabled: true })
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
-      this.onLoadData()
-    })
+    this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
+    this._loadFreeze()
+    this._loadCandidates()
+    this._loadUserVotes()
+    this._loadPublicKey()
+    this._refreshCandidates()
   }
 
-  componentWillUnmount () {
-    this._navListener.remove()
+  _getVoteList = store =>
+    store.objects('Candidate')
+      .sorted([['votes', true], ['url', false]])
+      .slice(this.state.offset, clamp(this.state.offset + LIST_STEP_SIZE, store.objects('Candidate').length))
+      .map(item => Object.assign({}, item))
+
+  _loadCandidates = async () => {
+    const store = await getCandidateStore()
+    this.setState({ voteList: this._getVoteList(store) })
+  }
+  
+  _refreshCandidates = async () => {
+    if (!this.state.refreshing) {
+      this.setState({ refreshing: true })
+      const { candidates, totalVotes } = await Client.getTotalVotes()
+      const store = await getCandidateStore()
+      store.write(() => candidates.map(item => store.create('Candidate', item, true)))
+      this.setState({
+        voteList: this._getVoteList(store),
+        totalVotes,
+        refreshing: false
+      })
+    }
+  }
+  
+  _loadMoreCandidates = async () => {
+    this.setState({ refreshing: true, offset: this.state.offset + LIST_STEP_SIZE })
+    const store = await getCandidateStore()
+    this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)), refreshing: false })
+  }
+  
+  _loadFreeze = async () => {
+    const { total } = await Client.getFreeze()
+    this.setState({ totalRemaining: total || 0 })
+  }
+  
+  _loadUserVotes = async () => {
+    const userVotes = await Client.getUserVotes()
+    this.setState({ userVotes })
+  }
+  
+  _loadPublicKey = async () => {
+    const publicKey = await Client.getPublicKey()
+    this.setState({ publicKey })
   }
 
-  onLoadData = async () => {
-    const data = await Promise.all([
-      Client.getTotalVotes(),
-      Client.getFreeze(),
-      Client.getUserVotes(),
-      Client.getPublicKey()
-    ])
-    const { candidates, totalVotes } = data[0]
-    const frozen = data[1]
-    const userVotes = data[2]
-    const from = data[3]
-    const totalTrx = frozen.total || 0
-    this.setState({
-      voteList: _.orderBy(candidates, ['votes', 'url'], ['desc', 'asc']) || 0,
-      loading: false,
-      totalVotes,
-      totalRemaining: totalTrx,
-      totalTrx,
-      userVotes,
-      from
-    })
-  }
-
-  onSubmit = async () => {
+  _onSubmit = async () => {
     const { from, currentVotes, totalRemaining } = this.state
 
     if (totalRemaining >= 0) {
       this.setState({ loading: true })
-      _.forIn(currentVotes, function (value, key) {
+      forIn(currentVotes, function (value, key) {
         currentVotes[key] = Number(value)
       })
       try {
@@ -118,14 +143,14 @@ class VoteScene extends PureComponent {
           URL: MakeTronMobileURL('transaction'),
           data
         })
-        this.openDeepLink(dataToSend)
+        this._openDeepLink(dataToSend)
       } catch (error) {
         this.setState({ loading: false })
       }
     }
   }
 
-  openDeepLink = async (dataToSend) => {
+  _openDeepLink = async (dataToSend) => {
     try {
       const url = `${TronVaultURL}auth/${dataToSend}`
 
@@ -139,24 +164,24 @@ class VoteScene extends PureComponent {
     }
   }
 
-  onChangeVotes = (value, address) => {
+  _onChangeVotes = (value, address) => {
     const { navigation } = this.props
-    const { currentVotes, totalTrx } = this.state
+    const { currentVotes, totalRemaining } = this.state
 
     const newVotes = { ...currentVotes, [address]: value }
-    const totalUserVotes = _.reduce(
+    const totalUserVotes = reduce(
       newVotes,
-      function (result, value, key) {
+      function (result, value) {
         return Number(result) + Number(value)
       },
       0
     )
-    const totalRemaining = totalTrx - totalUserVotes
-    navigation.setParams({ disabled: totalRemaining <= 0 })
-    this.setState({ currentVotes: newVotes, totalRemaining })
+    const total = totalRemaining - totalUserVotes
+    navigation.setParams({ disabled: total <= 0 })
+    this.setState({ currentVotes: newVotes, totalRemaining: total })
   }
 
-  onSearch = async (value, field) => {
+  _onSearch = async value => {
     const { voteList } = this.state
     if (value) {
       this.setState({ loadingList: true })
@@ -170,31 +195,32 @@ class VoteScene extends PureComponent {
     }
   }
 
-  format = value => {
-    return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  }
+  _format = value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
-  renderRow = ({ item, index }) => {
+  _renderRow = ({ item, index }) => {
     const { currentVotes, userVotes } = this.state
     return (
       <VoteItem
         item={item}
         index={index}
-        format={this.format}
-        onChangeVotes={this.onChangeVotes}
+        format={this._format}
+        onChangeVotes={this._onChangeVotes}
         votes={currentVotes[item.address]}
         userVote={userVotes[item.address]}
       />
     )
   }
 
-  renderList = () =>
+  _renderList = () =>
     Platform.select({
       ios: (
         <KeyboardAwareFlatList
           keyExtractor={item => item.address}
           data={this.state.voteList}
-          renderItem={this.renderRow}
+          renderItem={this._renderRow}
+          onEndReached={this._loadMoreCandidates}
+          onRefresh={this._refreshCandidates}
+          refreshing={this.state.refreshing}
         />
       ),
       android: (
@@ -202,43 +228,52 @@ class VoteScene extends PureComponent {
           <KeyboardAwareFlatList
             keyExtractor={item => item.address}
             data={this.state.voteList}
-            renderItem={this.renderRow}
+            renderItem={this._renderRow}
+            onEndReached={this._loadMoreCandidates}
+            onRefresh={this._refreshCandidates}
+            refreshing={this.state.refreshing}
           />
         </KeyboardAvoidingView>
       )
     })
 
   render () {
-    const { loading, totalVotes, loadingList, totalRemaining } = this.state
-
-    if (loading) return <LoadingScene />
-
+    console.log('offset', this.state.offset)
+    const { totalVotes, loadingList, totalRemaining } = this.state
     return (
       <Utils.Container>
-        <Header>
-          <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>
-              TOTAL VOTES
-            </Utils.Text>
-            <Utils.Text size='small'>{this.format(totalVotes)}</Utils.Text>
-          </Utils.View>
-          <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>
-              VOTES AVAILABLE
-            </Utils.Text>
-            <Utils.Text
-              size='small'
-              style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
-            >
-              {this.format(totalRemaining)}
-            </Utils.Text>
-          </Utils.View>
-        </Header>
+        {
+          (totalVotes !== null) && (totalRemaining !== null) ? (
+            <Header>
+              <Utils.View align='center'>
+                <Utils.Text size='xsmall' secondary>
+                  TOTAL VOTES
+                </Utils.Text>
+                <Utils.Text size='small'>{this._format(totalVotes)}</Utils.Text>
+              </Utils.View>
+              <Utils.View align='center'>
+                <Utils.Text size='xsmall' secondary>
+                  VOTES AVAILABLE
+                </Utils.Text>
+                <Utils.Text
+                  size='small'
+                  style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
+                >
+                  {this._format(totalRemaining)}
+                </Utils.Text>
+              </Utils.View>
+            </Header>
+          ) : (
+            <Header>
+              <ActivityIndicator />
+            </Header>
+          )
+        }
         <KeyboardAwareScrollView>
           <Utils.View justify='center' align='center'>
             <Utils.FormInput
               underlineColorAndroid='transparent'
-              onChangeText={text => this.onSearch(text, 'search')}
+              onChangeText={text => this._onSearch(text, 'search')}
               placeholder='Search'
               placeholderTextColor='#fff'
               marginTop={Spacing.medium}
@@ -250,7 +285,7 @@ class VoteScene extends PureComponent {
               <ActivityIndicator size='large' color={'#ffffff'} />
             </Utils.Content>
           ) : (
-            this.renderList()
+            this._renderList()
           )}
         </KeyboardAwareScrollView>
       </Utils.Container>
