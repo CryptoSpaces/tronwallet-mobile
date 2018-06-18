@@ -21,6 +21,7 @@ import Header from '../../components/Header'
 import VoteItem from '../../components/Vote/VoteItem'
 import LoadingScene from '../../components/LoadingScene'
 import ButtonGradient from '../../components/ButtonGradient'
+import VoteModal from '../../components/Vote/VoteModal'
 
 // Service
 import Client from '../../services/client'
@@ -61,7 +62,8 @@ class VoteScene extends PureComponent {
     totalTrx: 0,
     from: '',
     currentVotes: {},
-    userVotes: {}
+    userVotes: {},
+    modalVisible: false
   }
 
   componentDidMount () {
@@ -174,6 +176,17 @@ class VoteScene extends PureComponent {
     return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
+  setupVoteModal = () => {
+    this.toggleModal()
+
+  }
+
+  toggleModal = () => {
+    this.setState({
+      modalVisible: !this.state.modalVisible
+    })
+  }
+
   renderRow = ({ item, index }) => {
     const { currentVotes, userVotes } = this.state
     return (
@@ -181,6 +194,7 @@ class VoteScene extends PureComponent {
         item={item}
         index={index}
         format={this.format}
+        openModal={this.setupVoteModal}
         onChangeVotes={this.onChangeVotes}
         votes={currentVotes[item.address]}
         userVote={userVotes[item.address]}
@@ -234,6 +248,10 @@ class VoteScene extends PureComponent {
             </Utils.Text>
           </Utils.View>
         </Header>
+        <VoteModal
+          modalVisible={this.state.modalVisible}
+          closeModal={this.toggleModal} 
+        />
         <KeyboardAwareScrollView>
           <Utils.View justify='center' align='center'>
             <Utils.FormInput
