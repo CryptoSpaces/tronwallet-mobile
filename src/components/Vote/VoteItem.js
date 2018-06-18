@@ -2,15 +2,11 @@ import React from 'react'
 import * as Utils from '../Utils'
 import { Colors, Spacing } from '../DesignSystem'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import formatUrl from '../../utils/formatUrl'
 
 const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote, openModal }) => {
-  let url = item.url
+  let url = formatUrl(item.url)
   let address = `${item.address.slice(0, 12)}...${item.address.substr(item.address.length - 12)}`
-  // url = url.replace(/(^\w+:|^)\/\//, '')
-  url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
-  if (url.length > 35) {
-    url = `${url.slice(0, 32)}...`
-  }
 
   return (
     <TouchableOpacity onPress={openModal}>

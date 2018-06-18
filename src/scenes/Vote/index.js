@@ -16,6 +16,8 @@ import { KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-key
 import { Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
+import formatUrl from '../../utils/formatUrl'
+
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../components/Vote/VoteItem'
@@ -63,7 +65,10 @@ class VoteScene extends PureComponent {
     from: '',
     currentVotes: {},
     userVotes: {},
-    modalVisible: false
+    modalVisible: false,
+    currentItemUrl: null,
+    currentItemAddress: null,
+    currentAmountToVote: ''
   }
 
   componentDidMount () {
@@ -89,6 +94,7 @@ class VoteScene extends PureComponent {
     const userVotes = data[2]
     const from = data[3]
     const totalTrx = frozen.total || 0
+
     this.setState({
       voteList: _.orderBy(candidates, ['votes', 'url'], ['desc', 'asc']) || 0,
       loading: false,
@@ -155,7 +161,10 @@ class VoteScene extends PureComponent {
     )
     const totalRemaining = totalTrx - totalUserVotes
     navigation.setParams({ disabled: totalRemaining <= 0 })
-    this.setState({ currentVotes: newVotes, totalRemaining })
+    this.setState({ 
+      currentVotes: newVotes, 
+      totalRemaining,
+      ...this.resetModalState()})
   }
 
   onSearch = async (value, field) => {
@@ -176,15 +185,49 @@ class VoteScene extends PureComponent {
     return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
-  setupVoteModal = () => {
-    this.toggleModal()
-
+  setupVoteModal = (item) => {
+    this.setState({
+      modalVisible: true,
+      currentItemUrl: formatUrl(item.url),
+      currentItemAddress: item.address
+    })
   }
 
-  toggleModal = () => {
+  closeModal = () => {
     this.setState({
-      modalVisible: !this.state.modalVisible
+      ...this.resetModalState()
     })
+  }
+
+  resetModalState = () => {
+    return {
+      modalVisible: false,
+      currentItemUrl: null,
+      currentItemAddress: null,
+      currentAmountToVote: ''
+    }
+  }
+
+  addNumToVote = (key) => {
+    this.setState((state) => {
+      return {
+        currentAmountToVote: `${state.currentAmountToVote}${key}`
+      }
+    })
+  }
+
+  removeNumFromVote = () => {
+    if (this.state.currentAmountToVote.length > 0) {
+      this.setState((state) => {
+        return {
+          currentAmountToVote: state.currentAmountToVote.slice(0, -1)
+        }
+      })
+    }
+  }
+
+  acceptCurrentVote = () => {
+
   }
 
   renderRow = ({ item, index }) => {
@@ -194,7 +237,7 @@ class VoteScene extends PureComponent {
         item={item}
         index={index}
         format={this.format}
-        openModal={this.setupVoteModal}
+        openModal={() => this.setupVoteModal(item)}
         onChangeVotes={this.onChangeVotes}
         votes={currentVotes[item.address]}
         userVote={userVotes[item.address]}
@@ -224,6 +267,7 @@ class VoteScene extends PureComponent {
 
   render () {
     const { loading, totalVotes, loadingList, totalRemaining } = this.state
+    console.log(this.state.currentVotes)
 
     if (loading) return <LoadingScene />
 
@@ -248,10 +292,17 @@ class VoteScene extends PureComponent {
             </Utils.Text>
           </Utils.View>
         </Header>
-        <VoteModal
-          modalVisible={this.state.modalVisible}
-          closeModal={this.toggleModal} 
-        />
+        {this.state.modalVisible && (
+          <VoteModal
+            addNumToVote={this.addNumToVote}
+            removeNumFromVote={this.removeNumFromVote}
+            acceptCurrentVote={this.onChangeVotes}
+            candidateUrl={this.state.currentItemUrl}
+            currVoteAmount={this.state.currentAmountToVote}
+            modalVisible={this.state.modalVisible}
+            closeModal={this.closeModal} 
+          />
+        )}
         <KeyboardAwareScrollView>
           <Utils.View justify='center' align='center'>
             <Utils.FormInput
