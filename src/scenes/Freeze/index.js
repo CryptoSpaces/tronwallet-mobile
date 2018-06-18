@@ -85,10 +85,21 @@ class FreezeScene extends Component {
   }
 
   freezeToken = async () => {
-    const { amount } = this.state
+    const { amount, trxBalance } = this.state
     this.setState({ loading: true })
-    const transaction = await Client.freezeToken(amount)
-    this.sendDeepLink(transaction)
+    try{
+      if(trxBalance < amount){
+        alert('Insufficient TRX balance');
+        throw new Error('Insufficient TRX balance');
+    }
+      const transaction = await Client.freezeToken(amount)
+      this.sendDeepLink(transaction)
+    } catch(error){
+      console.log(error.message);
+    } finally{
+      this.setState({loading: false});
+    }
+
   }
 
   unfreezeToken = () => {

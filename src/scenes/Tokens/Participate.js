@@ -4,12 +4,12 @@ import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
 import qs from 'qs'
+import Feather from 'react-native-vector-icons/Feather'
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Client from '../../services/client'
+import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
-import Feather from 'react-native-vector-icons/Feather'
 
 class ParticipateScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -33,28 +33,34 @@ class ParticipateScene extends Component {
 
   state = {
     value: '',
-    loading: false
+    loading: false,
+    error: null,
   }
 
   _confirm = async () => {
+    const { navigation } = this.props;
     try {
-      const pk = await Client.getPublicKey()
-      this.setState({ loading: true })
+      this.setState({ loading: true });
 
+      if (navigation.state.params.trxBalance < this.state.value) {
+        alert('Insufficient TRX balance');
+        throw new Error('Insufficient TRX balance');
+      }
+      const pk = await Client.getPublicKey()
       const response = await axios.post(
         'https://tronnotifier-dev.now.sh/v1/wallet/participate',
         {
           from: pk,
-          issuer: this.props.navigation.state.params.token.ownerAddress,
-          token: this.props.navigation.state.params.token.name,
+          issuer: navigation.state.params.token.ownerAddress,
+          token: navigation.state.params.token.name,
           amount: Number(this.state.value)
         }
       )
       const dataToSend = qs.stringify({
         txDetails: {
           from: pk,
-          issuer: this.props.navigation.state.params.token.ownerAddress,
-          token: this.props.navigation.state.params.token.name,
+          issuer: navigation.state.params.token.ownerAddress,
+          token: navigation.state.params.token.name,
           amount: Number(this.state.value),
           Type: 'PARTICIPATE'
         },
@@ -68,8 +74,9 @@ class ParticipateScene extends Component {
       this.openDeepLink(dataToSend)
     } catch (err) {
       console.log(err)
+    } finally {
+      this.setState({ loading: false })
     }
-    this.setState({ loading: false })
   }
 
   openDeepLink = async (dataToSend) => {
@@ -123,7 +130,7 @@ class ParticipateScene extends Component {
                   returnKeyType={'send'}
                 />
                 <Utils.Text>
-                  {Number(this.state.value) * token.price} TRX
+                  {Number(this.state.value) * token.price / ONE_TRX} TRX
                 </Utils.Text>
                 <Utils.VerticalSpacer />
                 {this.renderConfirmButtom()}
@@ -166,14 +173,14 @@ class ParticipateScene extends Component {
               <Utils.Text size='xsmall'>{token.transaction}</Utils.Text>
               <Utils.VerticalSpacer size='medium' />
 
-              <Utils.Text size='xsmall' secondary>OWNERADDRESS</Utils.Text>
+              <Utils.Text size='xsmall' secondary>OWNER ADDRESS</Utils.Text>
               <Utils.Text size='xsmall'>{token.ownerAddress}</Utils.Text>
               <Utils.VerticalSpacer size='medium' />
 
               <Utils.Row justify='space-between'>
                 <Utils.View>
                   <Utils.Text size='xsmall' secondary>TRXNUM</Utils.Text>
-                  <Utils.Text>{token.trxNum}</Utils.Text>
+                  <Utils.Text>{token.trxNum / ONE_TRX}</Utils.Text>
                 </Utils.View>
                 <Utils.View>
                   <Utils.Text size='xsmall' secondary>NUM</Utils.Text>
