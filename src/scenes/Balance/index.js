@@ -22,13 +22,13 @@ class BalanceScene extends Component {
     trxPrice: 0
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._navListener = this.props.navigation.addListener('willFocus', () => {
       this.loadData()
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
   }
 
@@ -63,7 +63,10 @@ class BalanceScene extends Component {
     }
   }
 
-  navigateToParticipate = token => this.props.navigation.navigate('Participate', { token })
+  navigateToParticipate = token => {
+    const { trxBalance } = this.state;
+    this.props.navigation.navigate('Participate', { token, trxBalance })
+  }
 
   listHeader = (text) => (
     <Utils.View align='center'>
@@ -108,7 +111,7 @@ class BalanceScene extends Component {
     )
   }
 
-  render () {
+  render() {
     const { assetBalance, trxBalance, loading, trxPrice, error, assetList } = this.state
     if (loading) return <LoadingScene />
 
@@ -133,7 +136,7 @@ class BalanceScene extends Component {
             <Utils.Content>
               <LineChart
                 style={{ height: 30 }}
-                data={[ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]}
+                data={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]}
                 svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
                 animate
               >
