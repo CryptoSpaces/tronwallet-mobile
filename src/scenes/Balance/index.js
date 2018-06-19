@@ -31,7 +31,13 @@ class BalanceScene extends Component {
     trxPrice: null
   }
 
-  componentDidMount () {
+  async componentDidMount () {
+    // await BalanceStore.write(() => {
+    //   BalanceStore.delete(BalanceStore.objects('Balance'))
+    // })
+    // await AssetsStore.write(() => {
+    //   AssetsStore.delete(AssetsStore.objects('Asset'))
+    // })
     this.loadData()
   }
 
@@ -44,10 +50,21 @@ class BalanceScene extends Component {
       ])
       const balances = getData[0]
       const tokenList = getData[1]
-      const { data: { data } } = getData[2] 
-      BalanceStore.write(() => balances.map(item => BalanceStore.create('Balance', item, true)))
-      AssetsStore.write(() => tokenList.map(item => AssetsStore.create('Asset', item, true)))
-      this.setState({ trxPrice: data.quotes.USD.price })
+      const { data: { data } } = getData[2]
+      await BalanceStore.write(() => balances.map(item => BalanceStore.create('Balance', item, true)))
+      await AssetsStore.write(() => tokenList.map(item => AssetsStore.create('Asset', item, true)))
+      const assetBalance = BalanceStore
+        .objects('Balance')
+        .map(item => Object.assign({}, item))
+      const assetList = AssetsStore
+        .objects('Asset')
+        .filtered(`percentage < 100 AND startTime < ${new Date().getTime()} AND endTime > ${new Date().getTime()}`)
+        .map(item => Object.assign({}, item))
+      this.setState({
+        trxPrice: data.quotes.USD.price,
+        assetBalance,
+        assetList
+      })
     } catch (error) {
       this.setState({ error: error.message })
     }
