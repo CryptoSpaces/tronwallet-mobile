@@ -3,14 +3,13 @@ import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp } from 'lodash'
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
   SafeAreaView,
   View,
-  Linking
+  Linking,
+  FlatList
 } from 'react-native'
 import qs from 'qs'
-import { KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 // Utils
 import { Spacing } from '../../components/DesignSystem'
@@ -68,7 +67,11 @@ class VoteScene extends PureComponent {
     offset: 0
   }
 
-  componentDidMount () {
+  async componentDidMount () {
+    // const realm = await getCandidateStore()
+    // realm.write(() => {
+    //   realm.delete(realm.objects('Candidate'))
+    // })
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
     this._loadFreeze()
     this._loadCandidates()
@@ -103,9 +106,9 @@ class VoteScene extends PureComponent {
   }
   
   _loadMoreCandidates = async () => {
-    this.setState({ refreshing: true, offset: this.state.offset + LIST_STEP_SIZE })
+    this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
     const store = await getCandidateStore()
-    this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)), refreshing: false })
+    this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
   }
   
   _loadFreeze = async () => {
@@ -211,34 +214,7 @@ class VoteScene extends PureComponent {
     )
   }
 
-  _renderList = () =>
-    Platform.select({
-      ios: (
-        <KeyboardAwareFlatList
-          keyExtractor={item => item.address}
-          data={this.state.voteList}
-          renderItem={this._renderRow}
-          onEndReached={this._loadMoreCandidates}
-          onRefresh={this._refreshCandidates}
-          refreshing={this.state.refreshing}
-        />
-      ),
-      android: (
-        <KeyboardAvoidingView behavior='padding'>
-          <KeyboardAwareFlatList
-            keyExtractor={item => item.address}
-            data={this.state.voteList}
-            renderItem={this._renderRow}
-            onEndReached={this._loadMoreCandidates}
-            onRefresh={this._refreshCandidates}
-            refreshing={this.state.refreshing}
-          />
-        </KeyboardAvoidingView>
-      )
-    })
-
   render () {
-    console.log('offset', this.state.offset)
     const { totalVotes, loadingList, totalRemaining } = this.state
     return (
       <Utils.Container>
@@ -280,13 +256,16 @@ class VoteScene extends PureComponent {
               style={{ width: '95%' }}
             />
           </Utils.View>
-          {loadingList ? (
-            <Utils.Content height={200} justify='center' align='center'>
-              <ActivityIndicator size='large' color={'#ffffff'} />
-            </Utils.Content>
-          ) : (
-            this._renderList()
-          )}
+          <FlatList
+            keyExtractor={item => item.address}
+            data={this.state.voteList}
+            renderItem={this._renderRow}
+            onEndReachedThreshold={0.5}
+            onEndReached={this._loadMoreCandidates}
+            onRefresh={this._refreshCandidates}
+            refreshing={this.state.refreshing}
+            removeClippedSubviews
+          />
         </KeyboardAwareScrollView>
       </Utils.Container>
     )

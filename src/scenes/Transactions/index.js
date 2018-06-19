@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SafeAreaView, FlatList, StyleSheet, RefreshControl, Image } from 'react-native'
+import { SafeAreaView, FlatList, RefreshControl, Image } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
@@ -31,18 +31,25 @@ class TransactionsScene extends Component {
 
   state = {
     refreshing: true,
-    transactions: transactionsStore.objects('Transaction')
+    transactions: transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
   }
 
-  componentDidMount () {
+  async componentDidMount () {
+    // await transactionsStore.write(() => {
+    //   transactionsStore.delete(transactionsStore.objects('Transaction'))
+    // })
     this.loadData()
   }
 
   loadData = async () => {
     this.setState({ refreshing: true })
-    const transactions = await Client.getTransactionList()
-    transactionsStore.write(() => transactions.map(item => transactionsStore.create('Transaction', item, true)))
-    this.setState({ refreshing: false, transactions: transactionsStore.objects('Transaction') })
+    const response = await Client.getTransactionList()
+    await transactionsStore.write(() => response.map(item => transactionsStore.create('Transaction', item, true)))
+    const transactions = transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
+    this.setState({
+      refreshing: false,
+      transactions
+    })
   }
 
   renderCard = item => {
@@ -84,7 +91,7 @@ class TransactionsScene extends Component {
               onRefresh={this.loadData}
             />
           }
-          contentContainerStyle={styles.list}
+          contentContainerStyle={{ padding: Spacing.medium }}
           data={transactions}
           keyExtractor={item => item.id}
           renderItem={({ item }) => this.renderCard(item)}
@@ -96,9 +103,4 @@ class TransactionsScene extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  list: {
-    padding: Spacing.medium
-  }
-})
 export default TransactionsScene
