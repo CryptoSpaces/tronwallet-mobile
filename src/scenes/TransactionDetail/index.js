@@ -190,7 +190,7 @@ class TransactionDetail extends Component {
       return (
         <Utils.Content align='center' justify='center'>
           {loadingSubmit ? (
-            <ActivityIndicator size='small' color={Colors.yellow} />
+            <ActivityIndicator size='small' color={Colors.primaryText} />
           ) : (
             <ButtonGradient
               text='Submit Transaction'

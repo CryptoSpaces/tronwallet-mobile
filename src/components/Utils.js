@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { ImageBackground } from 'react-native'
 import PropTypes from 'prop-types'
-// import { Constants } from 'expo'
+import { tint } from 'polished'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
@@ -80,10 +80,12 @@ export const LoadButtonWrapper = styled.View`
   justify-content: center;
 `
 
+
 export const ContentWithBackground = Content.withComponent(ImageBackground)
 
 export const Row = View.extend`
   flex-direction: row;
+  ${props => props.wrap && css`flex-wrap: ${props.wrap};`}
 `
 
 export const Column = View.extend`
@@ -118,6 +120,7 @@ export const Text = styled.Text`
   font-family: rubik-medium;
   color: ${props => props.color};
   font-size: ${props => FontSize[props.size]};
+  ${props => props.align && css`text-align: ${props.align}`};
   ${props => props.font && css`font-family: rubik-${props.font}`};
   ${props => props.secondary && css`color: ${Colors.secondaryText}`};
   ${props => props.success && css`color: ${Colors.green}`};
@@ -219,9 +222,7 @@ export const PlusButton = styled.TouchableOpacity`
 `
 
 export const ButtonWrapper = styled.TouchableOpacity`
-  border-color: ${Colors.green};
-  border-width: 1px;
-  border-radius: ${Spacing.xsmall}px;
+  align-self: ${props => props.alignSelf || 'auto'};
   padding-vertical: ${Spacing.xsmall}px;
   padding-horizontal: ${Spacing.small}px;
   justify-content: center;
@@ -250,3 +251,31 @@ export const TransactionCard = styled.View`
 Card.defaultProps = {
   paddingSize: 'medium'
 }
+
+export const NumKeyWrapper = styled.View`
+  flex-basis: 33%;
+  flex-grow: 1;
+  padding: ${Spacing.xsmall}px;
+  align-items: stretch;
+  justify-content: center;
+  ${props => props.double && css`
+    flex-basis: 66%;
+    flex-grow: 2;
+  `}
+`
+
+export const NumKey = styled.TouchableOpacity`
+  ${props => props.double && css`
+    flex-direction: row;
+    justify-content: center;
+  `}
+  align-items: center;
+  padding: ${Spacing.medium}px;
+  background-color: ${tint(0.9, Colors.background)};
+`
+
+export const NumPadWrapper = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: ${Spacing.xsmall}px;
+`

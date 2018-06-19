@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Linking } from 'react-native'
 import { Auth } from 'aws-amplify'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
@@ -8,8 +8,14 @@ import Client from '../../services/client'
 
 class LoadingScene extends Component {
   async componentDidMount () {
-    await this._loadStuff()
-    this._checkSession()
+
+    //React Navigation open this route cuncurrently with 
+    //the deeplink route.
+    const deepLinkUrl = await Linking.getInitialURL();
+    if(!deepLinkUrl){
+      await this._loadStuff()
+      this._checkSession();
+    }
   }
 
   _loadStuff = async () => {

@@ -4,12 +4,13 @@ import { SafeAreaView, FlatList, StyleSheet, RefreshControl, Image } from 'react
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
-import LoadingScene from '../../components/LoadingScene'
 import TransferCard from './Transfer'
 import ParticipateCard from './Participate'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
+
+import transactionsStore from '../../store/transactions'
 
 // const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
@@ -29,31 +30,22 @@ class TransactionsScene extends Component {
   }
 
   state = {
-    firstLoading: true,
-    transactions: []
+    refreshing: true,
+    transactions: transactionsStore.objects('Transaction')
   }
 
   componentDidMount () {
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
-      this.loadData()
-    })
-  }
-
-  componentWillUnmount () {
-    this._navListener.remove()
+    this.loadData()
   }
 
   loadData = async () => {
     this.setState({ refreshing: true })
-    try {
-      const transactions = await Client.getTransactionList()
-      this.setState({ firstLoading: false, refreshing: false, transactions })
-    } catch (error) {
-      this.setState({ firstLoading: false, refreshing: false })
-    }
+    const transactions = await Client.getTransactionList()
+    transactionsStore.write(() => transactions.map(item => transactionsStore.create('Transaction', item, true)))
+    this.setState({ refreshing: false, transactions: transactionsStore.objects('Transaction') })
   }
 
-  renderCard = (item, index) => {
+  renderCard = item => {
     switch (item.type) {
       case 'Transfer': return <TransferCard item={item} />
       case 'Freeze': return <FreezeCard item={item} />
@@ -66,11 +58,8 @@ class TransactionsScene extends Component {
   renderListEmptyComponent = () => <Utils.Container />
 
   render () {
-    const { firstLoading, refreshing, transactions } = this.state
-
-    if (firstLoading) {
-      return <LoadingScene />
-    }
+    const { refreshing } = this.state
+    const transactions = transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
 
     if (transactions.length === 0) {
       return (
@@ -86,22 +75,24 @@ class TransactionsScene extends Component {
       )
     }
 
-    return <Utils.Container>
-      <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={this.loadData}
-          />
-        }
-        contentContainerStyle={styles.list}
-        data={transactions}
-        keyExtractor={item => item.hash || item.transactionHash}
-        renderItem={({ item, index }) => this.renderCard(item, index)}
-        ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
-        ListEmptyComponent={this.renderListEmptyComponent}
-      />
-    </Utils.Container>
+    return (
+      <Utils.Container>
+        <FlatList
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={this.loadData}
+            />
+          }
+          contentContainerStyle={styles.list}
+          data={transactions}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => this.renderCard(item)}
+          ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
+          ListEmptyComponent={this.renderListEmptyComponent}
+        />
+      </Utils.Container>
+    )
   }
 }
 
