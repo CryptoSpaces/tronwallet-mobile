@@ -21,6 +21,14 @@ const VoteModal = ({
 }) => {
   const errorCheck = currVoteAmount > totalRemaining
 
+  const formatAmount = (amount) => amount
+    .split('')
+    .reverse()
+    .map((char, index) => (index + 1) % 3 === 0 ? `,${char}` : char)
+    .reverse()
+    .map((char, index) => (index === 0 && char[0] === ',') ? char.slice(1, 2) : char)
+    .join('')
+
   return  (
     <Modal
       animationType="slide"
@@ -28,9 +36,6 @@ const VoteModal = ({
       visible={modalVisible}
       onRequestClose={() => {
         closeModal();
-      }}
-      style={{
-        backgroundColor: 'red'
       }}
       >
       <Utils.Container>
@@ -40,7 +45,7 @@ const VoteModal = ({
           </Utils.ButtonWrapper>
           <View>
             <Utils.Text size='medium' secondary>{formatUrl(candidateUrl)}</Utils.Text>
-            <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : currVoteAmount}</Utils.Text>
+            <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatAmount(currVoteAmount)}</Utils.Text>
             {errorCheck && (
               <Utils.Text>
                 You do not have enough frozen TRX to place this vote amount.
