@@ -30,25 +30,9 @@ const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote, openMod
               </Utils.Row>
             </Utils.View>
           </Utils.Row>
-          {//REFACTOR STYLES ->>
-          }
           <Utils.Row align='center' justify='space-between'>
-            <View style={{}}>
-              <Text style={{color: 'red'}}>{userVote ? '' : (votes || 0).toString()}</Text>
-            </View>
+            <Utils.Text>{userVote ? '' : (votes || 0).toString()}</Utils.Text>
           </Utils.Row>
-          {/* <Utils.Row align='center' justify='space-between'>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              keyboardType='numeric'
-              onChangeText={(v) => onChangeVotes(v, item.address)}
-              placeholderTextColor={Colors.secondaryText}
-              placeholder={`${userVote || 0}`}
-              value={userVote ? '' : (votes || '').toString()}
-              padding={Spacing.small}
-              style={styles.input}
-            />
-          </Utils.Row> */}
         </Utils.Row>
       </Utils.Item>
     </TouchableOpacity>
