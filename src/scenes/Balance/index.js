@@ -139,7 +139,7 @@ class BalanceScene extends Component {
               />
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text secondary>BALANCE</Utils.Text>
-              <Utils.Text size='medium'>{formatAmount(trxBalance)} TRX</Utils.Text>
+              <Utils.Text size='medium'>{formatAmount(trxBalance)}</Utils.Text>
             </Utils.View>
           </Utils.Row>
           <Utils.Content>
