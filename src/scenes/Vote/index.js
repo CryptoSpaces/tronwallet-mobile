@@ -42,12 +42,19 @@ class VoteScene extends PureComponent {
             </Utils.TitleWrapper>
             <View style={{ marginRight: 15 }}>
               <Utils.Text>{params.totalRemaining}</Utils.Text>
-              <ButtonGradient
-                disabled={params.disabled}
-                size='small'
-                text='Submit'
-                onPress={params._onSubmit}
-              />
+              {params.errorMessage ? 
+                <ButtonGradient
+                  size='small'
+                  text='Sync'
+                  onPress={params.loadData}
+                /> :
+                <ButtonGradient
+                  disabled={params.disabled}
+                  size='small'
+                  text='Submit'
+                  onPress={params.onSubmit}
+                />
+              }
             </View>
           </Utils.Header>
         </SafeAreaView>
@@ -76,19 +83,24 @@ class VoteScene extends PureComponent {
   }
 
   async componentDidMount () {
-    this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
-    this._loadCandidates()
-    this._loadFreeze()
-    this._loadUserVotes()
-    this._loadPublicKey()
-    this._requestData()
+    // const realm = await getCandidateStore()
+    // realm.write(() => {
+    //   realm.delete(realm.objects('Candidate'))
+    // })
+    this._loadData()
   }
 
-  _requestData = () => {
-
-
-
+  _loadData = () => {
+    this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
+    this._loadCandidates()
+    this._loadPublicKey()
     this._refreshCandidates()
+    Promise.all([this._loadFreeze(), this._loadUserVotes()])
+    .then(
+      this.setState({
+        loading: false
+      })
+    )
   }
 
   _getVoteList = store =>   
@@ -111,17 +123,15 @@ class VoteScene extends PureComponent {
   _refreshCandidates = async () => {
     try {
       if (!this.state.refreshing) {
-        console.log('refreshing', this.state)
         this.setState({ refreshing: true })
         const { candidates, totalVotes } = await Client.getTotalVotes()
-        console.log('candidatos:', candidates)
         const store = await getCandidateStore()
         store.write(() => candidates.map(item => store.create('Candidate', item, true)))
         this.setState({
           voteList: this._getVoteList(store),
           totalVotes,
           refreshing: false
-        }, () => console.log('after', this.state))
+        })
       }
     }
     catch(e){
@@ -144,19 +154,21 @@ class VoteScene extends PureComponent {
   
   _loadFreeze = async () => {
     try{
-    const { total } = await Client.getFreeze()
-    this.setState({ totalRemaining: total || 0 })
-    } 
-    catch(e){
-      e.name = 'Load Freeze Error'
-      this._throwError(e)
-    }
+      const { total } = await Client.getFreeze()
+      this.setState({ totalRemaining: total || 0 })
+      return total
+      } 
+      catch(e){
+        e.name = 'Load Freeze Error'
+        this._throwError(e)
+      }
   }
   
 _loadUserVotes = async () => {
   try {
     const userVotes = await Client.getUserVotes()
     this.setState({ userVotes })
+    return userVotes
   }
     catch(e){
       e.name = 'Load User Votes Error'
@@ -260,6 +272,8 @@ _loadUserVotes = async () => {
     this.setState({ 
         errorMessage:  'Communications with server failed.',
         loading: false
+    }, function setErrorParams() {
+      this.props.navigation.setParams({ loadData: this._loadData, errorMessage: this.state.errorMessage })
     })
   }
 
@@ -357,11 +371,8 @@ _loadUserVotes = async () => {
             </Header>
           </FadeIn>
         )}
-        {(errorMessage.length > 0) && (
-          <View>
-            <Utils.Text>{errorMessage}</Utils.Text>
-            <RefreshPage refresh={this._refreshPage} />
-          </View>
+        {(errorMessage.length) && (
+          <Utils.Text align='center' marginY={20}>{errorMessage}</Utils.Text>
         )}
         {this.state.modalVisible && (
           <VoteModal
