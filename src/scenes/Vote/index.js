@@ -16,6 +16,7 @@ import { Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
+import formatNumber from '../../utils/formatnumber'
 
 // Components
 import Header from '../../components/Header'
@@ -205,8 +206,6 @@ _loadUserVotes = async () => {
     }
   }
 
-  _format = value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-
   _setupVoteModal = (item) => {
     this.setState({
       modalVisible: true,
@@ -259,9 +258,8 @@ _loadUserVotes = async () => {
       <VoteItem
         item={item}
         index={index}
-        format={this._format}
+        format={formatNumber}
         openModal={() => this._setupVoteModal(item)}
-        format={this._format}
         onChangeVotes={this._onChangeVotes}
         votes={currentVotes[item.address]}
         userVote={userVotes[item.address]}
@@ -270,7 +268,7 @@ _loadUserVotes = async () => {
   }
 
   render () {
-    const { totalVotes, loadingList, totalRemaining } = this.state
+    const { totalVotes, totalRemaining } = this.state
 
     return (
       <Utils.Container>
@@ -281,7 +279,7 @@ _loadUserVotes = async () => {
                 <Utils.Text size='xsmall' secondary>
                   TOTAL VOTES
                 </Utils.Text>
-                <Utils.Text size='small'>{this._format(totalVotes)}</Utils.Text>
+                <Utils.Text size='small'>{formatNumber(totalVotes)}</Utils.Text>
               </Utils.View>
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
@@ -291,7 +289,7 @@ _loadUserVotes = async () => {
                   size='small'
                   style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
                 >
-                  {this._format(totalRemaining)}
+                  {formatNumber(totalRemaining)}
                 </Utils.Text>
               </Utils.View>
             </Header>

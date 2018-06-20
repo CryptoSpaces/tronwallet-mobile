@@ -1,10 +1,9 @@
 import React from 'react'
 import * as Utils from '../Utils'
-import { Colors, Spacing } from '../DesignSystem'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import formatUrl from '../../utils/formatUrl'
 
-const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote, openModal }) => {
+const VoteItem = ({ item, index, format, votes, userVote, openModal }) => {
   let url = formatUrl(item.url)
   let address = `${item.address.slice(0, 12)}...${item.address.substr(item.address.length - 12)}`
 

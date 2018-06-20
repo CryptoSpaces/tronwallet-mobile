@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import formatUrl from '../../utils/formatUrl'
+import formatNumber from '../../utils/formatnumber'
 
 import { Colors } from '../DesignSystem'
 import ButtonGradient from '../ButtonGradient'
@@ -21,14 +22,6 @@ const VoteModal = ({
 }) => {
   const errorCheck = currVoteAmount > totalRemaining
 
-  const formatAmount = (amount) => amount
-    .split('')
-    .reverse()
-    .map((char, index) => (index + 1) % 3 === 0 ? `,${char}` : char)
-    .reverse()
-    .map((char, index) => (index === 0 && char[0] === ',') ? char.slice(1, 2) : char)
-    .join('')
-
   return  (
     <Modal
       animationType="slide"
@@ -45,7 +38,7 @@ const VoteModal = ({
           </Utils.ButtonWrapper>
           <View>
             <Utils.Text size='medium' secondary>{formatUrl(candidateUrl)}</Utils.Text>
-            <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatAmount(currVoteAmount)}</Utils.Text>
+            <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatNumber(currVoteAmount)}</Utils.Text>
             {errorCheck && (
               <Utils.Text>
                 You do not have enough frozen TRX to place this vote amount.
