@@ -7,7 +7,6 @@ import {
   View,
   Linking,
   FlatList,
-  TouchableOpacity
 } from 'react-native'
 import qs from 'qs'
 
@@ -72,62 +71,108 @@ class VoteScene extends PureComponent {
     currentItemUrl: null,
     currentItemAddress: null,
     currentAmountToVote: '',
-    offset: 0
+    offset: 0,
+    errorMessage: ''
   }
 
   async componentDidMount () {
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
-    this._loadFreeze()
     this._loadCandidates()
+    this._loadFreeze()
     this._loadUserVotes()
     this._loadPublicKey()
+    this._requestData()
+  }
+
+  _requestData = () => {
+
+
+
     this._refreshCandidates()
   }
 
-  _getVoteList = store =>
+  _getVoteList = store =>   
     store.objects('Candidate')
       .sorted([['votes', true], ['url', false]])
       .slice(this.state.offset, clamp(this.state.offset + LIST_STEP_SIZE, store.objects('Candidate').length))
       .map(item => Object.assign({}, item))
 
   _loadCandidates = async () => {
+    try{
     const store = await getCandidateStore()
     this.setState({ voteList: this._getVoteList(store) })
+    }
+    catch(e){
+      e.name = 'Load Candidates Error'
+      this._throwError(e)
+    }
   }
   
   _refreshCandidates = async () => {
-    if (!this.state.refreshing) {
-      this.setState({ refreshing: true })
-      const { candidates, totalVotes } = await Client.getTotalVotes()
-      const store = await getCandidateStore()
-      store.write(() => candidates.map(item => store.create('Candidate', item, true)))
-      this.setState({
-        voteList: this._getVoteList(store),
-        totalVotes,
-        refreshing: false
-      })
+    try {
+      if (!this.state.refreshing) {
+        console.log('refreshing', this.state)
+        this.setState({ refreshing: true })
+        const { candidates, totalVotes } = await Client.getTotalVotes()
+        console.log('candidatos:', candidates)
+        const store = await getCandidateStore()
+        store.write(() => candidates.map(item => store.create('Candidate', item, true)))
+        this.setState({
+          voteList: this._getVoteList(store),
+          totalVotes,
+          refreshing: false
+        }, () => console.log('after', this.state))
+      }
+    }
+    catch(e){
+      e.name = 'Refresh Candidates Error'
+      this._throwError(e)
     }
   }
   
   _loadMoreCandidates = async () => {
-    this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
-    const store = await getCandidateStore()
-    this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
+    try { 
+      this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
+      const store = await getCandidateStore()
+      this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
+    }
+    catch (e){
+      e.name = 'Load More Candidates Error'
+      this._throwError(e)
+    }
   }
   
   _loadFreeze = async () => {
+    try{
     const { total } = await Client.getFreeze()
     this.setState({ totalRemaining: total || 0 })
+    } 
+    catch(e){
+      e.name = 'Load Freeze Error'
+      this._throwError(e)
+    }
   }
   
 _loadUserVotes = async () => {
+  try {
     const userVotes = await Client.getUserVotes()
     this.setState({ userVotes })
   }
+    catch(e){
+      e.name = 'Load User Votes Error'
+      this._throwError(e)
+    }
+  }
   
   _loadPublicKey = async () => {
-    const publicKey = await Client.getPublicKey()
-    this.setState({ publicKey })
+    try{
+      const publicKey = await Client.getPublicKey()
+      this.setState({ publicKey })
+    }
+    catch(e){
+      e.name = 'Load Public Key Error'
+      this._throwError(e)
+    }
   }
 
   _onSubmit = async () => {
@@ -210,10 +255,22 @@ _loadUserVotes = async () => {
     })
   }
 
+  _throwError = (e) => {
+    console.log(`${e.name}: ${e.message}`)
+    this.setState({ 
+        errorMessage:  'Communications with server failed.',
+        loading: false
+    })
+  }
+
   _closeModal = () => {
     this.setState({
       ...this._resetModalState()
     })
+  }
+
+  _refreshPage = () => {
+    this._requestData()
   }
 
   _resetModalState = () => {
@@ -264,7 +321,7 @@ _loadUserVotes = async () => {
   }
 
   render () {
-    const { totalVotes, totalRemaining } = this.state
+    const { totalVotes, totalRemaining, errorMessage } = this.state
 
     return (
       <Utils.Container>
@@ -299,6 +356,12 @@ _loadUserVotes = async () => {
               </Utils.View>
             </Header>
           </FadeIn>
+        )}
+        {(errorMessage.length > 0) && (
+          <View>
+            <Utils.Text>{errorMessage}</Utils.Text>
+            <RefreshPage refresh={this._refreshPage} />
+          </View>
         )}
         {this.state.modalVisible && (
           <VoteModal
