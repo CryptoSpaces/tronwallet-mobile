@@ -24,6 +24,7 @@ import SetPublicKey from './src/scenes/SetPublicKey'
 import HomeScene from './src/scenes/Home'
 import BalanceScene from './src/scenes/Balance'
 import VoteScene from './src/scenes/Vote'
+import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
 import TransactionDetailScene from './src/scenes/TransactionDetail'
 import TransferScene from './src/scenes/Transfer'
@@ -92,9 +93,10 @@ const AppTabs = createBottomTabNavigator(
       screen: VoteStack,
       path: 'vote'
     },
-    Balance: BalanceScene,
     Transactions: TransactionList,
+    Balance: BalanceScene,
     Transfer: TransferStack,
+    Receive: ReceiveScene,
     Settings: SettingsStack
   },
   {
@@ -112,7 +114,10 @@ const AppTabs = createBottomTabNavigator(
           iconName = `shout-out,-speaker,-offer,-announcement,-loud`
         } else if (routeName === 'Transactions') {
           iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
-        } else if (routeName === 'Settings') {
+        } else if (routeName === 'Receive'){
+          iconName = `scan,-bar-code,-qr-code,-barcode,-scanner`
+        }
+        else if (routeName === 'Settings') {
           iconName = `gear,-settings,-update,-setup,-config`
         }
 

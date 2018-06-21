@@ -59,6 +59,8 @@ export const Content = View.extend.attrs({
 })`
   padding: ${props => Spacing[props.paddingSize]}px;
   ${props => props.background && css`background-color: ${props.background};`}
+  ${props => props.marginY && css`margin-vertical: ${props.marginY}px;`}
+  ${props => props.marginX && css`margin-horizontal: ${props.marginX}px;`}
 `
 
 export const StatusBar = styled.View`
