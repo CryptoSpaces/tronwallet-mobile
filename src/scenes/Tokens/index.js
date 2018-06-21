@@ -40,7 +40,7 @@ class TokensScene extends Component {
   _loadTokens = async () => {
     try {
       const response = await axios.get(
-        'https://api.tronscan.org/api/token?sort=-name&start=0&status=ico'
+        'https://testapi.tronscan.org/api/token?sort=-name&start=0&status=ico'
       )
       console.log(response.data.data)
       this.setState({
