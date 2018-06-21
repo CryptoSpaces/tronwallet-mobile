@@ -22,7 +22,6 @@ const VoteItem = ({ item, index, format, votes, userVote, openModal }) => {
                 <Utils.Text lineHeight={20} size='xsmall'>{url}</Utils.Text>
               </Utils.View>
               <Utils.Row>
-                {/* <Utils.Text lineHeight={20} size='xsmall' secondary>Issuer: </Utils.Text> */}
                 <Utils.Text lineHeight={20} size='xsmall'>{address}</Utils.Text>
               </Utils.Row>
               <Utils.Row>

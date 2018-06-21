@@ -27,9 +27,8 @@ const VoteModal = ({
       animationType="slide"
       transparent={false}
       visible={modalVisible}
-      onRequestClose={() => {
-        closeModal();
-      }}
+      onRequestClose={closeModal}
+      style={{ backgroundColor: 'red' }}
       >
       <Utils.Container>
         <Utils.Content flex={1}>

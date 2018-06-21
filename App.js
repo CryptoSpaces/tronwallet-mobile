@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { StatusBar, Platform } from 'react-native'
 import {
   createBottomTabNavigator,
@@ -6,6 +6,7 @@ import {
   createMaterialTopTabNavigator
 } from 'react-navigation'
 import Amplify from 'aws-amplify'
+import { SharedElementRenderer } from 'react-native-motion'
 
 import awsExports from './aws-exports'
 import { Colors, ScreenSize } from './src/components/DesignSystem'
@@ -237,10 +238,10 @@ const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/'
 class App extends Component {
   render() {
     return (
-      <Fragment>
+      <SharedElementRenderer>
         <StatusBar barStyle='light-content' />
         <RootNavigator uriPrefix={prefix} />
-      </Fragment>
+      </SharedElementRenderer>
     )
   }
 }

@@ -6,13 +6,12 @@ import {
   SafeAreaView,
   View,
   Linking,
-  FlatList
+  FlatList,
+  TouchableOpacity
 } from 'react-native'
 import qs from 'qs'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 // Utils
-import { Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
@@ -23,6 +22,7 @@ import Header from '../../components/Header'
 import VoteItem from '../../components/Vote/VoteItem'
 import ButtonGradient from '../../components/ButtonGradient'
 import VoteModal from '../../components/Vote/VoteModal'
+import FadeIn from '../../components/Animations/FadeIn'
 
 // Service
 import Client from '../../services/client'
@@ -272,8 +272,17 @@ _loadUserVotes = async () => {
 
     return (
       <Utils.Container>
-        {
-          (totalVotes !== null) && (totalRemaining !== null) ? (
+        {(totalVotes === null || totalRemaining === null) && (
+          <FadeIn name='vote-header-loading'>
+            <Header>
+              <Utils.View align='center' height='33px'>
+                <ActivityIndicator />
+              </Utils.View>
+            </Header>
+          </FadeIn>
+        )}
+        {(totalVotes !== null && totalRemaining !== null) && (
+          <FadeIn name='vote-header'>
             <Header>
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
@@ -293,37 +302,31 @@ _loadUserVotes = async () => {
                 </Utils.Text>
               </Utils.View>
             </Header>
-          ) : (
-            <Header>
-              <ActivityIndicator />
-            </Header>
-          )
-        }
-        {
-          this.state.modalVisible && (
-            <VoteModal
-              addNumToVote={this._addNumToVote}
-              removeNumFromVote={this._removeNumFromVote}
-              acceptCurrentVote={this._acceptCurrentVote}
-              closeModal={this._closeModal} 
-              candidateUrl={this.state.currentItemUrl}
-              currVoteAmount={this.state.currentAmountToVote}
-              modalVisible={this.state.modalVisible}
-              totalRemaining={this.state.totalRemaining}
-            />
-          )
-        }
-        <KeyboardAwareScrollView>
-          <Utils.View justify='center' align='center'>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              onChangeText={text => this._onSearch(text, 'search')}
-              placeholder='Search'
-              placeholderTextColor='#fff'
-              marginTop={Spacing.medium}
-              style={{ width: '95%' }}
-            />
-          </Utils.View>
+          </FadeIn>
+        )}
+        {this.state.modalVisible && (
+          <VoteModal
+            addNumToVote={this._addNumToVote}
+            removeNumFromVote={this._removeNumFromVote}
+            acceptCurrentVote={this._acceptCurrentVote}
+            closeModal={this._closeModal} 
+            candidateUrl={this.state.currentItemUrl}
+            currVoteAmount={this.state.currentAmountToVote}
+            modalVisible={this.state.modalVisible}
+            totalRemaining={this.state.totalRemaining}
+          />
+        )}
+        <Utils.Content>
+          <Utils.FormInput
+            underlineColorAndroid='transparent'
+            onChangeText={text => this._onSearch(text, 'search')}
+            placeholder='Search'
+            placeholderTextColor='#fff'
+            marginBottom={0}
+            marginTop={0}
+          />
+        </Utils.Content>
+        <FadeIn name='candidates'>
           <FlatList
             keyExtractor={item => item.address}
             data={this.state.voteList}
@@ -334,7 +337,7 @@ _loadUserVotes = async () => {
             refreshing={this.state.refreshing}
             removeClippedSubviews
           />
-        </KeyboardAwareScrollView>
+        </FadeIn>
       </Utils.Container>
     )
   }

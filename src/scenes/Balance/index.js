@@ -4,16 +4,21 @@ import axios from 'axios'
 import { LineChart } from 'react-native-svg-charts'
 import { FlatList, Image, ScrollView, View, ActivityIndicator } from 'react-native'
 import { ListItem } from 'react-native-elements'
+import { Motion, spring, presets } from 'react-motion'
 
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatAmount from '../../utils/formatNumber'
 import ButtonGradient from '../../components/ButtonGradient'
+import FadeIn from '../../components/Animations/FadeIn'
+import GrowIn from '../../components/Animations/GrowIn'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 
 import BalanceStore from '../../store/balance'
 import AssetsStore from '../../store/assets'
+
+const PRICE_PRECISION = 7
 
 class BalanceScene extends Component {
   state = {
@@ -28,7 +33,8 @@ class BalanceScene extends Component {
         .filtered(`percentage < 100 AND startTime < ${new Date().getTime()} AND endTime > ${new Date().getTime()}`)
         .map(item => Object.assign({}, item)),
     trxBalance: 0,
-    trxPrice: null
+    trxPrice: null,
+    didLoaderLeave: false
   }
 
   async componentDidMount () {
@@ -110,56 +116,72 @@ class BalanceScene extends Component {
 
   renderTokenList = ({ item }) => {
     return (
-      <ListItem
-        onPress={() => this.navigateToParticipate(item)}
-        key={item.name}
-        titleStyle={{ color: Colors.primaryText }}
-        containerStyle={{ borderBottomColor: Colors.secondaryText, flex: 1, marginHorizontal: 0 }}
-        underlayColor='rgba(0,0,0,0.2)'
-        title={item.name}
-        hideChevron
-        badge={{ value: item.balance || 'Participate', textStyle: { color: Colors.primaryText }, containerStyle: { marginTop: -10 } }}
-      />
+      <FadeIn name={item.name}>
+        <ListItem
+          onPress={() => this.navigateToParticipate(item)}
+          titleStyle={{ color: Colors.primaryText }}
+          containerStyle={{ borderBottomColor: Colors.secondaryText, flex: 1, marginHorizontal: 0 }}
+          underlayColor='rgba(0,0,0,0.2)'
+          title={item.name}
+          hideChevron
+          badge={{
+            value: item.balance || 'Participate',
+            textStyle: { color: Colors.primaryText },
+            containerStyle: { marginTop: -10 }
+          }}
+        />
+      </FadeIn>
     )
   }
 
   render () {
-    const { assetBalance, trxBalance, trxPrice, error, assetList } = this.state
+    const { assetBalance, trxBalance, trxPrice, error, assetList, didLoaderLeave } = this.state
     return (
       <Utils.Container>
         <Utils.StatusBar />
         <ScrollView>
           <Utils.VerticalSpacer size='large' />
-          <Utils.Row justify='center'>
-            <Utils.View align='center'>
-              <Image
-                source={require('../../assets/tron-logo-small.png')}
-                resizeMode='contain'
-                style={{ height: 60 }}
-              />
-              <Utils.VerticalSpacer size='medium' />
-              <Utils.Text secondary>BALANCE</Utils.Text>
-              <Utils.Text size='medium'>{formatAmount(trxBalance)}</Utils.Text>
-            </Utils.View>
-          </Utils.Row>
+          <FadeIn name='header'>
+            <Utils.Row justify='center'>
+              <Utils.View align='center'>
+                  <Image
+                    source={require('../../assets/tron-logo-small.png')}
+                    resizeMode='contain'
+                    style={{ height: 60 }}
+                  />
+                <Utils.VerticalSpacer size='medium' />
+                <Utils.Text secondary>BALANCE</Utils.Text>
+                <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance)}}>
+                  {value => <Utils.Text size='medium'>{formatAmount(value.balance)} TRX</Utils.Text>}
+                </Motion>
+              </Utils.View>
+            </Utils.Row>
+          </FadeIn>
           <Utils.Content>
             <Utils.Content>
-              <LineChart
-                style={{ height: 30 }}
-                data={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]}
-                svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
-                animate
-              >
-                <Gradient />
-              </LineChart>
+              <GrowIn name='linechart' height={30}>
+                <LineChart
+                  style={{ height: 30 }}
+                  data={[ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]}
+                  svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
+                  animate
+                >
+                  <Gradient />
+                </LineChart>
+              </GrowIn>
             </Utils.Content>
-            {
-              trxPrice ? (
-                <Utils.Text size='xsmall' secondary>{`$ ${trxPrice}`} </Utils.Text>
-              ) : (
+            {trxPrice && (
+              <FadeIn name='tronprice'>
+                <Motion defaultStyle={{ price: 0 }} style={{ price: spring(trxPrice, presets.gentle)}}>
+                  {value => <Utils.Text size='small' align='center'>{`$ ${value.price.toFixed(PRICE_PRECISION)}`}</Utils.Text>}
+                </Motion>
+              </FadeIn>
+            )}
+            {!trxPrice && (
+              <FadeIn name='loader' didLeave={() => console.warn({ didLoaderLeave: true })}>
                 <ActivityIndicator />
-              )
-            }
+              </FadeIn>
+            )}
             <Utils.VerticalSpacer size='medium' />
             <FlatList
               ListEmptyComponent={this.emptyListComponent('Participate to a token')}
