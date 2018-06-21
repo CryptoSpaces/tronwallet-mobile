@@ -1,11 +1,11 @@
 import React from 'react'
 import { Modal, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import formatUrl from '../../utils/formatUrl'
 
 import { Colors } from '../DesignSystem'
 import ButtonGradient from '../ButtonGradient'
 import * as Utils from '../Utils'
+import formatUrl from '../../utils/formatUrl'
 
 const voteKeys = [1,2,3,4,5,6,7,8,9,0]
 
@@ -26,12 +26,8 @@ const VoteModal = ({
       animationType="slide"
       transparent={false}
       visible={modalVisible}
-      onRequestClose={() => {
-        closeModal();
-      }}
-      style={{
-        backgroundColor: 'red'
-      }}
+      onRequestClose={closeModal}
+      style={{ backgroundColor: 'red' }}
       >
       <Utils.Container>
         <Utils.Content flex={1}>
