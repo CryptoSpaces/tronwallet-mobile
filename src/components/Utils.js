@@ -36,6 +36,7 @@ export const View = styled.View`
   ${props => props.height && css`height: ${props.height};`}
   ${props => props.width && css`width: ${props.width};`}
   ${props => props.background && css`background-color: ${props.background};`}
+  ${props => props.paddingX && css`padding-horizontal: ${props.paddingX};`}
 `
 
 View.defaultProps = {

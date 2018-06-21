@@ -15,6 +15,7 @@ import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
 import formatNumber from '../../utils/formatNumber'
+import { Spacing } from '../../components/DesignSystem'
 
 // Components
 import Header from '../../components/Header'
@@ -82,25 +83,17 @@ class VoteScene extends PureComponent {
     errorMessage: ''
   }
 
-  async componentDidMount () {
-    // const realm = await getCandidateStore()
-    // realm.write(() => {
-    //   realm.delete(realm.objects('Candidate'))
-    // })
+  componentDidMount () {
     this._loadData()
   }
 
-  _loadData = () => {
+  _loadData = async () => {
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
     this._loadCandidates()
     this._loadPublicKey()
     this._refreshCandidates()
-    Promise.all([this._loadFreeze(), this._loadUserVotes()])
-    .then(
-      this.setState({
-        loading: false
-      })
-    )
+    await Promise.all([this._loadFreeze(), this._loadUserVotes()])
+    this.setState({ loading: false })
   }
 
   _getVoteList = store =>   
@@ -110,11 +103,10 @@ class VoteScene extends PureComponent {
       .map(item => Object.assign({}, item))
 
   _loadCandidates = async () => {
-    try{
+    try {
     const store = await getCandidateStore()
     this.setState({ voteList: this._getVoteList(store) })
-    }
-    catch(e){
+    } catch(e) {
       e.name = 'Load Candidates Error'
       this._throwError(e)
     }
@@ -133,8 +125,7 @@ class VoteScene extends PureComponent {
           refreshing: false
         })
       }
-    }
-    catch(e){
+    } catch(e) {
       e.name = 'Refresh Candidates Error'
       this._throwError(e)
     }
@@ -145,43 +136,45 @@ class VoteScene extends PureComponent {
       this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
       const store = await getCandidateStore()
       this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
-    }
-    catch (e){
+    } catch (e) {
       e.name = 'Load More Candidates Error'
       this._throwError(e)
     }
   }
   
   _loadFreeze = async () => {
-    try{
+    try {
+      console.log('_loadFreeze')
       const { total } = await Client.getFreeze()
       this.setState({ totalRemaining: total || 0 })
+      console.log('_loadFreeze completed')
       return total
-      } 
-      catch(e){
-        e.name = 'Load Freeze Error'
-        this._throwError(e)
-      }
-  }
-  
-_loadUserVotes = async () => {
-  try {
-    const userVotes = await Client.getUserVotes()
-    this.setState({ userVotes })
-    return userVotes
-  }
-    catch(e){
-      e.name = 'Load User Votes Error'
+    } catch(e) {
+      console.log('_loadFreeze error')
+      e.name = 'Load Freeze Error'
       this._throwError(e)
     }
   }
   
+_loadUserVotes = async () => {
+  try {
+    console.log('_loadUserVotes')
+    const userVotes = await Client.getUserVotes()
+    this.setState({ userVotes })
+    console.log('_loadUserVotes completed')
+    return userVotes
+  } catch(e) {
+    console.log('_loadUserVotes error')
+    e.name = 'Load User Votes Error'
+    this._throwError(e)
+  }
+  }
+  
   _loadPublicKey = async () => {
-    try{
+    try {
       const publicKey = await Client.getPublicKey()
       this.setState({ publicKey })
-    }
-    catch(e){
+    } catch(e) {
       e.name = 'Load Public Key Error'
       this._throwError(e)
     }
@@ -371,8 +364,21 @@ _loadUserVotes = async () => {
             </Header>
           </FadeIn>
         )}
+<<<<<<< 20536b398acbb4530cbf059ac3005f8c53c45ae0
         {(errorMessage.length) && (
           <Utils.Text align='center' marginY={20}>{errorMessage}</Utils.Text>
+||||||| merged common ancestors
+        {(errorMessage.length > 0) && (
+          <View>
+            <Utils.Text>{errorMessage}</Utils.Text>
+            <RefreshPage refresh={this._refreshPage} />
+          </View>
+=======
+        {(errorMessage.length) && (
+          <Utils.View paddingX={Spacing.medium}>
+            <Utils.Text size='small' secondary>{errorMessage}</Utils.Text>
+          </Utils.View>
+>>>>>>> Fix Error Handling on Vote Scene.
         )}
         {this.state.modalVisible && (
           <VoteModal
