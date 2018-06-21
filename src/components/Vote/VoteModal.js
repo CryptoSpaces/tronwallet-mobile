@@ -1,11 +1,12 @@
 import React from 'react'
 import { Modal, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import formatUrl from '../../utils/formatUrl'
+import formatNumber from '../../utils/formatNumber'
 
 import { Colors } from '../DesignSystem'
 import ButtonGradient from '../ButtonGradient'
 import * as Utils from '../Utils'
-import formatUrl from '../../utils/formatUrl'
 
 const voteKeys = [1,2,3,4,5,6,7,8,9,0]
 
@@ -36,7 +37,7 @@ const VoteModal = ({
           </Utils.ButtonWrapper>
           <View>
             <Utils.Text size='medium' secondary>{formatUrl(candidateUrl)}</Utils.Text>
-            <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : currVoteAmount}</Utils.Text>
+            <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatNumber(currVoteAmount)}</Utils.Text>
             {errorCheck && (
               <Utils.Text>
                 You do not have enough frozen TRX to place this vote amount.

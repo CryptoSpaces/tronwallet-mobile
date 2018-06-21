@@ -15,6 +15,7 @@ import qs from 'qs'
 import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
+import formatNumber from '../../utils/formatNumber'
 
 // Components
 import Header from '../../components/Header'
@@ -205,9 +206,7 @@ _loadUserVotes = async () => {
     }
   }
 
-  _format = value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-
-  _setupVoteModal = item => {
+  _setupVoteModal = (item) => {
     this.setState({
       modalVisible: true,
       currentItemUrl: formatUrl(item.url),
@@ -256,14 +255,15 @@ _loadUserVotes = async () => {
     const { currentVotes, userVotes } = this.state
 
     return (
-      <TouchableOpacity onPress={() => this._setupVoteModal(item)}>
-        <VoteItem
-          item={item}
-          index={index}
-          currentVotes={currentVotes[item.address]}
-          userVotes={userVotes[item.address]}
-        />
-      </TouchableOpacity>
+      <VoteItem
+        item={item}
+        index={index}
+        format={formatNumber}
+        openModal={() => this._setupVoteModal(item)}
+        onChangeVotes={this._onChangeVotes}
+        votes={currentVotes[item.address]}
+        userVote={userVotes[item.address]}
+      />
     )
   }
 
@@ -288,7 +288,7 @@ _loadUserVotes = async () => {
                 <Utils.Text size='xsmall' secondary>
                   TOTAL VOTES
                 </Utils.Text>
-                <Utils.Text size='small'>{this._format(totalVotes)}</Utils.Text>
+                <Utils.Text size='small'>{formatNumber(totalVotes)}</Utils.Text>
               </Utils.View>
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
@@ -298,7 +298,7 @@ _loadUserVotes = async () => {
                   size='small'
                   style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
                 >
-                  {this._format(totalRemaining)}
+                  {formatNumber(totalRemaining)}
                 </Utils.Text>
               </Utils.View>
             </Header>
