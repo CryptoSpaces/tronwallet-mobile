@@ -32,9 +32,7 @@ const VoteItem = ({ item, index, format, votes, userVote, openModal }) => {
             </Utils.View>
           </Utils.Row>
           <Utils.Row align='center' justify='space-between'>
-            <View style={{}}>
-              <Text style={{color: 'red'}}>{userVote ? '' : (votes || 0).toString()}</Text>
-            </View>
+            <Utils.Text>{userVote ? '' : (votes || 0).toString()}</Utils.Text>
           </Utils.Row>
         </Utils.Row>
       </Utils.Item>
