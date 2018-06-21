@@ -92,8 +92,8 @@ const AppTabs = createBottomTabNavigator(
       screen: VoteStack,
       path: 'vote'
     },
-    Balance: BalanceScene,
     Transactions: TransactionList,
+    Balance: BalanceScene,
     Transfer: TransferStack,
     Receive: ReceiveScene,
     Settings: SettingsStack
