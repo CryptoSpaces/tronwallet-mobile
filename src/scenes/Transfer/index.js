@@ -3,7 +3,6 @@ import { Dimensions, SafeAreaView } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import FreezeScreen from '../Freeze/index'
 import SendScreen from '../Send/index'
-import ReceiveScreen from '../Receive/index'
 import * as Utils from '../../components/Utils'
 
 const initialLayout = {
@@ -30,7 +29,6 @@ export default class TransferScene extends React.Component {
     index: 0,
     routes: [
       { key: 'send', title: 'Send' },
-      { key: 'receive', title: 'Receive' },
       { key: 'freeze', title: 'Freeze' }
     ]
   }
@@ -43,7 +41,6 @@ export default class TransferScene extends React.Component {
 
   _renderScene = SceneMap({
     send: () => <SendScreen {...this.props} />,
-    receive: () => <ReceiveScreen {...this.props} />,
     freeze: () => <FreezeScreen {...this.props} />
   });
 
