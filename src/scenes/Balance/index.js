@@ -155,7 +155,7 @@ class BalanceScene extends Component {
             </Utils.Content>
             {
               trxPrice ? (
-                <Utils.Text size='xsmall' secondary>{`$ ${trxPrice}`}</Utils.Text>
+                <Utils.Text size='xsmall' secondary>{`$ ${trxPrice}`} TRX</Utils.Text>
               ) : (
                 <ActivityIndicator />
               )
