@@ -5,10 +5,14 @@ import { Path } from 'react-native-svg'
 import { ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import { View } from 'react-native-animatable'
 import * as shape from 'd3-shape'
+import { Motion, spring, presets } from 'react-motion'
 
 import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
+import FadeIn from '../../components/Animations/FadeIn'
+
+const PRICE_PRECISION = 7
 
 const Line = ({ line }) => (
   <Path
@@ -122,7 +126,7 @@ class HomeScene extends Component {
   }
 
   render () {
-    const { price } = this.state
+    const { price, marketcap, volume, supply, graph } = this.state
     return (
       <Utils.Container>
         <Utils.ContentWithBackground
@@ -146,7 +150,9 @@ class HomeScene extends Component {
               <Utils.Row>
                 <Utils.Text secondary />
                 <Utils.HorizontalSpacer />
-                <Utils.Text size='medium'>$ {price}</Utils.Text>
+                <Motion defaultStyle={{ data: 0 }} style={{ data: spring(price, presets.gentle)}}>
+                  {value => <Utils.Text size='medium'>$ {value.data.toFixed(PRICE_PRECISION)}</Utils.Text>}
+                </Motion>
               </Utils.Row>
             </Utils.View>
           </Utils.Row>
@@ -167,28 +173,39 @@ class HomeScene extends Component {
                 CIRCULATING SUPPLY
               </Utils.Text>
             </Utils.View>
-            {
-              !this.state.marketcap || !this.state.volume || !this.state.supply ? (
+            {(!marketcap || !volume || !supply) && (
+              <FadeIn name='home-info-loading'>
                 <Utils.Content>
                   <ActivityIndicator size='small' color={Colors.primaryText} />
                 </Utils.Content>
-              ) : (
-                <View animation='fadeIn'>
-                  <Utils.View>
-                    <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(
-                      this.state.marketcap
-                    )}`}</Utils.Text>
-                    <Utils.VerticalSpacer size='medium' />
-                    <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(
-                      this.state.volume
-                    )}`}</Utils.Text>
-                    <Utils.VerticalSpacer size='medium' />
-                    <Utils.Text lineHeight={20}>{`${this._formatNumber(
-                      this.state.supply
-                    )} TRX`}</Utils.Text>
-                  </Utils.View>
-                </View>
-              )}
+              </FadeIn>
+            )}
+            {(marketcap && volume && supply) && (
+              <FadeIn name='home-info'>
+                <Utils.View>
+                  <Motion defaultStyle={{ data: 0 }} style={{ data: spring(marketcap, presets.gentle)}}>
+                    {value => <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(value.data)}`}</Utils.Text>}
+                  </Motion>
+                  <Utils.VerticalSpacer size='medium' />
+                  <Motion defaultStyle={{ data: 0 }} style={{ data: spring(volume, presets.gentle)}}>
+                    {value => <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(value.data)}`}</Utils.Text>}
+                  </Motion>
+                  <Utils.VerticalSpacer size='medium' />
+                  <Motion defaultStyle={{ data: 0 }} style={{ data: spring(supply, presets.gentle)}}>
+                    {value => <Utils.Text lineHeight={20}>{`${this._formatNumber(value.data)} TRX`}</Utils.Text>}
+                  </Motion>
+                </Utils.View>
+              </FadeIn>
+            )}
+            {!marketcap || !volume || !supply ? (
+              <Utils.Content>
+                <ActivityIndicator size='small' color={Colors.primaryText} />
+              </Utils.Content>
+            ) : (
+              <View animation='fadeIn'>
+                
+              </View>
+            )}
           </Utils.Row>
         </Utils.Content>
         <Utils.Row justify='space-evenly'>
@@ -197,13 +214,13 @@ class HomeScene extends Component {
               key={timeSpan}
               onPress={() => this._changeGraphTimeSpan(timeSpan)}
             >
-              <Utils.Text secondary={this.state.graph.timeSpan !== timeSpan}>
+              <Utils.Text secondary={graph.timeSpan !== timeSpan}>
                 {timeSpan}
               </Utils.Text>
             </TouchableOpacity>
           ))}
         </Utils.Row>
-        {this.state.graph.loading ? (
+        {graph.loading ? (
           <Utils.Content height={120} justify='center'>
             <ActivityIndicator size='large' color={Colors.primaryText} />
           </Utils.Content>
@@ -211,7 +228,7 @@ class HomeScene extends Component {
           <View animation='fadeIn' style={{ flex: 1 }}>
             <AreaChart
               style={{ flex: 1 }}
-              data={this.state.graph.data}
+              data={graph.data}
               contentInset={{ top: 30, bottom: 30 }}
               curve={shape.curveLinear}
               svg={{ fill: 'url(#gradient)', opacity: 0.2 }}
