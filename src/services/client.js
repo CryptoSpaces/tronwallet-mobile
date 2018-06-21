@@ -4,7 +4,7 @@ export const ONE_TRX = 1000000
 
 class ClientWallet {
   constructor (opt = null) {
-    this.api = 'https://api.tronscan.org/api'
+    this.api = 'https://testapi.tronscan.org/api'
     this.notifier = 'https://tronnotifier-dev.now.sh/v1/wallet'
   }
 
