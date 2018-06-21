@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Dimensions, Clipboard, ScrollView } from 'react-native'
+import { Dimensions, Clipboard, ScrollView, SafeAreaView } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import Feather from 'react-native-vector-icons/Feather'
@@ -50,10 +50,16 @@ class ReceiveScreen extends PureComponent {
     if (loading) return <LoadingScene />
 
     return (
-      <ScrollView>
         <Utils.Container>
+          <SafeAreaView style={{ backgroundColor: 'black' }}>
+            <Utils.Header>
+              <Utils.TitleWrapper>
+                <Utils.Title>Receive</Utils.Title>
+              </Utils.TitleWrapper>
+            </Utils.Header>
+          </SafeAreaView>
           <Utils.StatusBar />
-          <Utils.Content align='center'>
+          <Utils.Content marginY='20' align='center'>
             {!!publicKey && <QRCode value={publicKey} size={width * 0.6} />}
             <Utils.VerticalSpacer size='large' />
 
@@ -78,7 +84,6 @@ class ReceiveScreen extends PureComponent {
             />
           </Utils.Content>
         </Utils.Container>
-      </ScrollView>
     )
   }
 }
