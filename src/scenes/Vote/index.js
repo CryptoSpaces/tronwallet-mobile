@@ -16,7 +16,7 @@ import { Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
-import formatNumber from '../../utils/formatnumber'
+import formatNumber from '../../utils/formatNumber'
 
 // Components
 import Header from '../../components/Header'

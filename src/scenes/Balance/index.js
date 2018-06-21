@@ -7,7 +7,7 @@ import { ListItem } from 'react-native-elements'
 
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
-import formatAmount from '../../utils/formatnumber'
+import formatAmount from '../../utils/formatNumber'
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'

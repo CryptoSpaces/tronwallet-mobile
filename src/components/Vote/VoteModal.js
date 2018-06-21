@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import formatUrl from '../../utils/formatUrl'
-import formatNumber from '../../utils/formatnumber'
+import formatNumber from '../../utils/formatNumber'
 
 import { Colors } from '../DesignSystem'
 import ButtonGradient from '../ButtonGradient'
