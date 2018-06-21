@@ -1,10 +1,11 @@
 import React from 'react'
-import * as Utils from '../Utils'
-import { Colors, Spacing } from '../DesignSystem'
+import PropTypes from 'prop-types'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import * as Utils from '../Utils'
 import formatUrl from '../../utils/formatUrl'
 
-const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote, openModal }) => {
+
+const VoteItem = ({ item, index, format, votes, userVote, openModal }) => {
   let url = formatUrl(item.url)
   let address = `${item.address.slice(0, 12)}...${item.address.substr(item.address.length - 12)}`
 
@@ -30,29 +31,24 @@ const VoteItem = ({ item, index, format, onChangeVotes, votes, userVote, openMod
               </Utils.Row>
             </Utils.View>
           </Utils.Row>
-          {//REFACTOR STYLES ->>
-          }
           <Utils.Row align='center' justify='space-between'>
             <View style={{}}>
               <Text style={{color: 'red'}}>{userVote ? '' : (votes || 0).toString()}</Text>
             </View>
           </Utils.Row>
-          {/* <Utils.Row align='center' justify='space-between'>
-            <Utils.FormInput
-              underlineColorAndroid='transparent'
-              keyboardType='numeric'
-              onChangeText={(v) => onChangeVotes(v, item.address)}
-              placeholderTextColor={Colors.secondaryText}
-              placeholder={`${userVote || 0}`}
-              value={userVote ? '' : (votes || '').toString()}
-              padding={Spacing.small}
-              style={styles.input}
-            />
-          </Utils.Row> */}
         </Utils.Row>
       </Utils.Item>
     </TouchableOpacity>
   )
+}
+
+VoteItem.propTypes = {
+  item:  PropTypes.object.isRequired, 
+  format: PropTypes.func.isRequired, 
+  openModal: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired, 
+  votes: PropTypes.number, 
+  userVote: PropTypes.number, 
 }
 
 const styles = StyleSheet.create({
