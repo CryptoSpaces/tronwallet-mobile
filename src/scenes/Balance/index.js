@@ -32,18 +32,11 @@ class BalanceScene extends Component {
         .objects('Asset')
         .filtered(`percentage < 100 AND startTime < ${new Date().getTime()} AND endTime > ${new Date().getTime()}`)
         .map(item => Object.assign({}, item)),
-    trxBalance: 0,
-    trxPrice: null,
-    didLoaderLeave: false
+    trxBalance: BalanceStore.objects('Balance').filtered('name = "TRX"')[0].balance,
+    trxPrice: null
   }
 
   async componentDidMount () {
-    // await BalanceStore.write(() => {
-    //   BalanceStore.delete(BalanceStore.objects('Balance'))
-    // })
-    // await AssetsStore.write(() => {
-    //   AssetsStore.delete(AssetsStore.objects('Asset'))
-    // })
     this.loadData()
   }
 
@@ -78,7 +71,9 @@ class BalanceScene extends Component {
 
   navigateToParticipate = token => {
     const { trxBalance } = this.state;
-    this.props.navigation.navigate('Participate', { token, trxBalance })
+    if (token.name !== 'TRX') {
+      this.props.navigation.navigate('Participate', { token, trxBalance })
+    }
   }
 
   listHeader = text => (
@@ -119,13 +114,14 @@ class BalanceScene extends Component {
       <FadeIn name={item.name}>
         <ListItem
           onPress={() => this.navigateToParticipate(item)}
+          disabled={item.name === 'TRX'}
           titleStyle={{ color: Colors.primaryText }}
           containerStyle={{ borderBottomColor: Colors.secondaryText, flex: 1, marginHorizontal: 0 }}
           underlayColor='rgba(0,0,0,0.2)'
           title={item.name}
           hideChevron
           badge={{
-            value: item.balance || 'Participate',
+            value: (item.balance !== undefined) ? item.balance : 'Participate',
             textStyle: { color: Colors.primaryText },
             containerStyle: { marginTop: -10 }
           }}
@@ -135,7 +131,7 @@ class BalanceScene extends Component {
   }
 
   render () {
-    const { assetBalance, trxBalance, trxPrice, error, assetList, didLoaderLeave } = this.state
+    const { assetBalance, trxBalance, trxPrice, error, assetList } = this.state
     return (
       <Utils.Container>
         <Utils.StatusBar />
@@ -152,7 +148,7 @@ class BalanceScene extends Component {
                 <Utils.VerticalSpacer size='medium' />
                 <Utils.Text secondary>BALANCE</Utils.Text>
                 <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance)}}>
-                  {value => <Utils.Text size='medium'>{formatAmount(value.balance)} TRX</Utils.Text>}
+                  {value => <Utils.Text size='medium'>{formatAmount(value.balance.toFixed(0))} TRX</Utils.Text>}
                 </Motion>
               </Utils.View>
             </Utils.Row>
@@ -189,9 +185,7 @@ class BalanceScene extends Component {
               data={assetBalance}
               renderItem={this.renderTokenList}
               keyExtractor={item => item.name}
-              ItemSeparatorComponent={() => (
-                <Utils.VerticalSpacer size='large' />
-              )}
+              ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
               scrollEnabled
               ListFooterComponent={<Utils.VerticalSpacer size='large' />}
             />

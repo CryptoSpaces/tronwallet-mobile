@@ -35,9 +35,6 @@ class TransactionsScene extends Component {
   }
 
   async componentDidMount () {
-    // await transactionsStore.write(() => {
-    //   transactionsStore.delete(transactionsStore.objects('Transaction'))
-    // })
     this.loadData()
   }
 

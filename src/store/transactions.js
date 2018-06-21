@@ -9,7 +9,7 @@ const TransactionSchema = {
     block: 'int',
     contractType: 'int',
     ownerAddress: 'string',
-    timeStamp: 'int',
+    timestamp: 'int',
     tokenName: 'string',
     transactionHash: 'string',
     transferFromAddress: 'string',
@@ -21,5 +21,5 @@ const TransactionSchema = {
 export default new Realm({
   path: 'Realm.transactions',
   schema: [TransactionSchema],
-  schemaVersion: 4
+  schemaVersion: 5
 })
