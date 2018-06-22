@@ -235,10 +235,8 @@ class SendScene extends Component {
                 value={to}
                 field='from'
                 onChangeText={text => this.changeInput(text, 'to')}
+                qrScan={this.openModal}
               />
-              <TouchableOpacity onPress={this.openModal}>
-                <Text>OpenModal</Text>
-              </TouchableOpacity>
               <Modal
                 modalOpened={this.state.openQRmodal}
                 closeModal={this.closeModal}

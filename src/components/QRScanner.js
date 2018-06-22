@@ -9,10 +9,10 @@ import * as Utils from '../components/Utils'
 const QRCodeComponent = ({onRead, onClose}) => (
   <Utils.Container>
     <Utils.Content flex={1}>
-        <Utils.View style={{ flex: 1, justifyContent: 'center'}}>
+        <Utils.View flex={1}>
           <Utils.Row marginY='medium'>
             <Utils.View flex={1} justify='center' >
-              <Utils.Text size='xsmall'>Scan the QRCode to identify the target user.</Utils.Text>
+              <Utils.Text>Scan the QRCode to identify the target user.</Utils.Text>
             </Utils.View>
             <Utils.CloseButton onPress={onClose}>
               <Ionicons name='ios-close' size={32} color={Colors.primaryText} />
@@ -23,12 +23,12 @@ const QRCodeComponent = ({onRead, onClose}) => (
             reactivate
             fadeIn
             customMarker={(
-              <View style={{ flex: 1, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ width: 250, height: 250, borderWidth: 2, borderColor: 'white' }} />
-                <Text style={{ color: 'white', marginTop: 16 }}>Scan the QRCode to identify the target user.</Text>
-              </View>
+              <Utils.View flex={1} background='transparent' justify='center' align='center'>
+                <Utils.View width={250} height={250} borderWidth={2} borderColor={'white'}/>
+                <Utils.Text marginTop='medium'>Scan the QRCode to identify the target user.</Utils.Text>
+              </Utils.View>
             )}
-            cameraStyle={{ height: '100%', width: '100%' }}
+            cameraStyle={{ height: '90%', width: '100%', justifyContent: 'flex-start'}}
             permissionDialogMessage="To scan the public key the app needs your permission to access the camera."
             onRead={onRead}
           />
