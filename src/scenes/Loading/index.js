@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-
 import { ActivityIndicator, Linking } from 'react-native'
 import { Auth } from 'aws-amplify'
+import SplashScreen from 'react-native-splash-screen'
+
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
@@ -46,6 +47,7 @@ class LoadingScene extends Component {
     } catch (error) {
       this.props.navigation.navigate('Login')
     }
+    SplashScreen.hide()
   }
 
   render () {

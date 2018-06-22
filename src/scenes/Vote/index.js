@@ -76,10 +76,6 @@ class VoteScene extends PureComponent {
   }
 
   async componentDidMount () {
-    // const realm = await getCandidateStore()
-    // realm.write(() => {
-    //   realm.delete(realm.objects('Candidate'))
-    // })
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
     this._loadFreeze()
     this._loadCandidates()
