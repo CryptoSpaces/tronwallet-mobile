@@ -5230,6 +5230,10 @@ react-native-sectioned-multi-select@^0.4.7:
   version "0.4.7"
   resolved "https://registry.yarnpkg.com/react-native-sectioned-multi-select/-/react-native-sectioned-multi-select-0.4.7.tgz#28f231ac400c82f29fa22956b82cd3eb0f9c2895"
 
+react-native-splash-screen@^3.0.9:
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-3.0.9.tgz#5cdd026ae414d60cd86bcaa897bffacd16395bed"
+
 react-native-svg-charts@^5.0.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/react-native-svg-charts/-/react-native-svg-charts-5.2.0.tgz#eda090136250d02f9d1d8c971663afaee4ed2f4f"
