@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView } from 'react-native'
+import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+// import QRCodeScanner from 'react-native-qrcode-scanner'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
@@ -148,6 +149,12 @@ class SendScene extends Component {
     }
   }
 
+  readPublicKey = (e) => {
+    this.setState({
+      to: e.data
+    })
+  }
+
   renderHeader = () => {
     const { trxBalance } = this.state
     const { noNavigation } = this.props
@@ -188,6 +195,7 @@ class SendScene extends Component {
 
   render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
+    console.log('render', this.state)
     return (
       <KeyboardAvoidingView
         // behavior='padding'
@@ -214,6 +222,9 @@ class SendScene extends Component {
                 field='from'
                 onChangeText={text => this.changeInput(text, 'to')}
               />
+              {/* <QRCodeScanner
+                onRead={this.readPublicKey}
+              /> */}
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
                 Token
