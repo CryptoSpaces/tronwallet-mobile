@@ -5,12 +5,13 @@ import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-// import QRCodeScanner from 'react-native-qrcode-scanner'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
+import Modal from '../../components/Modal'
+import QRScanner from '../../components/QRScanner'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
@@ -26,7 +27,8 @@ class SendScene extends Component {
     error: null,
     loadingSign: false,
     loadingData: true,
-    trxBalance: 0.0
+    trxBalance: 0.0,
+    openQRmodal: false
   }
 
   componentDidMount () {
@@ -155,6 +157,18 @@ class SendScene extends Component {
     })
   }
 
+  openModal = () => {
+    this.setState({
+      openQRmodal: true
+    })
+  }
+
+  closeModal = () => {
+    this.setState({
+      openQRmodal: false
+    })
+  }
+
   renderHeader = () => {
     const { trxBalance } = this.state
     const { noNavigation } = this.props
@@ -222,9 +236,16 @@ class SendScene extends Component {
                 field='from'
                 onChangeText={text => this.changeInput(text, 'to')}
               />
-              {/* <QRCodeScanner
-                onRead={this.readPublicKey}
-              /> */}
+              <TouchableOpacity onPress={this.openModal}>
+                <Text>OpenModal</Text>
+              </TouchableOpacity>
+              <Modal
+                modalOpened={this.state.openQRmodal}
+                closeModal={this.closeModal}
+                animationType='slide'
+              >
+                <QRScanner onRead={this.readPublicKey} onClose={this.closeModal}/>
+              </Modal>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
                 Token

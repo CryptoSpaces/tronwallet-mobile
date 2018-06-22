@@ -222,14 +222,24 @@ export const PlusButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `
+export const CloseButton = styled.TouchableOpacity`
+  border-color: ${Colors.secondaryText};
+  border-radius: 5px;
+  align-items: flex-end;
+  align-self: flex-end;
+`
 
 export const ButtonWrapper = styled.TouchableOpacity`
   align-self: ${props => props.alignSelf || 'auto'};
   padding-vertical: ${Spacing.xsmall}px;
   padding-horizontal: ${Spacing.small}px;
+  ${props => props.marginBottom && `margin-bottom: ${Spacing[props.marginBottom]}`}px;
   justify-content: center;
   align-items: center;
 `
+ButtonWrapper.propTypes = {
+  marginBottom: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large']) 
+}
 
 export const Button = props => (
   <ButtonWrapper onPress={props.onPress}>
