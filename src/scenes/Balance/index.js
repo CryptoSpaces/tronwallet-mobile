@@ -32,7 +32,7 @@ class BalanceScene extends Component {
         .objects('Asset')
         .filtered(`percentage < 100 AND startTime < ${new Date().getTime()} AND endTime > ${new Date().getTime()}`)
         .map(item => Object.assign({}, item)),
-    trxBalance: BalanceStore.objects('Balance').filtered('name = "TRX"')[0].balance,
+    trxBalance: 0,
     trxPrice: null
   }
 
@@ -61,6 +61,7 @@ class BalanceScene extends Component {
         .map(item => Object.assign({}, item))
       this.setState({
         trxPrice: data.quotes.USD.price,
+        trxBalance: balances[0].balance,
         assetBalance,
         assetList
       })
