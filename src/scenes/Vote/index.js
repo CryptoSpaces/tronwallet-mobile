@@ -43,7 +43,7 @@ class VoteScene extends PureComponent {
             </Utils.TitleWrapper>
             <View style={{ marginRight: 15 }}>
               <Utils.Text>{params.totalRemaining}</Utils.Text>
-              {params.errorMessage ? 
+              {(params.votesError || params.listError) ? 
                 <ButtonGradient
                   size='small'
                   text='Sync'
@@ -80,7 +80,8 @@ class VoteScene extends PureComponent {
     currentItemAddress: null,
     currentAmountToVote: '',
     offset: 0,
-    errorMessage: ''
+    votesError: '',
+    listError: ''
   }
 
   componentDidMount () {
@@ -144,29 +145,23 @@ class VoteScene extends PureComponent {
   
   _loadFreeze = async () => {
     try {
-      console.log('_loadFreeze')
       const { total } = await Client.getFreeze()
       this.setState({ totalRemaining: total || 0 })
-      console.log('_loadFreeze completed')
       return total
     } catch(e) {
-      console.log('_loadFreeze error')
       e.name = 'Load Freeze Error'
-      this._throwError(e)
+      this._throwError(e, 'votesError')
     }
   }
   
 _loadUserVotes = async () => {
   try {
-    console.log('_loadUserVotes')
     const userVotes = await Client.getUserVotes()
     this.setState({ userVotes })
-    console.log('_loadUserVotes completed')
     return userVotes
   } catch(e) {
-    console.log('_loadUserVotes error')
     e.name = 'Load User Votes Error'
-    this._throwError(e)
+    this._throwError(e, 'votesError')
   }
   }
   
@@ -260,13 +255,15 @@ _loadUserVotes = async () => {
     })
   }
 
-  _throwError = (e) => {
+  _throwError = (e, type) => {
+    const errorType = type || 'listError'
+
     console.log(`${e.name}: ${e.message}`)
     this.setState({ 
-        errorMessage:  'Communications with server failed.',
+        [errorType]:  'Communications with server failed.',
         loading: false
     }, function setErrorParams() {
-      this.props.navigation.setParams({ loadData: this._loadData, errorMessage: this.state.errorMessage })
+      this.props.navigation.setParams({ loadData: this._loadData, [errorType]: this.state[errorType] })
     })
   }
 
@@ -328,20 +325,19 @@ _loadUserVotes = async () => {
   }
 
   render () {
-    const { totalVotes, totalRemaining, errorMessage } = this.state
+    const { totalVotes, totalRemaining, votesError } = this.state
 
     return (
       <Utils.Container>
-        {(totalVotes === null || totalRemaining === null) && (
+        {(votesError.length === 0 && totalVotes === null || totalRemaining === null) ? (
           <FadeIn name='vote-header-loading'>
             <Header>
               <Utils.View align='center' height='33px'>
                 <ActivityIndicator />
               </Utils.View>
             </Header>
-          </FadeIn>
-        )}
-        {(totalVotes !== null && totalRemaining !== null) && (
+          </FadeIn>) : <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>}
+        {(votesError.length === 0 && totalVotes !== null && totalRemaining !== null) && (
           <FadeIn name='vote-header'>
             <Header>
               <Utils.View align='center'>
@@ -363,22 +359,6 @@ _loadUserVotes = async () => {
               </Utils.View>
             </Header>
           </FadeIn>
-        )}
-<<<<<<< 20536b398acbb4530cbf059ac3005f8c53c45ae0
-        {(errorMessage.length) && (
-          <Utils.Text align='center' marginY={20}>{errorMessage}</Utils.Text>
-||||||| merged common ancestors
-        {(errorMessage.length > 0) && (
-          <View>
-            <Utils.Text>{errorMessage}</Utils.Text>
-            <RefreshPage refresh={this._refreshPage} />
-          </View>
-=======
-        {(errorMessage.length) && (
-          <Utils.View paddingX={Spacing.medium}>
-            <Utils.Text size='small' secondary>{errorMessage}</Utils.Text>
-          </Utils.View>
->>>>>>> Fix Error Handling on Vote Scene.
         )}
         {this.state.modalVisible && (
           <VoteModal
