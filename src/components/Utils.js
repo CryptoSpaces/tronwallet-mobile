@@ -36,6 +36,7 @@ export const View = styled.View`
   ${props => props.height && css`height: ${props.height};`}
   ${props => props.width && css`width: ${props.width};`}
   ${props => props.background && css`background-color: ${props.background};`}
+  ${props => props.paddingX && css`padding-horizontal: ${props.paddingX};`}
 `
 
 View.defaultProps = {
@@ -122,6 +123,7 @@ export const Text = styled.Text`
   font-family: rubik-medium;
   color: ${props => props.color};
   font-size: ${props => FontSize[props.size]};
+  ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};
   ${props => props.align && css`text-align: ${props.align}`};
   ${props => props.font && css`font-family: rubik-${props.font}`};
   ${props => props.secondary && css`color: ${Colors.secondaryText}`};
