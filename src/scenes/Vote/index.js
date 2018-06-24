@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp } from 'lodash'
 import {
-  ActivityIndicator,
   SafeAreaView,
   View,
   Linking,
@@ -31,6 +30,27 @@ import Client from '../../services/client'
 import getCandidateStore from '../../store/candidates'
 
 const LIST_STEP_SIZE = 20
+
+const INITIAL_STATE = {
+  voteList: [],
+  currentItem: null,
+  search: '',
+  loading: true,
+  loadingList: false,
+  totalVotes: null,
+  totalRemaining: null,
+  refreshing: false,
+  from: '',
+  currentVotes: {},
+  userVotes: {},
+  modalVisible: false,
+  currentItemUrl: null,
+  currentItemAddress: null,
+  currentAmountToVote: '',
+  offset: 0,
+  votesError: '',
+  listError: ''
+}
 
 class VoteScene extends PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -64,26 +84,7 @@ class VoteScene extends PureComponent {
     }
   }
 
-  state = {
-    voteList: [],
-    currentItem: null,
-    search: '',
-    loading: true,
-    loadingList: false,
-    totalVotes: null,
-    totalRemaining: null,
-    refreshing: false,
-    from: '',
-    currentVotes: {},
-    userVotes: {},
-    modalVisible: false,
-    currentItemUrl: null,
-    currentItemAddress: null,
-    currentAmountToVote: '',
-    offset: 0,
-    votesError: '',
-    listError: ''
-  }
+  state = INITIAL_STATE
 
   componentDidMount () {
     this._loadData()
@@ -91,6 +92,7 @@ class VoteScene extends PureComponent {
 
   _loadData = async () => {
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
+    this.setState(INITIAL_STATE)
     this._loadCandidates()
     this._loadPublicKey()
     this._refreshCandidates()
@@ -353,7 +355,11 @@ _loadUserVotes = async () => {
             </Header>
           </GrowIn>
         )}
-        {votesError.length && <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>}
+        {votesError.length && (
+          <FadeIn name='error'>
+            <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>
+          </FadeIn>
+        )}
         {this.state.modalVisible && (
           <VoteModal
             addNumToVote={this._addNumToVote}
