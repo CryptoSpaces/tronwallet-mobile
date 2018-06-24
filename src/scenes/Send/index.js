@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView } from 'react-native'
+import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
@@ -10,6 +10,8 @@ import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
+import Modal from '../../components/Modal'
+import QRScanner from '../../components/QRScanner'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
@@ -25,7 +27,8 @@ class SendScene extends Component {
     error: null,
     loadingSign: false,
     loadingData: true,
-    trxBalance: 0.0
+    trxBalance: 0.0,
+    openQRmodal: false
   }
 
   componentDidMount () {
@@ -148,6 +151,24 @@ class SendScene extends Component {
     }
   }
 
+  readPublicKey = (e) => {
+    this.setState({
+      to: e.data
+    })
+  }
+
+  openModal = () => {
+    this.setState({
+      openQRmodal: true
+    })
+  }
+
+  closeModal = () => {
+    this.setState({
+      openQRmodal: false
+    })
+  }
+
   renderHeader = () => {
     const { trxBalance } = this.state
     const { noNavigation } = this.props
@@ -188,6 +209,7 @@ class SendScene extends Component {
 
   render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
+    console.log('render', this.state)
     return (
       <KeyboardAvoidingView
         // behavior='padding'
@@ -213,7 +235,15 @@ class SendScene extends Component {
                 value={to}
                 field='from'
                 onChangeText={text => this.changeInput(text, 'to')}
+                qrScan={this.openModal}
               />
+              <Modal
+                modalOpened={this.state.openQRmodal}
+                closeModal={this.closeModal}
+                animationType='slide'
+              >
+                <QRScanner onRead={this.readPublicKey} onClose={this.closeModal}/>
+              </Modal>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
                 Token

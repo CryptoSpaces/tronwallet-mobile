@@ -36,6 +36,8 @@ export const View = styled.View`
   ${props => props.height && css`height: ${props.height};`}
   ${props => props.width && css`width: ${props.width};`}
   ${props => props.background && css`background-color: ${props.background};`}
+  ${props => props.borderWidth && css`border-width: ${props.borderWidth};`}
+  ${props => props.borderColor && css`border-color: ${props.borderColor};`}
   ${props => props.paddingX && css`padding-horizontal: ${props.paddingX};`}
 `
 
@@ -130,6 +132,7 @@ export const Text = styled.Text`
   ${props => props.success && css`color: ${Colors.green}`};
   ${props => props.lineHeight && css`line-height: ${props.lineHeight}`};
   ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
+  ${props => props.marginTop && css`margin-top: ${Spacing[props.marginTop]}px`};
 `
 
 Text.defaultProps = {
@@ -139,6 +142,7 @@ Text.defaultProps = {
 
 Text.propTypes = {
   size: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
+  marginTop: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
   lineHeight: PropTypes.number,
   font: PropTypes.oneOf(['bold', 'light', 'medium'])
 }
@@ -224,14 +228,24 @@ export const PlusButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `
+export const CloseButton = styled.TouchableOpacity`
+  border-color: ${Colors.secondaryText};
+  border-radius: 5px;
+  align-items: flex-end;
+  align-self: flex-end;
+`
 
 export const ButtonWrapper = styled.TouchableOpacity`
   align-self: ${props => props.alignSelf || 'auto'};
   padding-vertical: ${Spacing.xsmall}px;
   padding-horizontal: ${Spacing.small}px;
+  ${props => props.marginBottom && `margin-bottom: ${Spacing[props.marginBottom]}`}px;
   justify-content: center;
   align-items: center;
 `
+ButtonWrapper.propTypes = {
+  marginBottom: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large']) 
+}
 
 export const Button = props => (
   <ButtonWrapper onPress={props.onPress}>
