@@ -7,7 +7,6 @@ import {
   View,
   Linking,
   FlatList,
-  TouchableOpacity
 } from 'react-native'
 import qs from 'qs'
 
@@ -16,6 +15,7 @@ import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
 import formatNumber from '../../utils/formatNumber'
+import { Spacing } from '../../components/DesignSystem'
 
 // Components
 import Header from '../../components/Header'
@@ -43,12 +43,19 @@ class VoteScene extends PureComponent {
             </Utils.TitleWrapper>
             <View style={{ marginRight: 15 }}>
               <Utils.Text>{params.totalRemaining}</Utils.Text>
-              <ButtonGradient
-                disabled={params.disabled}
-                size='small'
-                text='Submit'
-                onPress={params._onSubmit}
-              />
+              {(params.votesError || params.listError) ? 
+                <ButtonGradient
+                  size='small'
+                  text='Sync'
+                  onPress={params.loadData}
+                /> :
+                <ButtonGradient
+                  disabled={params.disabled}
+                  size='small'
+                  text='Submit'
+                  onPress={params.onSubmit}
+                />
+              }
             </View>
           </Utils.Header>
         </SafeAreaView>
@@ -72,62 +79,100 @@ class VoteScene extends PureComponent {
     currentItemUrl: null,
     currentItemAddress: null,
     currentAmountToVote: '',
-    offset: 0
+    offset: 0,
+    votesError: '',
+    listError: ''
   }
 
-  async componentDidMount () {
+  componentDidMount () {
+    this._loadData()
+  }
+
+  _loadData = async () => {
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
-    this._loadFreeze()
     this._loadCandidates()
-    this._loadUserVotes()
     this._loadPublicKey()
     this._refreshCandidates()
+    await Promise.all([this._loadFreeze(), this._loadUserVotes()])
+    this.setState({ loading: false })
   }
 
-  _getVoteList = store =>
+  _getVoteList = store =>   
     store.objects('Candidate')
       .sorted([['votes', true], ['url', false]])
       .slice(this.state.offset, clamp(this.state.offset + LIST_STEP_SIZE, store.objects('Candidate').length))
       .map(item => Object.assign({}, item))
 
   _loadCandidates = async () => {
+    try {
     const store = await getCandidateStore()
     this.setState({ voteList: this._getVoteList(store) })
+    } catch(e) {
+      e.name = 'Load Candidates Error'
+      this._throwError(e)
+    }
   }
   
   _refreshCandidates = async () => {
-    if (!this.state.refreshing) {
-      this.setState({ refreshing: true })
-      const { candidates, totalVotes } = await Client.getTotalVotes()
-      const store = await getCandidateStore()
-      store.write(() => candidates.map(item => store.create('Candidate', item, true)))
-      this.setState({
-        voteList: this._getVoteList(store),
-        totalVotes,
-        refreshing: false
-      })
+    try {
+      if (!this.state.refreshing) {
+        this.setState({ refreshing: true })
+        const { candidates, totalVotes } = await Client.getTotalVotes()
+        const store = await getCandidateStore()
+        store.write(() => candidates.map(item => store.create('Candidate', item, true)))
+        this.setState({
+          voteList: this._getVoteList(store),
+          totalVotes,
+          refreshing: false
+        })
+      }
+    } catch(e) {
+      e.name = 'Refresh Candidates Error'
+      this._throwError(e)
     }
   }
   
   _loadMoreCandidates = async () => {
-    this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
-    const store = await getCandidateStore()
-    this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
+    try { 
+      this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
+      const store = await getCandidateStore()
+      this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
+    } catch (e) {
+      e.name = 'Load More Candidates Error'
+      this._throwError(e)
+    }
   }
   
   _loadFreeze = async () => {
-    const { total } = await Client.getFreeze()
-    this.setState({ totalRemaining: total || 0 })
+    try {
+      const { total } = await Client.getFreeze()
+      this.setState({ totalRemaining: total || 0 })
+      return total
+    } catch(e) {
+      e.name = 'Load Freeze Error'
+      this._throwError(e, 'votesError')
+    }
   }
   
 _loadUserVotes = async () => {
+  try {
     const userVotes = await Client.getUserVotes()
     this.setState({ userVotes })
+    return userVotes
+  } catch(e) {
+    e.name = 'Load User Votes Error'
+    this._throwError(e, 'votesError')
+  }
   }
   
   _loadPublicKey = async () => {
-    const publicKey = await Client.getPublicKey()
-    this.setState({ publicKey })
+    try {
+      const publicKey = await Client.getPublicKey()
+      this.setState({ publicKey })
+    } catch(e) {
+      e.name = 'Load Public Key Error'
+      this._throwError(e)
+    }
   }
 
   _onSubmit = async () => {
@@ -210,10 +255,26 @@ _loadUserVotes = async () => {
     })
   }
 
+  _throwError = (e, type) => {
+    const errorType = type || 'listError'
+
+    console.log(`${e.name}: ${e.message}`)
+    this.setState({ 
+        [errorType]:  'Communications with server failed.',
+        loading: false
+    }, function setErrorParams() {
+      this.props.navigation.setParams({ loadData: this._loadData, [errorType]: this.state[errorType] })
+    })
+  }
+
   _closeModal = () => {
     this.setState({
       ...this._resetModalState()
     })
+  }
+
+  _refreshPage = () => {
+    this._requestData()
   }
 
   _resetModalState = () => {
@@ -264,20 +325,19 @@ _loadUserVotes = async () => {
   }
 
   render () {
-    const { totalVotes, totalRemaining } = this.state
+    const { totalVotes, totalRemaining, votesError } = this.state
 
     return (
       <Utils.Container>
-        {(totalVotes === null || totalRemaining === null) && (
+        {(votesError.length === 0 && totalVotes === null || totalRemaining === null) ? (
           <FadeIn name='vote-header-loading'>
             <Header>
               <Utils.View align='center' height='33px'>
                 <ActivityIndicator />
               </Utils.View>
             </Header>
-          </FadeIn>
-        )}
-        {(totalVotes !== null && totalRemaining !== null) && (
+          </FadeIn>) : <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>}
+        {(votesError.length === 0 && totalVotes !== null && totalRemaining !== null) && (
           <FadeIn name='vote-header'>
             <Header>
               <Utils.View align='center'>
