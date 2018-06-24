@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react'
 import { View } from 'react-native'
-import { TransitionMotion, spring } from 'react-motion'
+import { TransitionMotion, spring, presets } from 'react-motion'
 
 
 class GrowIn extends Component {
-  willLeave = () => ({ height: spring(0) })
+  willLeave = () => ({ height: spring(0, presets.gentle) })
   
-  willEnter = () => ({ height: spring(0) })
+  willEnter = () => ({ height: spring(0, presets.gentle) })
   
-  getStyles = () => ({ height: spring(this.props.height) })
+  getStyles = () => ({ height: spring(this.props.height, presets.gentle) })
   
-  getDefaultStyles = () => ({ height: this.props.height })
+  getDefaultStyles = () => ({ height: 0 })
 
   render() {
     const { name, children } = this.props

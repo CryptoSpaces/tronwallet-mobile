@@ -23,6 +23,7 @@ import VoteItem from '../../components/Vote/VoteItem'
 import ButtonGradient from '../../components/ButtonGradient'
 import VoteModal from '../../components/Vote/VoteModal'
 import FadeIn from '../../components/Animations/FadeIn'
+import GrowIn from '../../components/Animations/GrowIn'
 
 // Service
 import Client from '../../services/client'
@@ -329,16 +330,8 @@ _loadUserVotes = async () => {
 
     return (
       <Utils.Container>
-        {(votesError.length === 0 && totalVotes === null || totalRemaining === null) ? (
-          <FadeIn name='vote-header-loading'>
-            <Header>
-              <Utils.View align='center' height='33px'>
-                <ActivityIndicator />
-              </Utils.View>
-            </Header>
-          </FadeIn>) : <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>}
-        {(votesError.length === 0 && totalVotes !== null && totalRemaining !== null) && (
-          <FadeIn name='vote-header'>
+        {(totalVotes !== null && totalRemaining !== null) && (
+          <GrowIn name='vote-header' height={63}>
             <Header>
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
@@ -358,8 +351,9 @@ _loadUserVotes = async () => {
                 </Utils.Text>
               </Utils.View>
             </Header>
-          </FadeIn>
+          </GrowIn>
         )}
+        {votesError.length && <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>}
         {this.state.modalVisible && (
           <VoteModal
             addNumToVote={this._addNumToVote}
