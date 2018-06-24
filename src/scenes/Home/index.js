@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import axios from 'axios'
 import { AreaChart, Grid } from 'react-native-svg-charts'
 import { Path } from 'react-native-svg'
 import { ActivityIndicator, TouchableOpacity, Image } from 'react-native'
-import { View } from 'react-native-animatable'
 import * as shape from 'd3-shape'
 import { Motion, spring, presets } from 'react-motion'
 
@@ -11,6 +10,7 @@ import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import FadeIn from '../../components/Animations/FadeIn'
+import { VerticalSpacer } from '../../components/Utils';
 
 const PRICE_PRECISION = 7
 
@@ -158,7 +158,7 @@ class HomeScene extends Component {
           </Utils.Row>
           <Utils.VerticalSpacer size='large' />
         </Utils.ContentWithBackground>
-        <Utils.Content background={Colors.background} flex={1}>
+        <Utils.Content background={Colors.background}>
           <Utils.Row justify='space-between' align='center'>
             <Utils.View>
               <Utils.Text secondary size='xsmall' lineHeight={20}>
@@ -197,35 +197,32 @@ class HomeScene extends Component {
                 </Utils.View>
               </FadeIn>
             )}
-            {!marketcap || !volume || !supply ? (
-              <Utils.Content>
-                <ActivityIndicator size='small' color={Colors.primaryText} />
-              </Utils.Content>
-            ) : (
-              <View animation='fadeIn'>
-                
-              </View>
-            )}
           </Utils.Row>
         </Utils.Content>
-        <Utils.Row justify='space-evenly'>
-          {this.timeSpans.map(timeSpan => (
-            <TouchableOpacity
-              key={timeSpan}
-              onPress={() => this._changeGraphTimeSpan(timeSpan)}
-            >
-              <Utils.Text secondary={graph.timeSpan !== timeSpan}>
-                {timeSpan}
-              </Utils.Text>
-            </TouchableOpacity>
-          ))}
-        </Utils.Row>
-        {graph.loading ? (
-          <Utils.Content height={120} justify='center'>
-            <ActivityIndicator size='large' color={Colors.primaryText} />
+        {graph.loading && (
+          <Utils.Content flex={1} justify='center' align='center'>
+            <FadeIn name='graph-load'>
+              <ActivityIndicator size='large' color={Colors.primaryText} />
+            </FadeIn>
           </Utils.Content>
-        ) : (
-          <View animation='fadeIn' style={{ flex: 1 }}>
+        )}
+        {!graph.loading && (
+          <Fragment>
+            <VerticalSpacer />
+            <FadeIn name='graph'>
+              <Utils.Row justify='space-evenly'>
+                {this.timeSpans.map(timeSpan => (
+                  <TouchableOpacity
+                    key={timeSpan}
+                    onPress={() => this._changeGraphTimeSpan(timeSpan)}
+                  >
+                    <Utils.Text secondary={graph.timeSpan !== timeSpan}>
+                      {timeSpan}
+                    </Utils.Text>
+                  </TouchableOpacity>
+                ))}
+              </Utils.Row>
+            </FadeIn>
             <AreaChart
               style={{ flex: 1 }}
               data={graph.data}
@@ -239,7 +236,7 @@ class HomeScene extends Component {
               <Gradient />
               <Line />
             </AreaChart>
-          </View>
+          </Fragment>
         )}
       </Utils.Container>
     )

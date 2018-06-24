@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp } from 'lodash'
 import {
-  ActivityIndicator,
   SafeAreaView,
   View,
   Linking,
@@ -23,6 +22,7 @@ import VoteItem from '../../components/Vote/VoteItem'
 import ButtonGradient from '../../components/ButtonGradient'
 import VoteModal from '../../components/Vote/VoteModal'
 import FadeIn from '../../components/Animations/FadeIn'
+import GrowIn from '../../components/Animations/GrowIn'
 
 // Service
 import Client from '../../services/client'
@@ -30,6 +30,27 @@ import Client from '../../services/client'
 import getCandidateStore from '../../store/candidates'
 
 const LIST_STEP_SIZE = 20
+
+const INITIAL_STATE = {
+  voteList: [],
+  currentItem: null,
+  search: '',
+  loading: true,
+  loadingList: false,
+  totalVotes: null,
+  totalRemaining: null,
+  refreshing: false,
+  from: '',
+  currentVotes: {},
+  userVotes: {},
+  modalVisible: false,
+  currentItemUrl: null,
+  currentItemAddress: null,
+  currentAmountToVote: '',
+  offset: 0,
+  votesError: '',
+  listError: ''
+}
 
 class VoteScene extends PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -63,26 +84,7 @@ class VoteScene extends PureComponent {
     }
   }
 
-  state = {
-    voteList: [],
-    currentItem: null,
-    search: '',
-    loading: true,
-    loadingList: false,
-    totalVotes: null,
-    totalRemaining: null,
-    refreshing: false,
-    from: '',
-    currentVotes: {},
-    userVotes: {},
-    modalVisible: false,
-    currentItemUrl: null,
-    currentItemAddress: null,
-    currentAmountToVote: '',
-    offset: 0,
-    votesError: '',
-    listError: ''
-  }
+  state = INITIAL_STATE
 
   componentDidMount () {
     this._loadData()
@@ -90,6 +92,7 @@ class VoteScene extends PureComponent {
 
   _loadData = async () => {
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
+    this.setState(INITIAL_STATE)
     this._loadCandidates()
     this._loadPublicKey()
     this._refreshCandidates()
@@ -329,16 +332,8 @@ _loadUserVotes = async () => {
 
     return (
       <Utils.Container>
-        {(votesError.length === 0 && totalVotes === null || totalRemaining === null) ? (
-          <FadeIn name='vote-header-loading'>
-            <Header>
-              <Utils.View align='center' height='33px'>
-                <ActivityIndicator />
-              </Utils.View>
-            </Header>
-          </FadeIn>) : <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>}
-        {(votesError.length === 0 && totalVotes !== null && totalRemaining !== null) && (
-          <FadeIn name='vote-header'>
+        {(totalVotes !== null && totalRemaining !== null) && (
+          <GrowIn name='vote-header' height={63}>
             <Header>
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
@@ -358,6 +353,11 @@ _loadUserVotes = async () => {
                 </Utils.Text>
               </Utils.View>
             </Header>
+          </GrowIn>
+        )}
+        {votesError.length && (
+          <FadeIn name='error'>
+            <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>
           </FadeIn>
         )}
         {this.state.modalVisible && (
