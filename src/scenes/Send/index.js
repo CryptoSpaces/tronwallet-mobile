@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native'
+import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, Modal } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
@@ -10,7 +10,6 @@ import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
 import Header from '../../components/Header'
 import PasteInput from '../../components/PasteInput'
-import Modal from '../../components/Modal'
 import QRScanner from '../../components/QRScanner'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
@@ -28,7 +27,7 @@ class SendScene extends Component {
     loadingSign: false,
     loadingData: true,
     trxBalance: 0.0,
-    openQRmodal: false
+    QRModalVisible: false
   }
 
   componentDidMount () {
@@ -151,22 +150,18 @@ class SendScene extends Component {
     }
   }
 
-  readPublicKey = (e) => {
-    this.setState({
-      to: e.data
-    })
-  }
+  /*
+    TODO: Weird behavior happening here. After read, the modal closes and somewhere somehow some function is trying
+    to set state on the QRCodescanner component. Probably a bug on QRScanner library. Gotta investigate this later.
+  */
+  readPublicKey = (e) => this.setState({ to: e.data }, this.closeModal)
 
-  openModal = () => {
-    this.setState({
-      openQRmodal: true
-    })
-  }
+  openModal = () => this.setState({ QRModalVisible: true })
 
   closeModal = () => {
-    this.setState({
-      openQRmodal: false
-    })
+    if (this.state.QRModalVisible) {
+      this.setState({ QRModalVisible: false })
+    }
   }
 
   renderHeader = () => {
@@ -209,11 +204,8 @@ class SendScene extends Component {
 
   render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
-    console.log('render', this.state)
     return (
       <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
         style={{ flex: 1 }}
         enabled
       >
@@ -238,11 +230,11 @@ class SendScene extends Component {
                 qrScan={this.openModal}
               />
               <Modal
-                modalOpened={this.state.openQRmodal}
-                closeModal={this.closeModal}
+                visible={this.state.QRModalVisible}
+                onRequestClose={this.closeModal}
                 animationType='slide'
               >
-                <QRScanner onRead={this.readPublicKey} onClose={this.closeModal}/>
+                <QRScanner onRead={this.readPublicKey} onClose={this.closeModal} checkAndroid6Permissions />
               </Modal>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
