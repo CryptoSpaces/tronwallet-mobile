@@ -1,7 +1,6 @@
 package com.tronwallet2;
 
 import android.app.Application;
-
 import com.facebook.react.ReactApplication;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import org.reactnative.camera.RNCameraPackage;
@@ -31,14 +30,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ReactNativeConfigPackage(),
-            new RNCameraPackage(),
-            new SplashScreenReactPackage(),
-            new RNAWSCognitoPackage(),
-            new RealmReactPackage(),
-            new VectorIconsPackage(),
-            new SvgPackage(),
-            new LinearGradientPackage()
+          new ReactNativeConfigPackage(),
+          new RNCameraPackage(),
+          new SplashScreenReactPackage(),
+          new RNAWSCognitoPackage(),
+          new RealmReactPackage(),
+          new VectorIconsPackage(),
+          new SvgPackage(),
+          new LinearGradientPackage()
       );
     }
 
