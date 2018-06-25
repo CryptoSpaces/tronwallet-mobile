@@ -22,6 +22,7 @@
     "react-native-animatable": "^1.2.4",
     "react-native-camera": "^1.1.4",
     "react-native-chooser": "^1.7.0",
+    "react-native-config": "^0.11.5",
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "^0.19.1",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",

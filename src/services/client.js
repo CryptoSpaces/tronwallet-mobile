@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { Auth } from 'aws-amplify'
 export const ONE_TRX = 1000000
+import Config from 'react-native-config'
 
 class ClientWallet {
   constructor (opt = null) {
-    this.api = 'https://testapi.tronscan.org/api'
-    this.notifier = 'https://tronnotifier-dev.now.sh/v1/wallet'
+    this.api = Config.API_URL
+    this.notifier = Config.NOTIFIER_API_URL
   }
 
   async getTotalVotes () {
