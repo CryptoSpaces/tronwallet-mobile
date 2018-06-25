@@ -231,6 +231,7 @@ const RootNavigator = createStackNavigator(
     initialRouteName: 'Loading',
     mode: 'modal',
     navigationOptions: {
+      gesturesEnabled: false,
       header: null
     }
   }
