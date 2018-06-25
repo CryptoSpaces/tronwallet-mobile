@@ -31,6 +31,7 @@ import TransferScene from './src/scenes/Transfer'
 import SettingScene from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
+import FreezeScene from './src/scenes/Freeze/FreezeRoute'
 
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from './src/assets/icons/config.json'
@@ -223,7 +224,8 @@ const RootNavigator = createStackNavigator(
     TransactionDetail: {
       screen: TransactionDetailScene,
       path: 'transaction/:tx'
-    }
+    },
+    Freeze: FreezeScene
   },
   {
     initialRouteName: 'Loading',

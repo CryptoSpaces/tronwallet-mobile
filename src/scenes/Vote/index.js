@@ -355,7 +355,7 @@ _loadUserVotes = async () => {
             </Header>
           </GrowIn>
         )}
-        {votesError.length && (
+        {votesError.length > 0 && (
           <FadeIn name='error'>
             <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>
           </FadeIn>
@@ -370,6 +370,7 @@ _loadUserVotes = async () => {
             currVoteAmount={this.state.currentAmountToVote}
             modalVisible={this.state.modalVisible}
             totalRemaining={this.state.totalRemaining}
+            navigation={this.props.navigation}
           />
         )}
         <Utils.Content>

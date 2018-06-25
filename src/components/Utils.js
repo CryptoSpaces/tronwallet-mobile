@@ -49,6 +49,7 @@ View.defaultProps = {
 View.propTypes = {
   align: PropTypes.oneOf(['stretch', 'center', 'flex-start', 'flex-end', 'baseline']),
   justify: PropTypes.oneOf(['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly']),
+  position: PropTypes.oneOf(['absolute', 'relative']),
   flex: PropTypes.number
 }
 
@@ -236,6 +237,8 @@ export const CloseButton = styled.TouchableOpacity`
 `
 
 export const ButtonWrapper = styled.TouchableOpacity`
+  position: ${props => props.absolute ? 'absolute' : 'relative'};
+  ${props => props.side && `${props.side}: ${Spacing.medium}`};
   align-self: ${props => props.alignSelf || 'auto'};
   padding-vertical: ${Spacing.xsmall}px;
   padding-horizontal: ${Spacing.small}px;
@@ -244,7 +247,8 @@ export const ButtonWrapper = styled.TouchableOpacity`
   align-items: center;
 `
 ButtonWrapper.propTypes = {
-  marginBottom: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large']) 
+  marginBottom: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large']),
+  side: PropTypes.oneOf(['right', 'left'])
 }
 
 export const Button = props => (

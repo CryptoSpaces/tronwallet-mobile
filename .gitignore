@@ -54,3 +54,6 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+#VS LiveShare
+.vs/slnx.sqlite

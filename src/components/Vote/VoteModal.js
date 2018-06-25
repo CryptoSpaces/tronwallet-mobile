@@ -18,7 +18,8 @@ const VoteModal = ({
   addNumToVote,
   removeNumFromVote,
   acceptCurrentVote,
-  totalRemaining
+  totalRemaining,
+  navigation
 }) => {
   const errorCheck = currVoteAmount > totalRemaining
 
@@ -38,10 +39,22 @@ const VoteModal = ({
           <View>
             <Utils.Text size='medium' secondary>{formatUrl(candidateUrl)}</Utils.Text>
             <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatNumber(currVoteAmount)}</Utils.Text>
+            <Utils.VerticalSpacer />
             {errorCheck && (
-              <Utils.Text size='xsmall'>
-                You do not have enough frozen TRX to place this vote amount.
-              </Utils.Text>
+              <React.Fragment>
+                <Utils.Text>
+                  You do not have enough frozen TRX to place this vote amount.
+                </Utils.Text>
+                <Utils.VerticalSpacer size='medium'/>
+                <ButtonGradient onPress={() => {
+                  closeModal()
+                  navigation.navigate('Freeze')
+                }}
+                  text='Freeze'
+                  size='small'
+                  width={100}
+                />
+              </React.Fragment>
             )}
           </View>
         </Utils.Content>
