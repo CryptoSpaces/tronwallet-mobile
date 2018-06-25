@@ -5,7 +5,7 @@ import { LineChart } from 'react-native-svg-charts'
 import { FlatList, Image, ScrollView, View, ActivityIndicator } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import { Motion, spring, presets } from 'react-motion'
-
+import { tint } from 'polished'
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatAmount from '../../utils/formatNumber'
@@ -78,7 +78,7 @@ class BalanceScene extends Component {
   }
 
   listHeader = text => (
-    <Utils.View align='center'>
+    <Utils.View align='flex-start'>
       <Utils.Text size='small' color={Colors.secondaryText}>{text}</Utils.Text>
       <Utils.VerticalSpacer size='medium' />
     </Utils.View>
@@ -111,20 +111,21 @@ class BalanceScene extends Component {
   )
 
   renderTokenList = ({ item }) => {
+    //console.warn(item)
     return (
       <FadeIn name={item.name}>
         <ListItem
           onPress={() => this.navigateToParticipate(item)}
           disabled={item.name === 'TRX'}
           titleStyle={{ color: Colors.primaryText }}
-          containerStyle={{ borderBottomColor: Colors.secondaryText, flex: 1, marginHorizontal: 0 }}
-          underlayColor='rgba(0,0,0,0.2)'
+          containerStyle={{ borderBottomColor: '#191a29', height: 60, marginLeft: -24, justifyContent: 'center' }}
+          underlayColor='#191a29'
           title={item.name}
+          titleStyle={{ padding: 6, borderRadius: 8, color: 'white' }}
           hideChevron
           badge={{
-            value: (item.balance !== undefined) ? item.balance : 'Participate',
+            value: `${(item.price !== undefined) ? item.price : '0'}`,
             textStyle: { color: Colors.primaryText },
-            containerStyle: { marginTop: -10 }
           }}
         />
       </FadeIn>
@@ -182,21 +183,19 @@ class BalanceScene extends Component {
             <Utils.VerticalSpacer size='medium' />
             <FlatList
               ListEmptyComponent={this.emptyListComponent('Participate to a token')}
-              ListHeaderComponent={this.listHeader('My Tokens')}
+              ListHeaderComponent={this.listHeader('Balances')}
               data={assetBalance}
               renderItem={this.renderTokenList}
               keyExtractor={item => item.name}
-              ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
               scrollEnabled
               ListFooterComponent={<Utils.VerticalSpacer size='large' />}
             />
             <FlatList
               ListEmptyComponent={this.emptyListComponent('No tokens to Participate')}
-              ListHeaderComponent={this.listHeader('Token List')}
+              ListHeaderComponent={this.listHeader('Participate')}
               data={assetList}
               renderItem={this.renderTokenList}
               keyExtractor={item => item.name}
-              ItemSeparatorComponent={() => <Utils.VerticalSpacer size='large' />}
               scrollEnabled
               ListFooterComponent={<Utils.VerticalSpacer size='large' />}
             />

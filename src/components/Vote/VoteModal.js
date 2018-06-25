@@ -39,7 +39,7 @@ const VoteModal = ({
             <Utils.Text size='medium' secondary>{formatUrl(candidateUrl)}</Utils.Text>
             <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatNumber(currVoteAmount)}</Utils.Text>
             {errorCheck && (
-              <Utils.Text>
+              <Utils.Text size='xsmall'>
                 You do not have enough frozen TRX to place this vote amount.
               </Utils.Text>
             )}
@@ -65,7 +65,7 @@ const VoteModal = ({
               </Utils.NumKeyWrapper>
             )
           })}
-          <Utils.NumKeyWrapper double>
+          <Utils.NumKeyWrapper>
             <Utils.NumKey onPress={removeNumFromVote} double>
               <Ionicons name="ios-arrow-round-back" size={24} color={Colors.primaryText} />
               <Utils.HorizontalSpacer />
@@ -77,7 +77,7 @@ const VoteModal = ({
             <ButtonGradient
               onPress={acceptCurrentVote}
               disabled={errorCheck} 
-              text="SUBMIT"
+              text="SET"
             />
           </Utils.NumKeyWrapper>
         </Utils.NumPadWrapper>

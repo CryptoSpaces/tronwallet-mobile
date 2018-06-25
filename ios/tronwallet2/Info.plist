@@ -45,7 +45,23 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>To scan your contracts the app needs your permission to access the camera.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>To validate your apple music the app needs your permission to access it.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>To validate your bluetooth the app needs your permission to access it.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>To validate your calendar the app needs your permission to access it.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To scan your contracts the app needs your permission to access the camera.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>To scan your contracts the app needs your permission to access it.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To save your contracts the app needs your permission to access the camera roll.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To select your contracts the app needs your permission to access the camera roll.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>To speech recognize your contracts the app needs your permission to access it.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

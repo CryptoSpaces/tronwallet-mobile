@@ -192,7 +192,7 @@ class HomeScene extends Component {
                   </Motion>
                   <Utils.VerticalSpacer size='medium' />
                   <Motion defaultStyle={{ data: 0 }} style={{ data: spring(supply, presets.gentle)}}>
-                    {value => <Utils.Text lineHeight={20}>{`${this._formatNumber(value.data)} TRX`}</Utils.Text>}
+                    {value => <Utils.Text lineHeight={20}>{`${this._formatNumber(value.data)}`}</Utils.Text>}
                   </Motion>
                 </Utils.View>
               </FadeIn>
