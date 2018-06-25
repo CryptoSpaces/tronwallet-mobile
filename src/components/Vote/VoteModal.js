@@ -14,14 +14,22 @@ const VoteModal = ({
   modalVisible,
   closeModal,
   candidateUrl,
-  currVoteAmount,
+  currVoteAmount = 0,
   addNumToVote,
   removeNumFromVote,
   acceptCurrentVote,
   totalRemaining,
   navigation
 }) => {
-  const errorCheck = currVoteAmount > totalRemaining
+  const convertedAmount = Number(currVoteAmount)
+  const notEnoughTrx = (convertedAmount > totalRemaining || totalRemaining === 0)
+  const amountIsZero = (convertedAmount === 0)
+  const disableSubmit = (amountIsZero || notEnoughTrx)
+
+  console.log('converted amount', convertedAmount)
+  console.log('totalRemaining', totalRemaining)
+  console.log('notEnough', notEnoughTrx)
+  console.log('submit check', disableSubmit)
 
   return  (
     <Modal
@@ -40,10 +48,10 @@ const VoteModal = ({
             <Utils.Text size='medium' secondary>{formatUrl(candidateUrl)}</Utils.Text>
             <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatNumber(currVoteAmount)}</Utils.Text>
             <Utils.VerticalSpacer />
-            {errorCheck && (
+            {notEnoughTrx && (
               <React.Fragment>
                 <Utils.Text>
-                  You do not have enough frozen TRX to place this vote amount.
+                  {`You do not have enough frozen TRX. Freeze more TRX${totalRemaining ? ' or lower the vote amount' : ' to continue'}.`}
                 </Utils.Text>
                 <Utils.VerticalSpacer size='medium'/>
                 <ButtonGradient onPress={() => {
@@ -67,7 +75,6 @@ const VoteModal = ({
         )}
         <Utils.NumPadWrapper>
           {voteKeys.map((voteKey, index) => {
-            const lastKey = index + 1 === voteKeys.length;
             return (
               <Utils.NumKeyWrapper key={voteKey}>
                 <Utils.NumKey
@@ -89,7 +96,7 @@ const VoteModal = ({
           <Utils.NumKeyWrapper>
             <ButtonGradient
               onPress={acceptCurrentVote}
-              disabled={errorCheck} 
+              disabled={disableSubmit} 
               text="SET"
             />
           </Utils.NumKeyWrapper>
