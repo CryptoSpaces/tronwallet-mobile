@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import axios from 'axios'
 import { LineChart } from 'react-native-svg-charts'
-import { FlatList, Image, ScrollView, View, ActivityIndicator } from 'react-native'
+import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import { Motion, spring, presets } from 'react-motion'
-import { tint } from 'polished'
+
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatAmount from '../../utils/formatNumber'
@@ -33,11 +33,18 @@ class BalanceScene extends Component {
         .filtered(`percentage < 100 AND startTime < ${new Date().getTime()} AND endTime > ${new Date().getTime()}`)
         .map(item => Object.assign({}, item)),
     trxBalance: 0,
-    trxPrice: null
+    trxPrice: null,
+    refreshing: false
   }
 
-  async componentDidMount () {
+  componentDidMount () {
     this.loadData()
+  }
+
+  _onRefresh = async () => {
+    this.setState({ refreshing: true })
+    await this.loadData()
+    this.setState({ refreshing: false })
   }
 
   loadData = async () => {
@@ -137,7 +144,14 @@ class BalanceScene extends Component {
     return (
       <Utils.Container>
         <Utils.StatusBar />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
           <Utils.VerticalSpacer size='large' />
           <FadeIn name='header'>
             <Utils.Row justify='center'>
