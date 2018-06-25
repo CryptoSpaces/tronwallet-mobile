@@ -25,12 +25,7 @@ const VoteModal = ({
   const notEnoughTrx = (convertedAmount > totalRemaining || totalRemaining === 0)
   const amountIsZero = (convertedAmount === 0)
   const disableSubmit = (amountIsZero || notEnoughTrx)
-
-  console.log('converted amount', convertedAmount)
-  console.log('totalRemaining', totalRemaining)
-  console.log('notEnough', notEnoughTrx)
-  console.log('submit check', disableSubmit)
-
+  
   return  (
     <Modal
       animationType="slide"
