@@ -34,9 +34,19 @@ class TransactionsScene extends Component {
     transactions: transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
   }
 
-  async componentDidMount () {
-    this.loadData()
+  componentDidMount() {
+    this.didFocusSubscription = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        this.loadData();
+      }
+    );
   }
+
+  componentWillUnmount() {
+    this.didFocusSubscription.remove();
+  }
+
 
   loadData = async () => {
     this.setState({ refreshing: true })
@@ -61,7 +71,7 @@ class TransactionsScene extends Component {
 
   renderListEmptyComponent = () => <Utils.Container />
 
-  render () {
+  render() {
     const { refreshing } = this.state
     const transactions = transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
 
