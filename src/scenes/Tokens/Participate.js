@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, SafeAreaView, Linking } from 'react-native'
 import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
 import qs from 'qs'
 import Feather from 'react-native-vector-icons/Feather'
+import Config from 'react-native-config'
+import { ActivityIndicator, SafeAreaView, Linking } from 'react-native'
+
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -48,7 +50,7 @@ class ParticipateScene extends Component {
       }
       const pk = await Client.getPublicKey()
       const response = await axios.post(
-        'https://tronnotifier-dev.now.sh/v1/wallet/participate',
+        `${Config.NOTIFIER_API_URL}/participate`,
         {
           from: pk,
           issuer: navigation.state.params.token.ownerAddress,
@@ -91,11 +93,11 @@ class ParticipateScene extends Component {
     }
   }
 
-  formatPercentage = (percentage) => numeral(percentage).format('0.[00]') + '%'
+  formatPercentage = percentage => numeral(percentage).format('0.[00]') + '%'
 
-  formatCurrency = (value) => numeral(value).format('0,0[.]00')
+  formatCurrency = value => numeral(value).format('0,0[.]00')
 
-  formatDate = (date) => moment(date).format('YYYY-MM-DD h:mm:ss')
+  formatDate = date => moment(date).format('YYYY-MM-DD h:mm:ss')
 
   renderConfirmButtom = () => {
     if (this.state.loading) return <ActivityIndicator color={'#ffffff'} />
@@ -113,7 +115,6 @@ class ParticipateScene extends Component {
           <Utils.Content>
             <Utils.View >
               <Utils.Content justify='center'>
-
                 <Utils.Row justify='space-between'>
                   <Utils.Text size='medium'>{token.name}</Utils.Text>
                 </Utils.Row>
@@ -135,7 +136,6 @@ class ParticipateScene extends Component {
                 <Utils.VerticalSpacer />
                 {this.renderConfirmButtom()}
               </Utils.Content>
-
               <Utils.Row justify='space-between'>
                 <Utils.View>
                   <Utils.Text size='xsmall' secondary>PRICE</Utils.Text>
@@ -147,7 +147,6 @@ class ParticipateScene extends Component {
                 </Utils.View>
               </Utils.Row>
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Row justify='space-between'>
                 <Utils.View>
                   <Utils.Text size='xsmall' secondary>PERCENTAGE</Utils.Text>
@@ -162,21 +161,16 @@ class ParticipateScene extends Component {
                   <Utils.Text>{token.totalSupply}</Utils.Text>
                 </Utils.View>
               </Utils.Row>
-
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Text size='xsmall' secondary>DESCRIPTION</Utils.Text>
               <Utils.Text size='xsmall'>{token.description}</Utils.Text>
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Text size='xsmall' secondary>TRANSACTION</Utils.Text>
               <Utils.Text size='xsmall'>{token.transaction}</Utils.Text>
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Text size='xsmall' secondary>OWNER ADDRESS</Utils.Text>
               <Utils.Text size='xsmall'>{token.ownerAddress}</Utils.Text>
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Row justify='space-between'>
                 <Utils.View>
                   <Utils.Text size='xsmall' secondary>TRXNUM</Utils.Text>
@@ -190,10 +184,8 @@ class ParticipateScene extends Component {
                   <Utils.Text size='xsmall' secondary>BLOCK</Utils.Text>
                   <Utils.Text>{token.block}</Utils.Text>
                 </Utils.View>
-
               </Utils.Row>
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Row justify='space-between'>
                 <Utils.View width='50%'>
                   <Utils.Text size='xsmall' secondary>STARTTIME</Utils.Text>
@@ -205,7 +197,6 @@ class ParticipateScene extends Component {
                 </Utils.View>
               </Utils.Row>
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Row>
                 <Utils.View width='50%'>
                   <Utils.Text size='xsmall' secondary>DATECREATED</Utils.Text>
@@ -217,15 +208,13 @@ class ParticipateScene extends Component {
                 </Utils.View>
               </Utils.Row>
               <Utils.VerticalSpacer size='medium' />
-
               <Utils.Text size='xsmall' secondary>URL</Utils.Text>
               <Utils.Text>{token.url}</Utils.Text>
-
               <Utils.VerticalSpacer size='medium' />
             </Utils.View>
           </Utils.Content>
         </Utils.Container>
-      </KeyboardAwareScrollView >
+      </KeyboardAwareScrollView>
     )
   }
 }

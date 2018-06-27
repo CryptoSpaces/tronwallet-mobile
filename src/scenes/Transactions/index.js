@@ -10,12 +10,12 @@ import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
 
-import transactionsStore from '../../store/transactions'
+import getTransactionStore from '../../store/transactions'
 
 // const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 class TransactionsScene extends Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
@@ -31,22 +31,48 @@ class TransactionsScene extends Component {
 
   state = {
     refreshing: true,
-    transactions: transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
+    transactions: []
   }
 
   async componentDidMount () {
-    this.loadData()
+    const store = await getTransactionStore()
+    this.setState({ transactions: store.objects('Transaction').map(item => Object.assign({}, item)) })
+    this.updateData()
   }
 
-  loadData = async () => {
-    this.setState({ refreshing: true })
-    const response = await Client.getTransactionList()
-    await transactionsStore.write(() => response.map(item => transactionsStore.create('Transaction', item, true)))
-    const transactions = transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
-    this.setState({
-      refreshing: false,
-      transactions
-    })
+  updateData = async () => {
+    try {
+      this.setState({ refreshing: true })
+      const response = await Client.getTransactionList()
+      const store = await getTransactionStore()
+      console.log(response)
+      store.write(() => response.map(item => {
+        const transaction = {
+          id: item.hash,
+          type: item.type,
+          contractData: item.contractData,
+          ownerAddress: item.ownerAddress,
+          timestamp: item.timestamp
+        }
+        if (item.type === 'Transfer') {
+          transaction.id = item.transactionHash
+          transaction.contractData = {
+            transferFromAddress: item.transferFromAddress,
+            transferToAddress: item.transferToAddress,
+            amount: item.amount,
+            tokenName: item.tokenName
+          }
+        }
+        store.create('Transaction', transaction, true)
+      }))
+      const transactions = store.objects('Transaction').map(item => Object.assign({}, item))
+      this.setState({
+        refreshing: false,
+        transactions
+      })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   renderCard = item => {
@@ -62,8 +88,7 @@ class TransactionsScene extends Component {
   renderListEmptyComponent = () => <Utils.Container />
 
   render () {
-    const { refreshing } = this.state
-    const transactions = transactionsStore.objects('Transaction').map(item => Object.assign({}, item))
+    const { transactions, refreshing } = this.state
 
     if (transactions.length === 0) {
       return (
@@ -85,7 +110,7 @@ class TransactionsScene extends Component {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={this.loadData}
+              onRefresh={this.updateData}
             />
           }
           contentContainerStyle={{ padding: Spacing.medium }}
