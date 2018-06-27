@@ -58,3 +58,6 @@ buck-out/
 
 #VS LiveShare
 .vs/slnx.sqlite
+
+aws-exports.js
+ios/Podfile.lock
