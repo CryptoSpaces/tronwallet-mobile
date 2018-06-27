@@ -37,7 +37,11 @@ class TransactionsScene extends Component {
   async componentDidMount () {
     const store = await getTransactionStore()
     this.setState({ transactions: store.objects('Transaction').map(item => Object.assign({}, item)) })
-    this.updateData()
+    this.didFocusSubscription = this.props.navigation.addListener('didFocus', this.updateData);
+  }
+
+  componentWillUnmount() {
+    this.didFocusSubscription.remove();
   }
 
   updateData = async () => {
