@@ -1,25 +1,39 @@
 import Realm from 'realm'
 
+const VoteSchema = {
+  name: 'Vote',
+  properties: {
+    voteAddress: 'string',
+    voteCount: 'int'
+  }
+}
+
+const ContractDataSchema = {
+  name: 'ContractData',
+  properties: {
+    amount: 'int?',
+    frozenBalance: 'int?',
+    transferFromAddress: 'string?',
+    transferToAddress: 'string?',
+    tokenName: 'string?',
+    votes: 'Vote[]'
+  }
+}
+
 const TransactionSchema = {
   name: 'Transaction',
   primaryKey: 'id',
   properties: {
     id: 'string',
-    amount: 'float',
-    block: 'int',
-    contractType: 'int',
-    ownerAddress: 'string',
     timestamp: 'int',
-    tokenName: 'string',
-    transactionHash: 'string',
-    transferFromAddress: 'string',
-    transferToAddress: 'string',
-    type: 'string'
+    type: 'string',
+    ownerAddress: 'string',
+    contractData: 'ContractData'
   }
 }
 
-export default new Realm({
+export default () => Realm.open({
   path: 'Realm.transactions',
-  schema: [TransactionSchema],
-  schemaVersion: 5
+  schema: [TransactionSchema, ContractDataSchema, VoteSchema],
+  schemaVersion: 9
 })

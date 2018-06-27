@@ -23,8 +23,8 @@ const AssetsSchema = {
     totalSupply: 'int',
     trxNum: 'int',
     num: 'int',
-    startTime: 'int',
-    endTime: 'int',
+    startTime: { type: 'int', indexed: true },
+    endTime: { type: 'int', indexed: true },
     voteScore: 'int',
     description: 'string',
     url: 'string',
@@ -35,5 +35,5 @@ const AssetsSchema = {
 export default new Realm({
   path: 'Realm.assets',
   schema: [AssetsSchema],
-  schemaVersion: 4
+  schemaVersion: 7
 })

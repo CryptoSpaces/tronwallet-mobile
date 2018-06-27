@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import moment from 'moment'
 import axios from 'axios'
+import Config from 'react-native-config'
 import { LineChart } from 'react-native-svg-charts'
 import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { ListItem } from 'react-native-elements'
@@ -8,7 +9,7 @@ import { Motion, spring, presets } from 'react-motion'
 
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
-import formatAmount from '../../utils/formatNumber'
+import formatNumber from '../../utils/formatNumber'
 import ButtonGradient from '../../components/ButtonGradient'
 import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
@@ -21,20 +22,16 @@ import AssetsStore from '../../store/assets'
 const PRICE_PRECISION = 7
 
 class BalanceScene extends Component {
-  state = {
-    error: null,
-    assetBalance:
-      BalanceStore
-        .objects('Balance')
-        .map(item => Object.assign({}, item)),
-    assetList: 
-      AssetsStore
-        .objects('Asset')
-        .filtered(`percentage < 100 AND startTime < ${new Date().getTime()} AND endTime > ${new Date().getTime()}`)
-        .map(item => Object.assign({}, item)),
-    trxBalance: 0,
-    trxPrice: null,
-    refreshing: false
+  constructor() {
+    super()
+    this.state = {
+      error: null,
+      assetBalance: this._getBalancesFromStore(),
+      assetList: this._getTokenListFromStore(),
+      trxBalance: 0,
+      trxPrice: null,
+      refreshing: false
+    }
   }
 
   componentDidMount () {
@@ -46,26 +43,28 @@ class BalanceScene extends Component {
     await this.loadData()
     this.setState({ refreshing: false })
   }
+  
+  _getBalancesFromStore = () => BalanceStore.objects('Balance')
+    .map(item => Object.assign({}, item))
 
+  _getTokenListFromStore = () => AssetsStore.objects('Asset')
+    .filtered(`percentage < 100 AND startTime < ${Date.now()} AND endTime > ${Date.now()}`)
+    .map(item => Object.assign({}, item))
+  
   loadData = async () => {
     try {
       const getData = await Promise.all([
         Client.getBalances(),
         Client.getTokenList(),
-        axios.get( 'https://api.coinmarketcap.com/v2/ticker/1958')
+        axios.get(Config.TRX_PRICE_API)
       ])
       const balances = getData[0]
       const tokenList = getData[1]
       const { data: { data } } = getData[2]
       await BalanceStore.write(() => balances.map(item => BalanceStore.create('Balance', item, true)))
       await AssetsStore.write(() => tokenList.map(item => AssetsStore.create('Asset', item, true)))
-      const assetBalance = BalanceStore
-        .objects('Balance')
-        .map(item => Object.assign({}, item))
-      const assetList = AssetsStore
-        .objects('Asset')
-        .filtered(`percentage < 100 AND startTime < ${new Date().getTime()} AND endTime > ${new Date().getTime()}`)
-        .map(item => Object.assign({}, item))
+      const assetBalance = this._getBalancesFromStore()
+      const assetList = this._getTokenListFromStore()
       this.setState({
         trxPrice: data.quotes.USD.price,
         trxBalance: balances[0].balance,
@@ -118,7 +117,6 @@ class BalanceScene extends Component {
   )
 
   renderTokenList = ({ item }) => {
-    //console.warn(item)
     return (
       <FadeIn name={item.name}>
         <ListItem
@@ -164,7 +162,7 @@ class BalanceScene extends Component {
                 <Utils.VerticalSpacer size='medium' />
                 <Utils.Text secondary>BALANCE</Utils.Text>
                 <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance)}}>
-                  {value => <Utils.Text size='medium'>{formatAmount(value.balance.toFixed(0))} TRX</Utils.Text>}
+                  {value => <Utils.Text size='medium'>{formatNumber(value.balance.toFixed(0))} TRX</Utils.Text>}
                 </Motion>
               </Utils.View>
             </Utils.Row>
