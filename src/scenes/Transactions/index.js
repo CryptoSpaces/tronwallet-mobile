@@ -45,7 +45,6 @@ class TransactionsScene extends Component {
       this.setState({ refreshing: true })
       const response = await Client.getTransactionList()
       const store = await getTransactionStore()
-      console.log(response)
       store.write(() => response.map(item => {
         const transaction = {
           id: item.hash,
