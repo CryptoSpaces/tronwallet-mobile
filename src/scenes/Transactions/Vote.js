@@ -14,7 +14,9 @@ export default ({ item }) => {
           <Utils.Text size='xsmall'>{item.type}</Utils.Text>
         </Utils.Tag>
         <Utils.View>
-          <Utils.Text size='small'>{voteCount}  <Feather name='thumbs-up' size={20} color='#ffffff' /></Utils.Text>
+          <Utils.Text size='small'>
+            {voteCount} <Feather name='thumbs-up' size={20} color='#ffffff' />
+          </Utils.Text>
         </Utils.View>
       </Utils.Row>
       <Utils.VerticalSpacer size='xsmall' />
@@ -26,15 +28,4 @@ export default ({ item }) => {
       </Utils.Row>
     </Utils.TransactionCard>
   )
-
-  // return <Utils.TransactionCard>
-  //   <Utils.Row style={{ justifyContent: 'space-between' }}>
-  //     <Utils.Text size='small' secondary>{item.type}</Utils.Text>
-  //     <Utils.Text size='xsmall'>{voteCount} TRX
-  //       {' '}<Feather name='thumbs-up' size={14} color='#ffffff' />
-  //     </Utils.Text>
-  //   </Utils.Row>
-  //   <Utils.VerticalSpacer size='small' />
-  //   <Utils.Text font='light' size='xsmall' secondary>{moment(item.timestamp).fromNow()}</Utils.Text>
-  // </Utils.TransactionCard>
 }
