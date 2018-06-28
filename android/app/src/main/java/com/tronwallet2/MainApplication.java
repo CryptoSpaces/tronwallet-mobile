@@ -1,7 +1,6 @@
 package com.tronwallet2;
 
 import android.app.Application;
-
 import com.facebook.react.ReactApplication;
 import io.getty.rntron.RNTronPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
