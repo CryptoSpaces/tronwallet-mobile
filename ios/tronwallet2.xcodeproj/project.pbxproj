@@ -65,6 +65,7 @@
 		BB091019DB474FDCAFE6FFF7 /* libRNAWSCognito.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3023E19F0E214D3B87CFF0F2 /* libRNAWSCognito.a */; };
 		D71BA88CBAAF4FF78B0D562F /* libRNSVG-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EE3FE18581748D98C0A7C55 /* libRNSVG-tvOS.a */; };
 		E0987A43542E48A184C5A9E4 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 37F5E92D400949F8AF9F23B0 /* Rubik-Regular.ttf */; };
+		E126B4B79F1A7C8DB8E9FD1D /* libPods-tronwallet2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F8425BBD8EAA3FF492110B7 /* libPods-tronwallet2.a */; };
 		E27FBF08E6EA403399B9AEA1 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A8730F5FCB94901A9ACB41A /* libRNVectorIcons.a */; };
 		E9464FEF1EFA4440B2ED7EB2 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F74F54C3DAD44274BE7BB042 /* EvilIcons.ttf */; };
 		E9FE190397F742318A411500 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBA8F6CE85EE4A558FD86480 /* Zocial.ttf */; };
@@ -468,12 +469,15 @@
 		5EE3FE18581748D98C0A7C55 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
 		5F3DC3734E824E88BCDED9A4 /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../src/assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
 		5FC08FCA7FE14F14ADA547E5 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
+		705F1597724AC2904B3A3548 /* Pods-tronwallet2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tronwallet2.release.xcconfig"; path = "Pods/Target Support Files/Pods-tronwallet2/Pods-tronwallet2.release.xcconfig"; sourceTree = "<group>"; };
 		744AE86E4AD24328BE28DAAC /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		7532EBE8253E2359B6A29456 /* Pods-tronwallet2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tronwallet2.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tronwallet2/Pods-tronwallet2.debug.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7E3008F9A8FC46B788F79C01 /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		80F2561D649848F798D2E6F9 /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		86CE5335D66B4880B8BB3DB3 /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
+		8F8425BBD8EAA3FF492110B7 /* libPods-tronwallet2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tronwallet2.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		948E460590714D2C8CA144E0 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		A20BA51A560B40D3BE6FE6BC /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		A78F85E742F74BBAA25DD73D /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../src/assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
@@ -536,6 +540,7 @@
 				15FB766D8A3444C6B23D62D9 /* libRNCamera.a in Frameworks */,
 				31D21EA1B0FB47C1891C29F8 /* libReactNativePermissions.a in Frameworks */,
 				5CC01FB143E44914B1DD0E64 /* libReactNativeConfig.a in Frameworks */,
+				E126B4B79F1A7C8DB8E9FD1D /* libPods-tronwallet2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +722,7 @@
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				7E3008F9A8FC46B788F79C01 /* libc++.tbd */,
 				B041CF6E2B0142638D1D8862 /* libz.tbd */,
+				8F8425BBD8EAA3FF492110B7 /* libPods-tronwallet2.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -786,6 +792,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				0FB65A15D8E54311AE327DD1 /* Resources */,
 				8492BBB820D3416500A7D981 /* Recovered References */,
+				D90039A0A5A50D3D7777D1F8 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -903,6 +910,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D90039A0A5A50D3D7777D1F8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7532EBE8253E2359B6A29456 /* Pods-tronwallet2.debug.xcconfig */,
+				705F1597724AC2904B3A3548 /* Pods-tronwallet2.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -928,10 +944,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "tronwallet2" */;
 			buildPhases = (
+				DAF6DD9532D3C8B3C741B89F /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				4A404306C291A30BBDE8889B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1539,6 +1557,42 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		4A404306C291A30BBDE8889B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-tronwallet2/Pods-tronwallet2-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-tronwallet2/Pods-tronwallet2-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DAF6DD9532D3C8B3C741B89F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-tronwallet2-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1695,6 +1749,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7532EBE8253E2359B6A29456 /* Pods-tronwallet2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1731,6 +1786,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 705F1597724AC2904B3A3548 /* Pods-tronwallet2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;

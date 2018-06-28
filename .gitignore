@@ -60,3 +60,4 @@ buck-out/
 aws-exports.js
 ios/Pods/
 ios/Pods/**/*
+ios/Podfile.lock
