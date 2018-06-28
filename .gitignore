@@ -21,7 +21,8 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-
+# Pods
+ios/Pods/**/*
 # Android/IntelliJ
 #
 build/
@@ -57,3 +58,6 @@ buck-out/
 
 #VS LiveShare
 .vs/slnx.sqlite
+
+aws-exports.js
+ios/Podfile.lock

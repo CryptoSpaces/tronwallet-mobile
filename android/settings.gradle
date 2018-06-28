@@ -1,4 +1,6 @@
 rootProject.name = 'tronwallet2'
+include ':react-native-tron'
+project(':react-native-tron').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-tron/android')
 include ':react-native-config'
 project(':react-native-config').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-config/android')
 include ':react-native-camera'
