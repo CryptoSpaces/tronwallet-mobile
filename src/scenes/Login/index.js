@@ -15,7 +15,6 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import { version } from '../../../package.json'
 import Client from '../../services/client'
-import RNTron from 'react-native-tron';
 
 class LoginScene extends Component {
   state = {
@@ -23,15 +22,6 @@ class LoginScene extends Component {
     email: '',
     password: '',
     signError: null
-  }
-
-  async componentDidMount () {
-    try {
-      const key = await RNTron.generateKeypair('hub purpose pistol mountain tape possible aware board decorate good chair only', 0, 0);
-      console.warn('key 1', key);
-    } catch (error) {
-      console.warn('key', error.message);
-    }
   }
 
   componentWillReceiveProps (nextProps) {
