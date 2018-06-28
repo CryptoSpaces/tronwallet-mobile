@@ -59,3 +59,4 @@ buck-out/
 .vs/slnx.sqlite
 aws-exports.js
 ios/Pods/
+ios/Pods/**/*
