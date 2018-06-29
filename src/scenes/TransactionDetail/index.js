@@ -4,7 +4,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import Client from '../../services/client'
+import Client, { ONE_TRX } from '../../services/client'
 import LoadingScene from '../../components/LoadingScene'
 import moment from 'moment'
 
@@ -41,7 +41,7 @@ class TransactionDetail extends Component {
     isConnected: null
   }
 
-  async componentDidMount () {
+  componentDidMount() {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this._loadData()
     })
@@ -54,7 +54,7 @@ class TransactionDetail extends Component {
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
     NetInfo.isConnected.removeEventListener(
       'connectionChange',
@@ -97,18 +97,19 @@ class TransactionDetail extends Component {
   submitTransaction = async () => {
     const { signedTransaction } = this.state
     this.setState({ loadingSubmit: true })
-    let error = null
     try {
-      const { success, code } = await Client.submitTransaction(
-        signedTransaction
-      )
-      if (!success) error = code
+      // let error = null;
+      // const { success, code } = await Client.submitTransaction(signedTransaction)
+      // if (!success) error = code;
+      let success = false;
+      const { code } = await Client.broadcastTransaction(signedTransaction)
+      if (code === 'SUCCESS') success = true;
 
       this.setState({
         loadingSubmit: false,
         success,
         submitted: true,
-        submitError: error
+        submitError: null,
       })
     } catch (error) {
       this.setState({
@@ -122,11 +123,10 @@ class TransactionDetail extends Component {
   renderContracts = () => {
     const { transactionData } = this.state
     if (!transactionData) return
-
     const { contracts } = transactionData
     const contractsElements = []
     for (const ctr in contracts[0]) {
-      if (ctr === 'amount') {
+      if (ctr === 'amount' || ctr === 'frozenBalance') {
         contractsElements.push(
           <Utils.Row
             key={ctr}
@@ -135,7 +135,7 @@ class TransactionDetail extends Component {
             <Utils.Text secondary size='xsmall'>
               {firstLetterCapitalize(ctr)}
             </Utils.Text>
-            <Utils.Text size='xsmall'>{contracts[0][ctr] / 1000000}</Utils.Text>
+            <Utils.Text size='xsmall'>{contracts[0][ctr] / ONE_TRX}</Utils.Text>
           </Utils.Row>
         )
       } else if (ctr === 'votes') {
@@ -176,7 +176,7 @@ class TransactionDetail extends Component {
           Time
         </Utils.Text>
         <Utils.Text size='xsmall'>
-          {moment(transactionData.timestamp / 1000000).format('MM/DD/YYYY HH:MM:SS')}
+          {moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}
         </Utils.Text>
       </Utils.Row>
     )
@@ -192,12 +192,12 @@ class TransactionDetail extends Component {
           {loadingSubmit ? (
             <ActivityIndicator size='small' color={Colors.primaryText} />
           ) : (
-            <ButtonGradient
-              text='Submit Transaction'
-              onPress={this.submitTransaction}
-              size='small'
-            />
-          )}
+              <ButtonGradient
+                text='Submit Transaction'
+                onPress={this.submitTransaction}
+                size='small'
+              />
+            )}
         </Utils.Content>
       )
     }
@@ -229,7 +229,7 @@ class TransactionDetail extends Component {
     </Utils.Content>
   )
 
-  render () {
+  render() {
     const { submitError, loadingData, isConnected } = this.state
 
     if (loadingData) return <LoadingScene />

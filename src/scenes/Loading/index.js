@@ -6,14 +6,15 @@ import SplashScreen from 'react-native-splash-screen'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
+import { createUserKeyPair } from '../../utils/secretsUtils';
 
 class LoadingScene extends Component {
-  async componentDidMount () {
+  async componentDidMount() {
 
     //React Navigation open this route cuncurrently with 
     //the deeplink route.
     const deepLinkUrl = await Linking.getInitialURL();
-    if(!deepLinkUrl){
+    if (!deepLinkUrl) {
       await this._loadStuff()
       this._checkSession();
     }
@@ -39,18 +40,19 @@ class LoadingScene extends Component {
         new Promise((resolve, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
       ])
 
-      if (userPublicKey) {
-        this.props.navigation.navigate('App')
-      } else {
-        this.props.navigation.navigate('SetPublicKey')
+      if (!userPublicKey) {
+        await createUserKeyPair();
       }
+      this.props.navigation.navigate('App')
+
     } catch (error) {
       this.props.navigation.navigate('Login')
     }
     SplashScreen.hide()
   }
 
-  render () {
+
+  render() {
     return (
       <Utils.View
         flex={1}

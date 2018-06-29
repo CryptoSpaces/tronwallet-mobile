@@ -4,9 +4,13 @@ import { Auth } from 'aws-amplify'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StackActions, NavigationActions } from 'react-navigation'
 
+//Design
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
+
+//Services
+import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
 
 class SignupScene extends Component {
   state = {
@@ -32,10 +36,12 @@ class SignupScene extends Component {
     try {
       await Auth.confirmSignUp(username, code)
       await Auth.signIn(username, password)
+      await createUserKeyPair();
+
       this.setState({ loadingConfirm: false })
       const confirmSignAndLogin = StackActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'SetPublicKey' })],
+        actions: [NavigationActions.navigate({ routeName: 'App' })],
         key: null
       })
       navigation.dispatch(confirmSignAndLogin)
@@ -69,7 +75,7 @@ class SignupScene extends Component {
     )
   }
 
-  render () {
+  render() {
     const { confirmError } = this.state
     return (
       <KeyboardAvoidingView
@@ -108,7 +114,7 @@ class SignupScene extends Component {
             <Utils.Error>{confirmError}</Utils.Error>
             <Utils.Content justify='center' align='center'>
               <Utils.Text
-                onPress={() => this.props.navigation.navigate('Login')}
+                onPress={() => this.props.navigation.navigate('Sign')}
                 size='small'
                 font='light'
                 secondary

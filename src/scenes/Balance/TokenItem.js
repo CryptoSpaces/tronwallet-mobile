@@ -3,11 +3,14 @@ import { ListItem } from 'react-native-elements'
 
 import FadeIn from '../../components/Animations/FadeIn'
 import { Colors } from '../../components/DesignSystem'
+import formatNumber from '../../utils/formatNumber'
+import { ONE_TRX } from '../../services/client'
 
 const ITEM_HEIGHT = 40
 
-const TokenItem = ({ item, onPress }) => (
-  <FadeIn name={item.name}>
+const TokenItem = ({ item, onPress }) => {
+  const tokenValue = item.balance || item.price / ONE_TRX;
+  return <FadeIn name={item.name}>
     <ListItem
       onPress={onPress}
       disabled={item.name === 'TRX'}
@@ -27,11 +30,11 @@ const TokenItem = ({ item, onPress }) => (
       }}
       hideChevron
       badge={{
-        value: `${item.balance || 0}`,
+        value: `${formatNumber(tokenValue.toFixed(2)) || 0}`,
         textStyle: { color: Colors.primaryText },
       }}
     />
   </FadeIn>
-)
+}
 
 export default TokenItem

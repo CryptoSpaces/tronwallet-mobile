@@ -54,7 +54,7 @@ class Settings extends Component {
   showAlert = () => {
     Alert.alert(
       'Logout',
-      'Logout',
+      'Do you want to log out of your wallet ?',
       [
         {
           text: 'Cancel',

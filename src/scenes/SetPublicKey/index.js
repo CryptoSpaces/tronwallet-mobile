@@ -3,16 +3,20 @@ import { ActivityIndicator, TouchableOpacity, Linking } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Feather from 'react-native-vector-icons/Feather'
 import { Auth } from 'aws-amplify'
+import qs from 'qs'
 
+//Design
 import Header from '../../components/Header'
 import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import PasteInput from '../../components/PasteInput'
 import ButtonGradient from '../../components/ButtonGradient'
+
+//Services
 import { isAddressValid } from '../../services/address'
 import Client from '../../services/client'
-import qs from 'qs'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
+import { createUserKeyPair, getUserSecrets, recoverUserKeypair } from '../../utils/secretsUtils';
 
 export default class SetPkScene extends Component {
   state = {
@@ -44,6 +48,16 @@ export default class SetPkScene extends Component {
     const { userPublicKey } = this.state
     const { navigation } = this.props
     this.setState({ loading: true, error: null })
+    //Testing around
+    // try {
+    //   await recoverUserKeypair(userPublicKey);
+    //   navigation.navigate('App');
+    // } catch (error) {
+    //   this.setState({
+    //     error: error.message,
+    //     loading: false
+    //   })
+    // }
     try {
       if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
       await Client.setUserPk(userPublicKey)

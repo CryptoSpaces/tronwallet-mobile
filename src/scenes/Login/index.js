@@ -15,8 +15,10 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import { version } from '../../../package.json'
 import Client from '../../services/client'
+import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
 
 class LoginScene extends Component {
+
   state = {
     username: '',
     email: '',
@@ -24,7 +26,7 @@ class LoginScene extends Component {
     signError: null
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     const { navigation } = nextProps
     if (navigation.state.params && navigation.state.params.totpError) {
       this.refs.toast.show('Session expired, try again')
@@ -36,6 +38,20 @@ class LoginScene extends Component {
       [field]: text,
       signError: null
     })
+  }
+
+  navigateToHome = () => {
+    const { navigation } = this.props
+    this.setState({ loadingSign: false, signError: null },
+      () => {
+        const signToApp = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'App' })],
+          key: null
+        })
+        navigation.dispatch(signToApp)
+      }
+    )
   }
 
   signIn = async () => {
@@ -60,37 +76,30 @@ class LoginScene extends Component {
       }
 
       const userPublicKey = await Client.getPublicKey()
+
       if (userPublicKey) {
-        this.setState(
-          {
-            loadingSign: false,
-            confirmError: null
-          },
-          () => {
-            const signToApp = StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({ routeName: 'App' })],
-              key: null
-            })
-            navigation.dispatch(signToApp)
-          }
-        )
+        const { publicKey } = await getUserSecrets()
+        //Check if user is using a new account or old one
+        if (userPublicKey === publicKey) {
+          this.navigateToHome()
+        } else {
+          //TODO - Navigate to new pages
+          // navigation.navigate('SetPublicKey')
+        }
+
       } else {
-        this.setState({ loadingSign: false, signError: null }, () => {
-          navigation.navigate('SetPublicKey')
-        })
+        await createUserKeyPair()
+        this.navigateToHome()
       }
+
     } catch (error) {
       if (error.code === 'UserNotConfirmedException') {
         navigation.navigate('ConfirmSignup', { username, password })
         this.setState({ loadingSign: false })
         return
       }
-      if (error && error.message) {
-        this.setState({ signError: error.message, loadingSign: false })
-      } else {
-        this.setState({ signError: error, loadingSign: false })
-      }
+      console.log(error);
+      this.setState({ signError: error.message, loadingSign: false })
     }
   }
 
@@ -126,7 +135,7 @@ class LoginScene extends Component {
     return (<ButtonGradient text='SIGN IN' onPress={this.signIn} size='small' />)
   }
 
-  render () {
+  render() {
     const { signError } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
@@ -183,7 +192,6 @@ class LoginScene extends Component {
                 returnKeyType='send'
                 padding={Spacing.small}
               />
-              {this.renderSubmitButton()}
             </Utils.FormGroup>
             <Utils.Content justify='center' align='center'>
               {ChangedPassword && (
@@ -219,4 +227,4 @@ class LoginScene extends Component {
   }
 }
 
-export default LoginScene
+export default LoginScene;

@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
-import { Dimensions, Clipboard, ScrollView, SafeAreaView } from 'react-native'
+import { Dimensions, Clipboard, ScrollView, SafeAreaView, Keyawa } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import Feather from 'react-native-vector-icons/Feather'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import QRCode from '../../components/QRCode'
 import Client from '../../services/client'
@@ -58,6 +59,7 @@ class ReceiveScreen extends PureComponent {
               </Utils.TitleWrapper>
             </Utils.Header>
           </SafeAreaView>
+          <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Content marginY='20' align='center'>
             {!!publicKey && <QRCode value={publicKey} size={width * 0.6} />}
@@ -83,6 +85,7 @@ class ReceiveScreen extends PureComponent {
               opacity={0.8}
             />
           </Utils.Content>
+          </KeyboardAwareScrollView>
         </Utils.Container>
     )
   }

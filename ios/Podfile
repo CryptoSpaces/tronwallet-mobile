@@ -39,6 +39,8 @@ target 'tronwallet2' do
   # Pods for tronwallet2
   pod "RNTron",
     :path => "../node_modules/react-native-tron/ios/"
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
 
   pod "react-native-camera", 
     :path => "../node_modules/react-native-camera"

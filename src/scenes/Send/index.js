@@ -3,7 +3,6 @@ import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, Modal } from '
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import qs from 'qs'
 import { Select, Option } from 'react-native-chooser'
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import ButtonGradient from '../../components/ButtonGradient'
@@ -15,6 +14,7 @@ import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
+import { signTransaction } from '../../utils/transactionUtils';
 
 class SendScene extends Component {
   state = {
@@ -30,19 +30,20 @@ class SendScene extends Component {
     QRModalVisible: false
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this.loadData()
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
   }
 
   loadData = async () => {
     this.setState({ loading: true })
     try {
+
       const result = await Promise.all([
         Client.getPublicKey(),
         Client.getBalances()
@@ -55,7 +56,7 @@ class SendScene extends Component {
         trxBalance: balance
       })
     } catch (error) {
-      Alert.alert('Error while loading data')
+      Alert.alert('Error while getting balance data')
       // TODO - Error handler
       this.setState({
         loadingData: false
@@ -71,10 +72,10 @@ class SendScene extends Component {
   }
 
   submit = () => {
-    const { amount, to, balances, token } = this.state
+    const { amount, to, balances, token, from } = this.state
     const balanceSelected = balances.find(b => b.name === token)
 
-    if (!isAddressValid(to)) {
+    if (!isAddressValid(to) || from === to) {
       this.setState({ error: 'Invalid receiver address' })
       return
     }
@@ -87,7 +88,9 @@ class SendScene extends Component {
       this.setState({ error: 'Invalid amount' })
       return
     }
-    this.sendDeepLink()
+
+    this.transferAsset()
+
   }
 
   onSelectToken = (value, label) => {
@@ -97,7 +100,8 @@ class SendScene extends Component {
   clearInput = () => {
     this.setState({
       to: '',
-      token: 'Select your balance'
+      token: 'Select your balance',
+      amount: 0,
     });
   }
 
@@ -106,21 +110,19 @@ class SendScene extends Component {
     return balances.map(bl => (
       <Option key={bl.name} value={bl.name}>{`${bl.balance} ${
         bl.name
-      }`}</Option>
+        }`}</Option>
     ))
   }
 
-  sendDeepLink = async () => {
+  transferAsset = async () => {
     const { from, to, amount, token } = this.state
     this.setState({ loadingSign: true })
     try {
-      // Transaction String
-      const data = await Client.getTransactionString({
-        from,
-        to,
-        amount,
-        token
-      })
+      //TronScan
+      // const data = await Client.getTransactionString({from,to,amount,token});
+      //Serverless
+      const data = await Client.getTransferTransaction({ from, to, amount, token });
+
       // Data to deep link, same format as Tron Wallet
       const dataToSend = qs.stringify({
         txDetails: { from, to, amount, Type: 'SEND' },
@@ -130,11 +132,25 @@ class SendScene extends Component {
         URL: MakeTronMobileURL('transaction'),
         data
       })
-      this.openDeepLink(dataToSend)
+
+      this.openTransactionDetails(data)
+      //this.openDeepLink(dataToSend)
+
     } catch (error) {
       this.setState({ error: 'Error getting transaction', loadingSign: false })
     } finally {
       this.clearInput()
+    }
+  }
+
+  openTransactionDetails = async (transactionUnsigned) => {
+    try {
+      const transactionSigned = await signTransaction(transactionUnsigned);
+      this.setState({ loadingSign: false }, () => {
+        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
+      })
+    } catch (error) {
+      this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
   }
 
@@ -149,6 +165,7 @@ class SendScene extends Component {
       })
     }
   }
+
 
   /*
     TODO: Weird behavior happening here. After read, the modal closes and somewhere somehow some function is trying
@@ -202,7 +219,7 @@ class SendScene extends Component {
     }
   }
 
-  render () {
+  render() {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
     return (
       <KeyboardAvoidingView
@@ -281,8 +298,8 @@ class SendScene extends Component {
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
-                <ButtonGradient text='Send Token' onPress={this.submit} size='small' />
-              )}
+                  <ButtonGradient text='Send' onPress={this.submit} size='small' />
+                )}
               <Utils.VerticalSpacer size='medium' />
             </Utils.Content>
           </Utils.Container>

@@ -32,7 +32,7 @@ const TransactionSchema = {
   }
 }
 
-export default () => Realm.open({
+export default async () => Realm.open({
   path: 'Realm.transactions',
   schema: [TransactionSchema, ContractDataSchema, VoteSchema],
   schemaVersion: 9

@@ -8,6 +8,7 @@ import Client from '../../services/client'
 import Header from '../../components/Header'
 import Card, { CardRow } from '../../components/Card'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
+import { signTransaction } from '../../utils/transactionUtils';
 
 import { Context } from '../../store/context'
 
@@ -22,46 +23,14 @@ class FreezeScene extends Component {
     loading: true
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this.loadData()
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
-  }
-
-  sendDeepLink = async (data) => {
-    const { from, amount } = this.state
-    try {
-      // Data to deep link, same format as Tron Wallet
-      const dataToSend = qs.stringify({
-        txDetails: { from, amount, Type: 'FREEZE' },
-        pk: from,
-        action: 'transaction',
-        from: 'mobile',
-        URL: MakeTronMobileURL('transaction'),
-        data
-      })
-      this.openDeepLink(dataToSend)
-    } catch (error) {
-      this.setState({ loading: false }, () => {
-        this.props.navigation.navigate('GetVault')
-      })
-    }
-  }
-
-  openDeepLink = async (dataToSend) => {
-    try {
-      const url = `${TronVaultURL}auth/${dataToSend}`
-      await Linking.openURL(url)
-      this.setState({ loading: false })
-    } catch (error) {
-      this.setState({ loading: false }, () => {
-        this.props.navigation.navigate('GetVault')
-      })
-    }
   }
 
   loadData = async () => {
@@ -84,24 +53,72 @@ class FreezeScene extends Component {
     }
   }
 
-  freezeToken = async () => {
+  submit = async () => {
     const { amount, trxBalance } = this.state
     this.setState({ loading: true })
-    try{
-      if(trxBalance < amount){
-        alert('Insufficient TRX balance')
-        throw new Error('Insufficient TRX balance')
-    }
-      const transaction = await Client.freezeToken(amount)
-      this.sendDeepLink(transaction)
-    } catch(error){
-      console.log(error.message)
-    } finally{
-      this.setState({loading: false})
+    try {
+      if (trxBalance < amount) throw new Error('Insufficient TRX balance');
+      await this.freezeToken()
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      this.setState({ loading: false });
     }
   }
 
-  render () {
+
+  freezeToken = async () => {
+    const { from, amount } = this.state
+    try {
+      //TronScan
+      //const data = await Client.freezeToken(amount)
+      //Serverless
+      const data = await Client.getFreezeTransaction(amount)
+
+      // Data to deep link, same format as Tron Wallet
+      const dataToSend = qs.stringify({
+        txDetails: { from, amount, Type: 'FREEZE' },
+        pk: from,
+        action: 'transaction',
+        from: 'mobile',
+        URL: MakeTronMobileURL('transaction'),
+        data
+      })
+
+      this.openTransactionDetails(data)
+      //this.openDeepLink(dataToSend)
+
+    } catch (error) {
+      alert("Error while building transaction, try again.");
+      this.setState({ error: 'Error getting transaction', loadingSign: false })
+    }
+  }
+
+  openTransactionDetails = async (transactionUnsigned) => {
+    try {
+      const transactionSigned = await signTransaction(transactionUnsigned);
+      this.setState({ loadingSign: false }, () => {
+        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
+      })
+    } catch (error) {
+      alert(error.message);
+      this.setState({ error: 'Error getting transaction', loadingSign: false })
+    }
+  }
+
+  openDeepLink = async (dataToSend) => {
+    try {
+      const url = `${TronVaultURL}auth/${dataToSend}`
+      await Linking.openURL(url)
+      this.setState({ loading: false })
+    } catch (error) {
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('GetVault')
+      })
+    }
+  }
+  
+  render() {
     const {
       total,
       bandwidth,
@@ -128,13 +145,14 @@ class FreezeScene extends Component {
               </Utils.View>
             </Header>
             <Utils.Content style={{ backgroundColor: 'transparent' }}>
-              <Card isEditable loading={loading} buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
+              <Card isEditable loading={loading} buttonLabel='Freeze' onPress={this.submit} onChange={(amount) => this.setState({ amount: Number(amount) })} >
                 <CardRow label='New Frozen TRX' value={amount + total} />
               </Card>
               <Card>
                 <CardRow label='Frozen TRX' value={total} />
                 <CardRow label='Current Bandwidth' value={bandwidth} />
               </Card>
+
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>

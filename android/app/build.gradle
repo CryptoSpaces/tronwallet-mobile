@@ -97,13 +97,19 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion 27
     buildToolsVersion "27.0.0"
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "com.tronwallet2"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 26
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -135,9 +141,15 @@ android {
             }
         }
     }
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty.versions.properties'
+    }
 }
 
 dependencies {
+    compile project(':react-native-device-info')
+    compile project(':react-native-tron')
     compile project(':react-native-config')
     compile project(':react-native-camera')
     compile project(':react-native-splash-screen')

@@ -9,6 +9,7 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
+import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
 
 class ConfirmLogin extends Component {
   state = {
@@ -21,7 +22,7 @@ class ConfirmLogin extends Component {
     userPublicKey: null
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadUserData()
   }
 
@@ -41,6 +42,20 @@ class ConfirmLogin extends Component {
 
   goBackLogin = () => this.props.navigation.navigate('Login')
 
+  navigateToHome = () => {
+    const { navigation } = this.props
+    this.setState({ loadingConfirm: false, confirmError: null },
+      () => {
+        const signToApp = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'App' })],
+          key: null
+        })
+        navigation.dispatch(signToApp)
+      }
+    )
+  }
+
   changeInput = (text, field) => {
     this.setState({
       [field]: text,
@@ -57,24 +72,21 @@ class ConfirmLogin extends Component {
         : await Auth.confirmSignIn(user, code, 'SOFTWARE_TOKEN_MFA')
 
       const userPublicKey = await Client.getPublicKey()
+
       if (userPublicKey) {
-        this.setState(
-          {
-            loadingConfirm: false,
-            confirmError: null
-          },
-          () => {
-            const signToAp = StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({ routeName: 'App' })],
-              key: null
-            })
-            navigation.dispatch(signToAp)
-          })
+
+        const { publicKey } = await getUserSecrets()
+        //Check if user is using a new account or old one
+        if (userPublicKey === publicKey) {
+          this.navigateToHome()
+        } else {
+          //TODO - Navigate to new pages
+          // navigation.navigate('SetPublicKey')     
+          }
+
       } else {
-        this.setState({ loadingConfirm: false }, () => {
-          navigation.navigate('SetPublicKey')
-        })
+        await createUserKeyPair()
+        this.navigateToHome()
       }
     } catch (error) {
       let message = error.message
@@ -93,7 +105,7 @@ class ConfirmLogin extends Component {
       this.setState({ confirmError: message, loadingConfirm: false })
     }
   }
-  render () {
+  render() {
     const { confirmError, loadingConfirm } = this.state
     return (
       <KeyboardAvoidingView

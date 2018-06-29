@@ -6,7 +6,7 @@ import { LineChart } from 'react-native-svg-charts'
 import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
 
-import Client from '../../services/client'
+import Client, { ONE_TRX } from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatNumber from '../../utils/formatNumber'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -34,7 +34,7 @@ class BalanceScene extends Component {
     refreshing: false
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     const assetList = await this._getAssetsFromStore()
     const assetBalance = await this._getBalancesFromStore()
     this.setState({ assetList, assetBalance })
@@ -50,30 +50,30 @@ class BalanceScene extends Component {
     await this._loadData()
     this.setState({ refreshing: false })
   }
-  
+
   _getBalancesFromStore = async () => {
     const store = await getBalanceStore()
     return store.objects('Balance')
       .map(item => Object.assign({}, item))
   }
-  
+
   _updateBalancesStore = async balances => {
     const store = await getBalanceStore()
     store.write(() => balances.map(item => store.create('Balance', item, true)))
   }
-  
+
   _getAssetsFromStore = async () => {
     const store = await getAssetsStore()
     return store.objects('Asset')
       .filtered(`percentage < 100 AND startTime < ${Date.now()} AND endTime > ${Date.now()}`)
       .map(item => Object.assign({}, item))
   }
-  
+
   _updateAssetsStore = async assets => {
     const store = await getAssetsStore()
     store.write(() => assets.map(item => store.create('Asset', item, true)))
   }
-  
+
   _loadData = async () => {
     try {
       const getData = await Promise.all([
@@ -81,7 +81,7 @@ class BalanceScene extends Component {
         Client.getTokenList(),
         axios.get(Config.TRX_PRICE_API)
       ])
-      
+
       const trxHistory = await axios.get(`${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`)
       this.setState({
         trxHistory: trxHistory.data.Data.map(item => item.close)
@@ -94,10 +94,10 @@ class BalanceScene extends Component {
 
       const assetBalance = await this._getBalancesFromStore()
       const assetList = await this._getAssetsFromStore()
-      const trxBalance = assetBalance.find(item => item.name === 'TRX').balance
-      
+      const trxBalance = assetBalance.find(item => item.name === 'TRX')
+
       this.setState({
-        trxBalance,
+        trxBalance: trxBalance.balance || '0',
         assetBalance,
         assetList
       })
@@ -107,9 +107,10 @@ class BalanceScene extends Component {
   }
 
   _navigateToParticipate = token => {
-    const { trxBalance } = this.state;
+    const { trxBalance, assetList } = this.state;
     if (token.name !== 'TRX') {
-      this.props.navigation.navigate('Participate', { token, trxBalance })
+      const tokenToParticipate = assetList.find(asset => asset.name === token.name);
+      this.props.navigation.navigate('Participate', { token: tokenToParticipate, trxBalance })
     }
   }
 
@@ -146,7 +147,7 @@ class BalanceScene extends Component {
     </Utils.View>
   )
 
-  render () {
+  render() {
     const { assetBalance, trxBalance, error, assetList, trxHistory } = this.state
     return (
       <Utils.Container>
@@ -171,14 +172,14 @@ class BalanceScene extends Component {
                 <Utils.VerticalSpacer size='medium' />
                 <Utils.Text secondary>BALANCE</Utils.Text>
                 <Utils.VerticalSpacer />
-                <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance)}}>
+                <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance) }}>
                   {value => <Utils.Text size='large'>{formatNumber(value.balance.toFixed(0))} TRX</Utils.Text>}
                 </Motion>
                 <Utils.VerticalSpacer />
                 <Context.Consumer>
                   {({ price }) => price.value && (
                     <FadeIn name='usd-value'>
-                      <Motion defaultStyle={{ price: 0 }} style={{ price: spring(trxBalance * price.value, presets.gentle)}}>
+                      <Motion defaultStyle={{ price: 0 }} style={{ price: spring(trxBalance * price.value, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${(value.price).toFixed(2)} USD`}</Utils.Text>}
                       </Motion>
                     </FadeIn>
@@ -217,21 +218,21 @@ class BalanceScene extends Component {
                     <Utils.View align='flex-start'>
                       <Utils.Text secondary size='xsmall'>TRON POWER</Utils.Text>
                       <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ power: 0 }} style={{ power: spring(freeze.value.total, presets.gentle)}}>
+                      <Motion defaultStyle={{ power: 0 }} style={{ power: spring(freeze.value.total, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${value.power.toFixed(0)}`}</Utils.Text>}
                       </Motion>
                     </Utils.View>
                     <Utils.View align='center'>
                       <Utils.Text secondary size='xsmall'>TRX PRICE</Utils.Text>
                       <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ price: 0 }} style={{ price: spring(price.value, presets.gentle)}}>
+                      <Motion defaultStyle={{ price: 0 }} style={{ price: spring(price.value, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${value.price.toFixed(PRICE_PRECISION)} USD`}</Utils.Text>}
                       </Motion>
                     </Utils.View>
                     <Utils.View align='flex-end'>
                       <Utils.Text secondary size='xsmall'>BANDWIDTH</Utils.Text>
                       <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ bandwidth: 0 }} style={{ bandwidth: spring(freeze.value.bandwidth.netRemaining, presets.gentle)}}>
+                      <Motion defaultStyle={{ bandwidth: 0 }} style={{ bandwidth: spring(freeze.value.bandwidth.netRemaining, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${value.bandwidth.toFixed(0)}`}</Utils.Text>}
                       </Motion>
                     </Utils.View>
@@ -244,7 +245,7 @@ class BalanceScene extends Component {
               ListEmptyComponent={this.emptyListComponent('Participate to a token')}
               ListHeaderComponent={this.listHeader('BALANCES')}
               data={assetBalance}
-              renderItem={({ item }) => <TokenItem item={item} onPress={() => {}} />}
+              renderItem={({ item }) => <TokenItem item={item} onPress={() => this._navigateToParticipate(item)} />}
               keyExtractor={item => item.name}
               scrollEnabled
             />
@@ -253,7 +254,7 @@ class BalanceScene extends Component {
               ListEmptyComponent={this.emptyListComponent('No tokens to Participate')}
               ListHeaderComponent={this.listHeader('PARTICIPATE')}
               data={assetList}
-              renderItem={({ item }) => <TokenItem item={item} onPress={() => {}} />}
+              renderItem={({ item }) => <TokenItem item={item} onPress={() => this._navigateToParticipate(item)} />}
               keyExtractor={item => item.name}
               scrollEnabled
             />

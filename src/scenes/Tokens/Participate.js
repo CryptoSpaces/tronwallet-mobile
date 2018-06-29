@@ -12,6 +12,7 @@ import * as Utils from '../../components/Utils'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
+import { signTransaction } from '../../utils/transactionUtils';
 
 class ParticipateScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -39,7 +40,7 @@ class ParticipateScene extends Component {
     error: null,
   }
 
-  _confirm = async () => {
+  _submit = async () => {
     const { navigation } = this.props;
     try {
       this.setState({ loading: true });
@@ -49,15 +50,12 @@ class ParticipateScene extends Component {
         throw new Error('Insufficient TRX balance');
       }
       const pk = await Client.getPublicKey()
-      const response = await axios.post(
-        `${Config.NOTIFIER_API_URL}/participate`,
-        {
-          from: pk,
-          issuer: navigation.state.params.token.ownerAddress,
-          token: navigation.state.params.token.name,
-          amount: Number(this.state.value)
-        }
-      )
+      const data = await Client.getParticipateTransaction({
+        participateAddress: navigation.state.params.token.ownerAddress,
+        participateToken: navigation.state.params.token.name,
+        participateAmount: Number(this.state.value)
+      });
+
       const dataToSend = qs.stringify({
         txDetails: {
           from: pk,
@@ -70,12 +68,15 @@ class ParticipateScene extends Component {
         from: 'mobile',
         action: 'transaction',
         URL: MakeTronMobileURL('transaction'),
-        data: response.data.transaction
+        data
       })
 
-      this.openDeepLink(dataToSend)
+      // this.openDeepLink(dataToSend)]
+      this.openTransactionDetails(data)
+
     } catch (err) {
-      console.log(err)
+      alert("Error while building transaction, try again.");
+      console.warn(err.response);
     } finally {
       this.setState({ loading: false })
     }
@@ -93,7 +94,19 @@ class ParticipateScene extends Component {
     }
   }
 
-  formatPercentage = percentage => numeral(percentage).format('0.[00]') + '%'
+  openTransactionDetails = async (transactionUnsigned) => {
+    try {
+      const transactionSigned = await signTransaction(transactionUnsigned);
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
+      })
+    } catch (error) {
+      this.setState({ error: 'Error getting transaction', loading: false })
+    }
+  }
+
+
+  formatPercentage = (percentage) => numeral(percentage).format('0.[00]') + '%'
 
   formatCurrency = value => numeral(value).format('0,0[.]00')
 
@@ -103,7 +116,7 @@ class ParticipateScene extends Component {
     if (this.state.loading) return <ActivityIndicator color={'#ffffff'} />
 
     return (
-      <ButtonGradient onPress={this._confirm} text='Confirm' size='xsmall' />
+      <ButtonGradient onPress={this._submit} text='Confirm' size='xsmall' />
     )
   }
 
@@ -143,7 +156,7 @@ class ParticipateScene extends Component {
                 </Utils.View>
                 <Utils.View>
                   <Utils.Text size='xsmall' secondary>FROZEN</Utils.Text>
-                  <Utils.Text>{token.frozen[0] ? token.frozen[0].amount : 0}</Utils.Text>
+                  <Utils.Text>{token.frozenPercentage}%</Utils.Text>
                 </Utils.View>
               </Utils.Row>
               <Utils.VerticalSpacer size='medium' />

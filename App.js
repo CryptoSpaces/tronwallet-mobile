@@ -6,6 +6,7 @@ import {
   createMaterialTopTabNavigator
 } from 'react-navigation'
 import Amplify from 'aws-amplify'
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 import axios from 'axios'
 import Config from 'react-native-config'
 
@@ -34,7 +35,6 @@ import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeScene from './src/scenes/Freeze/FreezeRoute'
 
-import { createIconSetFromFontello } from 'react-native-vector-icons'
 import fontelloConfig from './src/assets/icons/config.json'
 import * as Utils from './src/components/Utils'
 import ButtonGradient from './src/components/ButtonGradient'
@@ -148,7 +148,7 @@ const AppTabs = createBottomTabNavigator(
           iconName = `shout-out,-speaker,-offer,-announcement,-loud`
         } else if (routeName === 'Transactions') {
           iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
-        } else if (routeName === 'Receive'){
+        } else if (routeName === 'Receive') {
           iconName = `scan,-bar-code,-qr-code,-barcode,-scanner`
         }
         else if (routeName === 'Settings') {

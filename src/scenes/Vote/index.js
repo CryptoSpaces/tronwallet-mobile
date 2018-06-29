@@ -19,6 +19,7 @@ import GrowIn from '../../components/Animations/GrowIn'
 
 // Service
 import Client from '../../services/client'
+import { signTransaction } from '../../utils/transactionUtils';
 
 import getCandidateStore from '../../store/candidates'
 import { Context } from '../../store/context'
@@ -59,7 +60,7 @@ class VoteScene extends PureComponent {
   
 
   _loadData = async () => {
-    this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
+    this.props.navigation.setParams({ onSubmit: this._submit, disabled: true })
     this.setState(INITIAL_STATE)
     this._loadCandidates()
     this._refreshCandidates()
@@ -68,7 +69,7 @@ class VoteScene extends PureComponent {
     this.setState({ loading: false })
   }
 
-  _getVoteList = store =>   
+  _getVoteList = store =>
     store.objects('Candidate')
       .sorted([['votes', true], ['url', false]])
       .slice(this.state.offset, clamp(this.state.offset + LIST_STEP_SIZE, store.objects('Candidate').length))
@@ -83,7 +84,7 @@ class VoteScene extends PureComponent {
       this._throwError(e)
     }
   }
-  
+
   _refreshCandidates = async () => {
     try {
       if (!this.state.refreshing) {
@@ -97,14 +98,14 @@ class VoteScene extends PureComponent {
           refreshing: false
         })
       }
-    } catch(e) {
+    } catch (e) {
       e.name = 'Refresh Candidates Error'
       this._throwError(e)
     }
   }
-  
+
   _loadMoreCandidates = async () => {
-    try { 
+    try {
       this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
       const store = await getCandidateStore()
       this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
@@ -132,17 +133,20 @@ class VoteScene extends PureComponent {
     }
   }
 
-  _onSubmit = async () => {
+  _submit = async (mode) => {
     const { from, currentVotes, totalRemaining } = this.state
+    const { navigation } = this.props
 
     if (totalRemaining >= 0) {
       this.setState({ loading: true })
+      navigation.setParams({ disabled: true })
+
       forIn(currentVotes, function (value, key) {
         currentVotes[key] = Number(value)
       })
       try {
         // Transaction String
-        const data = await Client.postVotes(currentVotes)
+        const data = await Client.getVoteWitnessTransaction(currentVotes)
         // Data to deep link, same format as Tron Wallet
         const dataToSend = qs.stringify({
           txDetails: { from, Type: 'VOTE' },
@@ -152,10 +156,27 @@ class VoteScene extends PureComponent {
           URL: MakeTronMobileURL('transaction'),
           data
         })
-        this._openDeepLink(dataToSend)
+
+        this._openTransactionDetails(data)
+        // this.openDeepLink(dataToSend)
+
       } catch (error) {
+        console.warn(error.message);
         this.setState({ loading: false })
+        navigation.setParams({ disabled: false })
       }
+    }
+  }
+
+
+  _openTransactionDetails = async (transactionUnsigned) => {
+    try {
+      const transactionSigned = await signTransaction(transactionUnsigned);
+      this.setState({ loadingSign: false }, () => {
+        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
+      })
+    } catch (error) {
+      this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
   }
 
@@ -186,8 +207,8 @@ class VoteScene extends PureComponent {
       0
     )
     const total = totalRemaining - totalUserVotes
-    navigation.setParams({ disabled: total <= 0 })
-    this.setState({ currentVotes: newVotes, totalRemaining: total, ...this._resetModalState()})
+    navigation.setParams({ disabled: total < 0 && totalUserVotes > 0 })
+    this.setState({ currentVotes: newVotes, totalRemaining: total, ...this._resetModalState() })
   }
 
   _onSearch = async value => {
@@ -216,9 +237,9 @@ class VoteScene extends PureComponent {
     const errorType = type || 'listError'
 
     console.log(`${e.name}: ${e.message}`)
-    this.setState({ 
-        [errorType]:  'Communications with server failed.',
-        loading: false
+    this.setState({
+      [errorType]: 'Communications with server failed.',
+      loading: false
     }, function setErrorParams() {
       this.props.navigation.setParams({ loadData: this._loadData, [errorType]: this.state[errorType] })
     })
@@ -281,7 +302,7 @@ class VoteScene extends PureComponent {
     )
   }
 
-  render () {
+  render() {
     const { totalVotes, totalRemaining, votesError } = this.state
 
     return (
@@ -319,7 +340,7 @@ class VoteScene extends PureComponent {
             addNumToVote={this._addNumToVote}
             removeNumFromVote={this._removeNumFromVote}
             acceptCurrentVote={this._acceptCurrentVote}
-            closeModal={this._closeModal} 
+            closeModal={this._closeModal}
             candidateUrl={this.state.currentItemUrl}
             currVoteAmount={this.state.currentAmountToVote}
             modalVisible={this.state.modalVisible}
