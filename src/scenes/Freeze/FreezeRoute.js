@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Linking, KeyboardAvoidingView, View } from 'react-native'
+import { Linking, KeyboardAvoidingView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import qs from 'qs'
 
@@ -9,6 +9,8 @@ import Header from '../../components/Header'
 import Card, { CardRow } from '../../components/Card'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import GoBackButton from '../../components/GoBackButton'
+
+import { Context } from '../../store/context'
 
 class FreezeScene extends Component {
   state = {
@@ -65,20 +67,18 @@ class FreezeScene extends Component {
 
   loadData = async () => {
     try {
-      const result = await Promise.all([Client.getPublicKey(), Client.getFreeze()])
-      const { balance } = result[1].balances.find(b => b.name === 'TRX')
+      const { freeze, publicKey } = this.props.context
+      const { balance } = freeze.value.balances.find(b => b.name === 'TRX')
 
       this.setState({
-        from: result[0],
-        balances: result[1],
+        from: publicKey.value,
+        balances: freeze,
         trxBalance: balance,
-        bandwidth: result[1].bandwidth.netRemaining,
-        total: result[1].total,
+        bandwidth: freeze.value.bandwidth.netReimaining,
+        total: freeze.value.total,
         loading: false
       })
     } catch (error) {
-      // console.log('ERROR', error)
-      // TODO - Error handler
       this.setState({
         loading: false
       })
@@ -104,11 +104,6 @@ class FreezeScene extends Component {
 
   }
 
-  unfreezeToken = () => {
-    // const { amount } = this.state
-    // alert('UNFREEZE');
-  }
-
   render () {
     const {
       total,
@@ -120,8 +115,6 @@ class FreezeScene extends Component {
 
     return (
       <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
         style={{ flex: 1 }}
         enabled
       >
@@ -157,4 +150,8 @@ class FreezeScene extends Component {
   }
 }
 
-export default FreezeScene
+export default props => (
+  <Context.Consumer>
+    {context => <FreezeScene context={context} {...props} />}
+  </Context.Consumer>
+)
