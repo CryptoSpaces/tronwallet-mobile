@@ -40,6 +40,14 @@ PODS:
   - Protobuf (3.5.0)
   - React (0.55.4):
     - React/Core (= 0.55.4)
+  - react-native-camera (1.1.4):
+    - React
+    - react-native-camera/RCT (= 1.1.4)
+    - react-native-camera/RN (= 1.1.4)
+  - react-native-camera/RCT (1.1.4):
+    - React
+  - react-native-camera/RN (1.1.4):
+    - React
   - React/ART (0.55.4):
     - React/Core
   - React/Core (0.55.4):
@@ -110,6 +118,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - react-native-camera (from `../node_modules/react-native-camera`)
   - React/ART (from `../node_modules/react-native`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -148,6 +157,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  react-native-camera:
+    :path: "../node_modules/react-native-camera"
   RNTron:
     :path: "../node_modules/react-native-tron/ios/"
   yoga:
@@ -167,10 +178,11 @@ SPEC CHECKSUMS:
   "NSData+FastHex": a22ad031ee10a4297d0bf4d20cf03406a4476169
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   React: aa2040dbb6f317b95314968021bd2888816e03d5
+  react-native-camera: ab22041dcf0403d88f2ae4b9ea3ed2644e680423
   RNTron: f8896a86924422ed73d694ebbfd3b5a522a3d9f1
   TrezorCrypto: ecef681446bf02af6248d3b5e394026d7e766e56
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 3a4bbaeab23224f17f37a211667e42bcf7c84bd1
+PODFILE CHECKSUM: 3113f79303e37876f9039baf69035b4f19c2f3e3
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.2
