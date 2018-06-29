@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -26,7 +27,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		15FB766D8A3444C6B23D62D9 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F2C5AE707024DD89C9B3C97 /* libRNCamera.a */; };
 		1916F835149547BA9A1510EF /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38A309B93D174E949C2FCCF8 /* SimpleLineIcons.ttf */; };
 		1F3AFAF223F54401926FDAEB /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 948E460590714D2C8CA144E0 /* Feather.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -50,7 +50,6 @@
 		57C4A3EBF3F148DFA02B43B5 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326ED316BB04808BE4BFBDA /* libBVLinearGradient.a */; };
 		5CC01FB143E44914B1DD0E64 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC03B67D21AC48D081EE53E6 /* libReactNativeConfig.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		63412D0DA75ED68CF7E4757F /* libPods-tronwallet2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C625161933AC2AD5680F61C7 /* libPods-tronwallet2.a */; };
 		64EA5726E4094E1C902C00DF /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5AC94F0870E647E5A8561154 /* Ionicons.ttf */; };
 		80CA3C5AF545441E877EAD28 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B298404896A4405294368CF9 /* libRealmReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -342,13 +341,6 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		8448458320E03D7800320524 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2362585979C942759ADBFFD4 /* RNCamera.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
-			remoteInfo = RNCamera;
-		};
 		8448458820E03D7800320524 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8ED6A48D37849FFBDD5ACE2 /* ReactNativePermissions.xcodeproj */;
@@ -449,7 +441,6 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = tronwallet2/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = tronwallet2/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		2362585979C942759ADBFFD4 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* tronwallet2-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tronwallet2-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* tronwallet2-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tronwallet2-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -489,8 +480,6 @@
 		B8873F3E53874336A03D1ABC /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		B88EA4DB33EB4FF7A030AEB4 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		B8ED6A48D37849FFBDD5ACE2 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
-		C4EBC533154FEE05D22E7075 /* Pods-tronwallet2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tronwallet2.debug.xcconfig"; path = "Pods/Target Support Files/Pods-tronwallet2/Pods-tronwallet2.debug.xcconfig"; sourceTree = "<group>"; };
-		C625161933AC2AD5680F61C7 /* libPods-tronwallet2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tronwallet2.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6831B3349F047109F53B685 /* RNAWSCognito.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAWSCognito.xcodeproj; path = "../node_modules/amazon-cognito-identity-js/ios/RNAWSCognito.xcodeproj"; sourceTree = "<group>"; };
 		CC03B67D21AC48D081EE53E6 /* libReactNativeConfig.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeConfig.a; sourceTree = "<group>"; };
 		CE0D295D38DB4E3A91A2A8DA /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
@@ -539,7 +528,6 @@
 				A7E919B3066E43EB8ED83D33 /* libz.tbd in Frameworks */,
 				BB091019DB474FDCAFE6FFF7 /* libRNAWSCognito.a in Frameworks */,
 				3059EBF2C3144C8E84E0A4AC /* libSplashScreen.a in Frameworks */,
-				15FB766D8A3444C6B23D62D9 /* libRNCamera.a in Frameworks */,
 				31D21EA1B0FB47C1891C29F8 /* libReactNativePermissions.a in Frameworks */,
 				5CC01FB143E44914B1DD0E64 /* libReactNativeConfig.a in Frameworks */,
 				E126B4B79F1A7C8DB8E9FD1D /* libPods-tronwallet2.a in Frameworks */,
@@ -768,7 +756,6 @@
 				56ABAF6653B8418DBB44739A /* RealmReact.xcodeproj */,
 				C6831B3349F047109F53B685 /* RNAWSCognito.xcodeproj */,
 				B88EA4DB33EB4FF7A030AEB4 /* SplashScreen.xcodeproj */,
-				2362585979C942759ADBFFD4 /* RNCamera.xcodeproj */,
 				B8ED6A48D37849FFBDD5ACE2 /* ReactNativePermissions.xcodeproj */,
 				0A08B1F827984A1581A26A87 /* ReactNativeConfig.xcodeproj */,
 			);
@@ -808,14 +795,6 @@
 				00E356EE1AD99517003FC87E /* tronwallet2Tests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* tronwallet2-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* tronwallet2-tvOSTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8448458020E03D7800320524 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8448458420E03D7800320524 /* libRNCamera.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1109,10 +1088,6 @@
 					ProjectRef = C6831B3349F047109F53B685 /* RNAWSCognito.xcodeproj */;
 				},
 				{
-					ProductGroup = 8448458020E03D7800320524 /* Products */;
-					ProjectRef = 2362585979C942759ADBFFD4 /* RNCamera.xcodeproj */;
-				},
-				{
 					ProductGroup = 8492BBBE20D3416800A7D981 /* Products */;
 					ProjectRef = 5FC08FCA7FE14F14ADA547E5 /* RNSVG.xcodeproj */;
 				},
@@ -1386,13 +1361,6 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8448458420E03D7800320524 /* libRNCamera.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNCamera.a;
-			remoteRef = 8448458320E03D7800320524 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8448458920E03D7800320524 /* libReactNativePermissions.a */ = {
