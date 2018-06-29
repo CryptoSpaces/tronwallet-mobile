@@ -77,6 +77,8 @@ class LoginScene extends Component {
 
       const userPublicKey = await Client.getPublicKey()
 
+      this.navigateToHome()
+      return
       if (userPublicKey) {
         const { publicKey } = await getUserSecrets()
         //Check if user is using a new account or old one
@@ -85,6 +87,7 @@ class LoginScene extends Component {
         } else {
           //TODO - Navigate to new pages
           // navigation.navigate('SetPublicKey')
+          this.navigateToHome()
         }
 
       } else {
