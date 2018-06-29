@@ -32,7 +32,7 @@ const AssetsSchema = {
   }
 }
 
-export default () => Realm.open({
+export default async () => Realm.open({
   path: 'Realm.assets',
   schema: [AssetsSchema],
   schemaVersion: 7
