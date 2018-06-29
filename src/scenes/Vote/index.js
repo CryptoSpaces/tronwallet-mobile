@@ -1,12 +1,7 @@
 // Dependencies
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp } from 'lodash'
-import {
-  SafeAreaView,
-  View,
-  Linking,
-  FlatList,
-} from 'react-native'
+import { Linking, FlatList } from 'react-native'
 import qs from 'qs'
 
 // Utils
@@ -14,12 +9,10 @@ import * as Utils from '../../components/Utils'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
 import formatNumber from '../../utils/formatNumber'
-import { Spacing } from '../../components/DesignSystem'
 
 // Components
 import Header from '../../components/Header'
 import VoteItem from '../../components/Vote/VoteItem'
-import ButtonGradient from '../../components/ButtonGradient'
 import VoteModal from '../../components/Vote/VoteModal'
 import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
@@ -28,6 +21,7 @@ import GrowIn from '../../components/Animations/GrowIn'
 import Client from '../../services/client'
 
 import getCandidateStore from '../../store/candidates'
+import { Context } from '../../store/context'
 
 const LIST_STEP_SIZE = 20
 
@@ -53,50 +47,24 @@ const INITIAL_STATE = {
 }
 
 class VoteScene extends PureComponent {
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    return {
-      header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>Vote</Utils.Title>
-            </Utils.TitleWrapper>
-            <View style={{ marginRight: 15 }}>
-              <Utils.Text>{params.totalRemaining}</Utils.Text>
-              {(params.votesError || params.listError) ? 
-                <ButtonGradient
-                  size='small'
-                  text='Sync'
-                  onPress={params.loadData}
-                /> :
-                <ButtonGradient
-                  disabled={params.disabled}
-                  size='small'
-                  text='Submit'
-                  onPress={params.onSubmit}
-                />
-              }
-            </View>
-          </Utils.Header>
-        </SafeAreaView>
-      )
-    }
-  }
-
   state = INITIAL_STATE
 
-  componentDidMount () {
-    this._loadData()
+  async componentDidMount () {
+    this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
   }
+
+  componentWillUnmount() {
+    this.didFocusSubscription.remove()
+  }
+  
 
   _loadData = async () => {
     this.props.navigation.setParams({ onSubmit: this._onSubmit, disabled: true })
     this.setState(INITIAL_STATE)
     this._loadCandidates()
-    this._loadPublicKey()
     this._refreshCandidates()
-    await Promise.all([this._loadFreeze(), this._loadUserVotes()])
+    this._loadFreeze()
+    await this._loadUserVotes()
     this.setState({ loading: false })
   }
 
@@ -108,8 +76,8 @@ class VoteScene extends PureComponent {
 
   _loadCandidates = async () => {
     try {
-    const store = await getCandidateStore()
-    this.setState({ voteList: this._getVoteList(store) })
+      const store = await getCandidateStore()
+      this.setState({ voteList: this._getVoteList(store) })
     } catch(e) {
       e.name = 'Load Candidates Error'
       this._throwError(e)
@@ -146,35 +114,21 @@ class VoteScene extends PureComponent {
     }
   }
   
-  _loadFreeze = async () => {
-    try {
-      const { total } = await Client.getFreeze()
+  _loadFreeze = () => {
+    if (this.props.context.freeze.value) {
+      const { total } = this.props.context.freeze.value
       this.setState({ totalRemaining: total || 0 })
-      return total
-    } catch(e) {
-      e.name = 'Load Freeze Error'
-      this._throwError(e, 'votesError')
     }
   }
   
-_loadUserVotes = async () => {
-  try {
-    const userVotes = await Client.getUserVotes()
-    this.setState({ userVotes })
-    return userVotes
-  } catch(e) {
-    e.name = 'Load User Votes Error'
-    this._throwError(e, 'votesError')
-  }
-  }
-  
-  _loadPublicKey = async () => {
+  _loadUserVotes = async () => {
     try {
-      const publicKey = await Client.getPublicKey()
-      this.setState({ publicKey })
+      const userVotes = await Client.getUserVotes()
+      this.setState({ userVotes })
+      return userVotes
     } catch(e) {
-      e.name = 'Load Public Key Error'
-      this._throwError(e)
+      e.name = 'Load User Votes Error'
+      this._throwError(e, 'votesError')
     }
   }
 
@@ -400,4 +354,8 @@ _loadUserVotes = async () => {
   }
 }
 
-export default VoteScene
+export default props => (
+  <Context.Consumer>
+    {context => <VoteScene context={context} {...props} />}
+  </Context.Consumer>
+)

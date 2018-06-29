@@ -1,18 +1,24 @@
 import React, { Component, Fragment } from 'react'
 import axios from 'axios'
+import * as shape from 'd3-shape'
 import { AreaChart, Grid } from 'react-native-svg-charts'
 import { Path } from 'react-native-svg'
 import { ActivityIndicator, TouchableOpacity, Image } from 'react-native'
-import * as shape from 'd3-shape'
 import { Motion, spring, presets } from 'react-motion'
+import Config from 'react-native-config'
 
 import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import FadeIn from '../../components/Animations/FadeIn'
-import { VerticalSpacer } from '../../components/Utils';
+import { VerticalSpacer } from '../../components/Utils'
 
 const PRICE_PRECISION = 7
+const LAST_HOUR = Math.round(new Date().getTime() / 1000) - 3600
+const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
+const LAST_WEEK = Math.round(new Date().getTime() / 1000) - 7 * 24 * 3600
+const LAST_MONTH = Math.round(new Date().getTime() / 1000) - 31 * 24 * 3600
+const LAST_YEAR = Math.round(new Date().getTime() / 1000) - 365 * 24 * 3600
 
 const Line = ({ line }) => (
   <Path
@@ -47,14 +53,13 @@ class HomeScene extends Component {
   componentWillUnmount () {
     this._navListener.remove()
   }
+
   get timeSpans () {
     return ['1H', '1D', '1W', '1M', '1Y', 'ALL']
   }
 
   _loadData = async () => {
-    const { data: { data } } = await axios.get(
-      'https://api.coinmarketcap.com/v2/ticker/1958'
-    )
+    const { data: { data } } = await axios.get(Config.TRX_PRICE_API)
     this.setState({
       marketcap: data.quotes.USD.market_cap,
       volume: data.quotes.USD.volume_24h,
@@ -72,37 +77,23 @@ class HomeScene extends Component {
     let url
     switch (this.state.graph.timeSpan) {
       case '1H':
-        url = `https://min-api.cryptocompare.com/data/histoday?fsym=TRX&tsym=USD&fromTs=${Math.round(
-          new Date().getTime() / 1000
-        ) - 3600}&aggregate=3`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_HOUR}&aggregate=3`
         break
       case '1D':
-        url = `https://min-api.cryptocompare.com/data/histoday?fsym=TRX&tsym=USD&fromTs=${Math.round(
-          new Date().getTime() / 1000
-        ) -
-          24 * 3600}&aggregate=2`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}&aggregate=2`
         break
       case '1W':
-        url = `https://min-api.cryptocompare.com/data/histoday?fsym=TRX&tsym=USD&fromTs=${Math.round(
-          new Date().getTime() / 1000
-        ) -
-          7 * 24 * 3600}&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_WEEK}&aggregate=1`
         break
       case '1M':
-        url = `https://min-api.cryptocompare.com/data/histoday?fsym=TRX&tsym=USD&fromTs=${Math.round(
-          new Date().getTime() / 1000
-        ) -
-          31 * 24 * 3600}&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_MONTH}&aggregate=1`
         break
       case '1Y':
-        url = `https://min-api.cryptocompare.com/data/histoday?fsym=TRX&tsym=USD&fromTs=${Math.round(
-          new Date().getTime() / 1000
-        ) -
-          365 * 24 * 3600}&limit=365&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_YEAR}&limit=365&aggregate=1`
         break
       case 'ALL':
         url =
-          'https://min-api.cryptocompare.com/data/histoday?fsym=TRX&tsym=USD&aggregate=1&allData=true'
+          `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&aggregate=1&allData=true`
         break
     }
     const response = await axios.get(url, { credentials: false })

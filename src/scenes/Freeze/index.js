@@ -9,6 +9,8 @@ import Header from '../../components/Header'
 import Card, { CardRow } from '../../components/Card'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 
+import { Context } from '../../store/context'
+
 class FreezeScene extends Component {
   state = {
     from: '',
@@ -64,20 +66,18 @@ class FreezeScene extends Component {
 
   loadData = async () => {
     try {
-      const result = await Promise.all([Client.getPublicKey(), Client.getFreeze()])
-      const { balance } = result[1].balances.find(b => b.name === 'TRX')
+      const { freeze, publicKey } = this.props.context
+      const { balance } = freeze.value.balances.find(b => b.name === 'TRX')
 
       this.setState({
-        from: result[0],
-        balances: result[1],
+        from: publicKey.value,
+        balances: freeze,
         trxBalance: balance,
-        bandwidth: result[1].bandwidth.netRemaining,
-        total: result[1].total,
+        bandwidth: freeze.value.bandwidth.netReimaining,
+        total: freeze.value.total,
         loading: false
       })
     } catch (error) {
-      // console.log('ERROR', error)
-      // TODO - Error handler
       this.setState({
         loading: false
       })
@@ -89,22 +89,16 @@ class FreezeScene extends Component {
     this.setState({ loading: true })
     try{
       if(trxBalance < amount){
-        alert('Insufficient TRX balance');
-        throw new Error('Insufficient TRX balance');
+        alert('Insufficient TRX balance')
+        throw new Error('Insufficient TRX balance')
     }
       const transaction = await Client.freezeToken(amount)
       this.sendDeepLink(transaction)
     } catch(error){
-      console.log(error.message);
+      console.log(error.message)
     } finally{
-      this.setState({loading: false});
+      this.setState({loading: false})
     }
-
-  }
-
-  unfreezeToken = () => {
-    // const { amount } = this.state
-    // alert('UNFREEZE');
   }
 
   render () {
@@ -118,8 +112,6 @@ class FreezeScene extends Component {
 
     return (
       <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
         style={{ flex: 1 }}
         enabled
       >
@@ -139,7 +131,6 @@ class FreezeScene extends Component {
               <Card isEditable loading={loading} buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
                 <CardRow label='New Frozen TRX' value={amount + total} />
               </Card>
-              {/* <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}> */}
               <Card>
                 <CardRow label='Frozen TRX' value={total} />
                 <CardRow label='Current Bandwidth' value={bandwidth} />
@@ -152,4 +143,8 @@ class FreezeScene extends Component {
   }
 }
 
-export default FreezeScene
+export default props => (
+  <Context.Consumer>
+    {context => <FreezeScene context={context} {...props} />}
+  </Context.Consumer>
+)

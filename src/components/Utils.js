@@ -123,7 +123,7 @@ VerticalSpacer.propTypes = {
 }
 
 export const Text = styled.Text`
-  font-family: rubik-medium;
+  font-family: Rubik-Medium;
   color: ${props => props.color};
   font-size: ${props => FontSize[props.size]};
   ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};

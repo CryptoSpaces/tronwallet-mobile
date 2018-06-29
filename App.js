@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform } from 'react-native'
+import { StatusBar, Platform, SafeAreaView, View } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
   createMaterialTopTabNavigator
 } from 'react-navigation'
 import Amplify from 'aws-amplify'
-import { SharedElementRenderer } from 'react-native-motion'
+import axios from 'axios'
+import Config from 'react-native-config'
 
 import awsExports from './aws-exports'
 import { Colors, ScreenSize } from './src/components/DesignSystem'
@@ -33,14 +34,19 @@ import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeScene from './src/scenes/Freeze/FreezeRoute'
 
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+import { createIconSetFromFontello } from 'react-native-vector-icons'
 import fontelloConfig from './src/assets/icons/config.json'
+import * as Utils from './src/components/Utils'
+import ButtonGradient from './src/components/ButtonGradient'
 
-const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet');
+import Client from './src/services/client'
+import { Context } from './src/store/context'
+
+const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 Amplify.configure(awsExports)
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+import { YellowBox } from 'react-native'
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
 
 const SettingsStack = createStackNavigator(
   {
@@ -67,7 +73,34 @@ const VoteStack = createStackNavigator(
     VoteScene
   },
   {
-    initialRouteName: 'VoteScene'
+    initialRouteName: 'VoteScene',
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <SafeAreaView style={{ backgroundColor: 'black' }}>
+          <Utils.Header>
+            <Utils.TitleWrapper>
+              <Utils.Title>Vote</Utils.Title>
+            </Utils.TitleWrapper>
+            <View style={{ marginRight: 15 }}>
+              <Utils.Text>{navigation.getParam('totalRemaining')}</Utils.Text>
+              {(navigation.getParam('votesError') || navigation.getParam('listError')) ? 
+                <ButtonGradient
+                  size='small'
+                  text='Sync'
+                  onPress={navigation.getParam('loadData')}
+                /> :
+                <ButtonGradient
+                  disabled={navigation.getParam('disabled')}
+                  size='small'
+                  text='Submit'
+                  onPress={navigation.getParam('onSubmit')}
+                />
+              }
+            </View>
+          </Utils.Header>
+        </SafeAreaView>
+      )
+    })
   }
 )
 const TransferStack = createStackNavigator(
@@ -235,16 +268,58 @@ const RootNavigator = createStackNavigator(
       header: null
     }
   }
-);
+)
 
-const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://';
+const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
 class App extends Component {
+  state = {
+    price: {},
+    freeze: {},
+    publicKey: {},
+    getFreeze: this._getFreeze,
+    getPrice: this._getPrice,
+    getPublicKey: this._getPublicKey
+  }
+
+  componentDidMount() {
+    this._getFreeze()
+    this._getPrice()
+    this._getPublicKey()
+  }
+
+  _getFreeze = async () => {
+    try {
+      const value = await Client.getFreeze()
+      this.setState({ freeze: { value } })
+    } catch (err) {
+      this.setState({ freeze: { err } })
+    }
+  }
+
+  _getPrice = async () => {
+    try {
+      const { data: { data } } = await axios.get(Config.TRX_PRICE_API)
+      this.setState({ price: { value: data.quotes.USD.price } })
+    } catch (err) {
+      this.setState({ price: { err } })
+    }
+  }
+
+  _getPublicKey = async () => {
+    try {
+      const publicKey = await Client.getPublicKey()
+      this.setState({ publicKey: { value: publicKey } })
+    } catch (err) {
+      this.setState({ publicKey: { err } })
+    }
+  }
+
   render() {
     return (
-      <SharedElementRenderer>
+      <Context.Provider value={this.state}>
         <StatusBar barStyle='light-content' />
         <RootNavigator uriPrefix={prefix} />
-      </SharedElementRenderer>
+      </Context.Provider>
     )
   }
 }
