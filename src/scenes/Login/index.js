@@ -15,7 +15,7 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import { version } from '../../../package.json'
 import Client from '../../services/client'
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
+import { createUserKeyPair, getUserSecrets, recoverUserKeypair } from '../../utils/secretsUtils';
 
 class LoginScene extends Component {
 
@@ -77,15 +77,13 @@ class LoginScene extends Component {
 
       const userPublicKey = await Client.getPublicKey()
 
-      this.navigateToHome()
-      return
       if (userPublicKey) {
         const { publicKey } = await getUserSecrets()
         //Check if user is using a new account or old one
         if (userPublicKey === publicKey) {
           this.navigateToHome()
         } else {
-          //TODO - Navigate to new pages
+          //TODO - Navigate to Restore Wallet !
           // navigation.navigate('SetPublicKey')
           this.navigateToHome()
         }

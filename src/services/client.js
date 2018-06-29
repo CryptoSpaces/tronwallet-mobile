@@ -53,7 +53,6 @@ class ClientWallet {
     return { totalVotes, candidates }
   }
 
-
   async getTransactionDetails(tx) {
     try {
       const { data: { transaction } } = await axios.post(`${this.api}/transaction?dry-run`, {
@@ -107,44 +106,6 @@ class ClientWallet {
     }))
     return sortedTxs
   }
-
-  // async getTransactionString({ to, from, token, amount }) {
-  //   try {
-  //     const { data: { transaction } } = await axios.post(`${this.notifier}/transfer`, { to, from, token, amount })
-  //     return transaction
-  //   } catch (error) {
-  //     throw new Error(error.message || error)
-  //   }
-  // }
-
-  // async submitTransaction(tx) {
-  //   try {
-  //     const { data } = await axios.post(
-  //       `${this.api}/transaction`,
-  //       { transaction: tx }
-  //     )
-  //     return data
-  //   } catch (error) {
-  //     throw new Error(error.message || error)
-  //   }
-  // }
-
-  // async postVotes(votes) {
-  //   const owner = await this.getPublicKey()
-  //   const body = {
-  //     from: owner,
-  //     votes
-  //   }
-  //   const { data: { transaction } } = await axios.post(`${this.notifier}/vote`, body)
-  //   return transaction
-  // }
-
-  // async freezeToken(amount) {
-  //   const from = await this.getPublicKey()
-  //   const { data: { transaction } } = await axios.post(`${this.notifier}/freeze`, { from, amount, duration: '3' })
-
-  //   return transaction
-  // }
 
   //*============TronWalletServerless Api============*//
   async getAssetList() {
