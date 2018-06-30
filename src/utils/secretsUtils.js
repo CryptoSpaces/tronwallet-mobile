@@ -35,16 +35,26 @@ const generateKeypair = async (mnemonic) => {
     await Client.setUserPk(generatedKeypair.address);
 }
 
+const emptySecrets = {
+    privateKey: null,
+    mnemonic: null,
+    publicKey: null
+}
 
 export const getUserSecrets = async () => {
     try {
         const SecretsStore = await getSecretsStore();
         const [realmSecrets] = SecretsStore.objects('Secrets').map(item => Object.assign(item, {}));
-        return {
-            privateKey: realmSecrets.privateKey,
-            mnemonic: realmSecrets.mnemonic,
-            publicKey: realmSecrets.address
+        if (realmSecrets) {
+            return {
+                privateKey: realmSecrets.privateKey,
+                mnemonic: realmSecrets.mnemonic,
+                publicKey: realmSecrets.address
+            }
+        } else {
+            return emptySecrets;
         }
+
     } catch (error) {
         console.log(error);
         throw new Error('Something wrong getting user secrets');

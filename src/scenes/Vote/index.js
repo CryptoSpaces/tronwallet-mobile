@@ -50,14 +50,14 @@ const INITIAL_STATE = {
 class VoteScene extends PureComponent {
   state = INITIAL_STATE
 
-  async componentDidMount () {
+  async componentDidMount() {
     this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
   componentWillUnmount() {
     this.didFocusSubscription.remove()
   }
-  
+
 
   _loadData = async () => {
     this.props.navigation.setParams({ onSubmit: this._submit, disabled: true })
@@ -79,7 +79,7 @@ class VoteScene extends PureComponent {
     try {
       const store = await getCandidateStore()
       this.setState({ voteList: this._getVoteList(store) })
-    } catch(e) {
+    } catch (e) {
       e.name = 'Load Candidates Error'
       this._throwError(e)
     }
@@ -114,20 +114,20 @@ class VoteScene extends PureComponent {
       this._throwError(e)
     }
   }
-  
+
   _loadFreeze = () => {
     if (this.props.context.freeze.value) {
       const { total } = this.props.context.freeze.value
       this.setState({ totalRemaining: total || 0 })
     }
   }
-  
+
   _loadUserVotes = async () => {
     try {
       const userVotes = await Client.getUserVotes()
       this.setState({ userVotes })
       return userVotes
-    } catch(e) {
+    } catch (e) {
       e.name = 'Load User Votes Error'
       this._throwError(e, 'votesError')
     }
@@ -197,6 +197,7 @@ class VoteScene extends PureComponent {
   _onChangeVotes = (value, address) => {
     const { navigation } = this.props
     const { currentVotes, totalRemaining } = this.state
+    const totalFrozen = this.props.context.freeze.value
 
     const newVotes = { ...currentVotes, [address]: value }
     const totalUserVotes = reduce(
@@ -206,10 +207,11 @@ class VoteScene extends PureComponent {
       },
       0
     )
-    const total = totalRemaining - totalUserVotes
-    navigation.setParams({ disabled: total < 0 && totalUserVotes > 0 })
-    this.setState({ currentVotes: newVotes, totalRemaining: total, ...this._resetModalState() })
+    const totalVotesRemaining = totalFrozen - totalUserVotes
+    navigation.setParams({ disabled: totalVotesRemaining < 0 && totalUserVotes > 0 })
+    this.setState({ currentVotes: newVotes, totalRemaining: totalVotesRemaining, ...this._resetModalState() })
   }
+
 
   _onSearch = async value => {
     const { voteList } = this.state
