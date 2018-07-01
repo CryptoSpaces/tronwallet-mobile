@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform, SafeAreaView, View } from 'react-native'
+import { StatusBar, Platform, SafeAreaView, View, AsyncStorage } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -40,6 +40,7 @@ import * as Utils from './src/components/Utils'
 import ButtonGradient from './src/components/ButtonGradient'
 
 import Client from './src/services/client'
+import NodesIp from './src/utils/nodeIp'
 import { Context } from './src/store/context'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
@@ -83,7 +84,7 @@ const VoteStack = createStackNavigator(
             </Utils.TitleWrapper>
             <View style={{ marginRight: 15 }}>
               <Utils.Text>{navigation.getParam('totalRemaining')}</Utils.Text>
-              {(navigation.getParam('votesError') || navigation.getParam('listError')) ? 
+              {(navigation.getParam('votesError') || navigation.getParam('listError')) ?
                 <ButtonGradient
                   size='small'
                   text='Sync'
@@ -285,6 +286,7 @@ class App extends Component {
     this._getFreeze()
     this._getPrice()
     this._getPublicKey()
+    this._setNodes()
   }
 
   _getFreeze = async () => {
@@ -311,6 +313,14 @@ class App extends Component {
       this.setState({ publicKey: { value: publicKey } })
     } catch (err) {
       this.setState({ publicKey: { err } })
+    }
+  }
+
+  _setNodes = async () => {
+    try {
+      await NodesIp.initNodes();
+    } catch (error) {
+      console.warn(error);
     }
   }
 

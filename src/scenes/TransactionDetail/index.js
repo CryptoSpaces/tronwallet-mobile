@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, NetInfo, SafeAreaView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
+import moment from 'moment'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client, { ONE_TRX } from '../../services/client'
 import LoadingScene from '../../components/LoadingScene'
-import moment from 'moment'
+import DetailRow from './detailRow'
 
 const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
-
 class TransactionDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -98,9 +98,6 @@ class TransactionDetail extends Component {
     const { signedTransaction } = this.state
     this.setState({ loadingSubmit: true })
     try {
-      // let error = null;
-      // const { success, code } = await Client.submitTransaction(signedTransaction)
-      // if (!success) error = code;
       let success = false;
       const { code } = await Client.broadcastTransaction(signedTransaction)
       if (code === 'SUCCESS') success = true;
@@ -128,57 +125,36 @@ class TransactionDetail extends Component {
     for (const ctr in contracts[0]) {
       if (ctr === 'amount' || ctr === 'frozenBalance') {
         contractsElements.push(
-          <Utils.Row
+          <DetailRow
             key={ctr}
-            style={{ justifyContent: 'space-between', marginVertical: 5 }}
-          >
-            <Utils.Text secondary size='xsmall'>
-              {firstLetterCapitalize(ctr)}
-            </Utils.Text>
-            <Utils.Text size='xsmall'>{contracts[0][ctr] / ONE_TRX}</Utils.Text>
-          </Utils.Row>
+            title={firstLetterCapitalize(ctr)}
+            text={contracts[0][ctr] / ONE_TRX} />
         )
       } else if (ctr === 'votes') {
         const totalVotes = contracts[0][ctr].reduce((prev, curr) => {
           return prev + curr.voteCount
         }, 0)
         contractsElements.push(
-          <Utils.Row
-            key={'votes'}
-            style={{ justifyContent: 'space-between', marginVertical: 5 }}
-          >
-            <Utils.Text secondary size='xsmall'>
-              TotalVotes
-            </Utils.Text>
-            <Utils.Text size='xsmall'>{totalVotes}</Utils.Text>
-          </Utils.Row>
+          <DetailRow
+            key={ctr}
+            title="TotalVotes"
+            text={totalVotes} />
         )
       } else {
         contractsElements.push(
-          <Utils.Row
+          <DetailRow
             key={ctr}
-            style={{ justifyContent: 'space-between', marginVertical: 5 }}
-          >
-            <Utils.Text secondary size='xsmall'>
-              {firstLetterCapitalize(ctr)}
-            </Utils.Text>
-            <Utils.Text size='xsmall'>{contracts[0][ctr]}</Utils.Text>
-          </Utils.Row>
+            title={firstLetterCapitalize(ctr)}
+            text={contracts[0][ctr]} />
         )
       }
     }
     contractsElements.push(
-      <Utils.Row
-        style={{ justifyContent: 'space-between', marginVertical: 5 }}
-        key={'timestamp'}
-      >
-        <Utils.Text secondary size='xsmall'>
-          Time
-        </Utils.Text>
-        <Utils.Text size='xsmall'>
-          {moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}
-        </Utils.Text>
-      </Utils.Row>
+      <DetailRow
+        key={'time'}
+        title={"Time"}
+        text={moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}
+      />
     )
 
     return <Utils.Content>{contractsElements}</Utils.Content>

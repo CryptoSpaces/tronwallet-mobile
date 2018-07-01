@@ -12,8 +12,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import Client from '../../services/client'
-import LoadingScene from '../../components/LoadingScene'
-import ChangePKModal from './ChangePKModal'
+import ChangeNodeModal from './ChangeNodeModal'
 
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import fontelloConfig from '../../assets/icons/config.json'
@@ -38,7 +37,7 @@ class Settings extends Component {
   state = {
     currentUser: '',
     loading: true,
-    changePKVisible: false
+    nodeModalVisible: false
   }
 
   componentDidMount () {
@@ -118,6 +117,7 @@ class Settings extends Component {
 
   renderList = () => {
     const { currentUser } = this.state
+  
     let address = `${currentUser.slice(0, 10)}...${currentUser.substr(
       currentUser.length - 10
     )}`
@@ -128,10 +128,10 @@ class Settings extends Component {
         icon: 'user,-person,-avtar,-profile-picture,-dp'
       },
       {
-        title: 'Edit Public Key',
-        description: 'Change public key',
+        title: 'Edit Nodes',
+        description: 'Choose a node of your preference',
         icon: 'key,-password,-lock,-privacy,-login',
-        onPress: () => this.setState({ changePKVisible: true })
+        onPress: () => this.setState({ nodeModalVisible: true })
       }
     ]
 
@@ -175,9 +175,7 @@ class Settings extends Component {
   }
 
   render () {
-    const { loading, changePKVisible } = this.state
-    if (loading) return <LoadingScene />
-
+    const { nodeModalVisible } = this.state
     return (
       <Utils.Container
         keyboardShouldPersistTaps={'always'}
@@ -186,9 +184,9 @@ class Settings extends Component {
         {this.renderList()}
         <Utils.VerticalSpacer size='big' />
         {this.renderLogout()}
-        <ChangePKModal
-          visible={changePKVisible}
-          onClose={() => this.setState({ changePKVisible: false })}
+        <ChangeNodeModal
+          visible={nodeModalVisible}
+          onClose={() => this.setState({ nodeModalVisible: false })}
           onLoadData={this.onLoadData}
         />
       </Utils.Container>
