@@ -196,9 +196,8 @@ class VoteScene extends PureComponent {
 
   _onChangeVotes = (value, address) => {
     const { navigation } = this.props
-    const { currentVotes, totalRemaining } = this.state
-    const totalFrozen = this.props.context.freeze.value
-
+    const { currentVotes } = this.state
+    const totalFrozen = this.props.context.freeze.value.total
     const newVotes = { ...currentVotes, [address]: value }
     const totalUserVotes = reduce(
       newVotes,

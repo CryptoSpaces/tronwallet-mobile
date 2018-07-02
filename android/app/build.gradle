@@ -105,8 +105,8 @@ android {
 
     defaultConfig {
         applicationId "com.tronwallet2"
-        minSdkVersion 26
-        targetSdkVersion 26
+        minSdkVersion 22
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

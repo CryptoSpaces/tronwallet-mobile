@@ -133,7 +133,7 @@ class LoginScene extends Component {
       )
     }
 
-    return (<ButtonGradient text='SIGN IN' onPress={this.signIn} size='small' />)
+    return (<ButtonGradient text='SIGN IN' onPress={this._submit} size='small' />)
   }
 
   render() {
@@ -193,6 +193,7 @@ class LoginScene extends Component {
                 returnKeyType='send'
                 padding={Spacing.small}
               />
+              {this.renderSubmitButton()}
             </Utils.FormGroup>
             <Utils.Content justify='center' align='center'>
               {ChangedPassword && (

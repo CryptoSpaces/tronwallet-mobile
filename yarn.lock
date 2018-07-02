@@ -5388,7 +5388,7 @@ react-native-tab-view@^1.0.0:
 
 react-native-tron@gettyio/react-native-tron#master:
   version "1.0.0"
-  resolved "https://codeload.github.com/gettyio/react-native-tron/tar.gz/34aa231d2b288dec747e7d7f4194f8389d565559"
+  resolved "https://codeload.github.com/gettyio/react-native-tron/tar.gz/a5f32e506efc5b0775093db95d4ed57ed6566deb"
 
 react-native-vector-icons@4.5.0:
   version "4.5.0"

@@ -1,15 +1,14 @@
 import axios from 'axios'
-import { Auth } from 'aws-amplify'
-export const ONE_TRX = 1000000
 import Config from 'react-native-config'
+import { Auth } from 'aws-amplify'
+import NodesIp from '../utils/nodeIp'
+export const ONE_TRX = 1000000
 
 class ClientWallet {
   constructor(opt = null) {
     this.api = Config.MAIN_API_URL
     this.notifier = Config.NOTIFIER_API_URL
     this.tronwalletApi = Config.TRON_WALLET_API_URL
-    this.node = "35.231.121.122:50051" // constant for now
-    this.network = "testnet"
   }
 
   //*============AWS Functions============*//
@@ -109,8 +108,9 @@ class ClientWallet {
 
   //*============TronWalletServerless Api============*//
   async getAssetList() {
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     try {
-      const { data } = await axios.get(`${this.tronwalletApi}/vote/list?node=${this.node}`)
+      const { data } = await axios.get(`${this.tronwalletApi}/vote/list?node=${node}`)
       return data;
     } catch (error) {
       throw new Error(error.message || error)
@@ -118,10 +118,10 @@ class ClientWallet {
   }
 
   async broadcastTransaction(transactionSigned) {
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       transactionSigned,
-      network: this.network,
-      node: this.node
+      node: nodeIp,
     }
     try {
       const { data: { result } } = await axios.post(`${this.tronwalletApi}/transaction/broadcast`, reqBody);
@@ -133,13 +133,13 @@ class ClientWallet {
   }
 
   async getTransferTransaction({ to, from, token, amount }) {
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       from,
       to,
       amount,
       token,
-      network: this.network,
-      node: this.node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/send`, reqBody)
@@ -152,12 +152,12 @@ class ClientWallet {
 
   async getFreezeTransaction(freezeAmount) {
     const address = await this.getPublicKey()
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       address,
       freezeAmount,
       freezeDuration: 3,
-      network: this.network,
-      node: this.node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/freeze`, reqBody)
@@ -170,18 +170,19 @@ class ClientWallet {
 
   async getParticipateTransaction({ participateAmount, participateToken, participateAddress }) {
     const address = await this.getPublicKey();
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       address,
       participateAmount,
       participateToken,
       participateAddress,
-      network: this.network,
-      node: this.node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/participate`, reqBody)
       return transaction;
     } catch (error) {
+      console.warn(error)
       console.warn(error.response)
       throw new Error(error.message || error)
     }
@@ -189,11 +190,11 @@ class ClientWallet {
 
   async getVoteWitnessTransaction(votes) {
     const address = await this.getPublicKey();
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       address,
       votes,
-      network: this.network,
-      node: this.node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/vote`, reqBody)
