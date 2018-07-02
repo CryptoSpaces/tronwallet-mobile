@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Modal, View, ActivityIndicator } from 'react-native'
+import { Modal, View, ScrollView, StyleSheet } from 'react-native'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 
 //Design
@@ -17,7 +17,9 @@ const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 class ChangePKModal extends PureComponent {
   state = {
     mainNode: null,
+    mainNodePort: null,
     solidityNode: null,
+    solidityNodePort: null,
     loading: false,
     error: false,
   }
@@ -26,33 +28,49 @@ class ChangePKModal extends PureComponent {
   _loadData = async () => {
     try {
       const { nodeIp, nodeSolidityIp } = await NodesIp.getAllNodesIp()
-      this.setState({ mainNode: nodeIp, solidityNode: nodeSolidityIp })
+      const [mainNode, mainNodePort] = nodeIp.split(':')
+      const [solidityNode, solidityNodePort] = nodeSolidityIp.split(':')
+      this.setState({ mainNode, mainNodePort, solidityNode, solidityNodePort })
     } catch (error) {
       console.warn(error.message)
       this.setState({ mainNode: NodesIp.nodeIp, solidityNode: NodesIp.nodeSolidityIp })
     }
   }
 
-  _submit = () => {
-    const { mainNode, solidityNode } = this.state;
-    const ipPattern = /^\d{1,3}(\.\d{1,3}){3}:\d{1,5}$/
+  testIpValidity = (ip) => /^\d{1,3}(\.\d{1,3}){3}:\d{1,5}$/.test(ip)
 
-    this.setState({ loading: true });
+  _submit = (type) => {
+    const { mainNode, mainNodePort, solidityNode, solidityNodePort } = this.state;
 
-    if (!ipPattern.test(mainNode) || !ipPattern.test(solidityNode)) {
-      this.setState({ loading: false, error: 'Please put a valid IP on both fields' })
+    const ipToSubmit = type === 'solidity' ?
+      `${solidityNode}:${solidityNodePort}` : `${mainNode}:${mainNodePort}`
+
+    this.setState({ loading: true })
+
+    if (!this.testIpValidity(ipToSubmit)) {
+      this.setState({ loading: false, error: 'Please put a valid IP' })
       return
     }
-    this._updateNodes();
+    this._updateNodes(type, ipToSubmit);
   }
 
-  _updateNodes = async () => {
-    const { mainNode, solidityNode } = this.state;
+  _updateNodes = async (type, nodeip) => {
     try {
-      await NodesIp.setAllNodesIp(mainNode, solidityNode)
+      await NodesIp.setNodeIp(type, nodeip)
       this.setState({ loading: false, error: null })
     } catch (error) {
       this.setState({ loading: false, error: 'Something wrong while updating nodes ip' })
+    }
+  }
+
+
+  _reset = async (type) => {
+    try {
+      await NodesIp.resetNodesIp(type)
+      this._loadData()
+      this.setState({ loading: false, error: null })
+    } catch (error) {
+      this.setState({ loading: false, error: 'Something wrong while reseting node ip' })
     }
   }
 
@@ -75,7 +93,13 @@ class ChangePKModal extends PureComponent {
 
   render() {
     const { visible } = this.props
-    const { error, mainNode, solidityNode, loading } = this.state
+    const { error,
+      mainNode,
+      mainNodePort,
+      solidityNode,
+      solidityNodePort,
+      loading } = this.state
+
     return (
       <Modal
         animationType='slide'
@@ -88,58 +112,126 @@ class ChangePKModal extends PureComponent {
           keyboardShouldPersistTaps={'always'}
           keyboardDismissMode='interactive'
         >
-          <Utils.StatusBar transparent />
-          <Header
-            leftIcon={<View />}
-            onRightPress={this.closeModal}
-            rightIcon={
-              <Icon
-                name='stop,-disabled,-not-allowed,-close,-exit'
-                size={26}
-                color={Colors.primaryText}
-              />
-            }
-          />
-          <Utils.Content justify='center'>
-            <Utils.Text size='xsmall' secondary>
-              Main Node
-            </Utils.Text>
-            <Utils.FormInput
-              defaultValue={mainNode}
-              keyboardType='numeric'
-              placeholder='Loading ip'
-              onChangeText={text => this.changeInput(text, 'mainNode')}
-              underlineColorAndroid='transparent'
+          <ScrollView>
+            <Utils.StatusBar transparent />
+            <Header
+              leftIcon={<View />}
+              onRightPress={this.closeModal}
+              rightIcon={
+                <Icon
+                  name='stop,-disabled,-not-allowed,-close,-exit'
+                  size={26}
+                  color={Colors.primaryText}
+                />
+              }
             />
-            <Utils.Text size='xsmall' secondary>
-              Solidity Node
+            <View style={styles.card}>
+              <Utils.Text size='xsmall' secondary>
+                Main Node
             </Utils.Text>
-            <Utils.FormInput
-              defaultValue={solidityNode}
-              keyboardType='numeric'
-              placeholder='Loading ip'
-              onChangeText={text => this.changeInput(text, 'solidityNode')}
-              underlineColorAndroid='transparent'
-            />
-            {loading ? <ActivityIndicator color="#ffffff" size="small" /> :
-              <ButtonGradient
-                text='Update Nodes Ip'
-                onPress={this._submit}
-                size='small' />}
-          </Utils.Content>
-          {error && <Utils.Error>{error}</Utils.Error>}
-          <Utils.Content justify='center' align='center'>
-            <Utils.Text color="#ffffff" font="light" size="small">
-              With this option you can select the node that will better suit
-              your needs and preferences. Please be careful while updating
-              the node IP while wrong IP can lead to malfunctions within
-              your wallet
+              <Utils.Row justify="space-between">
+                <Utils.FormInput
+                  defaultValue={mainNode}
+                  keyboardType='numeric'
+                  placeholder='Loading ip'
+                  style={styles.buttonUpdate}
+                  onChangeText={text => this.changeInput(text, 'mainNode')}
+                  underlineColorAndroid='transparent'
+                />
+                <Utils.FormInput
+                  defaultValue={mainNodePort}
+                  keyboardType='numeric'
+                  placeholder='Loading port'
+                  style={styles.buttonReset}
+                  onChangeText={text => this.changeInput(text, 'mainNodePort')}
+                  underlineColorAndroid='transparent'
+                />
+              </Utils.Row>
+              <Utils.Row justify="space-between">
+                <View style={styles.buttonUpdate}>
+                  <ButtonGradient
+                    text='Update and Connect'
+                    onPress={() => this._submit('main')}
+                    size='small' />
+                </View>
+                <View style={styles.buttonReset}>
+                  <ButtonGradient
+                    text='Reset'
+                    onPress={() => this._reset('main')}
+                    size='small' />
+                </View>
+              </Utils.Row>
+            </View>
+            <Utils.VerticalSpacer size="medium" />
+            <View style={styles.card}>
+              <Utils.Text size='xsmall' secondary>
+                Solidity Node
             </Utils.Text>
-          </Utils.Content>
+              <Utils.Row justify="space-between">
+                <Utils.FormInput
+                  defaultValue={solidityNode}
+                  keyboardType='numeric'
+                  placeholder='Loading ip'
+                  style={styles.buttonUpdate}
+                  onChangeText={text => this.changeInput(text, 'solidityNode')}
+                  underlineColorAndroid='transparent'
+                />
+                <Utils.FormInput
+                  defaultValue={solidityNodePort}
+                  keyboardType='numeric'
+                  placeholder='Loading port'
+                  style={styles.buttonReset}
+                  onChangeText={text => this.changeInput(text, 'solidityNodePort')}
+                  underlineColorAndroid='transparent'
+                />
+              </Utils.Row>
+              <Utils.Row justify="space-between">
+                <View style={styles.buttonUpdate}>
+                  <ButtonGradient
+                    text='Update and Connect'
+                    onPress={() => this._submit('solidity')}
+                    size='small' />
+                </View>
+                <View style={styles.buttonReset}>
+                  <ButtonGradient
+                    text='Reset'
+                    onPress={() => this._reset('solidity')}
+                    size='small' />
+                </View>
+              </Utils.Row>
+            </View>
+            {error && <Utils.Error>{error}</Utils.Error>}
+            <Utils.Content justify='center' align='center'>
+              <Utils.Text color="#ffffff" font="light" size="xsmall">
+                With this option you can select the node that will better suit
+                your needs and preferences. Please be careful while updating
+                the node IP while wrong IP can lead to malfunctions within
+                your wallet.
+                Example: 35.231.121.122:50051
+            </Utils.Text>
+            </Utils.Content>
+          </ScrollView>
         </Utils.Container>
-      </Modal >
+      </Modal>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  card: {
+    width: '90%',
+    borderRadius: 8,
+    alignSelf: 'center',
+    backgroundColor: Colors.darkerBackground,
+    borderColor: Colors.darkerBackground,
+    padding: 20,
+  },
+  buttonUpdate: {
+    width: '70%'
+  },
+  buttonReset: {
+    width: '28%'
+  }
+})
 
 export default ChangePKModal

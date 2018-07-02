@@ -29,6 +29,18 @@ class NodeIp {
         }
     }
 
+    async setNodeIp(type, nodeip) {
+        //Types
+        // 'main' or 'solidity'
+        try {
+            const item = type === 'solidity' ? 'NODE_SOLIDITY_IP' : 'NODE_IP'
+            await AsyncStorage.setItem(item, nodeip)
+            alert('Node IP updated!')
+        } catch (error) {
+            console.warn(error)
+            throw new Error(error)
+        }
+    }
     async setAllNodesIp(mainnode, soliditynode) {
         try {
             const setNode = () => AsyncStorage.setItem('NODE_IP', mainnode)
@@ -40,13 +52,26 @@ class NodeIp {
             throw new Error(error)
         }
     }
-
+    
     async getAllNodesIp() {
         try {
             const nodes = this.getStorageNodes()
             if (nodes) return nodes
             else throw new Error('No node found!')
         } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async resetNodesIp(type) {
+        //Types
+        // 'main' or 'solidity'
+        try {
+            const item = type === 'solidity' ? 'NODE_SOLIDITY_IP' : 'NODE_IP'
+            const newIp = type === 'solidity' ? this.nodeSolidityIp : this.nodeIp
+            await AsyncStorage.setItem(item, newIp)
+        } catch (error) {
+            console.warn(error)
             throw new Error(error)
         }
     }

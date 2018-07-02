@@ -12,7 +12,7 @@ const ButtonGradient = ({ text, onPress, disabled, size, width }) => (
       end={{x: 1, y: 0}}
       colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
       style={[styles.btnGradient, { padding: Spacing[size], opacity: disabled ? 0.4 : 1, width: width ? width : '100%' }]}>
-      <Utils.Text>{text}</Utils.Text>
+      <Utils.Text size={size}>{text}</Utils.Text>
     </LinearGradient>
   </TouchableOpacity>
 );
