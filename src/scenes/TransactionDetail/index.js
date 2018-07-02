@@ -124,11 +124,12 @@ class TransactionDetail extends Component {
     const contractsElements = []
     for (const ctr in contracts[0]) {
       if (ctr === 'amount' || ctr === 'frozenBalance') {
+        const isTRX = !contracts[0].token  //weird api response
         contractsElements.push(
           <DetailRow
             key={ctr}
             title={firstLetterCapitalize(ctr)}
-            text={contracts[0][ctr] / ONE_TRX} />
+            text={contracts[0][ctr] / (isTRX ? ONE_TRX : 1)} />
         )
       } else if (ctr === 'votes') {
         const totalVotes = contracts[0][ctr].reduce((prev, curr) => {

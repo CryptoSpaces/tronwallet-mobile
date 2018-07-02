@@ -8,11 +8,11 @@ class NodeIp {
     }
 
     getStorageNodes = async () => {
-        const nodes = await Promise.all([
+        const [nodeIp, nodeSolidityIp] = await Promise.all([
             AsyncStorage.getItem("NODE_IP"),
             AsyncStorage.getItem("NODE_SOLIDITY_IP")
         ])
-        if (nodes.length) return { nodeIp: nodes[0], nodeSolidityIp: nodes[1] }
+        if (nodeIp && nodeSolidityIp) return { nodeIp, nodeSolidityIp }
         else return null;
     }
 
@@ -52,7 +52,7 @@ class NodeIp {
             throw new Error(error)
         }
     }
-    
+
     async getAllNodesIp() {
         try {
             const nodes = this.getStorageNodes()

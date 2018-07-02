@@ -101,7 +101,6 @@ class SendScene extends Component {
     this.setState({
       to: '',
       token: 'Select your balance',
-      amount: 0,
     });
   }
 
@@ -116,10 +115,10 @@ class SendScene extends Component {
 
   transferAsset = async () => {
     const { from, to, amount, token } = this.state
-    this.setState({ loadingSign: true })
+    this.setState({ loadingSign: true, error: null })
     try {
       //TronScan
-      // const data = await Client.getTransactionString({from,to,amount,token});
+      //const data = await Client.getTransactionString({from,to,amount,token});
       //Serverless
       const data = await Client.getTransferTransaction({ from, to, amount, token });
 
@@ -135,18 +134,17 @@ class SendScene extends Component {
 
       this.openTransactionDetails(data)
       //this.openDeepLink(dataToSend)
+      this.clearInput()
 
     } catch (error) {
       this.setState({ error: 'Error getting transaction', loadingSign: false })
-    } finally {
-      this.clearInput()
     }
   }
 
   openTransactionDetails = async (transactionUnsigned) => {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned);
-      this.setState({ loadingSign: false }, () => {
+      this.setState({ loadingSign: false, error: null }, () => {
         this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
       })
     } catch (error) {
@@ -284,7 +282,7 @@ class SendScene extends Component {
               </Utils.Text>
               <Utils.Row align='center' justify='flex-start'>
                 <Utils.FormInput
-                  ref={i => this.amount = i}
+                  ref={ref => this.amount = ref}
                   underlineColorAndroid='transparent'
                   keyboardType='numeric'
                   onChangeText={text => this.changeInput(text, 'amount')}
