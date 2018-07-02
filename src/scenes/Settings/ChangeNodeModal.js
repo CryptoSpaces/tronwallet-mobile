@@ -107,6 +107,7 @@ class ChangePKModal extends PureComponent {
             <Utils.FormInput
               defaultValue={mainNode}
               keyboardType='numeric'
+              placeholder='Loading ip'
               onChangeText={text => this.changeInput(text, 'mainNode')}
               underlineColorAndroid='transparent'
             />
@@ -116,6 +117,7 @@ class ChangePKModal extends PureComponent {
             <Utils.FormInput
               defaultValue={solidityNode}
               keyboardType='numeric'
+              placeholder='Loading ip'
               onChangeText={text => this.changeInput(text, 'solidityNode')}
               underlineColorAndroid='transparent'
             />
@@ -130,7 +132,7 @@ class ChangePKModal extends PureComponent {
             <Utils.Text color="#ffffff" font="light" size="small">
               With this option you can select the node that will better suit
               your needs and preferences. Please be careful while updating
-              the node ip while wrong ips can lead to malfunctions within
+              the node IP while wrong IP can lead to malfunctions within
               your wallet
             </Utils.Text>
           </Utils.Content>

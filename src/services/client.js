@@ -108,7 +108,7 @@ class ClientWallet {
 
   //*============TronWalletServerless Api============*//
   async getAssetList() {
-    const node = await NodesIp.getNodeIp()
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     try {
       const { data } = await axios.get(`${this.tronwalletApi}/vote/list?node=${node}`)
       return data;
@@ -118,10 +118,10 @@ class ClientWallet {
   }
 
   async broadcastTransaction(transactionSigned) {
-    const node = await NodesIp.getNodeIp()
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       transactionSigned,
-      node
+      node: nodeIp,
     }
     try {
       const { data: { result } } = await axios.post(`${this.tronwalletApi}/transaction/broadcast`, reqBody);
@@ -133,13 +133,13 @@ class ClientWallet {
   }
 
   async getTransferTransaction({ to, from, token, amount }) {
-    const node = await NodesIp.getNodeIp()
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       from,
       to,
       amount,
       token,
-      node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/send`, reqBody)
@@ -152,12 +152,12 @@ class ClientWallet {
 
   async getFreezeTransaction(freezeAmount) {
     const address = await this.getPublicKey()
-    const node = await NodesIp.getNodeIp()
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       address,
       freezeAmount,
       freezeDuration: 3,
-      node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/freeze`, reqBody)
@@ -170,13 +170,13 @@ class ClientWallet {
 
   async getParticipateTransaction({ participateAmount, participateToken, participateAddress }) {
     const address = await this.getPublicKey();
-    const node = await NodesIp.getNodeIp()
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       address,
       participateAmount,
       participateToken,
       participateAddress,
-      node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/participate`, reqBody)
@@ -190,11 +190,11 @@ class ClientWallet {
 
   async getVoteWitnessTransaction(votes) {
     const address = await this.getPublicKey();
-    const node = await NodesIp.getNodeIp()
+    const { nodeIp } = await NodesIp.getAllNodesIp()
     const reqBody = {
       address,
       votes,
-      node
+      node: nodeIp,
     }
     try {
       const { data: { transaction } } = await axios.post(`${this.tronwalletApi}/unsigned/vote`, reqBody)
