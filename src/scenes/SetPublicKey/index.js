@@ -16,7 +16,6 @@ import ButtonGradient from '../../components/ButtonGradient'
 import { isAddressValid } from '../../services/address'
 import Client from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
-import { createUserKeyPair, getUserSecrets, recoverUserKeypair } from '../../utils/secretsUtils';
 
 export default class SetPkScene extends Component {
   state = {
@@ -48,16 +47,7 @@ export default class SetPkScene extends Component {
     const { userPublicKey } = this.state
     const { navigation } = this.props
     this.setState({ loading: true, error: null })
-    //Testing around
-    // try {
-    //   await recoverUserKeypair(userPublicKey);
-    //   navigation.navigate('App');
-    // } catch (error) {
-    //   this.setState({
-    //     error: error.message,
-    //     loading: false
-    //   })
-    // }
+
     try {
       if (!isAddressValid(userPublicKey)) throw new Error('Address invalid')
       await Client.setUserPk(userPublicKey)

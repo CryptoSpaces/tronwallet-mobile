@@ -10,7 +10,7 @@ import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 
 //Services
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
+import { createUserKeyPair } from '../../utils/secretsUtils';
 
 class SignupScene extends Component {
   state = {
