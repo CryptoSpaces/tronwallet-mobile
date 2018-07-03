@@ -8,12 +8,17 @@ class NodeIp {
     }
 
     getStorageNodes = async () => {
-        const [nodeIp, nodeSolidityIp] = await Promise.all([
-            AsyncStorage.getItem("NODE_IP"),
-            AsyncStorage.getItem("NODE_SOLIDITY_IP")
-        ])
-        if (nodeIp && nodeSolidityIp) return { nodeIp, nodeSolidityIp }
-        else return null;
+        try {
+            const [nodeIp, nodeSolidityIp] = await Promise.all([
+                AsyncStorage.getItem("NODE_IP"),
+                AsyncStorage.getItem("NODE_SOLIDITY_IP")
+            ])
+            if (nodeIp && nodeSolidityIp) return { nodeIp, nodeSolidityIp }
+            else return null;
+        } catch (error) {
+            console.warn(error)
+            return { nodeIp: this.nodeIp, nodeSolidityIp: this.nodeSolidityIp }
+        }
     }
 
     async initNodes() {
@@ -35,7 +40,6 @@ class NodeIp {
         try {
             const item = type === 'solidity' ? 'NODE_SOLIDITY_IP' : 'NODE_IP'
             await AsyncStorage.setItem(item, nodeip)
-            alert('Node IP updated!')
         } catch (error) {
             console.warn(error)
             throw new Error(error)
@@ -46,7 +50,6 @@ class NodeIp {
             const setNode = () => AsyncStorage.setItem('NODE_IP', mainnode)
             const setSolidityNode = () => AsyncStorage.setItem('NODE_SOLIDITY_IP', soliditynode)
             await Promise.all([setNode(), setSolidityNode()])
-            alert('Nodes IPs updated')
         } catch (error) {
             console.warn(error)
             throw new Error(error)
@@ -59,6 +62,7 @@ class NodeIp {
             if (nodes) return nodes
             else throw new Error('No node found!')
         } catch (error) {
+            console.warn(error)
             throw new Error(error)
         }
     }
