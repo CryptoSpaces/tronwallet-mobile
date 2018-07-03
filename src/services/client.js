@@ -99,10 +99,11 @@ class ClientWallet {
     const txs = transactions[0].data.data.filter(d => d.contractType !== 1)
     const trfs = transactions[1].data.data.map(d => ({ ...d, contractType: 1, ownerAddress: owner }))
     let sortedTxs = [...txs, ...trfs].sort((a, b) => (b.timestamp - a.timestamp))
-    sortedTxs = sortedTxs.map(t => ({
-      type: this.getContractType(t.contractType),
-      ...t
+    sortedTxs = sortedTxs.map(transaction => ({
+      type: this.getContractType(transaction.contractType),
+      ...transaction
     }))
+    console.log(">>>", sortedTxs)
     return sortedTxs
   }
 

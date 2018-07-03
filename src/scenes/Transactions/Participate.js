@@ -28,7 +28,7 @@ export default ({ item }) => {
           <Utils.VerticalSpacer size='xsmall' />
           <Utils.Text size='xsmall'>{contractData.token}</Utils.Text>
           <Utils.VerticalSpacer size='xsmall' />
-          <Utils.Text size='xsmall' secondary>{moment(contractData.timestamp).fromNow()}</Utils.Text>
+          <Utils.Text size='xsmall' secondary>{moment(item.timestamp).fromNow()}</Utils.Text>
         </Utils.View>
       </Utils.Row>
     </Utils.TransactionCard>
