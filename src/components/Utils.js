@@ -132,6 +132,7 @@ export const Text = styled.Text`
   ${props => props.secondary && css`color: ${Colors.secondaryText}`};
   ${props => props.success && css`color: ${Colors.green}`};
   ${props => props.lineHeight && css`line-height: ${props.lineHeight}`};
+  ${props => props.letterSpacing && css`letter-spacing: ${props.letterSpacing}`};
   ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
   ${props => props.marginTop && css`margin-top: ${Spacing[props.marginTop]}px`};
 `
@@ -238,22 +239,22 @@ export const CloseButton = styled.TouchableOpacity`
 
 export const ButtonWrapper = styled.TouchableOpacity`
   position: ${props => props.absolute ? 'absolute' : 'relative'};
-  ${props => props.side && `${props.side}: ${Spacing.medium}`};
   align-self: ${props => props.alignSelf || 'auto'};
   padding-vertical: ${Spacing.xsmall}px;
   padding-horizontal: ${Spacing.small}px;
-  ${props => props.marginBottom && `margin-bottom: ${Spacing[props.marginBottom]}`}px;
   justify-content: center;
   align-items: center;
+  ${props => props.side && `${props.side}: ${Spacing.medium}`};
+  ${props => props.marginBottom && css`margin-bottom: ${Spacing[props.marginBottom]}px;`};
 `
 ButtonWrapper.propTypes = {
   marginBottom: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large']),
   side: PropTypes.oneOf(['right', 'left'])
 }
 
-export const Button = props => (
+export const Button = ({ secondary, ...props }) => (
   <ButtonWrapper onPress={props.onPress}>
-    <Text>{props.children}</Text>
+    <Text secondary={secondary}>{props.children}</Text>
   </ButtonWrapper>
 )
 
@@ -264,7 +265,7 @@ export const Card = styled.View`
   border-radius: 6px;
 `
 export const TransactionCard = styled.View`
-  padding-top: ${Spacing.medium}
+  padding-top: ${Spacing.medium};
   background-color: ${Colors.background};
   width: 100%;
   border-radius: 6px;

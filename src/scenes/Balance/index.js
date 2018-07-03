@@ -6,7 +6,7 @@ import { LineChart } from 'react-native-svg-charts'
 import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
 
-import Client, { ONE_TRX } from '../../services/client'
+import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatNumber from '../../utils/formatNumber'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -20,6 +20,8 @@ import getBalanceStore from '../../store/balance'
 import getAssetsStore from '../../store/assets'
 import { Context } from '../../store/context'
 
+import { getUserSecrets } from '../../utils/secretsUtils'
+
 const PRICE_PRECISION = 4
 const LINE_CHART_HEIGHT = 40
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
@@ -31,17 +33,25 @@ class BalanceScene extends Component {
     assetList: [],
     trxHistory: [],
     trxBalance: 0,
-    refreshing: false
+    refreshing: false,
+    seedConfirmed: true
   }
 
-  async componentDidMount() {
-    const assetList = await this._getAssetsFromStore()
-    const assetBalance = await this._getBalancesFromStore()
-    this.setState({ assetList, assetBalance })
+  async componentDidMount () {
+    try {
+      const assetList = await this._getAssetsFromStore()
+      const assetBalance = await this._getBalancesFromStore()
+      const data = await getUserSecrets()
+      console.warn(data)
+      this.setState({ assetList, assetBalance, seedConfirmed: data.confirmed })
+    } catch (err) {
+      this._loadData()
+    }
+    this._loadData()
     this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
@@ -78,14 +88,11 @@ class BalanceScene extends Component {
     try {
       const getData = await Promise.all([
         Client.getBalances(),
-        Client.getTokenList(),
-        axios.get(Config.TRX_PRICE_API)
+        Client.getTokenList()
       ])
 
       const trxHistory = await axios.get(`${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`)
-      this.setState({
-        trxHistory: trxHistory.data.Data.map(item => item.close)
-      })
+      this.setState({ trxHistory: trxHistory.data.Data.map(item => item.close) })
 
       await Promise.all([
         this._updateBalancesStore(getData[0]),
@@ -96,10 +103,13 @@ class BalanceScene extends Component {
       const assetList = await this._getAssetsFromStore()
       const trxBalance = assetBalance.find(item => item.name === 'TRX')
 
+      const { confirmed } = await getUserSecrets()
+
       this.setState({
-        trxBalance: trxBalance.balance || '0',
+        trxBalance: trxBalance.balance || 0,
         assetBalance,
-        assetList
+        assetList,
+        seedConfirmed: confirmed
       })
     } catch (error) {
       this.setState({ error: error.message })
@@ -185,6 +195,16 @@ class BalanceScene extends Component {
                     </FadeIn>
                   )}
                 </Context.Consumer>
+                {!this.state.seedConfirmed && (
+                  <React.Fragment>
+                    <Utils.VerticalSpacer />
+                    <FadeIn name='seed-warning'>
+                      <Utils.Button onPress={() => this.props.navigation.navigate('SeedCreate')} secondary>
+                        Please, press here to confim your 12 seed words.
+                      </Utils.Button>
+                    </FadeIn>
+                  </React.Fragment>
+                )}
               </Utils.View>
             </Utils.Row>
           </FadeIn>
