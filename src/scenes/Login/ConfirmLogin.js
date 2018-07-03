@@ -9,7 +9,8 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
+
+import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils'
 
 class ConfirmLogin extends Component {
   state = {
@@ -74,15 +75,14 @@ class ConfirmLogin extends Component {
       const userPublicKey = await Client.getPublicKey()
 
       if (userPublicKey) {
-
-        const { publicKey } = await getUserSecrets()
+        const { address } = await getUserSecrets()
         //Check if user is using a new account or old one
-        if (userPublicKey === publicKey) {
+        if (userPublicKey === address) {
           this.navigateToHome()
         } else {
-          //TODO - Navigate to new pages
+          // TODO - Navigate to new pages
           // navigation.navigate('SetPublicKey')     
-          }
+        }
 
       } else {
         await createUserKeyPair()

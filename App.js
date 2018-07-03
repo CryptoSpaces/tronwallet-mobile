@@ -30,10 +30,13 @@ import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
 import TransactionDetailScene from './src/scenes/TransactionDetail'
 import TransferScene from './src/scenes/Transfer'
-import SettingScene from './src/scenes/Settings'
+import SettingsScene from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeScene from './src/scenes/Freeze/FreezeRoute'
+import SeedCreate from './src/scenes/Seed/Create'
+import SeedRestore from './src/scenes/Seed/Restore'
+import SeedConfirm from './src/scenes/Seed/Confirm'
 
 import fontelloConfig from './src/assets/icons/config.json'
 import * as Utils from './src/components/Utils'
@@ -43,6 +46,8 @@ import Client from './src/services/client'
 import NodesIp from './src/utils/nodeIp'
 import { Context } from './src/store/context'
 
+import './ReactotronConfig'
+
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 Amplify.configure(awsExports)
@@ -51,10 +56,12 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTIm
 
 const SettingsStack = createStackNavigator(
   {
-    SettingScene
+    SettingsScene,
+    SeedCreate,
+    SeedConfirm,
+    SeedRestore
   },
   {
-    initialRouteName: 'SettingScene',
     navigationOptions: {
       headerStyle: {
         backgroundColor: Colors.background,

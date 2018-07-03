@@ -8,19 +8,20 @@ import {
 } from 'react-native'
 import { Auth } from 'aws-amplify'
 import { StackActions, NavigationActions } from 'react-navigation'
+import { createIconSetFromFontello } from 'react-native-vector-icons'
 
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
-import Client from '../../services/client'
 import ChangeNodeModal from './ChangeNodeModal'
+import LoadingScene from '../../components/LoadingScene'
 
-import { createIconSetFromFontello } from 'react-native-vector-icons'
+import { getUserSecrets } from '../../utils/secretsUtils'
 import fontelloConfig from '../../assets/icons/config.json'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 class Settings extends Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       header: (
         <SafeAreaView style={{ backgroundColor: 'black' }}>
@@ -35,9 +36,10 @@ class Settings extends Component {
   }
 
   state = {
-    currentUser: '',
-    loading: true,
-    nodeModalVisible: false
+    nodeModalVisible: false,
+    address: null,
+    seed: null,
+    loading: true
   }
 
   componentDidMount () {
@@ -45,34 +47,32 @@ class Settings extends Component {
   }
 
   onLoadData = async () => {
-    const data = await Promise.all([Client.getPublicKey()])
-    const currentUser = data[0]
-    this.setState({ currentUser, loading: false })
+    const data = await getUserSecrets()
+    const address = data.address
+    const seed = data.mnemonic
+    this.setState({ address, seed, loading: false })
   }
 
   showAlert = () => {
     Alert.alert(
       'Logout',
       'Do you want to log out of your wallet ?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel'
+      [{
+        text: 'Cancel',
+        style: 'cancel'
+      }, {
+        text: 'Yes',
+        onPress: async () => {
+          await Auth.signOut()
+          const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'Auth' })],
+            key: null
+          })
+          this.props.navigation.dispatch(resetAction)
         },
-        {
-          text: 'Yes',
-          onPress: async () => {
-            await Auth.signOut()
-            const resetAction = StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({ routeName: 'Auth' })],
-              key: null
-            })
-            this.props.navigation.dispatch(resetAction)
-          },
-          style: 'default'
-        }
-      ],
+        style: 'default'
+      }],
       { cancelable: true }
     )
   }
@@ -116,11 +116,8 @@ class Settings extends Component {
   }
 
   renderList = () => {
-    const { currentUser } = this.state
-  
-    let address = `${currentUser.slice(0, 10)}...${currentUser.substr(
-      currentUser.length - 10
-    )}`
+    const { address, seed } = this.state
+    let address = `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
     const list = [
       {
         title: address,
@@ -132,13 +129,25 @@ class Settings extends Component {
         description: 'Choose a node of your preference',
         icon: 'key,-password,-lock,-privacy,-login',
         onPress: () => this.setState({ nodeModalVisible: true })
+      },
+      {
+        title: 'Confirm Seed',
+        description: 'Confirm the seed password for your account',
+        icon: 'key,-password,-lock,-privacy,-login',
+        onPress: () => this.props.navigation.navigate('SeedCreate', { seed })
+      },
+      {
+        title: 'Restore Seed',
+        description: 'Restore previously used seed words',
+        icon: 'key,-password,-lock,-privacy,-login',
+        onPress: () => this.props.navigation.navigate('SeedRestore')
       }
     ]
 
-    return list.map((item, i) => {
+    return list.map(item => {
       const arrowIcon = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
       return (
-        <TouchableWithoutFeedback onPress={item.onPress} key={i}>
+        <TouchableWithoutFeedback onPress={item.onPress} key={item.title}>
           <Utils.Item padding={16}>
             <Utils.Row justify='space-between' align='center'>
               <Utils.Row justify='space-between' align='center'>
@@ -158,7 +167,7 @@ class Settings extends Component {
                   </Utils.Text>
                 </Utils.View>
               </Utils.Row>
-              {item.onPress ? (
+              {!!item.onPress && (
                 <Utils.Row align='center' justify='space-between'>
                   <Icon
                     name={arrowIcon}
@@ -166,7 +175,7 @@ class Settings extends Component {
                     color={Colors.secondaryText}
                   />
                 </Utils.Row>
-              ) : null}
+              )}
             </Utils.Row>
           </Utils.Item>
         </TouchableWithoutFeedback>
@@ -176,6 +185,9 @@ class Settings extends Component {
 
   render () {
     const { nodeModalVisible } = this.state
+    const { loading } = this.state
+    if (loading) return <LoadingScene />
+
     return (
       <Utils.Container
         keyboardShouldPersistTaps={'always'}

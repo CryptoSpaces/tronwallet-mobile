@@ -13,12 +13,11 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import { version } from '../../../package.json'
 import Client from '../../services/client'
-import { createUserKeyPair, getUserSecrets, recoverUserKeypair } from '../../utils/secretsUtils';
+import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils'
+import { version } from '../../../package.json'
 
 class LoginScene extends Component {
-
   state = {
     username: '',
     email: '',
@@ -65,42 +64,25 @@ class LoginScene extends Component {
       const user = await Auth.signIn(username, password)
       if (user.challengeName && user.challengeName === 'SOFTWARE_TOKEN_MFA') {
         this.setState(
-          {
-            loadingSign: false,
-            signError: null
-          },
-          () => {
-            navigation.navigate('ConfirmLogin', { user })
-          })
-        return
-      }
-
-      const userPublicKey = await Client.getPublicKey()
-
-      if (userPublicKey) {
-        const { publicKey } = await getUserSecrets()
-        //Check if user is using a new account or old one
-        if (userPublicKey === publicKey) {
-          this.navigateToHome()
-        } else {
-          //TODO - Navigate to Restore Wallet !
-          // navigation.navigate('SetPublicKey')
-          this.navigateToHome()
-        }
-
+          { loadingSign: false, signError: null },
+          () => navigation.navigate('ConfirmLogin', { user })
+        )
       } else {
-        await createUserKeyPair()
+        try {
+          const { address } = await getUserSecrets()
+        } catch (err) {
+          await createUserKeyPair()
+          alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
+        }
         this.navigateToHome()
       }
-
     } catch (error) {
       if (error.code === 'UserNotConfirmedException') {
         navigation.navigate('ConfirmSignup', { username, password })
         this.setState({ loadingSign: false })
-        return
+      } else {
+        this.setState({ signError: error.message, loadingSign: false })
       }
-      console.log(error);
-      this.setState({ signError: error.message, loadingSign: false })
     }
   }
 
@@ -109,16 +91,10 @@ class LoginScene extends Component {
 
     if (target === 'username' && !password) {
       this.password.focus()
-      return
-    }
-
-    if (target === 'password' && !username) {
+    } else if (target === 'password' && !username) {
       this.email.focus()
-      return
-    }
-
-    if (username && password) {
-      return this.signIn()
+    } else if (username && password) {
+      this.signIn()
     }
   }
 
@@ -133,7 +109,9 @@ class LoginScene extends Component {
       )
     }
 
-    return (<ButtonGradient text='SIGN IN' onPress={this._submit} size='small' />)
+    return (
+      <ButtonGradient text='SIGN IN' onPress={this.signIn} size='small' />
+    )
   }
 
   render() {
@@ -141,8 +119,6 @@ class LoginScene extends Component {
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
       <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
@@ -182,9 +158,7 @@ class LoginScene extends Component {
                 PASSWORD
               </Utils.Text>
               <Utils.FormInput
-                innerRef={ref => {
-                  this.password = ref
-                }}
+                innerRef={ref => { this.password = ref }}
                 underlineColorAndroid='transparent'
                 secureTextEntry
                 letterSpacing={10}
