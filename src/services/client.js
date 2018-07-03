@@ -103,7 +103,6 @@ class ClientWallet {
       type: this.getContractType(transaction.contractType),
       ...transaction
     }))
-    console.log(">>>", sortedTxs)
     return sortedTxs
   }
 
