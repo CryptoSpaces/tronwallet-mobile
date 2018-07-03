@@ -116,9 +116,16 @@ class VoteScene extends PureComponent {
   }
 
   _loadFreeze = () => {
-    if (this.props.context.freeze.value) {
-      const { total } = this.props.context.freeze.value
-      this.setState({ totalRemaining: total || 0 })
+    try{
+      if (this.props.context.freeze.value) {
+        const { total } = this.props.context.freeze.value
+        this.setState({ totalRemaining: total || 0 })
+      } else {
+        throw new Error(this.props.context.freeze.err)
+      }
+    } catch (e) {
+      e.name = 'Freeze Error'
+      this._throwError(e, 'votesError')
     }
   }
 
@@ -237,7 +244,7 @@ class VoteScene extends PureComponent {
   _throwError = (e, type) => {
     const errorType = type || 'listError'
 
-    console.log(`${e.name}: ${e.message}`)
+    console.log(`${e.name}. ${e.message}`)
     this.setState({
       [errorType]: 'Communications with server failed.',
       loading: false
