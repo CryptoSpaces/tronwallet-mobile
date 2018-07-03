@@ -37,7 +37,7 @@ class TransactionsScene extends Component {
   async componentDidMount() {
     const store = await getTransactionStore()
     this.setState({
-      transactions: store.objects('Transaction').map(item => Object.assign({}, item)),
+      transactions: this.getSortedTransactionList(store),
       refreshing: false
     })
     this.updateData();
@@ -47,6 +47,8 @@ class TransactionsScene extends Component {
   componentWillUnmount() {
     this.didFocusSubscription.remove();
   }
+
+  getSortedTransactionList = (store) => store.objects('Transaction').sorted([['timestamp', true]]).map(item => Object.assign({}, item))
 
   updateData = async () => {
     try {
@@ -72,7 +74,7 @@ class TransactionsScene extends Component {
         }
         store.create('Transaction', transaction, true)
       }))
-      const transactions = store.objects('Transaction').map(item => Object.assign({}, item))
+      const transactions = this.getSortedTransactionList(store)
       this.setState({
         refreshing: false,
         transactions

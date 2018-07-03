@@ -117,10 +117,10 @@ class Settings extends Component {
 
   renderList = () => {
     const { address, seed } = this.state
-    let address = `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
+    const addressMinified = `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
     const list = [
       {
-        title: address,
+        title: addressMinified,
         description: 'Current Account',
         icon: 'user,-person,-avtar,-profile-picture,-dp'
       },

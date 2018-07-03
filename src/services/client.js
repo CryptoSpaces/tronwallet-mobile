@@ -46,10 +46,15 @@ class ClientWallet {
 
   //*============TronScan Api============*//
   async getTotalVotes() {
-    const { data } = await axios.get(`${this.api}/vote/current-cycle`)
-    const totalVotes = data.total_votes
-    const candidates = data.candidates
-    return { totalVotes, candidates }
+    try {
+      const { data } = await axios.get(`${this.api}/vote/current-cycle`)
+      const totalVotes = data.total_votes
+      const candidates = data.candidates
+      return { totalVotes, candidates }
+    } catch (error) {
+      console.warn(error)
+    }
+
   }
 
   async getTransactionDetails(tx) {
