@@ -116,9 +116,16 @@ class VoteScene extends PureComponent {
   }
 
   _loadFreeze = () => {
-    if (this.props.context.freeze.value) {
-      const { total } = this.props.context.freeze.value
-      this.setState({ totalRemaining: total || 0 })
+    try{
+      if (this.props.context.freeze.value) {
+        const { total } = this.props.context.freeze.value
+        this.setState({ totalRemaining: total || 0 })
+      } else {
+        throw new Error('bla')
+      }
+    } catch (e) {
+      e.name = 'Freeze Error'
+      this._throwError(e, 'votesError')
     }
   }
 
@@ -305,6 +312,7 @@ class VoteScene extends PureComponent {
 
   render() {
     const { totalVotes, totalRemaining, votesError } = this.state
+    console.log('votesError: ', votesError)
 
     return (
       <Utils.Container>
