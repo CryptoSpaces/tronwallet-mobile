@@ -27,29 +27,35 @@ const generateKeypair = async (mnemonic, randomlyGenerated) => {
     generatedKeypair.mnemonic = mnemonic
     generatedKeypair.id = DeviceInfo.getUniqueID()
     generatedKeypair.confirmed = !randomlyGenerated
-    const SecretsStore = await getSecretsStore()
-    await SecretsStore.write(() => SecretsStore.create('Secrets', generatedKeypair, true))
+    const secretsStore = await getSecretsStore()
+    await secretsStore.write(() => secretsStore.create('Secrets', generatedKeypair, true))
     await Client.setUserPk(generatedKeypair.address)
 }
 
 export const confirmSecret = async () => {
     try {
-        const SecretsStore = await getSecretsStore()
-        SecretsStore.write(() => {
-            const secret = SecretsStore.objects('Secrets')
+        const secretsStore = await getSecretsStore()
+        secretsStore.write(() => {
+            const secret = secretsStore.objects('Secrets')
             secret.confirmed = true
         })
     } catch (error) {
         throw error
     }
 }
+const emptySecret = {
+    address: null,
+    mnemonic: null,
+    privateKey: null,
+    publicKey: null
+}
 
 export const getUserSecrets = async () => {
     try {
-        const SecretsStore = await getSecretsStore()
-        const [realmSecrets] = SecretsStore.objects('Secrets').map(item => Object.assign(item, {}))
-        return realmSecrets
-
+        const secretsStore = await getSecretsStore()
+        const secretsObject = secretsStore.objects('Secrets').map(item => Object.assign(item, {}))
+        if (secretsObject.length) return secretsObject[0]
+        return emptySecret
     } catch (error) {
         throw error
     }

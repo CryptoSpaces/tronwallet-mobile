@@ -42,7 +42,7 @@ class Settings extends Component {
     loading: true
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.onLoadData()
   }
 
@@ -117,7 +117,8 @@ class Settings extends Component {
 
   renderList = () => {
     const { address, seed } = this.state
-    let shortAddress = `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
+    const shortAddress = address ? `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
+      : 'Loading Account ...'
     const list = [
       {
         title: shortAddress,
@@ -183,10 +184,8 @@ class Settings extends Component {
     })
   }
 
-  render () {
+  render() {
     const { nodeModalVisible } = this.state
-    const { loading } = this.state
-    if (loading) return <LoadingScene />
 
     return (
       <Utils.Container
