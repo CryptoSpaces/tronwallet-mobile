@@ -27,16 +27,16 @@ const generateKeypair = async (mnemonic, randomlyGenerated) => {
     generatedKeypair.mnemonic = mnemonic
     generatedKeypair.id = DeviceInfo.getUniqueID()
     generatedKeypair.confirmed = !randomlyGenerated
-    const SecretsStore = await getSecretsStore()
-    await SecretsStore.write(() => SecretsStore.create('Secrets', generatedKeypair, true))
+    const secretsStore = await getSecretsStore()
+    await secretsStore.write(() => secretsStore.create('Secrets', generatedKeypair, true))
     await Client.setUserPk(generatedKeypair.address)
 }
 
 export const confirmSecret = async () => {
     try {
-        const SecretsStore = await getSecretsStore()
-        SecretsStore.write(() => {
-            const secret = SecretsStore.objects('Secrets')
+        const secretsStore = await getSecretsStore()
+        secretsStore.write(() => {
+            const secret = secretsStore.objects('Secrets')
             secret.confirmed = true
         })
     } catch (error) {
@@ -52,9 +52,9 @@ const emptySecret = {
 
 export const getUserSecrets = async () => {
     try {
-        const SecretsStore = await getSecretsStore()
-        const SecretsObject = SecretsStore.objects('Secrets').map(item => Object.assign(item, {}))
-        if (SecretsObject.length) return SecretsObject[0]
+        const secretsStore = await getSecretsStore()
+        const secretsObject = secretsStore.objects('Secrets').map(item => Object.assign(item, {}))
+        if (secretsObject.length) return secretsObject[0]
         return emptySecret
     } catch (error) {
         throw error
