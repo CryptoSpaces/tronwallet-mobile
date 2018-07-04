@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import { StackActions, NavigationActions } from 'react-navigation'
+import { ScrollView } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
@@ -64,8 +65,8 @@ class Confirm extends React.Component {
       selected: this.state.selected.filter(word => word !== item)
     })
   }
-  
-  render () {
+
+  render() {
     return (
       <Fragment>
         <Utils.Header>
@@ -78,30 +79,32 @@ class Confirm extends React.Component {
           />
         </Utils.Header>
         <Utils.Container>
-          <Utils.View flex={1} />
-          <Utils.Content align='center' justify='center'>
-            <Utils.Text>Select the words below in the right order to confirm your secret phrase.</Utils.Text>
-          </Utils.Content>
-          <Utils.View flex={1} />
-          <Utils.Content background={Colors.darkerBackground}>
-            <Utils.Row wrap='wrap' justify='center'>
-              {this.state.selected.map(item => (
-                <WordWrapper key={item} onPress={() => this._deselectWord(item)}>
-                  <Utils.Text>{item}</Utils.Text>
-                </WordWrapper>
-              ))}
-            </Utils.Row>
-          </Utils.Content>
-          <Utils.View flex={1} />
-          <Utils.Content background={Colors.darkerBackground}>
-            <Utils.Row wrap='wrap' justify='center'>
-              {this.state.seed.map(item => (
-                <WordWrapper key={item.word} onPress={() => this._selectWord(item)} disabled={item.used}>
-                  <Utils.Text secondary={item.used}>{item.word}</Utils.Text>
-                </WordWrapper>
-              ))}
-            </Utils.Row>
-          </Utils.Content>
+          <ScrollView>
+            <Utils.View flex={1} />
+            <Utils.Content align='center' justify='center'>
+              <Utils.Text>Select the words below in the right order to confirm your secret phrase.</Utils.Text>
+            </Utils.Content>
+            <Utils.View flex={1} />
+            <Utils.Content background={Colors.darkerBackground}>
+              <Utils.Row wrap='wrap' justify='center'>
+                {this.state.selected.map(item => (
+                  <WordWrapper key={item} onPress={() => this._deselectWord(item)}>
+                    <Utils.Text>{item}</Utils.Text>
+                  </WordWrapper>
+                ))}
+              </Utils.Row>
+            </Utils.Content>
+            <Utils.View flex={1} />
+            <Utils.Content background={Colors.darkerBackground}>
+              <Utils.Row wrap='wrap' justify='center'>
+                {this.state.seed.map(item => (
+                  <WordWrapper key={item.word} onPress={() => this._selectWord(item)} disabled={item.used}>
+                    <Utils.Text secondary={item.used}>{item.word}</Utils.Text>
+                  </WordWrapper>
+                ))}
+              </Utils.Row>
+            </Utils.Content>
+          </ScrollView>
         </Utils.Container>
       </Fragment>
     )
