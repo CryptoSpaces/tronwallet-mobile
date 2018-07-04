@@ -5770,9 +5770,9 @@ readable-stream@^2.0.1, readable-stream@^2.0.6, readable-stream@^2.1.4, readable
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-realm@^2.8.3:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/realm/-/realm-2.11.0.tgz#641fffffa99ffbe9306c6ec64951e4c1ff780190"
+realm@^2.12.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/realm/-/realm-2.12.0.tgz#69eb4491f648864ea5be6e874881a938fa448d76"
   dependencies:
     command-line-args "^4.0.6"
     decompress "^4.2.0"
