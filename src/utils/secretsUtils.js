@@ -36,8 +36,8 @@ export const confirmSecret = async () => {
     try {
         const SecretsStore = await getSecretsStore()
         SecretsStore.write(() => {
-            const [secret] = SecretsStore.objects('Secrets')
-            secret[0].confirmed = true
+            const secret = SecretsStore.objects('Secrets')
+            secret.confirmed = true
         })
     } catch (error) {
         throw error

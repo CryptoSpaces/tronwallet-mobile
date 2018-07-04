@@ -63,6 +63,12 @@ class ConfirmLogin extends Component {
       confirmError: null
     })
   }
+  
+  createKeyPair = async () => {
+    await createUserKeyPair()
+    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
+  }
+
   confirmLogin = async () => {
     const { totpCode, user, code } = this.state
     const { navigation } = this.props
@@ -72,22 +78,17 @@ class ConfirmLogin extends Component {
         ? await Auth.verifyTotpToken(user, code)
         : await Auth.confirmSignIn(user, code, 'SOFTWARE_TOKEN_MFA')
 
-      const userPublicKey = await Client.getPublicKey()
-
-      if (userPublicKey) {
+      try {
+        const userPublicKey = await Client.getPublicKey()
         const { address } = await getUserSecrets()
-        //Check if user is using a new account or old one
-        if (userPublicKey === address) {
-          this.navigateToHome()
-        } else {
-          // TODO - Navigate to new pages
-          // navigation.navigate('SetPublicKey')     
-        }
+        if (userPublicKey !== address) this.createKeyPair();
 
-      } else {
-        await createUserKeyPair()
+      } catch (err) {
+        await this.createKeyPair();
+      } finally {
         this.navigateToHome()
       }
+      this.navigateToHome()
     } catch (error) {
       let message = error.message
 

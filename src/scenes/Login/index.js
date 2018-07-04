@@ -53,6 +53,11 @@ class LoginScene extends Component {
     )
   }
 
+  createKeyPair = async () => {
+    await createUserKeyPair()
+    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
+  }
+
   signIn = async () => {
     const { navigation } = this.props
     const { username, password } = this.state
@@ -69,12 +74,15 @@ class LoginScene extends Component {
         )
       } else {
         try {
+          const userPublicKey = await Client.getPublicKey()
           const { address } = await getUserSecrets()
+          if (userPublicKey !== address) this.createKeyPair();
+
         } catch (err) {
-          await createUserKeyPair()
-          alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
+          await this.createKeyPair();
+        } finally {
+          this.navigateToHome()
         }
-        this.navigateToHome()
       }
     } catch (error) {
       if (error.code === 'UserNotConfirmedException') {
