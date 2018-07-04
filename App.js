@@ -326,6 +326,11 @@ class App extends Component {
   _setNodes = async () => {
     try {
       await NodesIp.initNodes();
+
+import { Sentry } from 'react-native-sentry';
+
+Sentry.config('https://8ffba48a3f30473883ba930c49ab233d:afc6a14285db49669dbc76056a5ebedb@sentry.io/1236809').install();
+
     } catch (error) {
       console.warn(error);
     }
