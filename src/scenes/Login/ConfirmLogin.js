@@ -63,7 +63,7 @@ class ConfirmLogin extends Component {
       confirmError: null
     })
   }
-  
+
   createKeyPair = async () => {
     await createUserKeyPair()
     alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
@@ -81,14 +81,13 @@ class ConfirmLogin extends Component {
       try {
         const userPublicKey = await Client.getPublicKey()
         const { address } = await getUserSecrets()
-        if (userPublicKey !== address) this.createKeyPair();
+        if (userPublicKey !== address) await this.createKeyPair();
 
       } catch (err) {
         await this.createKeyPair();
       } finally {
         this.navigateToHome()
       }
-      this.navigateToHome()
     } catch (error) {
       let message = error.message
 

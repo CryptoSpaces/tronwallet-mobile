@@ -43,13 +43,19 @@ export const confirmSecret = async () => {
         throw error
     }
 }
+const emptySecret = {
+    address: null,
+    mnemonic: null,
+    privateKey: null,
+    publicKey: null
+}
 
 export const getUserSecrets = async () => {
     try {
         const SecretsStore = await getSecretsStore()
-        const [realmSecrets] = SecretsStore.objects('Secrets').map(item => Object.assign(item, {}))
-        return realmSecrets
-
+        const SecretsObject = SecretsStore.objects('Secrets').map(item => Object.assign(item, {}))
+        if (SecretsObject.length) return SecretsObject[0]
+        return emptySecret
     } catch (error) {
         throw error
     }
