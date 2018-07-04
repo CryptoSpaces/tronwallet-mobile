@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, Modal } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import qs from 'qs'
-import { Select, Option } from 'react-native-chooser'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import ButtonGradient from '../../components/ButtonGradient'
@@ -107,9 +106,11 @@ class SendScene extends Component {
   renderTokens = () => {
     const { balances } = this.state
     return balances.map(bl => (
-      <Option key={bl.name} value={bl.name}>{`${bl.balance} ${
-        bl.name
-        }`}</Option>
+      <Utils.PickerInput.Item 
+        key={bl.name} 
+        label={bl.name} 
+        value={bl.name} 
+      />
     ))
   }
 
@@ -255,7 +256,13 @@ class SendScene extends Component {
               <Utils.Text size='xsmall' secondary>
                 Token
               </Utils.Text>
-              <Select
+              <Utils.PickerInput
+                selectedValue={this.state.token}
+                onValueChange={this.onSelectToken}
+              >
+                {this.renderTokens()}
+              </Utils.PickerInput>
+              {/* <Select
                 onSelect={this.onSelectToken}
                 defaultText={this.state.token}
                 style={{
@@ -275,7 +282,7 @@ class SendScene extends Component {
                 }}
               >
                 {this.renderTokens()}
-              </Select>
+              </Select> */}
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
                 Amount

@@ -1,10 +1,15 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { ImageBackground } from 'react-native'
+import { ImageBackground, Picker } from 'react-native'
 import PropTypes from 'prop-types'
 import { tint } from 'polished'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
+
+const tronWalletBorder = css`
+  border-color: ${Colors.secondaryText};
+  border-radius: 5px;
+`;
 
 export const Header = styled.View`
   height: 90px;
@@ -181,9 +186,8 @@ export const FormInput = styled.TextInput.attrs({
   font-size: ${FontSize['small']};
   margin-bottom: ${props => props.marginBottom}px;
   margin-top: ${props => props.marginTop}px;
+  ${tronWalletBorder}
   border-width: 0.5px;
-  border-color: ${Colors.secondaryText};
-  border-radius: 5px;
 `
 
 FormInput.defaultProps = {
@@ -217,25 +221,30 @@ export const PasteButton = styled.TouchableOpacity`
   margin-horizontal: 5px;
   /* padding: ${Spacing.medium - 5}px; */
   padding: ${Spacing.small}px;
-  border-radius: 5px;
-  border-width:1px;
-  borderColor: ${Colors.secondaryText};
+  border-width: 1px;
+  ${tronWalletBorder}
 `
 export const PlusButton = styled.TouchableOpacity`
   background-color: ${Colors.secondaryText};
-  border-color: ${Colors.secondaryText};
-  border-radius: 5px;
+  ${tronWalletBorder}
   height: 20px;
   width: 20px;
   justify-content: center;
   align-items: center;
 `
 export const CloseButton = styled.TouchableOpacity`
-  border-color: ${Colors.secondaryText};
-  border-radius: 5px;
+  ${tronWalletBorder}
   align-items: flex-end;
   align-self: flex-end;
 `
+
+export const PickerInput = styled.Picker`
+  ${tronWalletBorder}
+  border-width: 0.5px;
+  color: ${Colors.primaryText};
+  height: 50px;
+  width: 100px;
+`;
 
 export const ButtonWrapper = styled.TouchableOpacity`
   position: ${props => props.absolute ? 'absolute' : 'relative'};
