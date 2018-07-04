@@ -3,7 +3,7 @@ import moment from 'moment'
 import axios from 'axios'
 import Config from 'react-native-config'
 import { LineChart } from 'react-native-svg-charts'
-import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl } from 'react-native'
+import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
 
 import Client from '../../services/client'
@@ -42,7 +42,6 @@ class BalanceScene extends Component {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()
       const data = await getUserSecrets()
-      console.warn(data)
       this.setState({ assetList, assetBalance, seedConfirmed: data.confirmed })
     } catch (err) {
       this._loadData()
@@ -170,45 +169,45 @@ class BalanceScene extends Component {
             />
           }
         >
-          <Utils.VerticalSpacer size='large' />
-          <FadeIn name='header'>
-            <Utils.Row justify='center'>
-              <Utils.View align='center'>
-                <Image
-                  source={require('../../assets/tron-logo-small.png')}
-                  resizeMode='contain'
-                  style={{ height: 60 }}
-                />
-                <Utils.VerticalSpacer size='medium' />
-                <Utils.Text secondary>BALANCE</Utils.Text>
-                <Utils.VerticalSpacer />
-                <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance) }}>
-                  {value => <Utils.Text size='large'>{formatNumber(value.balance.toFixed(0))} TRX</Utils.Text>}
-                </Motion>
-                <Utils.VerticalSpacer />
-                <Context.Consumer>
-                  {({ price }) => price.value && (
-                    <FadeIn name='usd-value'>
-                      <Motion defaultStyle={{ price: 0 }} style={{ price: spring(trxBalance * price.value, presets.gentle) }}>
-                        {value => <Utils.Text size='small' align='center'>{`${(value.price).toFixed(2)} USD`}</Utils.Text>}
-                      </Motion>
-                    </FadeIn>
-                  )}
-                </Context.Consumer>
-                {!this.state.seedConfirmed && (
-                  <React.Fragment>
-                    <Utils.VerticalSpacer />
-                    <FadeIn name='seed-warning'>
-                      <Utils.Button onPress={() => this.props.navigation.navigate('SeedCreate')} secondary>
-                        Please, press here to confim your 12 seed words.
-                      </Utils.Button>
-                    </FadeIn>
-                  </React.Fragment>
-                )}
-              </Utils.View>
-            </Utils.Row>
-          </FadeIn>
           <Utils.Content>
+            <FadeIn name='header'>
+              <Utils.Row justify='center'>
+                <Utils.View align='center'>
+                  <Image
+                    source={require('../../assets/tron-logo-small.png')}
+                    resizeMode='contain'
+                    style={{ height: 60 }}
+                  />
+                  <Utils.VerticalSpacer size='medium' />
+                  <Utils.Text secondary>BALANCE</Utils.Text>
+                  <Utils.VerticalSpacer />
+                  <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance) }}>
+                    {value => <Utils.Text size='large'>{formatNumber(value.balance.toFixed(0))} TRX</Utils.Text>}
+                  </Motion>
+                  <Utils.VerticalSpacer />
+                  <Context.Consumer>
+                    {({ price }) => price.value && (
+                      <FadeIn name='usd-value'>
+                        <Motion defaultStyle={{ price: 0 }} style={{ price: spring(trxBalance * price.value, presets.gentle) }}>
+                          {value => <Utils.Text size='small' align='center'>{`${(value.price).toFixed(2)} USD`}</Utils.Text>}
+                        </Motion>
+                      </FadeIn>
+                    )}
+                  </Context.Consumer>
+                  {!this.state.seedConfirmed && (
+                    <React.Fragment>
+                      <Utils.VerticalSpacer />
+                      <FadeIn name='seed-warning'>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('SeedCreate')}>
+                          <Utils.Text size='xsmall' secondary align='center'>Please, tap here to confim your 12 seed words.</Utils.Text>
+                        </TouchableOpacity>
+                      </FadeIn>
+                      <Utils.VerticalSpacer />
+                    </React.Fragment>
+                  )}
+                </Utils.View>
+              </Utils.Row>
+            </FadeIn>
             {!!trxHistory.length && (
               <Utils.View paddingX={Spacing.medium}>
                 <GrowIn name='linechart' height={LINE_CHART_HEIGHT}>
