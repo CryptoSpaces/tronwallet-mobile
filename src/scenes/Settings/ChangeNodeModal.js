@@ -57,6 +57,7 @@ class ChangePKModal extends PureComponent {
   _updateNodes = async (type, nodeip) => {
     try {
       await NodesIp.setNodeIp(type, nodeip)
+      alert('Nodes IP updated!')
       this.setState({ loading: false, error: null })
     } catch (error) {
       this.setState({ loading: false, error: 'Something wrong while updating nodes ip' })
@@ -68,6 +69,7 @@ class ChangePKModal extends PureComponent {
     try {
       await NodesIp.resetNodesIp(type)
       this._loadData()
+      alert('Nodes IP reseted!')
       this.setState({ loading: false, error: null })
     } catch (error) {
       this.setState({ loading: false, error: 'Something wrong while reseting node ip' })

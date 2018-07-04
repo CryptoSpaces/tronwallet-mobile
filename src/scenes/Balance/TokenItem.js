@@ -9,7 +9,9 @@ import { ONE_TRX } from '../../services/client'
 const ITEM_HEIGHT = 40
 
 const TokenItem = ({ item, onPress }) => {
-  const tokenValue = item.balance || item.price / ONE_TRX;
+  const tokenValue = item.balance >= 0 ? item.balance : item.price / ONE_TRX
+  const formattedValue = tokenValue >= 1 ? formatNumber(tokenValue.toFixed(2)) : tokenValue
+
   return <FadeIn name={item.name}>
     <ListItem
       onPress={onPress}
@@ -30,7 +32,7 @@ const TokenItem = ({ item, onPress }) => {
       }}
       hideChevron
       badge={{
-        value: `${formatNumber(tokenValue.toFixed(2)) || 0}`,
+        value: formattedValue,
         textStyle: { color: Colors.primaryText },
       }}
     />

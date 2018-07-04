@@ -140,7 +140,7 @@ class VoteScene extends PureComponent {
     }
   }
 
-  _submit = async (mode) => {
+  _submit = async () => {
     const { from, currentVotes, totalRemaining } = this.state
     const { navigation } = this.props
 
@@ -312,7 +312,6 @@ class VoteScene extends PureComponent {
 
   render() {
     const { totalVotes, totalRemaining, votesError } = this.state
-
     return (
       <Utils.Container>
         {(totalVotes !== null && totalRemaining !== null) && (
