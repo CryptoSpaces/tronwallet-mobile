@@ -9,6 +9,7 @@ import Amplify from 'aws-amplify'
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import axios from 'axios'
 import Config from 'react-native-config'
+import { Sentry } from 'react-native-sentry';
 
 import awsExports from './aws-exports'
 import { Colors, ScreenSize } from './src/components/DesignSystem'
@@ -326,6 +327,9 @@ class App extends Component {
   _setNodes = async () => {
     try {
       await NodesIp.initNodes();
+
+      Sentry.config(Config.SENTRY_URL).install();
+
     } catch (error) {
       console.warn(error);
     }
