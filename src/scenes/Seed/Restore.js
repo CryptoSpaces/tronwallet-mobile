@@ -7,6 +7,7 @@ import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 import { recoverUserKeypair } from '../../utils/secretsUtils'
+import { resetWalletData } from '../../utils/userAccountUtils'
 import { Context } from '../../store/context'
 
 class Restore extends React.Component {
@@ -27,7 +28,7 @@ class Restore extends React.Component {
     loading: false
   }
 
-  navigateToSettings = () => {
+  _navigateToSettings = () => {
     const resetAction = StackActions.reset({
       index: 0,
       actions: [
@@ -37,15 +38,17 @@ class Restore extends React.Component {
     this.props.navigation.dispatch(resetAction)
   }
 
+
   _handleRestore = async () => {
-    const { restoreWalletData } = this.props.context
+    const { updateWalletData } = this.props.context
     this.setState({ loading: true })
     try {
       await recoverUserKeypair(this.state.seed)
-      await restoreWalletData()
+      await resetWalletData()
+      await updateWalletData()
       alert("Wallet recovered with success!")
       this.setState({ loading: false }, () => {
-        this.navigateToSettings()
+        this._navigateToSettings()
       })
     } catch (err) {
       console.warn(err)
