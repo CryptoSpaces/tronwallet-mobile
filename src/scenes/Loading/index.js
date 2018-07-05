@@ -6,6 +6,8 @@ import SplashScreen from 'react-native-splash-screen'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 
+import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
+
 class LoadingScene extends Component {
   async componentDidMount() {
     // React Navigation open this route cuncurrently with the deeplink route.
@@ -21,7 +23,12 @@ class LoadingScene extends Component {
         Auth.currentSession(),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Session expired.')), 5000))
       ])
-      this.props.navigation.navigate('App')
+      const isAddressReusable = await checkPublicKeyReusability()
+      if (!isAddressReusable) {
+        this.props.navigation.navigate('RestoreOrCreateSeed')
+      } else {
+        this.props.navigation.navigate('App')
+      }
     } catch (error) {
       this.props.navigation.navigate('Login')
     }

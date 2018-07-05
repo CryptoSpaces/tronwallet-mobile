@@ -53,11 +53,6 @@ class LoginScene extends Component {
     )
   }
 
-  createKeyPair = async () => {
-    await createUserKeyPair()
-    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
-  }
-
   signIn = async () => {
     const { navigation } = this.props
     const { username, password } = this.state
@@ -76,10 +71,10 @@ class LoginScene extends Component {
         try {
           const isAddressReusable = await checkPublicKeyReusability()
           if (!isAddressReusable) {
-            //Here, we navigate to the Options page (restore or create)
-            await this.createKeyPair()
+            this.props.navigation.navigate('RestoreOrCreateSeed')
+          } else {
+            this.navigateToHome()
           }
-          this.navigateToHome()
         } catch (err) {
           console.warn(err)
           await Auth.signOut()
