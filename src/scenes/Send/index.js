@@ -272,6 +272,7 @@ class SendScene extends Component {
                 <Utils.FormInput
                   underlineColorAndroid='transparent'
                   keyboardType='numeric'
+                  autoCapitalize="none"
                   onChangeText={text => this.changeInput(text, 'amount')}
                   placeholderTextColor='#fff'
                   style={{ marginRight: 15, width: '100%' }}
