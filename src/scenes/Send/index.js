@@ -171,11 +171,6 @@ class SendScene extends Component {
     }
   }
 
-
-  /*
-    TODO: Weird behavior happening here. After read, the modal closes and somewhere somehow some function is trying
-    to set state on the QRCodescanner component. Probably a bug on QRScanner library. Gotta investigate this later.
-  */
   readPublicKey = (e) => this.setState({ to: e.data }, this.closeModal)
 
   openModal = () => this.setState({ QRModalVisible: true })
