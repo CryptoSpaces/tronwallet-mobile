@@ -149,6 +149,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sentry')
     compile project(':react-native-device-info')
     compile project(':react-native-tron')
     compile project(':react-native-config')
