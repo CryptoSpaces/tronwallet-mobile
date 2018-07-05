@@ -10,7 +10,7 @@ const ITEM_HEIGHT = 40
 
 const TokenItem = ({ item, onPress }) => {
   const tokenValue = item.balance >= 0 ? item.balance : item.price / ONE_TRX
-  const formattedValue = tokenValue >= 1 ? formatNumber(tokenValue.toFixed(2)) : tokenValue
+  const formattedValue = tokenValue >= 1 ? formatNumber(tokenValue.toFixed(2)) : tokenValue.toFixed(2)
 
   return <FadeIn name={item.name}>
     <ListItem

@@ -44,6 +44,7 @@ import * as Utils from './src/components/Utils'
 import ButtonGradient from './src/components/ButtonGradient'
 
 import Client from './src/services/client'
+import { getUserPublicKey } from './src/utils/userAccountUtils'
 import NodesIp from './src/utils/nodeIp'
 import { Context } from './src/store/context'
 
@@ -281,20 +282,22 @@ const RootNavigator = createStackNavigator(
 
 const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
 class App extends Component {
+
   state = {
     price: {},
     freeze: {},
-    publicKey: {},
-    getFreeze: this._getFreeze,
-    getPrice: this._getPrice,
-    getPublicKey: this._getPublicKey
+    publicKey: {}
   }
 
   componentDidMount() {
-    this._getFreeze()
     this._getPrice()
-    this._getPublicKey()
     this._setNodes()
+    this._loadUserData()
+  }
+
+  _loadUserData = () => {
+    this._getPublicKey()
+    this._getFreeze()
   }
 
   _getFreeze = async () => {
@@ -317,7 +320,7 @@ class App extends Component {
 
   _getPublicKey = async () => {
     try {
-      const publicKey = await Client.getPublicKey()
+      const publicKey = await getUserPublicKey()
       this.setState({ publicKey: { value: publicKey } })
     } catch (err) {
       this.setState({ publicKey: { err } })
@@ -336,8 +339,15 @@ class App extends Component {
   }
 
   render() {
+    const contextProps = {
+      ...this.state,
+      restoreWalletData: this._loadUserData,
+      getFreeze: this._getFreeze,
+      getPrice: this._getPrice,
+      getPublicKey: this._getPublicKey
+    }
     return (
-      <Context.Provider value={this.state}>
+      <Context.Provider value={contextProps}>
         <StatusBar barStyle='light-content' />
         <RootNavigator uriPrefix={prefix} />
       </Context.Provider>

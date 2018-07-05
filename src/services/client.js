@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Config from 'react-native-config'
 import { Auth } from 'aws-amplify'
+import { getUserPublicKey } from '../utils/userAccountUtils'
 import NodesIp from '../utils/nodeIp'
 export const ONE_TRX = 1000000
 
@@ -17,31 +18,6 @@ class ClientWallet {
     return Auth.updateUserAttributes(user, {
       'custom:publickey': publickey
     })
-  };
-
-  getUserAttributes = async () => {
-    try {
-      const authenticatedUser = await Auth.currentAuthenticatedUser()
-      const userAttributes = await Auth.userAttributes(authenticatedUser)
-      const user = {}
-      for (const attribute of userAttributes) {
-        user[attribute.Name] = attribute.Value
-      }
-      return user
-    } catch (error) {
-      if (error.code === 'UserNotFoundException' || error === 'not authenticated') {
-        throw new Error(error.message || error) // TODO redirect to login screen
-      }
-    }
-  };
-
-  getPublicKey = async () => {
-    try {
-      const userAttr = await this.getUserAttributes()
-      return userAttr['custom:publickey']
-    } catch (error) {
-      throw new Error(error.message || error)
-    }
   };
 
   //*============TronScan Api============*//
@@ -68,21 +44,21 @@ class ClientWallet {
     }
   }
   async getBalances() {
-    const owner = await this.getPublicKey()
-    const { data: { balances } } = await axios.get(`${this.api}/account/${owner}`)
+    const address = await getUserPublicKey()
+    const { data: { balances } } = await axios.get(`${this.api}/account/${address}`)
     const sortedBalances = balances.sort((a, b) => (Number(b.balance) - Number(a.balance)))
     return sortedBalances
   }
 
   async getFreeze() {
-    const owner = await this.getPublicKey()
-    const { data: { frozen, bandwidth, balances } } = await axios.get(`${this.api}/account/${owner}`)
+    const address = await getUserPublicKey()
+    const { data: { frozen, bandwidth, balances } } = await axios.get(`${this.api}/account/${address}`)
     return { ...frozen, total: frozen.total / ONE_TRX, bandwidth, balances }
   }
 
   async getUserVotes() {
-    const owner = await this.getPublicKey()
-    const { data: { votes } } = await axios.get(`${this.api}/account/${owner}/votes`)
+    const address = await getUserPublicKey()
+    const { data: { votes } } = await axios.get(`${this.api}/account/${address}/votes`)
     return votes
   }
 
@@ -97,12 +73,12 @@ class ClientWallet {
   }
 
   async getTransactionList() {
-    const owner = await this.getPublicKey()
-    const tx = () => axios.get(`${this.api}/transaction?sort=-timestamp&limit=50&address=${owner}`)
-    const tf = () => axios.get(`${this.api}/transfer?sort=-timestamp&limit=50&address=${owner}`)
+    const address = await getUserPublicKey()
+    const tx = () => axios.get(`${this.api}/transaction?sort=-timestamp&limit=50&address=${address}`)
+    const tf = () => axios.get(`${this.api}/transfer?sort=-timestamp&limit=50&address=${address}`)
     const transactions = await Promise.all([tx(), tf()])
     const txs = transactions[0].data.data.filter(d => d.contractType !== 1)
-    const trfs = transactions[1].data.data.map(d => ({ ...d, contractType: 1, ownerAddress: owner }))
+    const trfs = transactions[1].data.data.map(d => ({ ...d, contractType: 1, ownerAddress: address }))
     let sortedTxs = [...txs, ...trfs].sort((a, b) => (b.timestamp - a.timestamp))
     sortedTxs = sortedTxs.map(transaction => ({
       type: this.getContractType(transaction.contractType),
@@ -157,7 +133,7 @@ class ClientWallet {
 
   async getFreezeTransaction(freezeAmount) {
     try {
-      const address = await this.getPublicKey()
+      const address = await getUserPublicKey()
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
         address,
@@ -175,7 +151,7 @@ class ClientWallet {
 
   async getParticipateTransaction({ participateAmount, participateToken, participateAddress }) {
     try {
-      const address = await this.getPublicKey()
+      const address = await getUserPublicKey()
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
         address,
@@ -195,7 +171,7 @@ class ClientWallet {
 
   async getVoteWitnessTransaction(votes) {
     try {
-      const address = await this.getPublicKey();
+      const address = await getUserPublicKey();
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
         address,

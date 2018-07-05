@@ -7,6 +7,7 @@ import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 import { recoverUserKeypair } from '../../utils/secretsUtils'
+import { Context } from '../../store/context'
 
 class Restore extends React.Component {
   static navigationOptions = () => ({
@@ -22,27 +23,39 @@ class Restore extends React.Component {
   })
 
   state = {
-    seed: ''
+    seed: '',
+    loading: false
+  }
+
+  navigateToSettings = () => {
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'SettingsScene' })
+      ]
+    })
+    this.props.navigation.dispatch(resetAction)
   }
 
   _handleRestore = async () => {
+    const { restoreWalletData } = this.props.context
+    this.setState({ loading: true })
     try {
       await recoverUserKeypair(this.state.seed)
+      await restoreWalletData()
       alert("Wallet recovered with success!")
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({ routeName: 'SettingsScene' })
-        ]
+      this.setState({ loading: false }, () => {
+        this.navigateToSettings()
       })
-      this.props.navigation.dispatch(resetAction)
     } catch (err) {
       console.warn(err)
       alert("Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again.")
+      this.setState({ loading: false })
     }
   }
 
-  render () {
+  render() {
+    const { loading } = this.state
     return (
       <Utils.Container>
         <Utils.View flex={1} />
@@ -58,7 +71,7 @@ class Restore extends React.Component {
         <Utils.View flex={1} />
         <Utils.Row justify='center'>
           <ButtonGradient
-            disabled={!this.state.seed.length}
+            disabled={!this.state.seed.length || loading}
             onPress={this._handleRestore}
             text='RESTORE'
           />
@@ -71,4 +84,8 @@ class Restore extends React.Component {
   }
 }
 
-export default Restore
+export default props => (
+  <Context.Consumer>
+    {context => <Restore context={context} {...props} />}
+  </Context.Consumer>
+)

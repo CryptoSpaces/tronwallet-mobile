@@ -11,9 +11,13 @@ import PasteInput from '../../components/PasteInput'
 import QRScanner from '../../components/QRScanner'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
+
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
 import { signTransaction } from '../../utils/transactionUtils';
+import getBalanceStore from '../../store/balance'
+import { Context } from '../../store/context'
+import { getUserPublicKey } from '../../utils/userAccountUtils'
 
 class SendScene extends Component {
   state = {
@@ -30,26 +34,28 @@ class SendScene extends Component {
   }
 
   componentDidMount() {
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
-      this.loadData()
-    })
+    this._navListener = this.props.navigation.addListener('didFocus', this.loadData)
   }
 
   componentWillUnmount() {
     this._navListener.remove()
   }
 
+  getBalancesFromStore = async () => {
+    const store = await getBalanceStore()
+    return store.objects('Balance')
+      .map(item => Object.assign({}, item))
+  }
+
   loadData = async () => {
     this.setState({ loading: true })
     try {
-      const result = await Promise.all([
-        Client.getPublicKey(),
-        Client.getBalances()
-      ])
-      const { balance } = result[1].find(b => b.name === 'TRX')
+      const balances = await this.getBalancesFromStore()
+      const userPublicKey = await getUserPublicKey();
+      const { balance } = balances.find(b => b.name === 'TRX')
       this.setState({
-        from: result[0],
-        balances: result[1],
+        from: userPublicKey,
+        balances,
         loadingData: false,
         trxBalance: balance
       })
@@ -297,4 +303,8 @@ class SendScene extends Component {
   }
 }
 
-export default SendScene
+export default props => (
+  <Context.Consumer>
+    {context => <SendScene context={context} {...props} />}
+  </Context.Consumer>
+)

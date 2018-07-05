@@ -13,6 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils';
+import { getUserPublicKey } from '../../utils/userAccountUtils'
 
 class ParticipateScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -49,7 +50,7 @@ class ParticipateScene extends Component {
         alert('Insufficient TRX balance');
         throw new Error('Insufficient TRX balance');
       }
-      const pk = await Client.getPublicKey()
+      const pk = await getUserPublicKey()
       const data = await Client.getParticipateTransaction({
         participateAddress: navigation.state.params.token.ownerAddress,
         participateToken: navigation.state.params.token.name,

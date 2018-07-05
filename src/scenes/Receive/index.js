@@ -6,10 +6,10 @@ import Feather from 'react-native-vector-icons/Feather'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import QRCode from '../../components/QRCode'
-import Client from '../../services/client'
 import LoadingScene from '../../components/LoadingScene'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
+import { getUserPublicKey } from '../../utils/userAccountUtils'
 
 class ReceiveScreen extends PureComponent {
   state = {
@@ -18,13 +18,11 @@ class ReceiveScreen extends PureComponent {
     loading: true
   }
 
-  componentDidMount () {
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
-      this._loadPublicKey()
-    })
+  componentDidMount() {
+    this._navListener = this.props.navigation.addListener('didFocus', this._loadPublicKey)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
   }
 
@@ -40,26 +38,24 @@ class ReceiveScreen extends PureComponent {
 
   _loadPublicKey = async () => {
     this.setState({ loading: true })
-    const publicKey = await Client.getPublicKey()
+    const publicKey = await getUserPublicKey()
     this.setState({ publicKey, loading: false })
   }
 
-  render () {
+  render() {
     const { width } = Dimensions.get('window')
-    const { publicKey, loading } = this.state
-
-    if (loading) return <LoadingScene />
+    const { publicKey } = this.state
 
     return (
-        <Utils.Container>
-          <SafeAreaView style={{ backgroundColor: 'black' }}>
-            <Utils.Header>
-              <Utils.TitleWrapper>
-                <Utils.Title>Receive</Utils.Title>
-              </Utils.TitleWrapper>
-            </Utils.Header>
-          </SafeAreaView>
-          <KeyboardAwareScrollView>
+      <Utils.Container>
+        <SafeAreaView style={{ backgroundColor: 'black' }}>
+          <Utils.Header>
+            <Utils.TitleWrapper>
+              <Utils.Title>Receive</Utils.Title>
+            </Utils.TitleWrapper>
+          </Utils.Header>
+        </SafeAreaView>
+        <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Content marginY='20' align='center'>
             {!!publicKey && <QRCode value={publicKey} size={width * 0.6} />}
@@ -85,8 +81,8 @@ class ReceiveScreen extends PureComponent {
               opacity={0.8}
             />
           </Utils.Content>
-          </KeyboardAwareScrollView>
-        </Utils.Container>
+        </KeyboardAwareScrollView>
+      </Utils.Container>
     )
   }
 }
