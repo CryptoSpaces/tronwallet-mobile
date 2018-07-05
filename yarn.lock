@@ -5358,10 +5358,6 @@ react-native-camera@^1.1.4:
     lodash "^4.17.4"
     prop-types "^15.5.10"
 
-react-native-chooser@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-chooser/-/react-native-chooser-1.7.0.tgz#f0cf5f19cec2677932450711dc81625541607714"
-
 react-native-config@^0.11.5:
   version "0.11.5"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.11.5.tgz#516cb7b6ec437c7739236ca075971db3aabdcb95"

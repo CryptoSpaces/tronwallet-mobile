@@ -25,7 +25,6 @@
     "react-native": "0.55.4",
     "react-native-animatable": "^1.2.4",
     "react-native-camera": "^1.1.4",
-    "react-native-chooser": "^1.7.0",
     "react-native-config": "^0.11.5",
     "react-native-device-info": "^0.21.5",
     "react-native-easy-toast": "^1.1.0",

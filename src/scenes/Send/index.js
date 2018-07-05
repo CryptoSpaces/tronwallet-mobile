@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, Modal } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import qs from 'qs'
-import { Select, Option } from 'react-native-chooser'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import ButtonGradient from '../../components/ButtonGradient'
@@ -20,8 +19,8 @@ class SendScene extends Component {
   state = {
     from: '',
     to: '',
-    amount: 0,
-    token: 'Select your balance',
+    amount: '',
+    token: 'TRX',
     balances: [],
     error: null,
     loadingSign: false,
@@ -43,7 +42,6 @@ class SendScene extends Component {
   loadData = async () => {
     this.setState({ loading: true })
     try {
-
       const result = await Promise.all([
         Client.getPublicKey(),
         Client.getBalances()
@@ -90,26 +88,29 @@ class SendScene extends Component {
     }
 
     this.transferAsset()
-
   }
 
-  onSelectToken = (value, label) => {
+  onSelectToken = (value) => {
     this.setState({ token: value })
   }
 
   clearInput = () => {
     this.setState({
       to: '',
-      token: 'Select your balance',
+      token: 'TRX',
+      amount: ''
     });
   }
 
   renderTokens = () => {
     const { balances } = this.state
+    
     return balances.map(bl => (
-      <Option key={bl.name} value={bl.name}>{`${bl.balance} ${
-        bl.name
-        }`}</Option>
+      <Utils.PickerInput.Item 
+        key={bl.name} 
+        label={bl.name} 
+        value={bl.name} 
+      />
     ))
   }
 
@@ -117,23 +118,23 @@ class SendScene extends Component {
     const { from, to, amount, token } = this.state
     this.setState({ loadingSign: true, error: null })
     try {
-      //TronScan
-      //const data = await Client.getTransactionString({from,to,amount,token});
-      //Serverless
+      // TronScan
+      // const data = await Client.getTransactionString({from,to,amount,token});
+      // Serverless
       const data = await Client.getTransferTransaction({ from, to, amount, token });
 
       // Data to deep link, same format as Tron Wallet
-      const dataToSend = qs.stringify({
-        txDetails: { from, to, amount, Type: 'SEND' },
-        pk: from,
-        action: 'transaction',
-        from: 'mobile',
-        URL: MakeTronMobileURL('transaction'),
-        data
-      })
+      // const dataToSend = qs.stringify({
+      //   txDetails: { from, to, amount, Type: 'SEND' },
+      //   pk: from,
+      //   action: 'transaction',
+      //   from: 'mobile',
+      //   URL: MakeTronMobileURL('transaction'),
+      //   data
+      // })
 
       this.openTransactionDetails(data)
-      //this.openDeepLink(dataToSend)
+      // this.openDeepLink(dataToSend)
       this.clearInput()
 
     } catch (error) {
@@ -255,40 +256,29 @@ class SendScene extends Component {
               <Utils.Text size='xsmall' secondary>
                 Token
               </Utils.Text>
-              <Select
-                onSelect={this.onSelectToken}
-                defaultText={this.state.token}
-                style={{
-                  width: '100%',
-                  borderWidth: 0.5,
-                  marginVertical: 10,
-                  borderRadius: 5,
-                  padding: 12,
-                  borderColor: Colors.secondaryText
-                }}
-                textStyle={{ color: Colors.primaryText }}
-                transparent
-                animationType='fade'
-                optionListStyle={{
-                  borderRadius: 10,
-                  backgroundColor: Colors.secondaryText
-                }}
+              <Utils.PickerInput
+                selectedValue={this.state.token}
+                onValueChange={this.onSelectToken}
+                placeholder={this.state.token}
               >
                 {this.renderTokens()}
-              </Select>
+              </Utils.PickerInput>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
                 Amount
               </Utils.Text>
               <Utils.Row align='center' justify='flex-start'>
+
                 <Utils.FormInput
-                  ref={ref => this.amount = ref}
                   underlineColorAndroid='transparent'
                   keyboardType='numeric'
+                  autoCapitalize="none"
                   onChangeText={text => this.changeInput(text, 'amount')}
                   placeholderTextColor='#fff'
                   style={{ marginRight: 15, width: '100%' }}
-                />
+                >
+                  <Utils.Text>{this.state.amount}</Utils.Text> 
+                </Utils.FormInput>
               </Utils.Row>
             </Utils.Content>
             {error && <Utils.Error>{error}</Utils.Error>}
