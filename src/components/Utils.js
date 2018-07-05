@@ -234,8 +234,7 @@ export const PlusButton = styled.TouchableOpacity`
 `
 export const CloseButton = styled.TouchableOpacity`
   ${tronWalletBorder}
-  align-items: flex-end;
-  align-self: flex-end;
+  margin-right: 15px;
 `
 
 export const PickerInput = styled.Picker`
