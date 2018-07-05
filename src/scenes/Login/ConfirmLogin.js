@@ -9,7 +9,6 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 
 class ConfirmLogin extends Component {
@@ -63,11 +62,6 @@ class ConfirmLogin extends Component {
     })
   }
 
-  createKeyPair = async () => {
-    await createUserKeyPair()
-    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
-  }
-
   confirmLogin = async () => {
     const { totpCode, user, code } = this.state
     const { navigation } = this.props
@@ -80,10 +74,10 @@ class ConfirmLogin extends Component {
       try {
         const isAddressReusable = await checkPublicKeyReusability()
         if (!isAddressReusable) {
-          //Here, we navigate to the Options page (restore or create)
-          await this.createKeyPair()
+          this.props.navigation.navigate('RestoreOrCreateSeed')
+        } else {
+          this.navigateToHome()
         }
-        this.navigateToHome()
       } catch (err) {
         console.warn(err)
         await Auth.signOut()
@@ -110,8 +104,6 @@ class ConfirmLogin extends Component {
     const { confirmError, loadingConfirm } = this.state
     return (
       <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >

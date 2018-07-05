@@ -38,6 +38,7 @@ import FreezeScene from './src/scenes/Freeze/FreezeRoute'
 import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
+import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
 
 import fontelloConfig from './src/assets/icons/config.json'
 import * as Utils from './src/components/Utils'
@@ -255,6 +256,8 @@ const RootNavigator = createStackNavigator(
   {
     Loading: LoadingScene,
     Welcome: WelcomeScene,
+    RestoreOrCreateSeed,
+    RootSeedRestore: SeedRestore,
     Auth: SignTabs,
     App: AppTabs,
     Send: SendScreen,
