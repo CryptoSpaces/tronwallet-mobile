@@ -1,6 +1,8 @@
 
 import { Auth } from 'aws-amplify'
 import { getUserSecrets } from './secretsUtils'
+import getBalanceStore from '../store/balance'
+import getTransactionStore from '../store/transactions'
 
 //TODO
 //Put all Account Info related functions Here
@@ -58,6 +60,21 @@ export const checkPublicKeyReusability = async () => {
         const awsAddress = await getAwsPublicKey()
         //Return true or false if user's address/account is already saved in realm
         return address == awsAddress
+
+    } catch (error) {
+        throw error
+    }
+}
+
+export const resetWalletData = async () => {
+    try {
+        const [balanceStore, transactionStore] = await Promise.all([getBalanceStore(), getTransactionStore()])
+
+        const allBalances = balanceStore.objects('Balance')
+        await balanceStore.write(() => balanceStore.delete(allBalances))
+
+        const allTransactions = transactionStore.objects('Transaction')
+        await transactionStore.write(() => transactionStore.delete(allTransactions))
 
     } catch (error) {
         throw error

@@ -330,9 +330,6 @@ class App extends Component {
   _setNodes = async () => {
     try {
       await NodesIp.initNodes();
-
-      Sentry.config(Config.SENTRY_URL).install();
-
     } catch (error) {
       console.warn(error);
     }
@@ -341,7 +338,7 @@ class App extends Component {
   render() {
     const contextProps = {
       ...this.state,
-      restoreWalletData: this._loadUserData,
+      updateWalletData: this._loadUserData,
       getFreeze: this._getFreeze,
       getPrice: this._getPrice,
       getPublicKey: this._getPublicKey
