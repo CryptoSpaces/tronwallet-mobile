@@ -17,7 +17,6 @@ const QRCodeComponent = ({ onRead, onClose }) => (
     </Utils.Header>
     <QRCodeScanner
       showMarker
-      reactivate
       fadeIn
       customMarker={(
         <Utils.View flex={1} background='transparent' justify='center' align='center'>
