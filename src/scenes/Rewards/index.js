@@ -72,7 +72,7 @@ class RewardsScreen extends PureComponent {
                     align='center'
                   >
                     <Utils.Text 
-                      font='Rubik-Light'
+                      font='light'
                       align='center'
                       size='average'
                     >{label}</Utils.Text> 

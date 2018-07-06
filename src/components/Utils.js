@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { ImageBackground, Image } from 'react-native'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import { tint } from 'polished'
 
@@ -44,8 +45,8 @@ export const View = styled.View`
   ${props => props.borderWidth && css`border-width: ${props.borderWidth};`}
   ${props => props.borderColor && css`border-color: ${props.borderColor};`}
   ${props => props.borderRadius && css`border-radius: ${props.borderRadius}px;`}
-  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]}px;`}
-  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]}px;`}
+  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]};`}
+  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]};`}
   ${props => props.padding && css`top: ${props.padding};`}
   ${props => props.marginTop && css`margin-top: ${props.marginTop}px;`}
   ${props => props.position && css`position: ${props.position};`}
@@ -152,9 +153,9 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   color: ${props => props.color};
-  font-size: ${props => FontSize[props.size]};
+  ${props => props.size && css`font-size: ${FontSize[props.size]}`};
   ${props => props.light && css`font-family: Rubik-Light;`}
-  font-family: ${props => props.font || 'Rubik-Medium'};
+  font-family: ${props => `Rubik-${_.capitalize(props.font)}` || 'Rubik-Medium'};
   ${props => props.padding && css`padding: ${props.padding}`};
   ${props => props.weight && css`font-weight: ${props.weight}`};
   ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};
@@ -178,7 +179,7 @@ Text.propTypes = {
   size: PropTypes.oneOf(['tiny', 'xsmall', 'smaller', 'small', 'average', 'medium', 'large', 'huge']),
   marginTop: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
   lineHeight: PropTypes.number,
-  font: PropTypes.oneOf(['Rubik-Bold', 'Rubik-Light'])
+  font: PropTypes.oneOf(['bold', 'light'])
 }
 
 export const Item = styled.View`
@@ -275,8 +276,8 @@ export const PickerInput = styled.Picker`
 export const ButtonWrapper = styled.TouchableOpacity`
   position: ${props => props.absolute ? 'absolute' : 'relative'};
   align-self: ${props => props.alignSelf || 'auto'};
-  padding-vertical: ${Spacing.xsmall}px;
-  padding-horizontal: ${Spacing.small}px;
+  padding-vertical: ${Spacing.xsmall};
+  padding-horizontal: ${Spacing.small};
   justify-content: center;
   align-items: center;
   ${props => props.side && `${props.side}: ${Spacing.medium}`};
