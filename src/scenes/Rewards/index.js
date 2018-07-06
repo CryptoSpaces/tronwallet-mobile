@@ -19,21 +19,6 @@ class RewardsScreen extends PureComponent {
           colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]} 
           style={{flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center'}}
         >
-          <Utils.Row 
-            justify='space-between' 
-            width='100%' 
-            position='absolute'
-            top='0'
-            paddingY='big'
-            paddingX='medium'
-          >
-            <Utils.ButtonWrapper onPress={() => {}}>
-              <Ionicons name='ios-menu' size={Spacing.large} color={Colors.primaryText} />
-            </Utils.ButtonWrapper>
-            <Utils.ButtonWrapper onPress={() => {}}>
-              <Ionicons name='ios-add' size={40} color={Colors.primaryText} />
-            </Utils.ButtonWrapper>
-          </Utils.Row>
           <Utils.View 
             align='center' 
             justify='center' 
