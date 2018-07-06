@@ -243,7 +243,7 @@ export const PickerInput = styled.Picker`
   border-width: 0.5px;
   color: ${Colors.primaryText};
   height: 50px;
-  width: 100px;
+  width: 150px;
 `;
 
 export const ButtonWrapper = styled.TouchableOpacity`

@@ -119,7 +119,7 @@ class SignupScene extends Component {
             <Utils.Error>{confirmError}</Utils.Error>
             <Utils.Content justify='center' align='center'>
               <Utils.Text
-                onPress={() => this.props.navigation.navigate('Sign')}
+                onPress={() => this.props.navigation.goBack()}
                 size='small'
                 font='light'
                 secondary

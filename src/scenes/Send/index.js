@@ -110,14 +110,14 @@ class SendScene extends Component {
 
   renderTokens = () => {
     const { balances } = this.state
-    
-    return balances.map(bl => (
-      <Utils.PickerInput.Item 
-        key={bl.name} 
-        label={bl.name} 
-        value={bl.name} 
+    return balances.map(bl => {
+      const balanceValue = bl.balance > 1 ? bl.balance.toFixed(2) : bl.balance.toFixed(4)
+      return <Utils.PickerInput.Item
+        key={bl.name}
+        label={`${bl.name} ${balanceValue}`}
+        value={bl.name}
       />
-    ))
+    })
   }
 
   transferAsset = async () => {
@@ -278,7 +278,7 @@ class SendScene extends Component {
                   placeholderTextColor='#fff'
                   style={{ marginRight: 15, width: '100%' }}
                 >
-                  <Utils.Text>{this.state.amount}</Utils.Text> 
+                  <Utils.Text>{this.state.amount}</Utils.Text>
                 </Utils.FormInput>
               </Utils.Row>
             </Utils.Content>
