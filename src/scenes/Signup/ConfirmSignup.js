@@ -27,7 +27,7 @@ class SignupScene extends Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    alert("We created a secret list of words for you. We highly recommend you backup it on paper to be able to recover it later.")
+    alert("We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.")
   }
 
   confirmSignup = async () => {
