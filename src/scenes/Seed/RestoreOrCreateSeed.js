@@ -18,7 +18,7 @@ class RestoreOrCreateSeed extends React.Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
+    alert("We created a secret list of words for you. We highly recommend you backup it on paper to be able to recover it later.")
   }
 
   _newWallet = async () => {
