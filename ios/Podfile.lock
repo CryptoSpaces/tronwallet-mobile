@@ -12,25 +12,37 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.4)
-  - gRPC (1.12.0):
-    - gRPC-RxLibrary (= 1.12.0)
-    - gRPC/Main (= 1.12.0)
-  - gRPC-Core (1.12.0):
-    - gRPC-Core/Implementation (= 1.12.0)
-    - gRPC-Core/Interface (= 1.12.0)
-  - gRPC-Core/Implementation (1.12.0):
+  - gRPC (1.13.0):
+    - gRPC-RxLibrary (= 1.13.0)
+    - gRPC/Main (= 1.13.0)
+  - gRPC-Core (1.13.0):
+    - gRPC-Core/Implementation (= 1.13.0)
+    - gRPC-Core/Interface (= 1.13.0)
+  - gRPC-Core/Implementation (1.13.0):
     - BoringSSL (~> 10.0)
-    - gRPC-Core/Interface (= 1.12.0)
+    - gRPC-Core/Interface (= 1.13.0)
     - nanopb (~> 0.3)
-  - gRPC-Core/Interface (1.12.0)
-  - gRPC-ProtoRPC (1.12.0):
-    - gRPC (= 1.12.0)
-    - gRPC-RxLibrary (= 1.12.0)
+  - gRPC-Core/Interface (1.13.0)
+  - gRPC-ProtoRPC (1.13.0):
+    - gRPC-ProtoRPC/Main (= 1.13.0)
+  - gRPC-ProtoRPC/Main (1.13.0):
+    - gRPC (= 1.13.0)
+    - gRPC-RxLibrary (= 1.13.0)
     - Protobuf (~> 3.0)
-  - gRPC-RxLibrary (1.12.0)
-  - gRPC/Main (1.12.0):
-    - gRPC-Core (= 1.12.0)
-    - gRPC-RxLibrary (= 1.12.0)
+  - gRPC-RxLibrary (1.13.0)
+  - gRPC/Main (1.13.0):
+    - gRPC-Core (= 1.13.0)
+    - gRPC-RxLibrary (= 1.13.0)
+  - KSCrash/Core (1.15.18):
+    - KSCrash/Reporting/Filters/Basic
+  - KSCrash/Recording (1.15.18):
+    - KSCrash/Recording/Tools (= 1.15.18)
+  - KSCrash/Recording/Tools (1.15.18)
+  - KSCrash/Reporting/Filters/Base (1.15.18):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.15.18):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
@@ -113,6 +125,16 @@ PODS:
     - React
     - RNTron/Messages
     - TrezorCrypto
+  - Sentry (3.12.4):
+    - Sentry/Core (= 3.12.4)
+    - Sentry/KSCrash (= 3.12.4)
+  - Sentry/Core (3.12.4)
+  - Sentry/KSCrash (3.12.4):
+    - KSCrash/Core (~> 1.15.12)
+  - SentryReactNative (0.38.1):
+    - React
+    - Sentry (~> 3.12.4)
+    - Sentry/KSCrash (~> 3.12.4)
   - TrezorCrypto (0.0.5)
   - yoga (0.55.4.React)
 
@@ -136,6 +158,7 @@ DEPENDENCIES:
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNTron (from `../node_modules/react-native-tron/ios/`)
+  - SentryReactNative (from `../node_modules/react-native-sentry`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -146,9 +169,11 @@ SPEC REPOS:
     - gRPC-Core
     - gRPC-ProtoRPC
     - gRPC-RxLibrary
+    - KSCrash
     - nanopb
     - "NSData+FastHex"
     - Protobuf
+    - Sentry
     - TrezorCrypto
 
 EXTERNAL SOURCES:
@@ -160,12 +185,14 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
-  RNDeviceInfo:
-    :path: "../node_modules/react-native-device-info"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNTron:
     :path: "../node_modules/react-native-tron/ios/"
+  SentryReactNative:
+    :path: "../node_modules/react-native-sentry"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -175,20 +202,23 @@ SPEC CHECKSUMS:
   DoubleConversion: e22e0762848812a87afd67ffda3998d9ef29170c
   Folly: 211775e49d8da0ca658aebc8eab89d642935755c
   glog: 1de0bb937dccdc981596d3b5825ebfb765017ded
-  gRPC: 9362451032695e2dfb7bafcd3740e3a27939e4ff
-  gRPC-Core: 9696b220565b283e021cf2722d473a4a74b7622a
-  gRPC-ProtoRPC: a1bd56fb1991a8dae4581250d7259eddabb66779
-  gRPC-RxLibrary: 1ed5314e8b38cd6e55c9bfa048387136ae925ce9
+  gRPC: 81b990caa01d7c32605d300c2ffd1b5ba0ef9e49
+  gRPC-Core: a56b086a8ef5ced6f6ba5be5bc0a63fca185015a
+  gRPC-ProtoRPC: 842797fbe05dfcf891afb4a5048e5ccf5f06ef86
+  gRPC-RxLibrary: fa6852f98d6ec0b73c0ec2f6406c26943099d501
+  KSCrash: 5394936f41e5c1ef7b79cf79b30d53299b0c160e
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   "NSData+FastHex": a22ad031ee10a4297d0bf4d20cf03406a4476169
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
   React: aa2040dbb6f317b95314968021bd2888816e03d5
-  RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
   react-native-camera: ab22041dcf0403d88f2ae4b9ea3ed2644e680423
+  RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
   RNTron: f8896a86924422ed73d694ebbfd3b5a522a3d9f1
+  Sentry: 7d3ea7176e5184e9c35c12a5825905345807e8c1
+  SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
   TrezorCrypto: ecef681446bf02af6248d3b5e394026d7e766e56
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 5a242e1757e5f9503d1cc48a6cbec79c634f1673
+PODFILE CHECKSUM: cc47eb125f0a84bb20939223f7f7dc462090c080
 
 COCOAPODS: 1.5.2
