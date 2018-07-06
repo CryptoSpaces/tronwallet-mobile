@@ -98,6 +98,7 @@ class BalanceScene extends Component {
         this._updateBalancesStore(getData[0]),
         this._updateAssetsStore(getData[1])
       ])
+      await updateWalletData()
 
       const assetBalance = await this._getBalancesFromStore()
       const assetList = await this._getAssetsFromStore()
@@ -111,7 +112,6 @@ class BalanceScene extends Component {
         assetList,
         seedConfirmed: confirmed
       })
-      await updateWalletData()
       
     } catch (error) {
       this.setState({ error: error.message })
@@ -137,7 +137,7 @@ class BalanceScene extends Component {
     const now = moment()
     if (item.percentage >= 100 || moment(item.startTime).isAfter(now) || moment(item.endTime).isBefore(now)) {
       return (
-        <View style={{ justifyContent: 'center', paddingHorizontal: 12 }}>
+        <View style={{ justifyContent: 'center', paddingY: 12 }}>
           <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
         </View>
       )
@@ -212,7 +212,7 @@ class BalanceScene extends Component {
               </Utils.Row>
             </FadeIn>
             {!!trxHistory.length && (
-              <Utils.View paddingX={Spacing.medium}>
+              <Utils.View paddingX='medium'>
                 <GrowIn name='linechart' height={LINE_CHART_HEIGHT}>
                   <LineChart
                     style={{ height: LINE_CHART_HEIGHT }}

@@ -15,7 +15,6 @@ const TokenItem = ({ item, onPress }) => {
   return <FadeIn name={item.name}>
     <ListItem
       onPress={onPress}
-      disabled={item.name === 'TRX'}
       titleStyle={{ color: Colors.primaryText }}
       containerStyle={{
         borderBottomColor: '#191a29',

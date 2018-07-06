@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
@@ -37,8 +37,19 @@ class Restore extends React.Component {
     this.props.navigation.dispatch(resetAction)
   }
 
-
   _handleRestore = async () => {
+    Alert.alert(
+      'Warning',
+      'Restore seed will erase all data on this device and pull information from the network for the restored account.',
+      [
+        { text: 'Cancel' },
+        { text: 'OK', onPress: () => this._restoreWallet() },
+      ],
+      { cancelable: false }
+    )
+  }
+
+  _restoreWallet = async () => {
     const { updateWalletData } = this.props.context
     this.setState({ loading: true })
     try {
