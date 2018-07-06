@@ -96,7 +96,7 @@ class TransactionDetail extends Component {
 
   submitTransaction = async () => {
     const { signedTransaction } = this.state
-    this.setState({ loadingSubmit: true })
+    this.setState({ loadingSubmit: true, submitError: null })
     try {
       let success = false;
       const { code } = await Client.broadcastTransaction(signedTransaction)
@@ -109,10 +109,14 @@ class TransactionDetail extends Component {
         submitError: null,
       })
     } catch (error) {
+      let errorMessage = error.message
+      //TODO
+      //Refactor lambda function. Research GOAWAY error
+      console.warn("Error Transaction Details", error)
       this.setState({
         loadingSubmit: false,
         submitted: true,
-        submitError: error.message
+        submitError: errorMessage
       })
     }
   }
@@ -161,38 +165,33 @@ class TransactionDetail extends Component {
     return <Utils.Content>{contractsElements}</Utils.Content>
   }
 
-  renderSubmitionView = () => {
-    const { loadingSubmit, submitted, success } = this.state
-    if (!submitted) {
-      return (
-        <Utils.Content align='center' justify='center'>
-          {loadingSubmit ? (
-            <ActivityIndicator size='small' color={Colors.primaryText} />
-          ) : (
-              <ButtonGradient
-                text='Submit Transaction'
-                onPress={this.submitTransaction}
-                size='small'
-              />
-            )}
-        </Utils.Content>
-      )
-    }
+  renderSubmitButton = () => {
+    const { loadingSubmit, success } = this.state
     if (success) {
-      return (
-        <Utils.Content align='center' justify='center'>
-          <Feather
-            style={{ marginVertical: 5 }}
-            name='check-circle'
-            size={FontSize['large']}
-            color={Colors.green}
-          />
-          <Utils.Text success size='small'>
-            Transaction submitted to network !
+      return <Utils.Content align='center' justify='center'>
+        <Feather
+          style={{ marginVertical: 5 }}
+          name='check-circle'
+          size={FontSize['large']}
+          color={Colors.green}
+        />
+        <Utils.Text success size='small'>
+          Transaction submitted to network !
           </Utils.Text>
-        </Utils.Content>
-      )
+      </Utils.Content>
     }
+
+    return <Utils.Content align='center' justify='center'>
+      {loadingSubmit ? (
+        <ActivityIndicator size='small' color={Colors.primaryText} />
+      ) : (
+          <ButtonGradient
+            text='Submit Transaction'
+            onPress={this.submitTransaction}
+            size='small'
+          />
+        )}
+    </Utils.Content>
   }
 
   renderRetryConnection = () => (
@@ -207,7 +206,7 @@ class TransactionDetail extends Component {
   )
 
   render() {
-    const { submitError, loadingData, isConnected } = this.state
+    const { submitError, loadingData, isConnected, success } = this.state
 
     if (loadingData) return <LoadingScene />
 
@@ -215,7 +214,7 @@ class TransactionDetail extends Component {
       <Utils.Container>
         {!isConnected && this.renderRetryConnection()}
         {isConnected && this.renderContracts()}
-        {isConnected && this.renderSubmitionView()}
+        {isConnected && this.renderSubmitButton()}
         <Utils.Content align='center' justify='center'>
           {submitError && (
             <Utils.Error>Transaction Failed: {submitError}</Utils.Error>

@@ -104,6 +104,8 @@ class Confirm extends React.Component {
                 ))}
               </Utils.Row>
             </Utils.Content>
+            <Utils.VerticalSpacer />
+            <Utils.Button onPress={() => this.props.navigation.goBack()}>Back</Utils.Button>
           </ScrollView>
         </Utils.Container>
       </Fragment>

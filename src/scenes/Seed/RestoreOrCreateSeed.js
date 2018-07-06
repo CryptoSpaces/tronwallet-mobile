@@ -5,6 +5,7 @@ import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 
 import { createUserKeyPair } from '../../utils/secretsUtils'
+import { resetWalletData } from '../../utils/userAccountUtils'
 
 class RestoreOrCreateSeed extends React.Component {
   static navigationOptions = {
@@ -23,11 +24,12 @@ class RestoreOrCreateSeed extends React.Component {
   _newWallet = async () => {
     this.setState({ loading: true })
     await this._createKeyPair()
+    await resetWalletData()
     this.setState({ loading: false })
     this.props.navigation.navigate('SeedCreate')
   }
 
-  render () {
+  render() {
     return (
       <Utils.Container>
         <Utils.Content flex={1} justify='center'>
