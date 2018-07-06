@@ -17,6 +17,7 @@ export const Colors = {
   yellow: '#F5FF30',
   green: '#a9ff68',
   red: '#9A2520',
+  orange: '#ff7f28',
   RGB: {
     background: '25,26,42',
     darkerBackground: '16,16,26',
@@ -35,8 +36,12 @@ export const ScreenSize = {
 const getAdjustedFontSize = (size) => parseInt(size) * width * (1.8 - 0.002 * width) / 400
 
 export const FontSize = {
+  tiny: getAdjustedFontSize(11),
   xsmall: getAdjustedFontSize(12),
+  smaller: getAdjustedFontSize(14),
   small: getAdjustedFontSize(16),
+  average: getAdjustedFontSize(18),
   medium: getAdjustedFontSize(24),
-  large: getAdjustedFontSize(36)
+  large: getAdjustedFontSize(36),
+  huge: getAdjustedFontSize(54)
 }
