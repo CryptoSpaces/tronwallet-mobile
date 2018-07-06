@@ -33,10 +33,11 @@ class Confirm extends React.Component {
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
       await confirmSecret()
+      alert('Wallet successfully confirmed.')
       const resetAction = StackActions.reset({
         index: 0,
         actions: [
-          NavigationActions.navigate({ routeName: 'SettingsScene' })
+          NavigationActions.navigate({ routeName: 'Settings' })
         ]
       })
       this.props.navigation.dispatch(resetAction)
