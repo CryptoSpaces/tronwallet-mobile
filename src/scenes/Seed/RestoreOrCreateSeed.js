@@ -54,7 +54,7 @@ class RestoreOrCreateSeed extends React.Component {
           <Utils.VerticalSpacer size='medium' />
           <ButtonGradient
             size='small'
-            onPress={() => this.props.navigation.navigate('RootSeedRestore')}
+            onPress={() => this.props.navigation.navigate('SeedRestore')}
             text="Restore previous wallet"
           />
         </Utils.Content>
