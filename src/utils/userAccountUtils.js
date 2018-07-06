@@ -19,7 +19,7 @@ const getAwsPublicKey = async () => {
         return user['custom:publickey']
     } catch (error) {
         if (error.code === 'UserNotFoundException' || error === 'not authenticated') {
-            throw new Error(error.message)
+            return null
         } else {
             throw error
         }

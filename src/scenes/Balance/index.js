@@ -98,6 +98,7 @@ class BalanceScene extends Component {
         this._updateBalancesStore(getData[0]),
         this._updateAssetsStore(getData[1])
       ])
+      await updateWalletData()
 
       const assetBalance = await this._getBalancesFromStore()
       const assetList = await this._getAssetsFromStore()
@@ -111,7 +112,6 @@ class BalanceScene extends Component {
         assetList,
         seedConfirmed: confirmed
       })
-      await updateWalletData()
       
     } catch (error) {
       this.setState({ error: error.message })

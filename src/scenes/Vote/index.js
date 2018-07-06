@@ -60,7 +60,13 @@ class VoteScene extends PureComponent {
 
 
   _loadData = async () => {
-    this.props.navigation.setParams({ onSubmit: this._submit, disabled: true })
+    this.props.navigation.setParams({
+      onSubmit: this._submit,
+      disabled: true,
+      votesError: null,
+      listError: null,
+    })
+
     this.setState(INITIAL_STATE)
     this._loadCandidates()
     this._refreshCandidates()
@@ -116,7 +122,7 @@ class VoteScene extends PureComponent {
   }
 
   _loadFreeze = () => {
-    try{
+    try {
       if (this.props.context.freeze.value) {
         const { total } = this.props.context.freeze.value
         this.setState({ totalRemaining: total || 0 })
@@ -244,10 +250,9 @@ class VoteScene extends PureComponent {
 
   _throwError = (e, type) => {
     const errorType = type || 'listError'
-
     console.log(`${e.name}. ${e.message}`)
     this.setState({
-      [errorType]: 'Communications with server failed.',
+      [errorType]: "Oops, something didn't load correctly. Try to sync again",
       loading: false
     }, function setErrorParams() {
       this.props.navigation.setParams({ loadData: this._loadData, [errorType]: this.state[errorType] })
@@ -258,10 +263,6 @@ class VoteScene extends PureComponent {
     this.setState({
       ...this._resetModalState()
     })
-  }
-
-  _refreshPage = () => {
-    this._requestData()
   }
 
   _resetModalState = () => {

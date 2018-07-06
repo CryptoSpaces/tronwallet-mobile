@@ -44,7 +44,7 @@ class RestoreOrCreateSeed extends React.Component {
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
           {this.state.loading
-            ? <ActivityIndicator />
+            ? <ActivityIndicator color="#ffffff"/>
             : <ButtonGradient size='small' onPress={this._newWallet} text="Create a new wallet" />}
           <Utils.VerticalSpacer size='medium' />
           <Utils.Text light secondary>
