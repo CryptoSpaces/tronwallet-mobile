@@ -13,8 +13,8 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import Client from '../../services/client'
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils'
+import { createUserKeyPair } from '../../utils/secretsUtils'
+import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 import { version } from '../../../package.json'
 
 class LoginScene extends Component {
@@ -53,11 +53,6 @@ class LoginScene extends Component {
     )
   }
 
-  createKeyPair = async () => {
-    await createUserKeyPair()
-    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
-  }
-
   signIn = async () => {
     const { navigation } = this.props
     const { username, password } = this.state
@@ -74,14 +69,16 @@ class LoginScene extends Component {
         )
       } else {
         try {
-          const userPublicKey = await Client.getPublicKey()
-          const { address } = await getUserSecrets()
-          if (userPublicKey !== address) this.createKeyPair();
-
+          const isAddressReusable = await checkPublicKeyReusability()
+          if (!isAddressReusable) {
+            this.props.navigation.navigate('RestoreOrCreateSeed')
+          } else {
+            this.navigateToHome()
+          }
         } catch (err) {
-          await this.createKeyPair();
-        } finally {
-          this.navigateToHome()
+          console.warn(err)
+          await Auth.signOut()
+          this.setState({ signError: 'Oops. Login failed, try again', loadingSign: false })
         }
       }
     } catch (error) {

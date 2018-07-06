@@ -8,9 +8,8 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
-import Client from '../../services/client'
 
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils'
+import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 
 class ConfirmLogin extends Component {
   state = {
@@ -29,7 +28,6 @@ class ConfirmLogin extends Component {
 
   loadUserData = async () => {
     try {
-      // const userPubliKey = await Client.getPublicKey()
       const user = this.props.navigation.getParam('user')
       let totpCode = null
       if (user.challengeParam.MFAS_CAN_SETUP) {
@@ -64,11 +62,6 @@ class ConfirmLogin extends Component {
     })
   }
 
-  createKeyPair = async () => {
-    await createUserKeyPair()
-    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
-  }
-
   confirmLogin = async () => {
     const { totpCode, user, code } = this.state
     const { navigation } = this.props
@@ -79,14 +72,16 @@ class ConfirmLogin extends Component {
         : await Auth.confirmSignIn(user, code, 'SOFTWARE_TOKEN_MFA')
 
       try {
-        const userPublicKey = await Client.getPublicKey()
-        const { address } = await getUserSecrets()
-        if (userPublicKey !== address) await this.createKeyPair();
-
+        const isAddressReusable = await checkPublicKeyReusability()
+        if (!isAddressReusable) {
+          this.props.navigation.navigate('RestoreOrCreateSeed')
+        } else {
+          this.navigateToHome()
+        }
       } catch (err) {
-        await this.createKeyPair();
-      } finally {
-        this.navigateToHome()
+        console.warn(err)
+        await Auth.signOut()
+        this.setState({ confirmError: 'Oops. Login failed, try again', loadingConfirm: false })
       }
     } catch (error) {
       let message = error.message
@@ -109,8 +104,6 @@ class ConfirmLogin extends Component {
     const { confirmError, loadingConfirm } = this.state
     return (
       <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >

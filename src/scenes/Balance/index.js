@@ -37,7 +37,7 @@ class BalanceScene extends Component {
     seedConfirmed: true
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     try {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()
@@ -50,7 +50,7 @@ class BalanceScene extends Component {
     this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
   }
 
@@ -85,6 +85,7 @@ class BalanceScene extends Component {
 
   _loadData = async () => {
     try {
+      const { updateWalletData } = this.props.context
       const getData = await Promise.all([
         Client.getBalances(),
         Client.getTokenList()
@@ -103,13 +104,15 @@ class BalanceScene extends Component {
       const trxBalance = assetBalance.find(item => item.name === 'TRX')
 
       const { confirmed } = await getUserSecrets()
-
+      
       this.setState({
         trxBalance: trxBalance.balance || 0,
         assetBalance,
         assetList,
         seedConfirmed: confirmed
       })
+      await updateWalletData()
+      
     } catch (error) {
       this.setState({ error: error.message })
     }
@@ -285,4 +288,8 @@ class BalanceScene extends Component {
   }
 }
 
-export default BalanceScene
+export default props => (
+  <Context.Consumer>
+    {context => <BalanceScene context={context} {...props} />}
+  </Context.Consumer>
+)

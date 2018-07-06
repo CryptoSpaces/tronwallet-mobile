@@ -31,19 +31,21 @@ import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
 import TransactionDetailScene from './src/scenes/TransactionDetail'
 import TransferScene from './src/scenes/Transfer'
-import SettingsScene from './src/scenes/Settings'
+import Settings from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeScene from './src/scenes/Freeze/FreezeRoute'
 import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
+import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
 
 import fontelloConfig from './src/assets/icons/config.json'
 import * as Utils from './src/components/Utils'
 import ButtonGradient from './src/components/ButtonGradient'
 
 import Client from './src/services/client'
+import { getUserPublicKey } from './src/utils/userAccountUtils'
 import NodesIp from './src/utils/nodeIp'
 import { Context } from './src/store/context'
 
@@ -57,10 +59,9 @@ YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTIm
 
 const SettingsStack = createStackNavigator(
   {
-    SettingsScene,
+    Settings,
     SeedCreate,
-    SeedConfirm,
-    SeedRestore
+    SeedConfirm
   },
   {
     navigationOptions: {
@@ -254,6 +255,8 @@ const RootNavigator = createStackNavigator(
   {
     Loading: LoadingScene,
     Welcome: WelcomeScene,
+    RestoreOrCreateSeed,
+    SeedRestore,
     Auth: SignTabs,
     App: AppTabs,
     Send: SendScreen,
@@ -281,20 +284,22 @@ const RootNavigator = createStackNavigator(
 
 const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
 class App extends Component {
+
   state = {
     price: {},
     freeze: {},
-    publicKey: {},
-    getFreeze: this._getFreeze,
-    getPrice: this._getPrice,
-    getPublicKey: this._getPublicKey
+    publicKey: {}
   }
 
   componentDidMount() {
-    this._getFreeze()
     this._getPrice()
-    this._getPublicKey()
     this._setNodes()
+    this._loadUserData()
+  }
+
+  _loadUserData = () => {
+    this._getPublicKey()
+    this._getFreeze()
   }
 
   _getFreeze = async () => {
@@ -317,7 +322,7 @@ class App extends Component {
 
   _getPublicKey = async () => {
     try {
-      const publicKey = await Client.getPublicKey()
+      const publicKey = await getUserPublicKey()
       this.setState({ publicKey: { value: publicKey } })
     } catch (err) {
       this.setState({ publicKey: { err } })
@@ -327,17 +332,21 @@ class App extends Component {
   _setNodes = async () => {
     try {
       await NodesIp.initNodes();
-
-      Sentry.config(Config.SENTRY_URL).install();
-
     } catch (error) {
       console.warn(error);
     }
   }
 
   render() {
+    const contextProps = {
+      ...this.state,
+      updateWalletData: this._loadUserData,
+      getFreeze: this._getFreeze,
+      getPrice: this._getPrice,
+      getPublicKey: this._getPublicKey
+    }
     return (
-      <Context.Provider value={this.state}>
+      <Context.Provider value={contextProps}>
         <StatusBar barStyle='light-content' />
         <RootNavigator uriPrefix={prefix} />
       </Context.Provider>

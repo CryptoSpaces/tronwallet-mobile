@@ -35,9 +35,11 @@ const generateKeypair = async (mnemonic, randomlyGenerated) => {
 export const confirmSecret = async () => {
     try {
         const secretsStore = await getSecretsStore()
+        const deviceId = await DeviceInfo.getUniqueID()
         secretsStore.write(() => {
             const secret = secretsStore.objects('Secrets')
             secret.confirmed = true
+            secretsStore.create('Secrets', { id: deviceId, confirmed: true }, true)
         })
     } catch (error) {
         throw error

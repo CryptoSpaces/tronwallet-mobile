@@ -25,6 +25,11 @@ class SignupScene extends Component {
     })
   }
 
+  _createKeyPair = async () => {
+    await createUserKeyPair()
+    alert("We created a mnemonic for you. You can confirm that or change it in the settings.")
+  }
+
   confirmSignup = async () => {
     const { code } = this.state
     const { navigation } = this.props
@@ -36,7 +41,7 @@ class SignupScene extends Component {
     try {
       await Auth.confirmSignUp(username, code)
       await Auth.signIn(username, password)
-      await createUserKeyPair();
+      await this._createKeyPair()
 
       this.setState({ loadingConfirm: false })
       const confirmSignAndLogin = StackActions.reset({

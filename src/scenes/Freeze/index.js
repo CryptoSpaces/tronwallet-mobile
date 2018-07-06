@@ -24,13 +24,11 @@ class FreezeScene extends Component {
   }
 
   componentDidMount() {
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
-      this.loadData()
-    })
+    this._didFocusSubscription = this.props.navigation.addListener('didFocus', this.loadData)
   }
 
   componentWillUnmount() {
-    this._navListener.remove()
+    this._didFocusSubscription.remove()
   }
 
   loadData = async () => {
@@ -117,7 +115,7 @@ class FreezeScene extends Component {
       })
     }
   }
-  
+
   render() {
     const {
       total,

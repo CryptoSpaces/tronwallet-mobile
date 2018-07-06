@@ -169,6 +169,7 @@ class VoteScene extends PureComponent {
 
       } catch (error) {
         console.warn(error.message);
+        alert("Error while building transaction, try again.")
         this.setState({ loading: false })
         navigation.setParams({ disabled: false })
       }

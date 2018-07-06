@@ -131,6 +131,7 @@ export const Text = styled.Text`
   font-family: Rubik-Medium;
   color: ${props => props.color};
   font-size: ${props => FontSize[props.size]};
+  ${props => props.light && css`font-family: Rubik-Light;`}
   ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};
   ${props => props.align && css`text-align: ${props.align}`};
   ${props => props.font && css`font-family: rubik-${props.font}`};
@@ -234,8 +235,7 @@ export const PlusButton = styled.TouchableOpacity`
 `
 export const CloseButton = styled.TouchableOpacity`
   ${tronWalletBorder}
-  align-items: flex-end;
-  align-self: flex-end;
+  margin-right: 15px;
 `
 
 export const PickerInput = styled.Picker`
