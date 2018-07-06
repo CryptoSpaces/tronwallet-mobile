@@ -35,6 +35,7 @@ import Settings from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeScene from './src/scenes/Freeze/FreezeRoute'
+import RewardsScene from './src/scenes/Rewards'
 import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
@@ -270,7 +271,8 @@ const RootNavigator = createStackNavigator(
       screen: TransactionDetailScene,
       path: 'transaction/:tx'
     },
-    Freeze: FreezeScene
+    Freeze: FreezeScene,
+    Rewards: RewardsScene
   },
   {
     initialRouteName: 'Loading',
