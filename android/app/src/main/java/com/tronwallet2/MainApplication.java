@@ -8,7 +8,6 @@ import io.getty.rntron.RNTronPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import org.reactnative.camera.RNCameraPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import com.amazonaws.RNAWSCognitoPackage;
 import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
@@ -39,7 +38,6 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeConfigPackage(),
             new RNCameraPackage(),
             new SplashScreenReactPackage(),
-            new RNAWSCognitoPackage(),
             new RealmReactPackage(),
             new VectorIconsPackage(),
             new SvgPackage(),
