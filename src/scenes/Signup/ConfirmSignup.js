@@ -50,7 +50,6 @@ class SignupScene extends Component {
         throw new Error('User already gifted')
       }
     } catch (error) {
-      console.warn(error)
       const navigateToHome = StackActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'App' })],
