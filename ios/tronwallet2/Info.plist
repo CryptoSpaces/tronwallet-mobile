@@ -2,20 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>d5f6785c569f60c2263fee801b88934f597c5059</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict/>
-				<key>KitName</key>
-				<string>Crashlytics</string>
-			</dict>
-		</array>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -45,6 +31,20 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>8a4c58e10271010dcceecabee4eb627aac38c79c</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -58,8 +58,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>To scan your contracts the app needs your permission to access the camera.</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To validate your apple music the app needs your permission to access it.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -67,6 +65,8 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>To validate your calendar the app needs your permission to access it.</string>
 	<key>NSCameraUsageDescription</key>
+	<string>To scan your contracts the app needs your permission to access the camera.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To scan your contracts the app needs your permission to access the camera.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>To scan your contracts the app needs your permission to access it.</string>

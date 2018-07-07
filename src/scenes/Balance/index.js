@@ -21,6 +21,7 @@ import getAssetsStore from '../../store/assets'
 import { Context } from '../../store/context'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
+
 const PRICE_PRECISION = 4
 const LINE_CHART_HEIGHT = 40
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600

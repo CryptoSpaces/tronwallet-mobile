@@ -949,7 +949,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				4A404306C291A30BBDE8889B /* [CP] Copy Pods Resources */,
 				05604981483E4ABAA358BE77 /* Upload Debug Symbols to Sentry */,
-				67FF31BD20F0FA4800B88C37 /* ShellScript */,
+				67FF31BD20F0FA4800B88C37 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -1589,18 +1589,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-tronwallet2/Pods-tronwallet2-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		67FF31BD20F0FA4800B88C37 /* ShellScript */ = {
+		67FF31BD20F0FA4800B88C37 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" d5f6785c569f60c2263fee801b88934f597c5059 f6667e02d71fa0dbb07222037f830b3e494d838fcfa0bc39a376e3a659c16952";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 8a4c58e10271010dcceecabee4eb627aac38c79c 258e4f97c9a807d2d2c55dd4167b6b8a8146c4b0463db0558f7f8c7bbfa6b62c";
 		};
 		DAF6DD9532D3C8B3C741B89F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
