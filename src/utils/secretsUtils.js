@@ -3,6 +3,7 @@ import DeviceInfo from 'react-native-device-info'
 
 import getSecretsStore from '../store/secrets'
 import Client from '../services/client'
+import { resetWalletData } from './userAccountUtils';
 
 export const createUserKeyPair = async () => {
     try {
@@ -30,6 +31,7 @@ const generateKeypair = async (mnemonic, randomlyGenerated) => {
     const secretsStore = await getSecretsStore()
     await secretsStore.write(() => secretsStore.create('Secrets', generatedKeypair, true))
     await Client.setUserPk(generatedKeypair.address)
+    await resetWalletData()
 }
 
 export const confirmSecret = async () => {

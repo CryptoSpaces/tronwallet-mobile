@@ -13,7 +13,6 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import { createUserKeyPair } from '../../utils/secretsUtils'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 import { version } from '../../../package.json'
 

@@ -10,7 +10,9 @@ import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 
 //Services
-import { createUserKeyPair } from '../../utils/secretsUtils';
+import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
+import WalletClient from '../../services/client';
+import { getUserPublicKey } from '../../utils/userAccountUtils';
 
 class SignupScene extends Component {
   state = {
@@ -30,6 +32,33 @@ class SignupScene extends Component {
     alert("We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.")
   }
 
+
+  _navigateNext = async () => {
+    const { navigation } = this.props
+    try {
+      const result = await WalletClient.giftUser()
+      if (result) {
+        const address = await getUserPublicKey()
+        //Adapt Reward here
+        const rewardsParams = {
+          label: address,
+          amount: 1,
+          token: 'TWX',
+        }
+        navigation.navigate('Rewards', rewardsParams)
+      } else {
+        throw new Error('User already gifted')
+      }
+    } catch (error) {
+      const navigateToHome = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'App' })],
+        key: null
+      })
+      navigation.dispatch(navigateToHome)
+    }
+  }
+
   confirmSignup = async () => {
     const { code } = this.state
     const { navigation } = this.props
@@ -42,14 +71,9 @@ class SignupScene extends Component {
       await Auth.confirmSignUp(username, code)
       await Auth.signIn(username, password)
       await this._createKeyPair()
-
       this.setState({ loadingConfirm: false })
-      const confirmSignAndLogin = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'App' })],
-        key: null
-      })
-      navigation.dispatch(confirmSignAndLogin)
+      await this._navigateNext()
+
     } catch (error) {
       if (error.code === 'NotAuthorizedException') {
         this.setState({ loadingConfirm: false, confirmError: 'Incorrect credentials, try again..' })
