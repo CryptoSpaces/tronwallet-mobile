@@ -44,6 +44,7 @@ target 'tronwallet2' do
 
   pod "react-native-camera", 
     :path => "../node_modules/react-native-camera"
+
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
 
 end

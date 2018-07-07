@@ -1,0 +1,19 @@
+{
+	"ProjectName": "tronwallet-mobile",
+	"ProjectPath": "/Users/dbuarque/workspace/tronwallet-mobile",
+	"InitializationTime": "2018-07-06-14-54-20",
+	"LastConfigurationTime": "2018-07-06-14-53-27",
+	"LastNPMInstallTime": "",
+	"FrontendLastBuildTime": "",
+	"LastPublishTime": "",
+	"BackendLastSyncTime": "2018-07-06-14-55-46",
+	"BackendLastBuildTime": "2018-07-06-14-55-39",
+	"BackendLastPushTime": "2018-07-06-14-55-40",
+	"BackendProjectID": "3cf6ba24-e73f-48f5-aca4-85cb7d962561",
+	"BackendProjectName": "TronWallet",
+	"BackendProjectConsoleUrl": "https://console.aws.amazon.com/mobilehub/home#/3cf6ba24-e73f-48f5-aca4-85cb7d962561/build",
+	"BackendProjectCreationTime": "2018-06-02T16:10:43.107Z",
+	"BackendProjectLastUpdatedTime": "2018-07-06T17:55:40.368Z",
+	"Framework": "react-native",
+	"BackendLastSyncToDevTime": "2018-07-06-14-55-46"
+}
