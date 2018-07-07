@@ -31,6 +31,20 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>8a4c58e10271010dcceecabee4eb627aac38c79c</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -44,8 +58,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>To scan your contracts the app needs your permission to access the camera.</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To validate your apple music the app needs your permission to access it.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -53,6 +65,8 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>To validate your calendar the app needs your permission to access it.</string>
 	<key>NSCameraUsageDescription</key>
+	<string>To scan your contracts the app needs your permission to access the camera.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To scan your contracts the app needs your permission to access the camera.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>To scan your contracts the app needs your permission to access it.</string>

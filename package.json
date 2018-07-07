@@ -3,7 +3,6 @@
   "version": "2.0.0rc1",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "postinstall": "npm install gettyio/react-native-tron#master --save",
     "test": "jest"
   },
   "dependencies": {
@@ -42,7 +41,7 @@
     "react-native-svg": "^6.3.1",
     "react-native-svg-charts": "^5.0.0",
     "react-native-tab-view": "^0.0.78",
-    "react-native-tron": "github:gettyio/react-native-tron#master",
+    "react-native-tron": "gettyio/react-native-tron#1.0.2",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.0.1",
     "reactotron-react-native": "^1.14.0",
