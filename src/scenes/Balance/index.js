@@ -5,7 +5,7 @@ import Config from 'react-native-config'
 import { LineChart } from 'react-native-svg-charts'
 import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
-
+import { Crashlytics, Answers } from 'react-native-fabric';
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatNumber from '../../utils/formatNumber'
@@ -19,12 +19,12 @@ import TokenItem from './TokenItem'
 import getBalanceStore from '../../store/balance'
 import getAssetsStore from '../../store/assets'
 import { Context } from '../../store/context'
-
 import { getUserSecrets } from '../../utils/secretsUtils'
 
 const PRICE_PRECISION = 4
 const LINE_CHART_HEIGHT = 40
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
+
 
 class BalanceScene extends Component {
   state = {
@@ -38,6 +38,7 @@ class BalanceScene extends Component {
   }
 
   async componentDidMount() {
+    
     try {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()

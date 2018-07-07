@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -1601,7 +1600,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 8a4c58e10271010dcceecabee4eb627aac38c79c 258e4f97c9a807d2d2c55dd4167b6b8a8146c4b0463db0558f7f8c7bbfa6b62c";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 8a4c58e10271010dcceecabee4eb627aac38c79c \"${FABRIC_KEY}\"";
 		};
 		DAF6DD9532D3C8B3C741B89F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

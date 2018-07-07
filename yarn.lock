@@ -5502,6 +5502,10 @@ react-native-elements@^0.19.1:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
+react-native-fabric@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-fabric/-/react-native-fabric-0.5.1.tgz#e5eb65c56196355b41f230c14adcc9c4bcf60dda"
+
 react-native-gesture-handler@1.0.0-alpha.41:
   version "1.0.0-alpha.41"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.0-alpha.41.tgz#5667a1977ab148339ec2e7b0a94ad4b959cf09e5"
@@ -5649,9 +5653,9 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-tron@gettyio/react-native-tron#1.0.1:
+react-native-tron@gettyio/react-native-tron#1.0.2:
   version "1.0.0"
-  resolved "https://codeload.github.com/gettyio/react-native-tron/tar.gz/7147f2043197e80f3ac54dac0c5a5cbebaebe51b"
+  resolved "https://codeload.github.com/gettyio/react-native-tron/tar.gz/82d438048e05befe88014e7290381356186f046d"
 
 react-native-vector-icons@4.5.0:
   version "4.5.0"
