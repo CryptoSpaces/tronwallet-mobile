@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -916,22 +917,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		F3E790F8F7124C38964BDCF6 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			path = Application;
-			sourceTree = "<group>";
-		};
-		DDF9B4F84D854DBDAB188E20 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			path = Application;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -964,6 +949,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				4A404306C291A30BBDE8889B /* [CP] Copy Pods Resources */,
 				05604981483E4ABAA358BE77 /* Upload Debug Symbols to Sentry */,
+				67FF31BD20F0FA4800B88C37 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1557,6 +1543,20 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		05604981483E4ABAA358BE77 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
+		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1589,6 +1589,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-tronwallet2/Pods-tronwallet2-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		67FF31BD20F0FA4800B88C37 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" d5f6785c569f60c2263fee801b88934f597c5059 f6667e02d71fa0dbb07222037f830b3e494d838fcfa0bc39a376e3a659c16952";
+		};
 		DAF6DD9532D3C8B3C741B89F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1606,20 +1619,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		05604981483E4ABAA358BE77 /* Upload Debug Symbols to Sentry */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			name = "Upload Debug Symbols to Sentry";
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2154,7 +2153,7 @@
 				00E356F71AD99517003FC87E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "tronwallet2" */ = {
 			isa = XCConfigurationList;
@@ -2163,7 +2162,7 @@
 				13B07F951A680F5B00A75B9A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "tronwallet2-tvOS" */ = {
 			isa = XCConfigurationList;
@@ -2172,7 +2171,7 @@
 				2D02E4981E0B4A5E006451C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "tronwallet2-tvOSTests" */ = {
 			isa = XCConfigurationList;
@@ -2181,7 +2180,7 @@
 				2D02E49A1E0B4A5E006451C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "tronwallet2" */ = {
 			isa = XCConfigurationList;
@@ -2190,7 +2189,7 @@
 				83CBBA211A601CBA00E9B192 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

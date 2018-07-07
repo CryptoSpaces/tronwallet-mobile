@@ -37,8 +37,8 @@ target 'tronwallet2' do
     :inhibit_warnings => true
 
   # Pods for tronwallet2
-  pod "RNTron",
-    :path => "../node_modules/react-native-tron/ios/"
+  pod "RNTron", :path => "../node_modules/react-native-tron/ios/"
+
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
 
@@ -47,4 +47,7 @@ target 'tronwallet2' do
 
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
 
+  pod 'Fabric'
+  
+  pod 'Crashlytics'
 end
