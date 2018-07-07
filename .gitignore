@@ -30,7 +30,7 @@ build/
 .gradle
 local.properties
 *.iml
-
+fabric.properties
 # node.js
 #
 node_modules/
@@ -66,3 +66,4 @@ ios/Podfile.lock
 
 #npm lock file
 package-lock.json
+android/app/fabric.properties

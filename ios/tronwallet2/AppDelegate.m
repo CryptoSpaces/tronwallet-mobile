@@ -40,6 +40,7 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [SplashScreen show];
+  
   return YES;
 }
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url

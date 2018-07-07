@@ -107,6 +107,10 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativeFabric (0.5.1):
+    - Crashlytics
+    - Fabric
+    - React
   - RNDeviceInfo (0.21.5):
     - React
   - RNTron (1.0.0):
@@ -121,7 +125,7 @@ PODS:
     - React
     - TrezorCrypto
   - RNTron/Services (1.0.0):
-    - gRPC-ProtoRPC (= 1.12.0)
+    - gRPC-ProtoRPC
     - "NSData+FastHex"
     - React
     - RNTron/Messages
@@ -140,9 +144,7 @@ PODS:
   - yoga (0.55.4.React)
 
 DEPENDENCIES:
-  - Crashlytics
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - Fabric
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - react-native-camera (from `../node_modules/react-native-camera`)
@@ -159,6 +161,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativeFabric (from `../node_modules/react-native-fabric`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNTron (from `../node_modules/react-native-tron/ios/`)
   - SentryReactNative (from `../node_modules/react-native-sentry`)
@@ -192,6 +195,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  ReactNativeFabric:
+    :path: "../node_modules/react-native-fabric"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNTron:
@@ -219,13 +224,14 @@ SPEC CHECKSUMS:
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
   React: aa2040dbb6f317b95314968021bd2888816e03d5
   react-native-camera: ab22041dcf0403d88f2ae4b9ea3ed2644e680423
+  ReactNativeFabric: 3912bf9c714d7cc98110eadf06ca6dedef219322
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
-  RNTron: e5cc70419d4fc1021255c7bffb764bbf3e8cc560
+  RNTron: f8896a86924422ed73d694ebbfd3b5a522a3d9f1
   Sentry: 7d3ea7176e5184e9c35c12a5825905345807e8c1
   SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
   TrezorCrypto: ecef681446bf02af6248d3b5e394026d7e766e56
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: be0b06a6dcda9fd8830a5e4857fad257c4f1759a
+PODFILE CHECKSUM: a6885e9ab6e8865cadb423ce139b27dc8219d0c6
 
 COCOAPODS: 1.5.2

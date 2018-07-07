@@ -2,6 +2,7 @@ package com.tronwallet2;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.smixx.fabric.FabricPackage;
 import com.amazonaws.RNAWSCognitoPackage;
 import io.sentry.RNSentryPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FabricPackage(),
             new RNAWSCognitoPackage(),
             new RNSentryPackage(),
             new RNDeviceInfo(),
