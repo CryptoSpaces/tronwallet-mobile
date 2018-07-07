@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, Alert } from 'react-native'
+import { SafeAreaView, Alert, Keyboard } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
@@ -7,7 +7,6 @@ import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 import { recoverUserKeypair } from '../../utils/secretsUtils'
-import { resetWalletData } from '../../utils/userAccountUtils'
 import { Context } from '../../store/context'
 
 class Restore extends React.Component {
@@ -51,10 +50,10 @@ class Restore extends React.Component {
 
   _restoreWallet = async () => {
     const { updateWalletData } = this.props.context
+    Keyboard.dismiss()
     this.setState({ loading: true })
     try {
       await recoverUserKeypair(this.state.seed)
-      await resetWalletData()
       await updateWalletData()
       alert("Wallet recovered with success!")
       this.setState({ loading: false }, () => {

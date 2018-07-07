@@ -88,6 +88,30 @@ class ClientWallet {
   }
 
   //*============TronWalletServerless Api============*//
+
+  async giftUser() {
+    try {
+      const { signInUserSession, username } = await Auth.currentAuthenticatedUser()
+      const authToken = signInUserSession.idToken.jwtToken
+      const address = await getUserPublicKey()
+
+      const config = {
+        headers: {
+          "Authorization": authToken
+        }
+      }
+      const body = {
+        address,
+        username,
+      }
+
+      const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body, config)
+      return result
+    } catch (error) {
+      throw error
+    }
+  }
+
   async getAssetList() {
     try {
       const { nodeIp } = await NodesIp.getAllNodesIp()

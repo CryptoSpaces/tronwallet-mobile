@@ -3,34 +3,46 @@ import PropTypes from 'prop-types'
 import { ImageBackground } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { StackActions, NavigationActions } from 'react-navigation'
+
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 
 class RewardsScreen extends PureComponent {
+
+  _navigateHome = () => {
+    const { navigation } = this.props
+    const navigateToHome = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'App' })],
+      key: null
+    })
+    navigation.dispatch(navigateToHome)
+  }
 
   render() {
     const { label, amount, token } = this.props.navigation.state.params
 
     return (
       <Utils.Container align='stretch'>
-        <LinearGradient 
-          start={{x: 0, y: 0}} 
-          end={{x: 1, y: 1}} 
-          colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]} 
-          style={{flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center'}}
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
+          style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
         >
-          <Utils.View 
-            align='center' 
-            justify='center' 
-            width={450} 
-            height={450} 
+          <Utils.View
+            align='center'
+            justify='center'
+            width={450}
+            height={450}
             position='relative'
           >
-            <Utils.Img 
-              source={require('../../assets/tron-logo-small.png')} 
+            <Utils.Img
+              source={require('../../assets/tron-logo-small.png')}
               position='absolute'
               top='0'
-              width='42px' 
+              width='42px'
               height='42px'
             />
             <Utils.Text
@@ -42,25 +54,25 @@ class RewardsScreen extends PureComponent {
               source={require('../../assets/circle-illustration.png')}
               resizeMode='contain'
               paddingSize='none'
-              style={{flex: 1, paddingTop: 50}}
+              style={{ flex: 1, paddingTop: 50 }}
             >
-              <Utils.View 
+              <Utils.View
                 align='center'
                 justify='center'
               >
                 <ImageBackground
                   source={require('../../assets/bg-account.png')}
-                  style={{width: 300, height: 300}}
+                  style={{ width: 300, height: 300 }}
                 >
                   <Utils.View
                     marginTop={65}
                     align='center'
                   >
-                    <Utils.Text 
+                    <Utils.Text
                       font='light'
                       align='center'
                       size='average'
-                    >{label}</Utils.Text> 
+                    >{label}</Utils.Text>
                     <Utils.Text
                       align='center'
                       size='xsmall'
@@ -72,12 +84,12 @@ class RewardsScreen extends PureComponent {
                       marginY={15}
                     >{amount}</Utils.Text>
                     <Utils.View
-                        backgroundColor={Colors.primaryText}
-                        borderRadius={3}
-                        width={65}
-                        padding={8} 
-                        elevation={5} 
-                        style={{shadowOffset: {  width: 15,  height: 15,  }, shadowColor: 'black', shadowRadius: 15, shadowOpacity: 0.5}}>
+                      backgroundColor={Colors.primaryText}
+                      borderRadius={3}
+                      width={65}
+                      padding={8}
+                      elevation={5}
+                      style={{ shadowOffset: { width: 15, height: 15, }, shadowColor: 'black', shadowRadius: 15, shadowOpacity: 0.5 }}>
                       <Utils.Text
                         size='smaller'
                         align='center'
@@ -89,21 +101,21 @@ class RewardsScreen extends PureComponent {
               </Utils.View>
             </ImageBackground>
           </Utils.View>
-            <Utils.ContentWithBackground
-              source={require('../../assets/back-arrow-bg.png')}
-              resizeMode='contain'
-              justify='center'
-              align='center'
-              position='absolute'
-              bottom={25}
-              right={25}
-              width={120}
-              height={120}
-            >
-              <Utils.ButtonWrapper onPress={() => {}}>
-                <Ionicons name='ios-arrow-round-forward' size={Spacing.large} color={Colors.primaryText} />
-              </Utils.ButtonWrapper>
-            </Utils.ContentWithBackground>
+          <Utils.ContentWithBackground
+            source={require('../../assets/back-arrow-bg.png')}
+            resizeMode='contain'
+            justify='center'
+            align='center'
+            position='absolute'
+            bottom={25}
+            right={25}
+            width={120}
+            height={120}
+          >
+            <Utils.ButtonWrapper onPress={this._navigateHome}>
+              <Ionicons name='ios-arrow-round-forward' size={Spacing.large} color={Colors.primaryText} />
+            </Utils.ButtonWrapper>
+          </Utils.ContentWithBackground>
         </LinearGradient>
       </Utils.Container>
     )
