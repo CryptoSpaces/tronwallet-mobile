@@ -27,7 +27,7 @@ class SignupScene extends Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    alert("We created a secret list of words for you. We highly recommend you backup it on paper to be able to recover it later.")
+    alert("We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.")
   }
 
   confirmSignup = async () => {
@@ -119,7 +119,7 @@ class SignupScene extends Component {
             <Utils.Error>{confirmError}</Utils.Error>
             <Utils.Content justify='center' align='center'>
               <Utils.Text
-                onPress={() => this.props.navigation.navigate('Sign')}
+                onPress={() => this.props.navigation.goBack()}
                 size='small'
                 font='light'
                 secondary

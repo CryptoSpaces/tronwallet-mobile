@@ -2,13 +2,13 @@ package com.tronwallet2;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.amazonaws.RNAWSCognitoPackage;
 import io.sentry.RNSentryPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.getty.rntron.RNTronPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import org.reactnative.camera.RNCameraPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import com.amazonaws.RNAWSCognitoPackage;
 import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
@@ -33,13 +33,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNAWSCognitoPackage(),
             new RNSentryPackage(),
             new RNDeviceInfo(),
             new RNTronPackage(),
             new ReactNativeConfigPackage(),
             new RNCameraPackage(),
             new SplashScreenReactPackage(),
-            new RNAWSCognitoPackage(),
             new RealmReactPackage(),
             new VectorIconsPackage(),
             new SvgPackage(),

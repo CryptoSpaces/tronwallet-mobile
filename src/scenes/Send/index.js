@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, Modal } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import qs from 'qs'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import ButtonGradient from '../../components/ButtonGradient'
@@ -12,7 +11,7 @@ import QRScanner from '../../components/QRScanner'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 
-import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
+import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
 import { signTransaction } from '../../utils/transactionUtils';
 import getBalanceStore from '../../store/balance'
@@ -110,14 +109,14 @@ class SendScene extends Component {
 
   renderTokens = () => {
     const { balances } = this.state
-    
-    return balances.map(bl => (
-      <Utils.PickerInput.Item 
-        key={bl.name} 
-        label={bl.name} 
-        value={bl.name} 
+    return balances.map(bl => {
+      const balanceValue = bl.balance > 1 ? bl.balance.toFixed(2) : bl.balance.toFixed(4)
+      return <Utils.PickerInput.Item
+        key={bl.name}
+        label={`${bl.name} ${balanceValue}`}
+        value={bl.name}
       />
-    ))
+    })
   }
 
   transferAsset = async () => {
@@ -278,7 +277,7 @@ class SendScene extends Component {
                   placeholderTextColor='#fff'
                   style={{ marginRight: 15, width: '100%' }}
                 >
-                  <Utils.Text>{this.state.amount}</Utils.Text> 
+                  <Utils.Text>{this.state.amount}</Utils.Text>
                 </Utils.FormInput>
               </Utils.Row>
             </Utils.Content>
