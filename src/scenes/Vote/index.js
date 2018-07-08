@@ -19,12 +19,13 @@ import GrowIn from '../../components/Animations/GrowIn'
 
 // Service
 import Client from '../../services/client'
-import { signTransaction } from '../../utils/transactionUtils';
+import { signTransaction } from '../../utils/transactionUtils'
 
 import getCandidateStore from '../../store/candidates'
 import { Context } from '../../store/context'
 
 const LIST_STEP_SIZE = 20
+const POOLING_TIME = 30000
 
 const INITIAL_STATE = {
   voteList: [],
@@ -52,10 +53,12 @@ class VoteScene extends PureComponent {
 
   async componentDidMount() {
     this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
+    this.dataSubscription = setInterval(this._loadData, POOLING_TIME)
   }
 
   componentWillUnmount() {
     this.didFocusSubscription.remove()
+    clearInterval(this.dataSubscription)
   }
 
 
