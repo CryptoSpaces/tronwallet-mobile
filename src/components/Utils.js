@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { ImageBackground, Image } from 'react-native'
+import { ImageBackground, Image, Platform } from 'react-native'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 import { tint } from 'polished'
@@ -265,13 +265,19 @@ export const CloseButton = styled.TouchableOpacity`
   margin-right: 15px;
 `
 
-export const PickerInput = styled.Picker`
-  ${tronWalletBorder}
-  border-width: 0.5px;
-  color: ${Colors.primaryText};
-  height: 50px;
-  width: 150px;
-`;
+export const PickerInput = Platform.select({
+  android: styled.Picker`
+    ${tronWalletBorder}
+    border-width: 0.5px;
+    color: ${Colors.primaryText};
+    height: 50px;
+    width: 150px;
+  `,
+  ios: styled.Picker.attrs({
+    itemStyle: { color: Colors.primaryText, height: 50 },
+    style: { height: 50 }
+  })``
+})
 
 export const ButtonWrapper = styled.TouchableOpacity`
   position: ${props => props.absolute ? 'absolute' : 'relative'};
