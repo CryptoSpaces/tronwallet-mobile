@@ -6,7 +6,7 @@ import { Colors } from '../../components/DesignSystem'
 import formatNumber from '../../utils/formatNumber'
 import { ONE_TRX } from '../../services/client'
 
-const ITEM_HEIGHT = 40
+const ITEM_HEIGHT = 48
 
 const TokenItem = ({ item, onPress }) => {
   const tokenValue = item.balance >= 0 ? item.balance : item.price / ONE_TRX
@@ -14,12 +14,14 @@ const TokenItem = ({ item, onPress }) => {
 
   return <FadeIn name={item.name}>
     <ListItem
+      roundAvatar
       onPress={onPress}
       titleStyle={{ color: Colors.primaryText }}
       containerStyle={{
         borderBottomColor: '#191a29',
         height: ITEM_HEIGHT,
         marginLeft: -24,
+        paddingBottom: 8,
         justifyContent: 'center'
       }}
       underlayColor='#191a29'
