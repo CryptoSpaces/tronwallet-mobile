@@ -12,7 +12,7 @@ import Default from './Default'
 
 import getTransactionStore from '../../store/transactions'
 
-// const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
+const POOLING_TIME = 30000
 
 class TransactionsScene extends Component {
   static navigationOptions = () => {
@@ -40,12 +40,14 @@ class TransactionsScene extends Component {
       transactions: this.getSortedTransactionList(store),
       refreshing: false
     })
-    this.updateData();
-    this.didFocusSubscription = this.props.navigation.addListener('didFocus', this.updateData);
+    this.updateData()
+    this.didFocusSubscription = this.props.navigation.addListener('didFocus', this.updateData)
+    this.dataSubscription = setInterval(this.updateData, POOLING_TIME)
   }
 
   componentWillUnmount() {
-    this.didFocusSubscription.remove();
+    this.didFocusSubscription.remove()
+    clearInterval(this.dataSubscription)
   }
 
   getSortedTransactionList = (store) => store.objects('Transaction').sorted([['timestamp', true]]).map(item => Object.assign({}, item))

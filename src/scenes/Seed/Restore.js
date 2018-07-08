@@ -60,6 +60,7 @@ class Restore extends React.Component {
         this._navigateToSettings()
       })
     } catch (err) {
+      console.warn(err)
       alert("Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again.")
       this.setState({ loading: false })
     }
@@ -75,6 +76,9 @@ class Restore extends React.Component {
             placeholder='Please, type your 12 seed words here'
             multiline={true}
             numberOfLines={4}
+            autoCapitalize='none'
+            autoCorrect={false}
+            autoFocus
             value={this.state.seed}
             onChangeText={seed => this.setState({ seed })}
           />

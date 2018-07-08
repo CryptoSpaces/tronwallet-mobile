@@ -5,7 +5,7 @@ import Config from 'react-native-config'
 import { LineChart } from 'react-native-svg-charts'
 import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
-import { Crashlytics, Answers } from 'react-native-fabric';
+import { Crashlytics, Answers } from 'react-native-fabric'
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatNumber from '../../utils/formatNumber'
@@ -24,7 +24,7 @@ import { getUserSecrets } from '../../utils/secretsUtils'
 const PRICE_PRECISION = 4
 const LINE_CHART_HEIGHT = 40
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
-
+const POOLING_TIME = 30000
 
 class BalanceScene extends Component {
   state = {
@@ -38,21 +38,23 @@ class BalanceScene extends Component {
   }
 
   async componentDidMount() {
-    
     try {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()
       const data = await getUserSecrets()
       this.setState({ assetList, assetBalance, seedConfirmed: data.confirmed })
     } catch (err) {
+      this.setState({ error: 'An error occured while loading data.' })
+    } finally {
       this._loadData()
     }
-    this._loadData()
     this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
+    this._dataListener = setInterval(this._loadData, POOLING_TIME)
   }
 
   componentWillUnmount() {
     this._navListener.remove()
+    clearInterval(this._dataListener)
   }
 
   _onRefresh = async () => {
