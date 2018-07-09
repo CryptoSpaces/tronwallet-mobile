@@ -121,7 +121,7 @@ export const Img = View.withComponent(Image)
 
 export const Row = View.extend`
   flex-direction: row;
-  ${props => props.color && css`background-color: ${props.color};`}
+  ${props => props.background && css`background-color: ${props.background};`}
   ${props => props.position && css`position: ${props.position};`}
   ${props => props.wrap && css`flex-wrap: ${props.wrap};`}
 `
