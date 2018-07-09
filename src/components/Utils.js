@@ -7,9 +7,19 @@ import { tint } from 'polished'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
+/* Tron Wallet's border settings. Use it
+anywhere you need the default Tron Wallet 
+border. */
 const tronWalletBorder = css`
+  border-width: 1px;
   border-color: ${Colors.secondaryText};
   border-radius: 5px;
+`
+
+/* Form Input controls that follow the design scheme of 
+the project. */
+export const RevisedFormInput = styled.TextInput`
+  ${tronWalletBorder} 
 `
 
 export const Header = styled.View`
@@ -38,83 +48,26 @@ export const TitleWrapper = styled.View`
 export const View = styled.View`
   align-items: ${props => props.align};
   justify-content: ${props => props.justify};
-  ${props =>
-    props.flex &&
-    css`
-      flex: ${props.flex};
-    `} ${props =>
-  props.height &&
-      css`
-        height: ${props.height};
-      `} ${props =>
-  props.width &&
-      css`
-        width: ${props.width};
-      `} ${props =>
-  props.background &&
-      css`
-        background-color: ${props.background};
-      `} ${props =>
-  props.borderWidth &&
-      css`
-        border-width: ${props.borderWidth};
-      `} ${props =>
-  props.borderColor &&
-      css`
-        border-color: ${props.borderColor};
-      `} ${props =>
-  props.borderRadius &&
-      css`
-        border-radius: ${props.borderRadius}px;
-      `} ${props =>
-  props.paddingY &&
-      css`
-        padding-vertical: ${Spacing[props.paddingY]};
-      `} ${props =>
-  props.paddingX &&
-      css`
-        padding-horizontal: ${Spacing[props.paddingX]};
-      `} ${props =>
-  props.padding &&
-      css`
-        top: ${props.padding};
-      `} ${props =>
-  props.marginTop &&
-      css`
-        margin-top: ${props.marginTop}px;
-      `} ${props =>
-  props.marginBottom &&
-      css`
-        margin-bottom: ${props.marginBottom}px;
-      `} ${props =>
-  props.marginRight &&
-      css`
-        margin-right: ${props.marginRight}px;
-      `} ${props =>
-  props.marginLeft &&
-      css`
-        margin-left: ${props.marginLeft}px;
-      `} ${props =>
-  props.position &&
-      css`
-        position: ${props.position};
-      `} ${props =>
-  props.top &&
-      css`
-        top: ${props.top};
-      `} ${props =>
-  props.bottom &&
-      css`
-        bottom: ${props.bottom};
-      `} ${props =>
-  props.right &&
-      css`
-        right: ${props.right};
-      `} ${props =>
-  props.left &&
-      css`
-        left: ${props.left};
-      `};
+  ${props => props.flex && css`flex: ${props.flex};`}
+  ${props => props.height && css`height: ${props.height};`}
+  ${props => props.width && css`width: ${props.width};`}
+  ${props => props.background && css`background-color: ${props.background};`}
+  ${props => props.borderWidth && css`border-width: ${props.borderWidth};`}
+  ${props => props.borderColor && css`border-color: ${props.borderColor};`}
+  ${props => props.borderRadius && css`border-radius: ${props.borderRadius}px;`}
+  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]};`}
+  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]};`}
+  ${props => props.padding && css`top: ${props.padding};`}
+  ${props => props.margin && css`margin: ${props.margin}px;`}
+  ${props => props.marginTop && css`margin-top: ${props.marginTop}px;`}
+  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px;`}
+  ${props => props.marginRight && css`margin-right: ${props.marginRight}px;`}
+  ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px;`}
+  ${props => props.position && css`position: ${props.position};`}
+  ${props => props.top && css`top: ${props.top};`}
+  ${props => props.bottom && css`bottom: ${props.bottom};`}
+  ${props => props.right && css`right: ${props.right};`}
+  ${props => props.left && css`left: ${props.left};`}
 `
 
 View.defaultProps = {
@@ -289,81 +242,23 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   color: ${props => props.color};
-  ${props =>
-    props.size &&
-    css`
-      font-size: ${FontSize[props.size]};
-    `};
-  ${props =>
-    props.light &&
-    css`
-      font-family: rubik-light;
-    `} font-family: ${props => `rubik-${_.capitalize(props.font || 'medium')}`};
-  ${props =>
-    props.padding &&
-    css`
-      padding: ${props.padding};
-    `};
-  ${props =>
-    props.weight &&
-    css`
-      font-weight: ${props.weight};
-    `};
-  ${props =>
-    props.marginY &&
-    css`
-      margin-vertical: ${props.marginY}px;
-    `};
-  ${props =>
-    props.align &&
-    css`
-      text-align: ${props.align};
-    `};
-  ${props =>
-    props.secondary &&
-    css`
-      color: ${Colors.secondaryText};
-    `};
-  ${props =>
-    props.success &&
-    css`
-      color: ${Colors.green};
-    `};
-  ${props =>
-    props.lineHeight &&
-    css`
-      line-height: ${props.lineHeight};
-    `};
-  ${props =>
-    props.letterSpacing &&
-    css`
-      letter-spacing: ${props.letterSpacing};
-    `};
-  ${props =>
-    props.marginBottom &&
-    css`
-      margin-bottom: ${props.marginBottom}px;
-    `};
-  ${props =>
-    props.marginTop &&
-    css`
-      margin-top: ${Spacing[props.marginTop]}px;
-    `};
-  ${props =>
-    props.position &&
-    css`
-      position: ${props.position};
-    `};
-  ${props =>
-    props.top &&
-    css`
-      top: ${props.top};
-    `};
-  ${props =>
-    props.background &&
-    css`
-      background-color: ${props.background};
-    `};
+  ${props => props.size && css`font-size: ${FontSize[props.size]}`};
+  ${props => props.light && css`font-family: rubik-light;`}
+  font-family: ${props => `rubik-${_.capitalize(props.font || 'medium')}`};
+  ${props => props.padding && css`padding: ${props.padding}`};
+  ${props => props.weight && css`font-weight: ${props.weight}`};
+  ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};
+  ${props => props.align && css`text-align: ${props.align}`};
+  ${props => props.secondary && css`color: ${Colors.secondaryText}`};
+  ${props => props.success && css`color: ${Colors.green}`};
+  ${props => props.lineHeight && css`line-height: ${props.lineHeight}`};
+  ${props => props.letterSpacing && css`letter-spacing: ${props.letterSpacing}`};
+  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
+  ${props => props.marginTop && css`margin-top: ${Spacing[props.marginTop]}px`};
+  ${props => props.margin && css`margin: ${props.margin}px`};
+  ${props => props.position && css`position: ${props.position}`};
+  ${props => props.top && css`top: ${props.top}`};
+  ${props => props.background && css`background-color: ${props.background};`}
 `
 
 Text.defaultProps = {
