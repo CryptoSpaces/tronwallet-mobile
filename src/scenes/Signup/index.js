@@ -148,7 +148,7 @@ class SignupScene extends Component {
                   this.password = ref
                 }}
                 letterSpacing={10}
-                marginBottom={20}
+                marginBottom={10}
                 underlineColorAndroid='transparent'
                 secureTextEntry
                 onChangeText={text => this.changeInput(text, 'password')}
@@ -156,6 +156,10 @@ class SignupScene extends Component {
                 returnKeyType={'send'}
                 padding={Spacing.small}
               />
+              <Utils.Text size='xsmall' secondary>
+                Password must be at least 8 characters in length, contain at least one uppercase, lowercase letters, special characters and numbers
+              </Utils.Text>
+              <Utils.VerticalSpacer size='medium' />
               {this.renderSubmitButton()}
             </Utils.FormGroup>
             <Utils.Error>{signError}</Utils.Error>

@@ -119,10 +119,24 @@ class SignupScene extends Component {
             keyboardShouldPersistTaps={'always'}
             keyboardDismissMode='interactive'
           >
-            <Utils.Content height={80} justify='center' align='center'>
+            <Utils.Content justify='center' align='center'>
+              <Utils.VerticalSpacer size='small' />
               <Image source={require('../../assets/login-circle.png')} />
+              <Utils.VerticalSpacer size='small' />
+              <Utils.Text size='medium'>
+                TRONWALLET
+              </Utils.Text>
             </Utils.Content>
+
+
             <Utils.Content>
+            <Utils.Text size='xsmall'>
+              We sent you an email with the verification code from
+              no-reply@verificationemail.com, please check your spam folder if you don't
+              find it.
+            </Utils.Text>
+            <Utils.VerticalSpacer size='medium' />
+
               <Utils.Text size='xsmall' secondary>
                 EMAIL VERIFICATION CODE
               </Utils.Text>
@@ -133,11 +147,7 @@ class SignupScene extends Component {
                 returnKeyType={'send'}
                 padding={Spacing.medium}
               />
-              <Utils.Text size='xsmall'>
-                We sent you an email with the verification code from
-                no-reply@verificationemail.com, please check your spam if you didn't
-                find it.
-              </Utils.Text>
+              <Utils.VerticalSpacer size='medium' />
               {this.renderSubmitButton()}
             </Utils.Content>
             <Utils.Error>{confirmError}</Utils.Error>

@@ -252,21 +252,21 @@ class BalanceScene extends Component {
               {({ price, freeze }) => (price.value && freeze.value) && (
                 <FadeIn name='tronprice'>
                   <Utils.Row justify='space-between' marginBottom={24}>
-                    <Utils.View flex={1} align='center' padding={6} borderWidth={1} borderRadius={8} borderColor={Colors.secondaryText} marginRight={4} >
+                    <Utils.View flex={1} align='center' padding={6}  borderRadius={8} borderColor={Colors.secondaryText} marginRight={4} >
                       <Utils.Text secondary size='xsmall'>TRON POWER</Utils.Text>
                       <Utils.VerticalSpacer />
                       <Motion defaultStyle={{ power: 0 }} style={{ power: spring(freeze.value.total, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${value.power.toFixed(0)}`}</Utils.Text>}
                       </Motion>
                     </Utils.View>
-                    <Utils.View flex={1} align='center' padding={6}  borderWidth={1} borderRadius={8} borderColor={Colors.secondaryText}  >
+                    <Utils.View flex={1} align='center' padding={6}   borderRadius={8} borderColor={Colors.secondaryText}  >
                       <Utils.Text secondary size='xsmall'>TRX PRICE</Utils.Text>
                       <Utils.VerticalSpacer />
                       <Motion defaultStyle={{ price: 0 }} style={{ price: spring(price.value, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${value.price.toFixed(PRICE_PRECISION)} USD`}</Utils.Text>}
                       </Motion>
                     </Utils.View>
-                    <Utils.View flex={1} align='center' padding={6}  borderWidth={1} borderRadius={8} borderColor={Colors.secondaryText} marginLeft={4}>
+                    <Utils.View flex={1} align='center' padding={6}   borderRadius={8} borderColor={Colors.secondaryText} marginLeft={4}>
                       <Utils.Text secondary size='xsmall'>BANDWIDTH</Utils.Text>
                       <Utils.VerticalSpacer />
                       <Motion defaultStyle={{ bandwidth: 0 }} style={{ bandwidth: spring(freeze.value.bandwidth.netRemaining, presets.gentle) }}>
