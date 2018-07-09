@@ -14,14 +14,12 @@ const TokenItem = ({ item, onPress }) => {
 
   return <FadeIn name={item.name}>
     <ListItem
-      roundAvatar
       onPress={onPress}
       titleStyle={{ color: Colors.primaryText }}
       containerStyle={{
         borderBottomColor: '#191a29',
         height: ITEM_HEIGHT,
         marginLeft: -24,
-        paddingBottom: 8,
         justifyContent: 'center'
       }}
       underlayColor='#191a29'

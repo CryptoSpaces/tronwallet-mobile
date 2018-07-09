@@ -67,11 +67,16 @@ class ReceiveScreen extends PureComponent {
             <Utils.VerticalSpacer size='medium' />
 
             <Utils.PasteButton onPress={this._copy}>
-              <Feather
-                name='clipboard'
-                size={FontSize['small']}
-                color={Colors.primaryText}
-              />
+              
+              <Utils.Text>
+                <Feather
+                  name='clipboard'
+                  size={FontSize['small']}
+                  color={Colors.primaryText}
+                />
+                 
+                {` Copy My Address`}
+              </Utils.Text>
             </Utils.PasteButton>
             <Toast
               ref='toast'
