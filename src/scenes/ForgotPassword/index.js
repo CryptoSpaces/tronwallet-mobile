@@ -39,13 +39,19 @@ class SignupScene extends Component {
     const { forgotError, loadingForgot } = this.state
     return (
       <Utils.Container>
-        <Utils.Content height={80} justify='center' align='center'>
+        <Utils.Content justify='center' align='center'>
+          <Utils.VerticalSpacer size='small' />
           <Image source={require('../../assets/login-circle.png')} />
+          <Utils.VerticalSpacer size='small' />
+          <Utils.Text size='medium'>
+            TRONWALLET
+          </Utils.Text>
         </Utils.Content>
         <Utils.Content>
           <Utils.Text size='xsmall' secondary>
             Change Password
           </Utils.Text>
+          <Utils.VerticalSpacer size='medium' />
           <Utils.Text size='xsmall'>
             Provide your email to proceed with the recovery
           </Utils.Text>
