@@ -14,6 +14,7 @@ import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils';
 import { getUserPublicKey } from '../../utils/userAccountUtils'
+import formatNumber from '../../utils/formatNumber'
 
 class ParticipateScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -111,6 +112,12 @@ class ParticipateScene extends Component {
 
   formatCurrency = value => numeral(value).format('0,0[.]00')
 
+  formatValue = (value) => {
+    const price = value / ONE_TRX;
+    const formattedValue = formatNumber(price.toFixed(2));
+    return formattedValue;
+  }
+
   formatDate = date => moment(date).format('YYYY-MM-DD h:mm:ss')
 
   renderConfirmButtom = () => {
@@ -152,8 +159,8 @@ class ParticipateScene extends Component {
               </Utils.Content>
               <Utils.Row justify='space-between'>
                 <Utils.View>
-                  <Utils.Text size='xsmall' secondary>PRICE</Utils.Text>
-                  <Utils.Text>{this.formatCurrency(token.price)}</Utils.Text>
+                  <Utils.Text size='xsmall' secondary>PRICE PER TOKEN</Utils.Text>
+                  <Utils.Text>{`${this.formatValue(token.price)} TRX`}</Utils.Text>
                 </Utils.View>
                 <Utils.View>
                   <Utils.Text size='xsmall' secondary>FROZEN</Utils.Text>

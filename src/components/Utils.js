@@ -49,12 +49,14 @@ export const View = styled.View`
   ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]};`}
   ${props => props.padding && css`top: ${props.padding};`}
   ${props => props.marginTop && css`margin-top: ${props.marginTop}px;`}
+  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px;`}
+  ${props => props.marginRight && css`margin-right: ${props.marginRight}px;`}
+  ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px;`}
   ${props => props.position && css`position: ${props.position};`}
   ${props => props.top && css`top: ${props.top};`}
   ${props => props.bottom && css`bottom: ${props.bottom};`}
   ${props => props.right && css`right: ${props.right};`}
   ${props => props.left && css`left: ${props.left};`}
-  ${props => props.backgroundColor && css`background-color: ${props.backgroundColor}`};
 `
 
 View.defaultProps = {
@@ -119,6 +121,7 @@ export const Img = View.withComponent(Image)
 
 export const Row = View.extend`
   flex-direction: row;
+  ${props => props.color && css`background-color: ${props.color};`}
   ${props => props.position && css`position: ${props.position};`}
   ${props => props.wrap && css`flex-wrap: ${props.wrap};`}
 `
@@ -168,6 +171,7 @@ export const Text = styled.Text`
   ${props => props.marginTop && css`margin-top: ${Spacing[props.marginTop]}px`};
   ${props => props.position && css`position: ${props.position}`};
   ${props => props.top && css`top: ${props.top}`};
+  ${props => props.background && css`background-color: ${props.background};`}
 `
 
 Text.defaultProps = {
