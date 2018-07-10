@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform, SafeAreaView, View, AsyncStorage } from 'react-native'
+import { StatusBar, Platform, SafeAreaView, YellowBox } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
   createMaterialTopTabNavigator
 } from 'react-navigation'
 import Amplify from 'aws-amplify'
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+import { createIconSetFromFontello } from 'react-native-vector-icons'
 import axios from 'axios'
 import Config from 'react-native-config'
-import { Sentry } from 'react-native-sentry';
 
 import awsExports from './aws-exports'
 import { Colors, ScreenSize } from './src/components/DesignSystem'
@@ -56,7 +55,6 @@ import './ReactotronConfig'
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 Amplify.configure(awsExports)
-import { YellowBox } from 'react-native'
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
 
 const SettingsStack = createStackNavigator(
@@ -64,7 +62,7 @@ const SettingsStack = createStackNavigator(
     Settings,
     SeedCreate,
     SeedConfirm,
-    NetworkConnection,
+    NetworkConnection
   },
   {
     navigationOptions: {
@@ -94,22 +92,19 @@ const VoteStack = createStackNavigator(
             <Utils.TitleWrapper>
               <Utils.Title>Vote</Utils.Title>
             </Utils.TitleWrapper>
-            <View style={{ marginRight: 15 }}>
-              <Utils.Text>{navigation.getParam('totalRemaining')}</Utils.Text>
-              {(navigation.getParam('votesError') || navigation.getParam('listError')) ?
-                <ButtonGradient
-                  size='small'
-                  text='Sync'
-                  onPress={navigation.getParam('loadData')}
-                /> :
-                <ButtonGradient
-                  disabled={navigation.getParam('disabled')}
-                  size='small'
-                  text='Submit'
-                  onPress={navigation.getParam('onSubmit')}
-                />
-              }
-            </View>
+            {(navigation.getParam('votesError') || navigation.getParam('listError'))
+              ? <ButtonGradient
+                size='small'
+                text='Sync'
+                onPress={navigation.getParam('loadData')}
+              />
+              : <ButtonGradient
+                disabled={navigation.getParam('disabled')}
+                size='small'
+                text='Submit'
+                onPress={navigation.getParam('onSubmit')}
+              />
+            }
           </Utils.Header>
         </SafeAreaView>
       )
@@ -163,8 +158,7 @@ const AppTabs = createBottomTabNavigator(
           iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
         } else if (routeName === 'Receive') {
           iconName = `scan,-bar-code,-qr-code,-barcode,-scanner`
-        }
-        else if (routeName === 'Settings') {
+        } else if (routeName === 'Settings') {
           iconName = `gear,-settings,-update,-setup,-config`
         }
 
@@ -286,16 +280,16 @@ const RootNavigator = createStackNavigator(
   }
 )
 
-const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
-class App extends Component {
+const prefix = Platform.OS === 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
 
+class App extends Component {
   state = {
     price: {},
     freeze: {},
     publicKey: {}
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._getPrice()
     this._setNodes()
     this._loadUserData()
@@ -335,13 +329,13 @@ class App extends Component {
 
   _setNodes = async () => {
     try {
-      await NodesIp.initNodes();
+      await NodesIp.initNodes()
     } catch (error) {
-      console.warn(error);
+      console.warn(error)
     }
   }
 
-  render() {
+  render () {
     const contextProps = {
       ...this.state,
       updateWalletData: this._loadUserData,
