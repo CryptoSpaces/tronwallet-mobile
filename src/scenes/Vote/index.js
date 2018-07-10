@@ -25,7 +25,6 @@ import getCandidateStore from '../../store/candidates'
 import { Context } from '../../store/context'
 
 const LIST_STEP_SIZE = 20
-const POOLING_TIME = 30000
 
 const INITIAL_STATE = {
   voteList: [],
@@ -51,23 +50,20 @@ const INITIAL_STATE = {
 class VoteScene extends PureComponent {
   state = INITIAL_STATE
 
-  async componentDidMount() {
+  async componentDidMount () {
     this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
-    this.dataSubscription = setInterval(this._loadData, POOLING_TIME)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.didFocusSubscription.remove()
-    clearInterval(this.dataSubscription)
   }
-
 
   _loadData = async () => {
     this.props.navigation.setParams({
       onSubmit: this._submit,
       disabled: true,
       votesError: null,
-      listError: null,
+      listError: null
     })
 
     this.setState(INITIAL_STATE)
@@ -175,20 +171,18 @@ class VoteScene extends PureComponent {
 
         this._openTransactionDetails(data)
         // this.openDeepLink(dataToSend)
-
       } catch (error) {
-        console.warn(error.message);
-        alert("Error while building transaction, try again.")
+        console.warn(error.message)
+        alert('Error while building transaction, try again.')
         this.setState({ loading: false })
         navigation.setParams({ disabled: false })
       }
     }
   }
 
-
   _openTransactionDetails = async (transactionUnsigned) => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
+      const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false }, () => {
         this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
       })
@@ -228,7 +222,6 @@ class VoteScene extends PureComponent {
     this.setState({ currentVotes: newVotes, totalRemaining: totalVotesRemaining, ...this._resetModalState() })
   }
 
-
   _onSearch = async value => {
     const { voteList } = this.state
     if (value) {
@@ -257,7 +250,7 @@ class VoteScene extends PureComponent {
     this.setState({
       [errorType]: "Oops, something didn't load correctly. Try to sync again",
       loading: false
-    }, function setErrorParams() {
+    }, function setErrorParams () {
       this.props.navigation.setParams({ loadData: this._loadData, [errorType]: this.state[errorType] })
     })
   }
@@ -315,7 +308,7 @@ class VoteScene extends PureComponent {
     )
   }
 
-  render() {
+  render () {
     const { totalVotes, totalRemaining, votesError } = this.state
     return (
       <Utils.Container>
