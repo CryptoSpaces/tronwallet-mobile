@@ -8,8 +8,7 @@ import { tint } from 'polished'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
-/* Tron Wallet's border settings. Use it
-anywhere you need the default Tron Wallet
+/* Tron Wallet's border settings. Use it anywhere you need the default Tron Wallet
 border. */
 const tronWalletBorder = css`
   border-width: 1px;
@@ -18,17 +17,19 @@ const tronWalletBorder = css`
 `
 
 export const Header = styled.View`
-  height: 90px;
+  height: 70px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: ${Spacing.medium}px;
+  border-color: ${Colors.lighterBackground};
+  border-bottom-width: 1px;
+  background-color: ${props => props.background};
   ${props =>
     props.paddingTop &&
     css`
       padding-top: ${props.paddingTop}px;
     `};
-  flex-direction: row;
-  align-items: center;
-  background-color: ${props => props.background || 'black'};
-  border-bottom-width: 1px;
-  border-color: black;
   ${props =>
     props.noBorder &&
     css`
@@ -36,17 +37,21 @@ export const Header = styled.View`
     `};
 `
 
+Header.defaultProps = {
+  background: Colors.background
+}
+
 export const Title = styled.Text`
   color: white;
   font-weight: 700;
-  padding-left: ${props => Spacing[props.paddingLeft] || 16};
-  font-size: 26;
+  font-size: ${FontSize.medium};
 `
 
+Title.defaultProps = {
+  paddingLeft: 'medium'
+}
+
 export const TitleWrapper = styled.View`
-  flex: 1;
-  height: 100%;
-  background-color: ${props => props.background || 'black'};
   justify-content: center;
 `
 
