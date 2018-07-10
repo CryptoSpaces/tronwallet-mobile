@@ -371,18 +371,20 @@ class VoteScene extends PureComponent {
             marginTop={0}
           />
         </Utils.Content>
-        <FadeIn name='candidates'>
-          <FlatList
-            keyExtractor={item => item.address}
-            data={this.state.voteList}
-            renderItem={this._renderRow}
-            onEndReachedThreshold={0.5}
-            onEndReached={this._loadMoreCandidates}
-            onRefresh={this._refreshCandidates}
-            refreshing={this.state.refreshing}
-            removeClippedSubviews
-          />
-        </FadeIn>
+        <Utils.Content flex={1}>
+          <FadeIn name='candidates'>
+            <FlatList
+              keyExtractor={item => item.address}
+              data={this.state.voteList}
+              renderItem={this._renderRow}
+              onEndReachedThreshold={0.5}
+              onEndReached={this._loadMoreCandidates}
+              onRefresh={this._refreshCandidates}
+              refreshing={this.state.refreshing}
+              removeClippedSubviews
+            />
+          </FadeIn>
+        </Utils.Content>
       </Utils.Container>
     )
   }
