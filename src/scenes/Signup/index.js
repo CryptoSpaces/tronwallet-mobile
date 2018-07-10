@@ -91,7 +91,6 @@ class SignupScene extends Component {
         onPress={this.signIn}
         size='medium'
         marginVertical='large'
-        font='bold'
       />
     )
   }

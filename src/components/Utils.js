@@ -316,7 +316,7 @@ export const Text = styled.Text`
   ${props =>
     props.size &&
     css`
-      font-size: ${FontSize[props.size]};
+      font-size: ${FontSize[props.size]}px;
     `};
   ${props =>
     props.light &&

@@ -125,7 +125,6 @@ class LoginScene extends Component {
         onPress={this.signIn}
         size='medium'
         marginVertical='large'
-        font='bold'
       />
     )
   }
@@ -173,7 +172,7 @@ class LoginScene extends Component {
                 returnKeyType='send'
                 autoCapitalize='none'
               />
-              <Utils.VerticalSpacer size='large' />
+              <Utils.VerticalSpacer size='small' />
               {this.renderSubmitButton()}
             </Utils.FormGroup>
             <Utils.Content justify='center' align='center'>

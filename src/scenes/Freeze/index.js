@@ -169,7 +169,6 @@ class FreezeScene extends Component {
                 onPress={this.submit}
                 size='medium'
                 marginVertical='large'
-                font='bold'
               />
             </Utils.Content>
           </Utils.Container>

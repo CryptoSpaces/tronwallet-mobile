@@ -22,7 +22,8 @@ const ButtonGradient = ({
     <LinearGradient
       start={{ x: 0, y: 1 }}
       end={{ x: 1, y: 0 }}
-      colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
+      colors={ [Colors.buttonGradient[0], Colors.buttonGradient[1]]}
+
       style={[
         styles.btnGradient,
         {
@@ -32,7 +33,7 @@ const ButtonGradient = ({
         }
       ]}
     >
-      <Utils.Text font={font}>{text}</Utils.Text>
+      <Utils.Text size='xsmall' font={font}>{text}</Utils.Text>
     </LinearGradient>
   </TouchableOpacity>
 )

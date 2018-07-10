@@ -264,7 +264,7 @@ class SendScene extends Component {
               </Utils.View>
             </Header>
             <Utils.Content>
-              <ModalSelector
+            <ModalSelector
                 data={this.state.balances.map(item => ({
                   key: item.name,
                   label: item.name
@@ -303,7 +303,9 @@ class SendScene extends Component {
                 value={to}
                 onChangeText={text => this.changeInput(text, 'amount')}
               />
-              {error && <Utils.Error>{error}</Utils.Error>}
+            </Utils.Content>
+            {error && <Utils.Error>{error}</Utils.Error>}
+            <Utils.Content justify='center'>
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
@@ -312,9 +314,9 @@ class SendScene extends Component {
                   onPress={this.submit}
                   size='medium'
                   marginVertical='large'
-                  font='bold'
                 />
               )}
+              <Utils.VerticalSpacer />
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>
