@@ -1,22 +1,20 @@
 import React, { Component } from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 
-//Design
+// Design
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import NavigationHeader from '../../components/NavigationHeader'
 
-//Services
+// Services
 import NodesIp from '../../utils/nodeIp'
 
-
 class ChangeNetworkModal extends Component {
-
   static navigationOptions = ({ navigation }) => {
     return {
       header: <NavigationHeader
-        title="Transaction Details"
+        title='Transaction Details'
         onClose={() => navigation.goBack()}
       />
     }
@@ -27,17 +25,16 @@ class ChangeNetworkModal extends Component {
     solidityNode: null,
     solidityNodePort: null,
     loading: false,
-    error: false,
+    error: false
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.didFocusSubscription.remove()
   }
-
 
   _loadData = async () => {
     try {
@@ -54,10 +51,10 @@ class ChangeNetworkModal extends Component {
   testIpValidity = (ip) => /^\d{1,3}(\.\d{1,3}){3}:\d{1,5}$/.test(ip)
 
   _submit = (type) => {
-    const { mainNode, mainNodePort, solidityNode, solidityNodePort } = this.state;
+    const { mainNode, mainNodePort, solidityNode, solidityNodePort } = this.state
 
-    const ipToSubmit = type === 'solidity' ?
-      `${solidityNode}:${solidityNodePort}` : `${mainNode}:${mainNodePort}`
+    const ipToSubmit = type === 'solidity'
+      ? `${solidityNode}:${solidityNodePort}` : `${mainNode}:${mainNodePort}`
 
     this.setState({ loading: true })
 
@@ -65,7 +62,7 @@ class ChangeNetworkModal extends Component {
       this.setState({ loading: false, error: 'Please put a valid IP' })
       return
     }
-    this._updateNodes(type, ipToSubmit);
+    this._updateNodes(type, ipToSubmit)
   }
 
   _updateNodes = async (type, nodeip) => {
@@ -77,7 +74,6 @@ class ChangeNetworkModal extends Component {
       this.setState({ loading: false, error: 'Something wrong while updating nodes ip' })
     }
   }
-
 
   _reset = async (type) => {
     try {
@@ -107,7 +103,7 @@ class ChangeNetworkModal extends Component {
     onClose()
   }
 
-  render() {
+  render () {
     const { error,
       mainNode,
       mainNodePort,
@@ -125,7 +121,7 @@ class ChangeNetworkModal extends Component {
             <Utils.Text size='xsmall' secondary>
               Main Node
             </Utils.Text>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <Utils.FormInput
                 defaultValue={mainNode}
                 keyboardType='numeric'
@@ -143,7 +139,7 @@ class ChangeNetworkModal extends Component {
                 underlineColorAndroid='transparent'
               />
             </Utils.Row>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <View style={styles.buttonUpdate}>
                 <ButtonGradient
                   text='Update and Connect'
@@ -158,12 +154,12 @@ class ChangeNetworkModal extends Component {
               </View>
             </Utils.Row>
           </View>
-          <Utils.VerticalSpacer size="medium" />
+          <Utils.VerticalSpacer size='medium' />
           <View style={styles.card}>
             <Utils.Text size='xsmall' secondary>
               Solidity Node
             </Utils.Text>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <Utils.FormInput
                 defaultValue={solidityNode}
                 keyboardType='numeric'
@@ -181,7 +177,7 @@ class ChangeNetworkModal extends Component {
                 underlineColorAndroid='transparent'
               />
             </Utils.Row>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <View style={styles.buttonUpdate}>
                 <ButtonGradient
                   text='Update and Connect'
@@ -198,7 +194,7 @@ class ChangeNetworkModal extends Component {
           </View>
           {error && <Utils.Error>{error}</Utils.Error>}
           <Utils.Content justify='center' align='center'>
-            <Utils.Text color="#ffffff" font="light" size="xsmall">
+            <Utils.Text color='#ffffff' font='light' size='xsmall'>
               With this option you can select the node that will better suit
               your needs and preferences. Please be careful while updating
               the node IP while wrong IP can lead to malfunctions within
@@ -219,7 +215,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: Colors.darkerBackground,
     borderColor: Colors.darkerBackground,
-    padding: 20,
+    padding: 20
   },
   buttonUpdate: {
     width: '70%'

@@ -4,7 +4,6 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import * as Utils from '../Utils'
 import formatUrl from '../../utils/formatUrl'
 
-
 const VoteItem = ({ item, index, format, votes, userVote, openModal }) => {
   let url = formatUrl(item.url)
   let address = `${item.address.slice(0, 12)}...${item.address.substr(item.address.length - 12)}`
@@ -40,12 +39,12 @@ const VoteItem = ({ item, index, format, votes, userVote, openModal }) => {
 }
 
 VoteItem.propTypes = {
-  item:  PropTypes.object.isRequired, 
-  format: PropTypes.func.isRequired, 
+  item: PropTypes.object.isRequired,
+  format: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired, 
-  votes: PropTypes.number, 
-  userVote: PropTypes.number, 
+  index: PropTypes.number.isRequired,
+  votes: PropTypes.number,
+  userVote: PropTypes.number
 }
 
 const styles = StyleSheet.create({

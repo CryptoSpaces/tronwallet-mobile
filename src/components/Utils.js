@@ -10,7 +10,7 @@ import { Colors, Spacing, FontSize } from './DesignSystem'
 const tronWalletBorder = css`
   border-color: ${Colors.secondaryText};
   border-radius: 5px;
-`;
+`
 
 export const Header = styled.View`
   height: 90px;
@@ -113,7 +113,6 @@ export const LoadButtonWrapper = styled.View`
   align-self: center;
   justify-content: center;
 `
-
 
 export const ContentWithBackground = Content.withComponent(ImageBackground)
 

@@ -9,7 +9,7 @@ import Header from '../../components/Header'
 import Card, { CardRow } from '../../components/Card'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
 import GoBackButton from '../../components/GoBackButton'
-import { signTransaction } from '../../utils/transactionUtils';
+import { signTransaction } from '../../utils/transactionUtils'
 
 import { Context } from '../../store/context'
 
@@ -24,20 +24,19 @@ class FreezeScene extends Component {
     loading: true
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this.loadData()
     })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
   sendDeepLink = async (data) => {
     const { from, amount } = this.state
     try {
-
       // Data to deep link, same format as Tron Wallet
       const dataToSend = qs.stringify({
         txDetails: { from, amount, Type: 'FREEZE' },
@@ -57,16 +56,15 @@ class FreezeScene extends Component {
 
   openTransactionDetails = async (transactionUnsigned) => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
+      const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loading: false }, () => {
         this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
       })
     } catch (error) {
-      alert(error.message);
+      alert(error.message)
       this.setState({ error: 'Error getting transaction', loading: false })
     }
   }
-
 
   openDeepLink = async (dataToSend) => {
     try {
@@ -105,22 +103,21 @@ class FreezeScene extends Component {
     this.setState({ loading: true })
     try {
       if (trxBalance < amount) {
-        alert('Insufficient TRX balance');
-        throw new Error('Insufficient TRX balance');
+        alert('Insufficient TRX balance')
+        throw new Error('Insufficient TRX balance')
       }
       const transaction = await Client.getFreezeTransaction(amount)
       this.openTransactionDetails(transaction)
       // this.sendDeepLink(transaction)
       // this.props.navigation.goBack()
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     } finally {
-      this.setState({ loading: false });
+      this.setState({ loading: false })
     }
-
   }
 
-  render() {
+  render () {
     const {
       total,
       bandwidth,

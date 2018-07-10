@@ -12,7 +12,7 @@ import * as Utils from '../../components/Utils'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
-import { signTransaction } from '../../utils/transactionUtils';
+import { signTransaction } from '../../utils/transactionUtils'
 import { getUserPublicKey } from '../../utils/userAccountUtils'
 import formatNumber from '../../utils/formatNumber'
 
@@ -39,24 +39,24 @@ class ParticipateScene extends Component {
   state = {
     value: '',
     loading: false,
-    error: null,
+    error: null
   }
 
   _submit = async () => {
-    const { navigation } = this.props;
+    const { navigation } = this.props
     try {
-      this.setState({ loading: true });
+      this.setState({ loading: true })
 
       if (navigation.state.params.trxBalance < this.state.value) {
-        alert('Insufficient TRX balance');
-        throw new Error('Insufficient TRX balance');
+        alert('Insufficient TRX balance')
+        throw new Error('Insufficient TRX balance')
       }
       const pk = await getUserPublicKey()
       const data = await Client.getParticipateTransaction({
         participateAddress: navigation.state.params.token.ownerAddress,
         participateToken: navigation.state.params.token.name,
         participateAmount: Number(this.state.value)
-      });
+      })
 
       const dataToSend = qs.stringify({
         txDetails: {
@@ -75,10 +75,9 @@ class ParticipateScene extends Component {
 
       // this.openDeepLink(dataToSend)]
       this.openTransactionDetails(data)
-
     } catch (err) {
-      alert("Error while building transaction, try again.");
-      console.warn(err.response);
+      alert('Error while building transaction, try again.')
+      console.warn(err.response)
     } finally {
       this.setState({ loading: false })
     }
@@ -98,7 +97,7 @@ class ParticipateScene extends Component {
 
   openTransactionDetails = async (transactionUnsigned) => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
+      const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loading: false }, () => {
         this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
       })
@@ -107,15 +106,14 @@ class ParticipateScene extends Component {
     }
   }
 
-
   formatPercentage = (percentage) => numeral(percentage).format('0.[00]') + '%'
 
   formatCurrency = value => numeral(value).format('0,0[.]00')
 
   formatValue = (value) => {
-    const price = value / ONE_TRX;
-    const formattedValue = formatNumber(price.toFixed(2));
-    return formattedValue;
+    const price = value / ONE_TRX
+    const formattedValue = formatNumber(price.toFixed(2))
+    return formattedValue
   }
 
   formatDate = date => moment(date).format('YYYY-MM-DD h:mm:ss')
@@ -128,7 +126,7 @@ class ParticipateScene extends Component {
     )
   }
 
-  render() {
+  render () {
     const token = this.props.navigation.getParam('token')
     return (
       <KeyboardAwareScrollView>

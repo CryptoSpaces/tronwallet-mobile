@@ -4,9 +4,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import { tint } from 'polished'
 import * as Utils from '../../components/Utils'
 import { ONE_TRX } from '../../services/client'
-import formatNumber from '../../utils/formatNumber';
-
-
+import formatNumber from '../../utils/formatNumber'
 
 const TransferItem = ({ item }) => {
   const amount = item.contractData.tokenName === 'TRX' ? item.contractData.amount / ONE_TRX : item.contractData.amount

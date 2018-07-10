@@ -9,7 +9,7 @@ import { Colors } from '../../components/DesignSystem'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 
 class LoadingScene extends Component {
-  async componentDidMount() {
+  async componentDidMount () {
     // React Navigation open this route cuncurrently with the deeplink route.
     const deepLinkUrl = await Linking.getInitialURL()
     if (!deepLinkUrl) {
@@ -21,7 +21,7 @@ class LoadingScene extends Component {
     try {
       await Promise.race([
         Auth.currentSession(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Session expired.')), 5000))
+        new Promise((resolve, reject) => setTimeout(() => reject(new Error('Session expired.')), 5000))
       ])
       const isAddressReusable = await checkPublicKeyReusability()
       if (!isAddressReusable) {
@@ -35,8 +35,7 @@ class LoadingScene extends Component {
     SplashScreen.hide()
   }
 
-
-  render() {
+  render () {
     return (
       <Utils.View
         flex={1}

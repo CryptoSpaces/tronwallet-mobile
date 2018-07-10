@@ -37,7 +37,7 @@ class BalanceScene extends Component {
     seedConfirmed: true
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     try {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()
@@ -52,7 +52,7 @@ class BalanceScene extends Component {
     this._dataListener = setInterval(this._loadData, POOLING_TIME)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
     clearInterval(this._dataListener)
   }
@@ -115,19 +115,18 @@ class BalanceScene extends Component {
         assetList,
         seedConfirmed: confirmed
       })
-
     } catch (error) {
       this.setState({ error: error.message })
     }
   }
 
   _navigateToParticipate = token => {
-    const { trxBalance, assetList } = this.state;
+    const { trxBalance, assetList } = this.state
     if (token.name !== 'TRX') {
-      const tokenToParticipate = assetList.find(asset => asset.name === token.name);
+      const tokenToParticipate = assetList.find(asset => asset.name === token.name)
       if (!tokenToParticipate) {
-        //Need to understand better the behavior if a token doesn't belong to 
-        //the participation list but belongs to the user's balance list
+        // Need to understand better the behavior if a token doesn't belong to
+        // the participation list but belongs to the user's balance list
         return
       }
       this.props.navigation.navigate('Participate', { token: tokenToParticipate, trxBalance })
@@ -148,10 +147,9 @@ class BalanceScene extends Component {
       </Utils.View>
       <Utils.View align='flex-end' marginRight={12}>
         <Utils.Text size='xsmall' color={Colors.secondaryText}>{'PRICE PER TOKEN (TRX)'}</Utils.Text>
-      </Utils.View>      
+      </Utils.View>
     </Utils.Row>
   )
-  
 
   renderParticipateButton = item => {
     const now = moment()
@@ -179,7 +177,7 @@ class BalanceScene extends Component {
     </Utils.View>
   )
 
-  render() {
+  render () {
     const { assetBalance, trxBalance, error, assetList, trxHistory } = this.state
     return (
       <Utils.Container>
@@ -257,21 +255,21 @@ class BalanceScene extends Component {
               {({ price, freeze }) => (price.value && freeze.value) && (
                 <FadeIn name='tronprice'>
                   <Utils.Row justify='space-between' marginBottom={24}>
-                    <Utils.View flex={1} align='center' padding={6}  borderRadius={8} borderColor={Colors.secondaryText} marginRight={4} >
+                    <Utils.View flex={1} align='center' padding={6} borderRadius={8} borderColor={Colors.secondaryText} marginRight={4} >
                       <Utils.Text secondary size='xsmall'>TRON POWER</Utils.Text>
                       <Utils.VerticalSpacer />
                       <Motion defaultStyle={{ power: 0 }} style={{ power: spring(freeze.value.total, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${value.power.toFixed(0)}`}</Utils.Text>}
                       </Motion>
                     </Utils.View>
-                    <Utils.View flex={1} align='center' padding={6}   borderRadius={8} borderColor={Colors.secondaryText}  >
+                    <Utils.View flex={1} align='center' padding={6} borderRadius={8} borderColor={Colors.secondaryText} >
                       <Utils.Text secondary size='xsmall'>TRX PRICE</Utils.Text>
                       <Utils.VerticalSpacer />
                       <Motion defaultStyle={{ price: 0 }} style={{ price: spring(price.value, presets.gentle) }}>
                         {value => <Utils.Text size='small' align='center'>{`${value.price.toFixed(PRICE_PRECISION)} USD`}</Utils.Text>}
                       </Motion>
                     </Utils.View>
-                    <Utils.View flex={1} align='center' padding={6}   borderRadius={8} borderColor={Colors.secondaryText} marginLeft={4}>
+                    <Utils.View flex={1} align='center' padding={6} borderRadius={8} borderColor={Colors.secondaryText} marginLeft={4}>
                       <Utils.Text secondary size='xsmall'>BANDWIDTH</Utils.Text>
                       <Utils.VerticalSpacer />
                       <Motion defaultStyle={{ bandwidth: 0 }} style={{ bandwidth: spring(freeze.value.bandwidth.netRemaining, presets.gentle) }}>

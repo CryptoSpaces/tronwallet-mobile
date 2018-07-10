@@ -4,15 +4,15 @@ import { Auth } from 'aws-amplify'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StackActions, NavigationActions } from 'react-navigation'
 
-//Design
+// Design
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 
-//Services
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
-import WalletClient from '../../services/client';
-import { getUserPublicKey } from '../../utils/userAccountUtils';
+// Services
+import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils'
+import WalletClient from '../../services/client'
+import { getUserPublicKey } from '../../utils/userAccountUtils'
 
 class SignupScene extends Component {
   state = {
@@ -29,9 +29,8 @@ class SignupScene extends Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    alert("We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.")
+    alert('We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.')
   }
-
 
   _navigateNext = async (username) => {
     const { navigation } = this.props
@@ -39,11 +38,11 @@ class SignupScene extends Component {
       const result = await WalletClient.giftUser()
       if (result) {
         const address = await getUserPublicKey()
-        //Adapt Reward here
+        // Adapt Reward here
         const rewardsParams = {
           label: username,
           amount: 1,
-          token: 'TWX',
+          token: 'TWX'
         }
         navigation.navigate('Rewards', rewardsParams)
       } else {
@@ -73,7 +72,6 @@ class SignupScene extends Component {
       await this._createKeyPair()
       this.setState({ loadingConfirm: false })
       await this._navigateNext(username)
-
     } catch (error) {
       if (error.code === 'NotAuthorizedException') {
         this.setState({ loadingConfirm: false, confirmError: 'Incorrect credentials, try again..' })
@@ -104,7 +102,7 @@ class SignupScene extends Component {
     )
   }
 
-  render() {
+  render () {
     const { confirmError } = this.state
     return (
       <KeyboardAvoidingView
@@ -128,14 +126,13 @@ class SignupScene extends Component {
               </Utils.Text>
             </Utils.Content>
 
-
             <Utils.Content>
-            <Utils.Text size='xsmall'>
+              <Utils.Text size='xsmall'>
               We sent you an email with the verification code from
               no-reply@verificationemail.com, please check your spam folder if you don't
               find it.
-            </Utils.Text>
-            <Utils.VerticalSpacer size='medium' />
+              </Utils.Text>
+              <Utils.VerticalSpacer size='medium' />
 
               <Utils.Text size='xsmall' secondary>
                 EMAIL VERIFICATION CODE

@@ -22,7 +22,7 @@ class ConfirmLogin extends Component {
     userPublicKey: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.loadUserData()
   }
 
@@ -100,7 +100,7 @@ class ConfirmLogin extends Component {
       this.setState({ confirmError: message, loadingConfirm: false })
     }
   }
-  render() {
+  render () {
     const { confirmError, loadingConfirm } = this.state
     return (
       <KeyboardAvoidingView

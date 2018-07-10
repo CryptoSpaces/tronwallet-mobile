@@ -10,14 +10,14 @@ import { getUserSecrets } from '../../utils/secretsUtils'
 
 class Create extends React.Component {
   static navigationOptions = () => ({
-    header: <NavigationHeader title="Confirm Wallet Seed" />
+    header: <NavigationHeader title='Confirm Wallet Seed' />
   })
 
   state = {
     seed: null
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     try {
       const { mnemonic } = await getUserSecrets()
       this.setState({ seed: mnemonic })

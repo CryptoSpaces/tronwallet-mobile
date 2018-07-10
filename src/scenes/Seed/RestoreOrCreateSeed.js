@@ -17,7 +17,7 @@ class RestoreOrCreateSeed extends React.Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    alert("We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.")
+    alert('We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.')
   }
 
   _newWallet = async () => {
@@ -27,7 +27,7 @@ class RestoreOrCreateSeed extends React.Component {
     this.props.navigation.navigate('SeedCreate')
   }
 
-  render() {
+  render () {
     return (
       <Utils.Container>
         <Utils.Content flex={1} justify='center'>
@@ -42,8 +42,8 @@ class RestoreOrCreateSeed extends React.Component {
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
           {this.state.loading
-            ? <ActivityIndicator color="#ffffff"/>
-            : <ButtonGradient size='small' onPress={this._newWallet} text="Create a new wallet" />}
+            ? <ActivityIndicator color='#ffffff' />
+            : <ButtonGradient size='small' onPress={this._newWallet} text='Create a new wallet' />}
           <Utils.VerticalSpacer size='medium' />
           <Utils.Text light secondary>
             If you don't want to restore that address you can easily get a new one
@@ -53,7 +53,7 @@ class RestoreOrCreateSeed extends React.Component {
           <ButtonGradient
             size='small'
             onPress={() => this.props.navigation.navigate('SeedRestore')}
-            text="Restore previous wallet"
+            text='Restore previous wallet'
           />
         </Utils.Content>
       </Utils.Container>

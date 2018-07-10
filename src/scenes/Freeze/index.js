@@ -8,7 +8,7 @@ import Client from '../../services/client'
 import Header from '../../components/Header'
 import Card, { CardRow } from '../../components/Card'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
-import { signTransaction } from '../../utils/transactionUtils';
+import { signTransaction } from '../../utils/transactionUtils'
 
 import { Context } from '../../store/context'
 
@@ -23,11 +23,11 @@ class FreezeScene extends Component {
     loading: true
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._didFocusSubscription = this.props.navigation.addListener('didFocus', this.loadData)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._didFocusSubscription.remove()
   }
 
@@ -55,22 +55,21 @@ class FreezeScene extends Component {
     const { amount, trxBalance } = this.state
     this.setState({ loading: true })
     try {
-      if (trxBalance < amount) throw new Error('Insufficient TRX balance');
+      if (trxBalance < amount) throw new Error('Insufficient TRX balance')
       await this.freezeToken()
     } catch (error) {
-      alert(error.message);
+      alert(error.message)
     } finally {
-      this.setState({ loading: false });
+      this.setState({ loading: false })
     }
   }
-
 
   freezeToken = async () => {
     const { from, amount } = this.state
     try {
-      //TronScan
-      //const data = await Client.freezeToken(amount)
-      //Serverless
+      // TronScan
+      // const data = await Client.freezeToken(amount)
+      // Serverless
       const data = await Client.getFreezeTransaction(amount)
 
       // Data to deep link, same format as Tron Wallet
@@ -84,22 +83,21 @@ class FreezeScene extends Component {
       })
 
       this.openTransactionDetails(data)
-      //this.openDeepLink(dataToSend)
-
+      // this.openDeepLink(dataToSend)
     } catch (error) {
-      alert("Error while building transaction, try again.");
+      alert('Error while building transaction, try again.')
       this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
   }
 
   openTransactionDetails = async (transactionUnsigned) => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
+      const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false }, () => {
         this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
       })
     } catch (error) {
-      alert(error.message);
+      alert(error.message)
       this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
   }
@@ -116,7 +114,7 @@ class FreezeScene extends Component {
     }
   }
 
-  render() {
+  render () {
     const {
       total,
       bandwidth,

@@ -34,7 +34,7 @@ class TransactionsScene extends Component {
     transactions: []
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     const store = await getTransactionStore()
     this.setState({
       transactions: this.getSortedTransactionList(store),
@@ -45,7 +45,7 @@ class TransactionsScene extends Component {
     this.dataSubscription = setInterval(this.updateData, POOLING_TIME)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.didFocusSubscription.remove()
     clearInterval(this.dataSubscription)
   }
@@ -98,7 +98,7 @@ class TransactionsScene extends Component {
 
   renderListEmptyComponent = () => <Utils.Container />
 
-  render() {
+  render () {
     const { transactions, refreshing } = this.state
 
     if (transactions.length === 0) {
@@ -111,14 +111,13 @@ class TransactionsScene extends Component {
           />
           <Utils.VerticalSpacer size='medium' />
           {
-            refreshing ?
-              <ActivityIndicator size="small" color="#ffffff" /> :
-              <Utils.Text secondary font='light' size='small'>No transactions found.</Utils.Text>
+            refreshing
+              ? <ActivityIndicator size='small' color='#ffffff' />
+              : <Utils.Text secondary font='light' size='small'>No transactions found.</Utils.Text>
           }
         </Utils.View>
       )
     }
-
 
     return (
       <Utils.Container>

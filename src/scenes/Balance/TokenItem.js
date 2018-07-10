@@ -32,7 +32,7 @@ const TokenItem = ({ item, onPress }) => {
       hideChevron
       badge={{
         value: formattedValue,
-        textStyle: { color: Colors.primaryText },
+        textStyle: { color: Colors.primaryText }
       }}
     />
   </FadeIn>

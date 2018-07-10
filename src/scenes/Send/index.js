@@ -13,7 +13,7 @@ import { Colors } from '../../components/DesignSystem'
 
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
-import { signTransaction } from '../../utils/transactionUtils';
+import { signTransaction } from '../../utils/transactionUtils'
 import getBalanceStore from '../../store/balance'
 import { Context } from '../../store/context'
 import { getUserPublicKey } from '../../utils/userAccountUtils'
@@ -32,11 +32,11 @@ class SendScene extends Component {
     QRModalVisible: false
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._navListener = this.props.navigation.addListener('didFocus', this.loadData)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
@@ -50,7 +50,7 @@ class SendScene extends Component {
     this.setState({ loading: true })
     try {
       const balances = await this.getBalancesFromStore()
-      const userPublicKey = await getUserPublicKey();
+      const userPublicKey = await getUserPublicKey()
       const { balance } = balances.find(b => b.name === 'TRX')
       this.setState({
         from: userPublicKey,
@@ -104,7 +104,7 @@ class SendScene extends Component {
       to: '',
       token: 'TRX',
       amount: ''
-    });
+    })
   }
 
   renderTokens = () => {
@@ -126,7 +126,7 @@ class SendScene extends Component {
       // TronScan
       // const data = await Client.getTransactionString({from,to,amount,token});
       // Serverless
-      const data = await Client.getTransferTransaction({ from, to, amount, token });
+      const data = await Client.getTransferTransaction({ from, to, amount, token })
 
       // Data to deep link, same format as Tron Wallet
       // const dataToSend = qs.stringify({
@@ -141,7 +141,6 @@ class SendScene extends Component {
       this.openTransactionDetails(data)
       // this.openDeepLink(dataToSend)
       this.clearInput()
-
     } catch (error) {
       this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
@@ -149,7 +148,7 @@ class SendScene extends Component {
 
   openTransactionDetails = async (transactionUnsigned) => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
+      const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false, error: null }, () => {
         this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
       })
@@ -218,7 +217,7 @@ class SendScene extends Component {
     }
   }
 
-  render() {
+  render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
     return (
       <KeyboardAvoidingView
@@ -272,7 +271,7 @@ class SendScene extends Component {
                 <Utils.FormInput
                   underlineColorAndroid='transparent'
                   keyboardType='numeric'
-                  autoCapitalize="none"
+                  autoCapitalize='none'
                   onChangeText={text => this.changeInput(text, 'amount')}
                   placeholderTextColor='#fff'
                   style={{ marginRight: 15, width: '100%' }}
@@ -286,8 +285,8 @@ class SendScene extends Component {
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
-                  <ButtonGradient text='Send' onPress={this.submit} size='small' />
-                )}
+                <ButtonGradient text='Send' onPress={this.submit} size='small' />
+              )}
               <Utils.VerticalSpacer size='medium' />
             </Utils.Content>
           </Utils.Container>

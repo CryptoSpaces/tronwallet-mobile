@@ -23,7 +23,7 @@ class Confirm extends React.Component {
           <Utils.Title>Confirm Seed</Utils.Title>
         </Utils.TitleWrapper>
         <ButtonGradient
-          size="medium"
+          size='medium'
           onPress={navigation.getParam('onSubmit')}
           text='SUBMIT'
         />
@@ -39,10 +39,9 @@ class Confirm extends React.Component {
     selected: []
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.navigation.setParams({ onSubmit: this._handleSubmit })
   }
-
 
   _handleSubmit = async () => {
     try {
@@ -85,7 +84,7 @@ class Confirm extends React.Component {
     })
   }
 
-  render() {
+  render () {
     return (
       <Utils.Container>
         <ScrollView>

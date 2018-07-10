@@ -18,11 +18,11 @@ class ReceiveScreen extends PureComponent {
     loading: true
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._navListener = this.props.navigation.addListener('didFocus', this._loadPublicKey)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
@@ -42,7 +42,7 @@ class ReceiveScreen extends PureComponent {
     this.setState({ publicKey, loading: false })
   }
 
-  render() {
+  render () {
     const { width } = Dimensions.get('window')
     const { publicKey } = this.state
 
@@ -67,14 +67,14 @@ class ReceiveScreen extends PureComponent {
             <Utils.VerticalSpacer size='medium' />
 
             <Utils.PasteButton onPress={this._copy}>
-              
+
               <Utils.Text>
                 <Feather
                   name='clipboard'
                   size={FontSize['small']}
                   color={Colors.primaryText}
                 />
-                 
+
                 {` Copy My Address`}
               </Utils.Text>
             </Utils.PasteButton>

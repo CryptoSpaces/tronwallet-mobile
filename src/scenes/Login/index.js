@@ -24,7 +24,7 @@ class LoginScene extends Component {
     signError: null
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     const { navigation } = nextProps
     if (navigation.state.params && navigation.state.params.totpError) {
       this.refs.toast.show('Session expired, try again')
@@ -118,7 +118,7 @@ class LoginScene extends Component {
     )
   }
 
-  render() {
+  render () {
     const { signError } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
@@ -207,4 +207,4 @@ class LoginScene extends Component {
   }
 }
 
-export default LoginScene;
+export default LoginScene

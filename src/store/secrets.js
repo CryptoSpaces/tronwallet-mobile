@@ -16,7 +16,7 @@ const SecretsSchema = {
     password: 'string',
     mnemonic: 'string',
     privateKey: 'string',
-    publicKey: 'string',
+    publicKey: 'string'
   }
 }
 

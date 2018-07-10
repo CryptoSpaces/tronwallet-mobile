@@ -5,14 +5,14 @@ import Feather from 'react-native-vector-icons/Feather'
 import { Auth } from 'aws-amplify'
 import qs from 'qs'
 
-//Design
+// Design
 import Header from '../../components/Header'
 import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import PasteInput from '../../components/PasteInput'
 import ButtonGradient from '../../components/ButtonGradient'
 
-//Services
+// Services
 import { isAddressValid } from '../../services/address'
 import Client from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
@@ -24,7 +24,7 @@ export default class SetPkScene extends Component {
     error: null
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     this._checkDeepLink(nextProps)
   }
 
@@ -111,7 +111,7 @@ export default class SetPkScene extends Component {
       <ActivityIndicator size='small' color={Colors.yellow} />
     </Utils.Content>
   )
-  render() {
+  render () {
     const { userPublicKey, loading, error } = this.state
     return (
       <Utils.Container>

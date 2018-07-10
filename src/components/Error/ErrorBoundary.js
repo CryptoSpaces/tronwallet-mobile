@@ -7,11 +7,11 @@ export default class ErrorBoundary extends Component {
     message: ''
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch (error, info) {
     this.setState({error: true})
   }
 
-  render() {
+  render () {
     if (this.state.error) {
       console.log('Error: ', this.state.error, this.state.info)
       return <Text>Something went wrong, please try again</Text>

@@ -1,7 +1,7 @@
 import React from 'react'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import { Colors } from '../components/DesignSystem'
 import * as Utils from '../components/Utils'
 
@@ -25,7 +25,7 @@ const QRCodeComponent = ({ onRead, onClose }) => (
         </Utils.View>
       )}
       cameraStyle={{ height: '100%', width: '100%', justifyContent: 'flex-start' }}
-      permissionDialogMessage="To scan the public key the app needs your permission to access the camera."
+      permissionDialogMessage='To scan the public key the app needs your permission to access the camera.'
       onRead={onRead}
     />
   </Utils.Container>

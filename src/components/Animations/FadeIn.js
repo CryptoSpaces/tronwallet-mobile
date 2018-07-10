@@ -11,7 +11,7 @@ const getStyles = () => ({ opacity: spring(1, presets.gentle) })
 const getDefaultStyles = () => ({ opacity: 0 })
 
 class FadeIn extends Component {
-  render() {
+  render () {
     const { name, children, didLeave } = this.props
     return (
       <TransitionMotion

@@ -40,7 +40,7 @@ class Settings extends Component {
     loading: true
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.onLoadData()
   }
 
@@ -182,8 +182,7 @@ class Settings extends Component {
     })
   }
 
-  render() {
-
+  render () {
     return (
       <Utils.Container
         keyboardShouldPersistTaps={'always'}

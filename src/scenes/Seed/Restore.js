@@ -42,7 +42,7 @@ class Restore extends React.Component {
       'Restore seed will erase all data on this device and pull information from the network for the restored account.',
       [
         { text: 'Cancel' },
-        { text: 'OK', onPress: () => this._restoreWallet() },
+        { text: 'OK', onPress: () => this._restoreWallet() }
       ],
       { cancelable: false }
     )
@@ -55,7 +55,7 @@ class Restore extends React.Component {
     try {
       await recoverUserKeypair(this.state.seed)
       await updateWalletData()
-      alert("Wallet recovered with success!")
+      alert('Wallet recovered with success!')
       this.setState({ loading: false }, () => {
         this._navigateToSettings()
       })
@@ -66,7 +66,7 @@ class Restore extends React.Component {
     }
   }
 
-  render() {
+  render () {
     const { loading } = this.state
     return (
       <Utils.Container>
@@ -74,7 +74,7 @@ class Restore extends React.Component {
         <Utils.Content>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'
-            multiline={true}
+            multiline
             numberOfLines={4}
             autoCapitalize='none'
             autoCorrect={false}

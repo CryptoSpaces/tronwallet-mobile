@@ -11,7 +11,7 @@ const getStyles = () => ({ left: spring(0), opacity: spring(1) })
 const getDefaultStyles = () => ({ left: -300, opacity: 0.5 })
 
 class SlideIn extends Component {
-  render() {
+  render () {
     const { name, children } = this.props
     return (
       <TransitionMotion

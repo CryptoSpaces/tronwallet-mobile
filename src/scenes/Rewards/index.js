@@ -9,7 +9,6 @@ import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 
 class RewardsScreen extends PureComponent {
-
   _navigateHome = () => {
     const { navigation } = this.props
     const navigateToHome = StackActions.reset({
@@ -20,7 +19,7 @@ class RewardsScreen extends PureComponent {
     navigation.dispatch(navigateToHome)
   }
 
-  render() {
+  render () {
     const { label, amount, token } = this.props.navigation.state.params
 
     return (
