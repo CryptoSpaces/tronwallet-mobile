@@ -12,8 +12,8 @@ import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import Input from '../../components/Input/Input'
-import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
+import { Colors } from '../../components/DesignSystem'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 import { version } from '../../../package.json'
 
@@ -119,7 +119,7 @@ class LoginScene extends Component {
       )
     }
 
-    return  (
+    return (
       <ButtonGradient
         text='SIGN IN'
         onPress={this.signIn}
