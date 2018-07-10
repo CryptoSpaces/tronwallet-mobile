@@ -15,17 +15,25 @@ const tronWalletBorder = css`
   border-width: 1px;
   border-color: ${Colors.secondaryText};
   border-radius: 5px;
-`;
+`
 
 export const Header = styled.View`
   height: 90px;
-  ${props => props.paddingTop && css`padding-top: ${props.paddingTop}px`};
+  ${props =>
+    props.paddingTop &&
+    css`
+      padding-top: ${props.paddingTop}px;
+    `};
   flex-direction: row;
   align-items: center;
   background-color: ${props => props.background || 'black'};
   border-bottom-width: 1px;
   border-color: black;
-  ${props => props.noBorder && css`border-bottom-width: 0`};
+  ${props =>
+    props.noBorder &&
+    css`
+      border-bottom-width: 0;
+    `};
 `
 
 export const Title = styled.Text`
@@ -45,26 +53,87 @@ export const TitleWrapper = styled.View`
 export const View = styled.View`
   align-items: ${props => props.align};
   justify-content: ${props => props.justify};
-  ${props => props.flex && css`flex: ${props.flex};`}
-  ${props => props.height && css`height: ${props.height};`}
-  ${props => props.width && css`width: ${props.width};`}
-  ${props => props.background && css`background-color: ${props.background};`}
-  ${props => props.borderWidth && css`border-width: ${props.borderWidth};`}
-  ${props => props.borderColor && css`border-color: ${props.borderColor};`}
-  ${props => props.borderRadius && css`border-radius: ${props.borderRadius}px;`}
-  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]};`}
-  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]};`}
-  ${props => props.padding && css`top: ${props.padding};`}
-  ${props => props.margin && css`margin: ${props.margin}px;`}
-  ${props => props.marginTop && css`margin-top: ${props.marginTop}px;`}
-  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px;`}
-  ${props => props.marginRight && css`margin-right: ${props.marginRight}px;`}
-  ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px;`}
-  ${props => props.position && css`position: ${props.position};`}
-  ${props => props.top && css`top: ${props.top};`}
-  ${props => props.bottom && css`bottom: ${props.bottom};`}
-  ${props => props.right && css`right: ${props.right};`}
-  ${props => props.left && css`left: ${props.left};`}
+  ${props =>
+    props.flex &&
+    css`
+      flex: ${props.flex};
+    `} ${props =>
+  props.height &&
+      css`
+        height: ${props.height};
+      `} ${props =>
+  props.width &&
+      css`
+        width: ${props.width};
+      `} ${props =>
+  props.background &&
+      css`
+        background-color: ${props.background};
+      `} ${props =>
+  props.borderWidth &&
+      css`
+        border-width: ${props.borderWidth};
+      `} ${props =>
+  props.borderColor &&
+      css`
+        border-color: ${props.borderColor};
+      `} ${props =>
+  props.borderRadius &&
+      css`
+        border-radius: ${props.borderRadius}px;
+      `} ${props =>
+  props.paddingY &&
+      css`
+        padding-vertical: ${Spacing[props.paddingY]};
+      `} ${props =>
+  props.paddingX &&
+      css`
+        padding-horizontal: ${Spacing[props.paddingX]};
+      `} ${props =>
+  props.padding &&
+      css`
+        top: ${props.padding};
+      `} ${props =>
+  props.margin &&
+      css`
+        margin: ${props.margin}px;
+      `} ${props =>
+  props.marginTop &&
+      css`
+        margin-top: ${props.marginTop}px;
+      `} ${props =>
+  props.marginBottom &&
+      css`
+        margin-bottom: ${props.marginBottom}px;
+      `} ${props =>
+  props.marginRight &&
+      css`
+        margin-right: ${props.marginRight}px;
+      `} ${props =>
+  props.marginLeft &&
+      css`
+        margin-left: ${props.marginLeft}px;
+      `} ${props =>
+  props.position &&
+      css`
+        position: ${props.position};
+      `} ${props =>
+  props.top &&
+      css`
+        top: ${props.top};
+      `} ${props =>
+  props.bottom &&
+      css`
+        bottom: ${props.bottom};
+      `} ${props =>
+  props.right &&
+      css`
+        right: ${props.right};
+      `} ${props =>
+  props.left &&
+      css`
+        left: ${props.left};
+      `};
 `
 
 View.defaultProps = {
@@ -239,23 +308,86 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   color: ${props => props.color};
-  ${props => props.size && css`font-size: ${FontSize[props.size]}`};
-  ${props => props.light && css`font-family: rubik-light;`}
-  font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
-  ${props => props.padding && css`padding: ${props.padding}`};
-  ${props => props.weight && css`font-weight: ${props.weight}`};
-  ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};
-  ${props => props.align && css`text-align: ${props.align}`};
-  ${props => props.secondary && css`color: ${Colors.secondaryText}`};
-  ${props => props.success && css`color: ${Colors.green}`};
-  ${props => props.lineHeight && css`line-height: ${props.lineHeight}`};
-  ${props => props.letterSpacing && css`letter-spacing: ${props.letterSpacing}`};
-  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
-  ${props => props.marginTop && css`margin-top: ${Spacing[props.marginTop]}px`};
-  ${props => props.margin && css`margin: ${props.margin}px`};
-  ${props => props.position && css`position: ${props.position}`};
-  ${props => props.top && css`top: ${props.top}`};
-  ${props => props.background && css`background-color: ${props.background};`}
+  ${props =>
+    props.size &&
+    css`
+      font-size: ${FontSize[props.size]};
+    `};
+  ${props =>
+    props.light &&
+    css`
+      font-family: rubik-light;
+    `} font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
+  ${props =>
+    props.padding &&
+    css`
+      padding: ${props.padding};
+    `};
+  ${props =>
+    props.weight &&
+    css`
+      font-weight: ${props.weight};
+    `};
+  ${props =>
+    props.marginY &&
+    css`
+      margin-vertical: ${props.marginY}px;
+    `};
+  ${props =>
+    props.align &&
+    css`
+      text-align: ${props.align};
+    `};
+  ${props =>
+    props.secondary &&
+    css`
+      color: ${Colors.secondaryText};
+    `};
+  ${props =>
+    props.success &&
+    css`
+      color: ${Colors.green};
+    `};
+  ${props =>
+    props.lineHeight &&
+    css`
+      line-height: ${props.lineHeight};
+    `};
+  ${props =>
+    props.letterSpacing &&
+    css`
+      letter-spacing: ${props.letterSpacing};
+    `};
+  ${props =>
+    props.marginBottom &&
+    css`
+      margin-bottom: ${props.marginBottom}px;
+    `};
+  ${props =>
+    props.marginTop &&
+    css`
+      margin-top: ${Spacing[props.marginTop]}px;
+    `};
+  ${props =>
+    props.margin &&
+    css`
+      margin: ${props.margin}px;
+    `};
+  ${props =>
+    props.position &&
+    css`
+      position: ${props.position};
+    `};
+  ${props =>
+    props.top &&
+    css`
+      top: ${props.top};
+    `};
+  ${props =>
+    props.background &&
+    css`
+      background-color: ${props.background};
+    `};
 `
 
 Text.defaultProps = {
@@ -470,10 +602,9 @@ export const InputContainer = styled.View`
 `
 
 export const InputBorderContainer = Row.extend`
-  ${tronWalletBorder}
-  height: 70px;
+  ${tronWalletBorder} position: relative;
   align-items: center;
-  position: relative;
+  height: 70px;
   padding: 10px;
 `
 
@@ -481,12 +612,17 @@ export const RevisedFormInput = styled.TextInput.attrs({
   placeholderTextColor: Colors.primaryText
 })`
   position: relative;
-  text-align: right;
-  font-size: ${props => props.size ? FontSize[props.size] : FontSize['average']};
+  text-align: ${props => props.align};
+  font-size: ${props => FontSize[props.size]};
   height: 70px;
   color: ${Colors.primaryText};
   flex: 1;
 `
+
+RevisedFormInput.defaultProps = {
+  size: 'average',
+  align: 'left'
+}
 
 export const FormIcon = styled(Ionicon)`
   position: absolute;
@@ -503,10 +639,6 @@ export const FormButton = styled.TouchableOpacity`
   shadow-offset: 4px 4px;
   shadow-opacity: 0.25;
   shadow-radius: 4px;
-`
-
-export const FormContent = Row.extend`
-
 `
 
 export const FormLabel = styled.Text`

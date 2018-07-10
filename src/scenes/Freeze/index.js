@@ -62,7 +62,7 @@ class FreezeScene extends Component {
 
     this.setState({ loading: true })
     try {
-      if (trxBalance < convertedAmount) throw new Error('Insufficient TRX balance')
+      if (trxBalance < convertedAmount) { throw new Error('Insufficient TRX balance') }
       await this.freezeToken()
     } catch (error) {
       Alert.alert(error.message)
@@ -110,7 +110,7 @@ class FreezeScene extends Component {
     }
   }
 
-  _changeFreeze = (value) => {
+  _changeFreeze = value => {
     const validation = /^0[0-9]/
     let amount = validation.test(value) ? value.slice(1, value.length) : value
 
@@ -119,17 +119,19 @@ class FreezeScene extends Component {
     })
   }
 
-  _leftContent = () => <Utils.FormIcon name='ios-unlock' size={24} color={Colors.primaryText} />
+  _leftContent = () => (
+    <Utils.FormIcon name='ios-unlock' size={24} color={Colors.primaryText} />
+  )
 
   render () {
-    const {
-      trxBalance,
-      amount
-    } = this.state
+    const { trxBalance, amount } = this.state
 
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} enabled>
-        <KeyboardAwareScrollView>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
+        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
           <Utils.StatusBar />
           <Utils.Container>
             <Header>
@@ -137,14 +139,19 @@ class FreezeScene extends Component {
                 <Utils.Text size='xsmall' secondary>
                   FREEZE
                 </Utils.Text>
-                <Utils.Row align='center' margin={8}>
+                <Utils.Row align='center'>
                   <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
-                  <Utils.Text size='small' margin={16} style={{
-                    backgroundColor: Colors.lighterBackground,
-                    borderRadius: 3,
-                    paddingHorizontal: 8,
-                    paddingVertical: 6
-                  }}>TRX</Utils.Text>
+                  <Utils.HorizontalSpacer size='xsmall' />
+                  <Utils.View
+                    style={{
+                      backgroundColor: Colors.lighterBackground,
+                      borderRadius: 3,
+                      paddingHorizontal: 8,
+                      paddingVertical: 6
+                    }}
+                  >
+                    <Utils.Text size='small'>TRX</Utils.Text>
+                  </Utils.View>
                 </Utils.Row>
               </Utils.View>
             </Header>
@@ -154,11 +161,18 @@ class FreezeScene extends Component {
                 leftContent={this._leftContent}
                 type='numeric'
                 value={amount}
-                onChange={(value) => this._changeFreeze(value)}
+                onChange={value => this._changeFreeze(value)}
                 placeholder='0'
               />
-              <Utils.SummaryInfo>{`New freeze TRX: ${amount}`}</Utils.SummaryInfo>
-              <ButtonGradient text='FREEZE' onPress={this.submit} size='medium' marginVertical='large' font='bold' />
+              <Utils.SummaryInfo
+              >{`New freeze TRX: ${amount}`}</Utils.SummaryInfo>
+              <ButtonGradient
+                text='FREEZE'
+                onPress={this.submit}
+                size='medium'
+                marginVertical='large'
+                font='bold'
+              />
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>

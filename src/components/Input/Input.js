@@ -1,34 +1,45 @@
 import React from 'react'
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { RevisedFormInput, InputContainer, FormLabel, FormIcon, InputBorderContainer, PasteButton, FormButton, Row, FormContent } from '../Utils'
-import { Colors } from '../DesignSystem'
+import * as Utils from '../Utils'
 
-const Input = ({label, type, value, onChange, placeholder, leftContent, rightContent }) => (
-  <InputContainer>
-    <FormLabel>{label}</FormLabel>
-    <InputBorderContainer>
+const Input = ({
+  label,
+  type,
+  value,
+  onChange,
+  placeholder,
+  leftContent,
+  rightContent,
+  textAlign
+}) => (
+  <Utils.InputContainer>
+    <Utils.FormLabel>{label}</Utils.FormLabel>
+    <Utils.InputBorderContainer>
       {leftContent && (
-        <FormContent>
+        <React.Fragment>
           {leftContent()}
-        </FormContent>
+          <Utils.HorizontalSpacer />
+        </React.Fragment>
       )}
-      <RevisedFormInput 
+      <Utils.RevisedFormInput
         keyboardType={type}
         autoCorrect={false}
         value={value}
+        align={textAlign}
         underlineColorAndroid='transparent'
-        onChangeText={(value) => onChange(value)}
+        onChangeText={value => onChange(value)}
         returnKeyType='send'
         placeholder={placeholder}
       />
+      <Utils.HorizontalSpacer />
       {rightContent && (
-        <FormContent>
+        <React.Fragment>
+          <Utils.HorizontalSpacer />
           {rightContent()}
-        </FormContent>
+        </React.Fragment>
       )}
-    </InputBorderContainer>
-  </InputContainer>
+    </Utils.InputBorderContainer>
+  </Utils.InputContainer>
 )
 
 export default Input

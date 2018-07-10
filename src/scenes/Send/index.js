@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Clipboard, Linking, Alert, KeyboardAvoidingView, Modal } from 'react-native'
+import {
+  ActivityIndicator,
+  Clipboard,
+  Linking,
+  Alert,
+  KeyboardAvoidingView,
+  Modal
+} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ModalSelector from 'react-native-modal-selector'
@@ -208,11 +215,19 @@ class SendScene extends Component {
   _rightContent = () => (
     <React.Fragment>
       <Utils.FormButton onPress={this._onPaste}>
-        <Ionicons name='md-clipboard' size={FontSize['medium']} color={Colors.buttonText} />
+        <Ionicons
+          name='md-clipboard'
+          size={FontSize['medium']}
+          color={Colors.buttonText}
+        />
       </Utils.FormButton>
       <Utils.HorizontalSpacer />
       <Utils.FormButton onPress={this._openModal}>
-        <Ionicons name='ios-qr-scanner' size={FontSize['medium']} color={Colors.buttonText} />
+        <Ionicons
+          name='ios-qr-scanner'
+          size={FontSize['medium']}
+          color={Colors.buttonText}
+        />
       </Utils.FormButton>
     </React.Fragment>
   )
@@ -220,8 +235,11 @@ class SendScene extends Component {
   render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} enabled>
-        <KeyboardAwareScrollView>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
+        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
           <Utils.StatusBar />
           <Utils.Container>
             <Header>
@@ -229,14 +247,19 @@ class SendScene extends Component {
                 <Utils.Text size='xsmall' secondary>
                   BALANCE
                 </Utils.Text>
-                <Utils.Row align='center' margin={8}>
+                <Utils.Row align='center'>
                   <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
-                  <Utils.Text size='small' margin={16} style={{
-                    backgroundColor: Colors.lighterBackground,
-                    borderRadius: 3,
-                    paddingHorizontal: 8,
-                    paddingVertical: 6
-                  }}>TRX</Utils.Text>
+                  <Utils.HorizontalSpacer size='xsmall' />
+                  <Utils.View
+                    style={{
+                      backgroundColor: Colors.lighterBackground,
+                      borderRadius: 3,
+                      paddingHorizontal: 8,
+                      paddingVertical: 6
+                    }}
+                  >
+                    <Utils.Text size='small'>TRX</Utils.Text>
+                  </Utils.View>
                 </Utils.Row>
               </Utils.View>
             </Header>
@@ -261,20 +284,17 @@ class SendScene extends Component {
                 />
               </Modal>
               <Utils.VerticalSpacer size='medium' />
-              <Utils.Text size='xsmall' secondary>
-                Token
-              </Utils.Text>
               <ModalSelector
-                data={this.state.balances.map(item => ({ key: item.name, label: item.name }))}
+                data={this.state.balances.map(item => ({
+                  key: item.name,
+                  label: item.name
+                }))}
                 onChange={option => this.setState({ token: option.label })}
               >
-                <Utils.Row align='center' justify='flex-start'>
-                  <Utils.FormInput
-                    style={{ marginRight: 15, width: '100%' }}
-                  >
-                    <Utils.Text>{this.state.token}</Utils.Text>
-                  </Utils.FormInput>
-                </Utils.Row>
+                <Input
+                  label='TOKEN'
+                  value={this.state.token}
+                />
               </ModalSelector>
               <Utils.VerticalSpacer size='medium' />
               <Input
@@ -290,9 +310,15 @@ class SendScene extends Component {
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
-                <ButtonGradient text='SEND' onPress={this.submit} size='medium' marginVertical='large' font='bold' />
+                <ButtonGradient
+                  text='SEND'
+                  onPress={this.submit}
+                  size='medium'
+                  marginVertical='large'
+                  font='bold'
+                />
               )}
-              <Utils.VerticalSpacer size='medium' />
+              <Utils.VerticalSpacer />
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>

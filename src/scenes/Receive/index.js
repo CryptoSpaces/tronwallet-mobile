@@ -1,9 +1,5 @@
 import React, { PureComponent } from 'react'
-import {
-  Dimensions,
-  Clipboard,
-  SafeAreaView
-} from 'react-native'
+import { Dimensions, Clipboard, SafeAreaView } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import Feather from 'react-native-vector-icons/Feather'

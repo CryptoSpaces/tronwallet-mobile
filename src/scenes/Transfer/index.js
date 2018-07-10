@@ -28,22 +28,29 @@ export default class TransferScene extends React.Component {
 
   state = {
     index: 0,
-    routes: [
-      { key: 'send', title: 'Send' },
-      { key: 'freeze', title: 'Freeze' }
-    ]
+    routes: [{ key: 'send', title: 'Send' }, { key: 'freeze', title: 'Freeze' }]
   }
 
   _handleIndexChange = index => this.setState({ index })
 
   _renderHeader = props => (
-    <TabBar {...props} labelStyle={{color: Colors.secondaryText}} style={{ backgroundColor: Colors.background, flex: 0.1, borderBottomWidth: 1, borderColor: Colors.lighterBackground, paddingBottom: 10 }} />
+    <TabBar
+      {...props}
+      labelStyle={{ color: Colors.secondaryText }}
+      style={{
+        backgroundColor: Colors.background,
+        flex: 0.1,
+        borderBottomWidth: 1,
+        borderColor: Colors.lighterBackground,
+        paddingBottom: 10
+      }}
+    />
   )
 
   _renderScene = SceneMap({
     send: () => <SendScreen {...this.props} />,
     freeze: () => <FreezeScreen {...this.props} />
-  });
+  })
 
   render () {
     return (
