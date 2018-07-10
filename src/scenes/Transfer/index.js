@@ -11,15 +11,17 @@ const initialLayout = {
   width: Dimensions.get('window').width
 }
 
+const SCREENSIZE = Dimensions.get('window')
+const TAB_WIDTH = SCREENSIZE.width / 2
+const INDICATOR_WIDTH = 15
+
 export default class TransferScene extends React.Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       header: (
         <SafeAreaView>
           <Utils.Header background={Colors.background} noBorder>
-            <Utils.TitleWrapper background={Colors.background}>
-              <Utils.Title paddingLeft='large'>Transfers</Utils.Title>
-            </Utils.TitleWrapper>
+            <Utils.Title paddingLeft='large'>Transfers</Utils.Title>
           </Utils.Header>
         </SafeAreaView>
       )
@@ -28,7 +30,10 @@ export default class TransferScene extends React.Component {
 
   state = {
     index: 0,
-    routes: [{ key: 'send', title: 'Send' }, { key: 'freeze', title: 'Freeze' }]
+    routes: [
+      { key: 'send', title: 'Send' },
+      { key: 'freeze', title: 'Freeze' }
+    ]
   }
 
   _handleIndexChange = index => this.setState({ index })
@@ -37,6 +42,11 @@ export default class TransferScene extends React.Component {
     <TabBar
       {...props}
       labelStyle={{ color: Colors.secondaryText }}
+      indicatorStyle={{
+        width: INDICATOR_WIDTH,
+        height: 1,
+        marginLeft: (TAB_WIDTH / 2 - INDICATOR_WIDTH / 2)
+      }}
       style={{
         backgroundColor: Colors.background,
         flex: 0.1,
