@@ -317,7 +317,7 @@ class VoteScene extends PureComponent {
   }
 
   render() {
-    const { totalVotes, totalRemaining, votesError } = this.state
+    const { totalVotes, totalRemaining, votesError, refreshing, loadingList } = this.state
     return (
       <Utils.Container>
         {(totalVotes !== null && totalRemaining !== null) && (
@@ -380,7 +380,7 @@ class VoteScene extends PureComponent {
               onEndReachedThreshold={0.5}
               onEndReached={this._loadMoreCandidates}
               onRefresh={this._refreshCandidates}
-              refreshing={this.state.refreshing}
+              refreshing={refreshing || loadingList}
               removeClippedSubviews
             />
           </FadeIn>
