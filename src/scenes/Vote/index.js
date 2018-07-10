@@ -1,6 +1,6 @@
 // Dependencies
 import React, { PureComponent } from 'react'
-import { forIn, reduce, union, clamp } from 'lodash'
+import { forIn, reduce, union, clamp, debounce } from 'lodash'
 import { Linking, FlatList } from 'react-native'
 import qs from 'qs'
 
@@ -54,6 +54,7 @@ class VoteScene extends PureComponent {
   async componentDidMount() {
     this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
     this.dataSubscription = setInterval(this._loadData, POOLING_TIME)
+    this._onSearch = debounce(this._onSearch, 500)
   }
 
   componentWillUnmount() {
