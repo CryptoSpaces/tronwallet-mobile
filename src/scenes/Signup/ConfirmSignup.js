@@ -1,18 +1,23 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Alert
+} from 'react-native'
 import { Auth } from 'aws-amplify'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StackActions, NavigationActions } from 'react-navigation'
 
-//Design
+// Design
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 
-//Services
-import { createUserKeyPair, getUserSecrets } from '../../utils/secretsUtils';
-import WalletClient from '../../services/client';
-import { getUserPublicKey } from '../../utils/userAccountUtils';
+// Services
+import { createUserKeyPair } from '../../utils/secretsUtils'
+import WalletClient from '../../services/client'
 
 class SignupScene extends Component {
   state = {
@@ -29,21 +34,22 @@ class SignupScene extends Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    alert("We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.")
+    Alert.alert(
+      'We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.'
+    )
   }
 
-
-  _navigateNext = async (username) => {
+  _navigateNext = async username => {
     const { navigation } = this.props
     try {
       const result = await WalletClient.giftUser()
       if (result) {
-        const address = await getUserPublicKey()
-        //Adapt Reward here
+        // const address = await getUserPublicKey()
+        // Adapt Reward here
         const rewardsParams = {
           label: username,
           amount: 1,
-          token: 'TWX',
+          token: 'TWX'
         }
         navigation.navigate('Rewards', rewardsParams)
       } else {
@@ -73,10 +79,12 @@ class SignupScene extends Component {
       await this._createKeyPair()
       this.setState({ loadingConfirm: false })
       await this._navigateNext(username)
-
     } catch (error) {
       if (error.code === 'NotAuthorizedException') {
-        this.setState({ loadingConfirm: false, confirmError: 'Incorrect credentials, try again..' })
+        this.setState({
+          loadingConfirm: false,
+          confirmError: 'Incorrect credentials, try again..'
+        })
         setTimeout(() => navigation.navigate('Login'), 1500)
         return
       }
@@ -104,7 +112,7 @@ class SignupScene extends Component {
     )
   }
 
-  render() {
+  render () {
     const { confirmError } = this.state
     return (
       <KeyboardAvoidingView
@@ -123,19 +131,16 @@ class SignupScene extends Component {
               <Utils.VerticalSpacer size='small' />
               <Image source={require('../../assets/login-circle.png')} />
               <Utils.VerticalSpacer size='small' />
-              <Utils.Text size='medium'>
-                TRONWALLET
-              </Utils.Text>
+              <Utils.Text size='medium'>TRONWALLET</Utils.Text>
             </Utils.Content>
 
-
             <Utils.Content>
-            <Utils.Text size='xsmall'>
-              We sent you an email with the verification code from
-              no-reply@verificationemail.com, please check your spam folder if you don't
-              find it.
-            </Utils.Text>
-            <Utils.VerticalSpacer size='medium' />
+              <Utils.Text size='xsmall'>
+                We sent you an email with the verification code from
+                no-reply@verificationemail.com, please check your spam folder if
+                you don't find it.
+              </Utils.Text>
+              <Utils.VerticalSpacer size='medium' />
 
               <Utils.Text size='xsmall' secondary>
                 EMAIL VERIFICATION CODE
@@ -163,7 +168,6 @@ class SignupScene extends Component {
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>
-
       </KeyboardAvoidingView>
     )
   }

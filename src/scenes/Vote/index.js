@@ -1,12 +1,11 @@
 // Dependencies
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp, debounce } from 'lodash'
-import { Linking, FlatList } from 'react-native'
-import qs from 'qs'
+import { Linking, FlatList, Alert } from 'react-native'
 
 // Utils
 import * as Utils from '../../components/Utils'
-import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
+import { TronVaultURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
 import formatNumber from '../../utils/formatNumber'
 
@@ -25,7 +24,6 @@ import getCandidateStore from '../../store/candidates'
 import { Context } from '../../store/context'
 
 const LIST_STEP_SIZE = 20
-const POOLING_TIME = 30000
 
 const INITIAL_STATE = {
   voteList: [],
@@ -51,24 +49,24 @@ const INITIAL_STATE = {
 class VoteScene extends PureComponent {
   state = INITIAL_STATE
 
-  async componentDidMount() {
-    this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
-    this.dataSubscription = setInterval(this._loadData, POOLING_TIME)
+  async componentDidMount () {
     this._onSearch = debounce(this._onSearch, 500)
+    this.didFocusSubscription = this.props.navigation.addListener(
+      'didFocus',
+      this._loadData
+    )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.didFocusSubscription.remove()
-    clearInterval(this.dataSubscription)
   }
-
 
   _loadData = async () => {
     this.props.navigation.setParams({
       onSubmit: this._submit,
       disabled: true,
       votesError: null,
-      listError: null,
+      listError: null
     })
 
     this.setState(INITIAL_STATE)
@@ -80,9 +78,16 @@ class VoteScene extends PureComponent {
   }
 
   _getVoteList = store =>
-    store.objects('Candidate')
+    store
+      .objects('Candidate')
       .sorted([['votes', true], ['url', false]])
-      .slice(this.state.offset, clamp(this.state.offset + LIST_STEP_SIZE, store.objects('Candidate').length))
+      .slice(
+        this.state.offset,
+        clamp(
+          this.state.offset + LIST_STEP_SIZE,
+          store.objects('Candidate').length
+        )
+      )
       .map(item => Object.assign({}, item))
 
   _loadCandidates = async () => {
@@ -101,7 +106,9 @@ class VoteScene extends PureComponent {
         this.setState({ refreshing: true })
         const { candidates, totalVotes } = await Client.getTotalVotes()
         const store = await getCandidateStore()
-        store.write(() => candidates.map(item => store.create('Candidate', item, true)))
+        store.write(() =>
+          candidates.map(item => store.create('Candidate', item, true))
+        )
         this.setState({
           voteList: this._getVoteList(store),
           totalVotes,
@@ -118,7 +125,9 @@ class VoteScene extends PureComponent {
     try {
       this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
       const store = await getCandidateStore()
-      this.setState({ voteList: union(this.state.voteList, this._getVoteList(store)) })
+      this.setState({
+        voteList: union(this.state.voteList, this._getVoteList(store))
+      })
     } catch (e) {
       e.name = 'Load More Candidates Error'
       this._throwError(e)
@@ -151,7 +160,7 @@ class VoteScene extends PureComponent {
   }
 
   _submit = async () => {
-    const { from, currentVotes, totalRemaining } = this.state
+    const { currentVotes, totalRemaining } = this.state
     const { navigation } = this.props
 
     if (totalRemaining >= 0) {
@@ -164,41 +173,30 @@ class VoteScene extends PureComponent {
       try {
         // Transaction String
         const data = await Client.getVoteWitnessTransaction(currentVotes)
-        // Data to deep link, same format as Tron Wallet
-        const dataToSend = qs.stringify({
-          txDetails: { from, Type: 'VOTE' },
-          pk: from,
-          from: 'mobile',
-          action: 'transaction',
-          URL: MakeTronMobileURL('transaction'),
-          data
-        })
-
         this._openTransactionDetails(data)
-        // this.openDeepLink(dataToSend)
-
       } catch (error) {
-        console.warn(error.message);
-        alert("Error while building transaction, try again.")
+        console.warn(error.message)
+        Alert.alert('Error while building transaction, try again.')
         this.setState({ loading: false })
         navigation.setParams({ disabled: false })
       }
     }
   }
 
-
-  _openTransactionDetails = async (transactionUnsigned) => {
+  _openTransactionDetails = async transactionUnsigned => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
+      const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false }, () => {
-        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
+        this.props.navigation.navigate('TransactionDetail', {
+          tx: transactionSigned
+        })
       })
     } catch (error) {
       this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
   }
 
-  _openDeepLink = async (dataToSend) => {
+  _openDeepLink = async dataToSend => {
     try {
       const url = `${TronVaultURL}auth/${dataToSend}`
 
@@ -225,10 +223,15 @@ class VoteScene extends PureComponent {
       0
     )
     const totalVotesRemaining = totalFrozen - totalUserVotes
-    navigation.setParams({ disabled: totalVotesRemaining < 0 && totalUserVotes > 0 })
-    this.setState({ currentVotes: newVotes, totalRemaining: totalVotesRemaining, ...this._resetModalState() })
+    navigation.setParams({
+      disabled: totalVotesRemaining < 0 && totalUserVotes > 0
+    })
+    this.setState({
+      currentVotes: newVotes,
+      totalRemaining: totalVotesRemaining,
+      ...this._resetModalState()
+    })
   }
-
 
   _onSearch = async value => {
     const { voteList } = this.state
@@ -244,7 +247,7 @@ class VoteScene extends PureComponent {
     }
   }
 
-  _setupVoteModal = (item) => {
+  _setupVoteModal = item => {
     this.setState({
       modalVisible: true,
       currentItemUrl: formatUrl(item.url),
@@ -255,12 +258,18 @@ class VoteScene extends PureComponent {
   _throwError = (e, type) => {
     const errorType = type || 'listError'
     console.log(`${e.name}. ${e.message}`)
-    this.setState({
-      [errorType]: "Oops, something didn't load correctly. Try to sync again",
-      loading: false
-    }, function setErrorParams() {
-      this.props.navigation.setParams({ loadData: this._loadData, [errorType]: this.state[errorType] })
-    })
+    this.setState(
+      {
+        [errorType]: "Oops, something didn't load correctly. Try to sync again",
+        loading: false
+      },
+      function setErrorParams () {
+        this.props.navigation.setParams({
+          loadData: this._loadData,
+          [errorType]: this.state[errorType]
+        })
+      }
+    )
   }
 
   _closeModal = () => {
@@ -278,8 +287,8 @@ class VoteScene extends PureComponent {
     }
   }
 
-  _addNumToVote = (key) => {
-    this.setState((state) => {
+  _addNumToVote = key => {
+    this.setState(state => {
       return {
         currentAmountToVote: `${state.currentAmountToVote}${key}`
       }
@@ -288,7 +297,7 @@ class VoteScene extends PureComponent {
 
   _removeNumFromVote = () => {
     if (this.state.currentAmountToVote.length > 0) {
-      this.setState((state) => {
+      this.setState(state => {
         return {
           currentAmountToVote: state.currentAmountToVote.slice(0, -1)
         }
@@ -297,7 +306,10 @@ class VoteScene extends PureComponent {
   }
 
   _acceptCurrentVote = () => {
-    this._onChangeVotes(this.state.currentAmountToVote, this.state.currentItemAddress)
+    this._onChangeVotes(
+      this.state.currentAmountToVote,
+      this.state.currentItemAddress
+    )
   }
 
   _renderRow = ({ item, index }) => {
@@ -316,36 +328,43 @@ class VoteScene extends PureComponent {
     )
   }
 
-  render() {
+  render () {
     const { totalVotes, totalRemaining, votesError, refreshing, loadingList } = this.state
     return (
       <Utils.Container>
-        {(totalVotes !== null && totalRemaining !== null) && (
-          <GrowIn name='vote-header' height={63}>
-            <Header>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>
-                  TOTAL VOTES
-                </Utils.Text>
-                <Utils.Text size='small'>{formatNumber(totalVotes)}</Utils.Text>
-              </Utils.View>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>
-                  VOTES AVAILABLE
-                </Utils.Text>
-                <Utils.Text
-                  size='small'
-                  style={{ color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}` }}
-                >
-                  {formatNumber(totalRemaining)}
-                </Utils.Text>
-              </Utils.View>
-            </Header>
-          </GrowIn>
-        )}
+        {totalVotes !== null &&
+          totalRemaining !== null && (
+            <GrowIn name='vote-header' height={63}>
+              <Header>
+                <Utils.View align='center'>
+                  <Utils.Text size='xsmall' secondary>
+                    TOTAL VOTES
+                  </Utils.Text>
+                  <Utils.Text size='small'>
+                    {formatNumber(totalVotes)}
+                  </Utils.Text>
+                </Utils.View>
+                <Utils.View align='center'>
+                  <Utils.Text size='xsmall' secondary>
+                    VOTES AVAILABLE
+                  </Utils.Text>
+                  <Utils.Text
+                    size='small'
+                    style={{
+                      color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}`
+                    }}
+                  >
+                    {formatNumber(totalRemaining)}
+                  </Utils.Text>
+                </Utils.View>
+              </Header>
+            </GrowIn>
+          )}
         {votesError.length > 0 && (
           <FadeIn name='error'>
-            <Utils.Text align='center' marginY={20}>{votesError}</Utils.Text>
+            <Utils.Text align='center' marginY={20}>
+              {votesError}
+            </Utils.Text>
           </FadeIn>
         )}
         {this.state.modalVisible && (

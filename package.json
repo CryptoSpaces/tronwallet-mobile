@@ -3,7 +3,10 @@
   "version": "2.0.0",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "lint": "standard 'src/**/*.js'",
+    "lint:fix": "prettier-standard 'src/**/*.js'",
+    "precommit": "yarn lint"
   },
   "dependencies": {
     "aws-amplify": "0.4.1",
@@ -13,7 +16,6 @@
     "bip39": "^2.5.0",
     "crypto-js": "^3.1.9-1",
     "expo": "^27.0.1",
-    "husky": "^0.14.3",
     "lodash": "^4.17.10",
     "moment": "^2.22.1",
     "numeral": "^2.0.6",
@@ -32,6 +34,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-linear-gradient": "^2.4.0",
     "react-native-modal": "^6.0.0",
+    "react-native-modal-selector": "^0.0.27",
     "react-native-motion": "^0.2.0",
     "react-native-permissions": "^1.1.1",
     "react-native-qrcode": "^0.2.6",
@@ -51,10 +54,14 @@
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.5",
     "babel-jest": "23.0.1",
     "babel-preset-react-native": "4.0.0",
+    "husky": "^0.14.3",
     "jest": "23.1.0",
-    "react-test-renderer": "16.3.1"
+    "prettier-standard": "^8.0.1",
+    "react-test-renderer": "16.3.1",
+    "standard": "^11.0.1"
   },
   "jest": {
     "preset": "react-native"
@@ -63,5 +70,8 @@
     "assets": [
       "./src/assets/fonts/"
     ]
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }

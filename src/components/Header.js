@@ -17,19 +17,21 @@ const Header = ({
   const placeholder = <View />
 
   const leftBtn = onLeftPress ? (
-    <TouchableOpacity onPress={onLeftPress}>
-      {leftIcon}
-    </TouchableOpacity>
-  ) : placeholder
+    <TouchableOpacity onPress={onLeftPress}>{leftIcon}</TouchableOpacity>
+  ) : (
+    placeholder
+  )
 
   const rightBtn = onRightPress ? (
-    <TouchableOpacity onPress={onRightPress}>
-      {rightIcon}
-    </TouchableOpacity>
-  ) : placeholder
+    <TouchableOpacity onPress={onRightPress}>{rightIcon}</TouchableOpacity>
+  ) : (
+    placeholder
+  )
 
   return (
-    <View style={{paddingTop: top, paddingBottom: bottom, paddingVertical: 10}}>
+    <View
+      style={{ paddingTop: top, paddingBottom: bottom, paddingVertical: 10 }}
+    >
       <Utils.Row align='center' justify='space-between'>
         {leftBtn}
         {children}

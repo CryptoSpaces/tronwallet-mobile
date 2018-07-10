@@ -22,7 +22,7 @@ class ConfirmLogin extends Component {
     userPublicKey: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.loadUserData()
   }
 
@@ -43,16 +43,14 @@ class ConfirmLogin extends Component {
 
   navigateToHome = () => {
     const { navigation } = this.props
-    this.setState({ loadingConfirm: false, confirmError: null },
-      () => {
-        const signToApp = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'App' })],
-          key: null
-        })
-        navigation.dispatch(signToApp)
-      }
-    )
+    this.setState({ loadingConfirm: false, confirmError: null }, () => {
+      const signToApp = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'App' })],
+        key: null
+      })
+      navigation.dispatch(signToApp)
+    })
   }
 
   changeInput = (text, field) => {
@@ -81,7 +79,10 @@ class ConfirmLogin extends Component {
       } catch (err) {
         console.warn(err)
         await Auth.signOut()
-        this.setState({ confirmError: 'Oops. Login failed, try again', loadingConfirm: false })
+        this.setState({
+          confirmError: 'Oops. Login failed, try again',
+          loadingConfirm: false
+        })
       }
     } catch (error) {
       let message = error.message
@@ -94,13 +95,14 @@ class ConfirmLogin extends Component {
       }
 
       if (error.code === 'EnableSoftwareTokenMFAException') {
-        message = 'Wrong code. Try set up your athenticator again with the code above'
+        message =
+          'Wrong code. Try set up your athenticator again with the code above'
       }
 
       this.setState({ confirmError: message, loadingConfirm: false })
     }
   }
-  render() {
+  render () {
     const { confirmError, loadingConfirm } = this.state
     return (
       <KeyboardAvoidingView
@@ -126,9 +128,14 @@ class ConfirmLogin extends Component {
               {loadingConfirm ? (
                 <Utils.Content height={80} justify='center' align='center'>
                   <ActivityIndicator size='small' color={Colors.primaryText} />
-                </Utils.Content>)
-                : (<ButtonGradient text='CONFIRM LOGIN' onPress={this.confirmLogin} size='medium' />)
-              }
+                </Utils.Content>
+              ) : (
+                <ButtonGradient
+                  text='CONFIRM LOGIN'
+                  onPress={this.confirmLogin}
+                  size='medium'
+                />
+              )}
             </Utils.Content>
             <Utils.Error>{confirmError}</Utils.Error>
             <Utils.Content justify='center' align='center'>

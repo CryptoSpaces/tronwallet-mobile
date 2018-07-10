@@ -16,26 +16,27 @@ const SecretsSchema = {
     password: 'string',
     mnemonic: 'string',
     privateKey: 'string',
-    publicKey: 'string',
+    publicKey: 'string'
   }
 }
 
-const getRealmStore = async (key) => Realm.open({
-  path: `secrets.realm`,
-  schema: [SecretsSchema],
-  schemaVersion: 2,
-  encryptionKey: key,
-  migration: (oldRealm, newRealm) => {
-    if (oldRealm.schemaVersion < 2) {
-      const oldObjects = oldRealm.objects('Secrets')
-      const newObjects = newRealm.objects('Secrets')
+const getRealmStore = async key =>
+  Realm.open({
+    path: `secrets.realm`,
+    schema: [SecretsSchema],
+    schemaVersion: 2,
+    encryptionKey: key,
+    migration: (oldRealm, newRealm) => {
+      if (oldRealm.schemaVersion < 2) {
+        const oldObjects = oldRealm.objects('Secrets')
+        const newObjects = newRealm.objects('Secrets')
 
-      for (let i = 0; i < oldObjects.length; i++) {
-        newObjects[i].confirmed = false
+        for (let i = 0; i < oldObjects.length; i++) {
+          newObjects[i].confirmed = false
+        }
       }
     }
-  }
-})
+  })
 
 export default async () => {
   const uniqueId = DeviceInfo.getUniqueID()

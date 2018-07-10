@@ -30,7 +30,7 @@ class DropdownModal extends Component {
     selectedItems: []
   }
 
-  onSelect = (selectedItems) => {
+  onSelect = selectedItems => {
     this.props.onSelect(selectedItems[0])
   }
 
@@ -45,7 +45,7 @@ class DropdownModal extends Component {
     const { width } = Dimensions.get('window')
 
     return (
-      <View width={width * 0.8} >
+      <View width={width * 0.8}>
         <SectionedMultiSelect
           single
           items={options}
