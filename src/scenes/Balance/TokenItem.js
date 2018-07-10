@@ -3,7 +3,7 @@ import { ListItem } from 'react-native-elements'
 
 import FadeIn from '../../components/Animations/FadeIn'
 import { Colors } from '../../components/DesignSystem'
-import formatNumber from '../../utils/formatNumber'
+import { formatNumber } from '../../utils/numberUtils'
 import { ONE_TRX } from '../../services/client'
 
 const ITEM_HEIGHT = 48

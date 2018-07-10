@@ -7,7 +7,7 @@ import { Linking, FlatList, Alert } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import formatUrl from '../../utils/formatUrl'
-import formatNumber from '../../utils/formatNumber'
+import { formatNumber } from '../../utils/numberUtils'
 
 // Components
 import Header from '../../components/Header'
@@ -49,7 +49,7 @@ const INITIAL_STATE = {
 class VoteScene extends PureComponent {
   state = INITIAL_STATE
 
-  async componentDidMount () {
+  async componentDidMount() {
     this._onSearch = debounce(this._onSearch, 500)
     this.didFocusSubscription = this.props.navigation.addListener(
       'didFocus',
@@ -57,7 +57,7 @@ class VoteScene extends PureComponent {
     )
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.didFocusSubscription.remove()
   }
 
@@ -263,7 +263,7 @@ class VoteScene extends PureComponent {
         [errorType]: "Oops, something didn't load correctly. Try to sync again",
         loading: false
       },
-      function setErrorParams () {
+      function setErrorParams() {
         this.props.navigation.setParams({
           loadData: this._loadData,
           [errorType]: this.state[errorType]

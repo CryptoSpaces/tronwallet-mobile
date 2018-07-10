@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import formatUrl from '../../utils/formatUrl'
-import formatNumber from '../../utils/formatNumber'
+import { formatNumber } from '../../utils/numberUtils'
 
 import { Colors } from '../DesignSystem'
 import ButtonGradient from '../ButtonGradient'
@@ -54,7 +54,7 @@ const VoteModal = ({
                     totalRemaining
                       ? ' or lower the vote amount'
                       : ' to continue'
-                  }.`}
+                    }.`}
                 </Utils.Text>
                 <Utils.VerticalSpacer size='medium' />
                 <ButtonGradient

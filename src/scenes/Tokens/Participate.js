@@ -10,7 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils'
-import formatNumber from '../../utils/formatNumber'
+import { formatNumber } from '../../utils/numberUtils'
 
 class ParticipateScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -108,7 +108,7 @@ class ParticipateScene extends Component {
     )
   }
 
-  render () {
+  render() {
     const token = this.props.navigation.getParam('token')
     return (
       <KeyboardAwareScrollView>
