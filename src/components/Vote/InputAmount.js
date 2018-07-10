@@ -11,7 +11,7 @@ const InputAmount = ({ input, onOutput, id }) => (
     <FormInput
       underlineColorAndroid='transparent'
       keyboardType='numeric'
-      onChangeText={(v) => onOutput(v, id)}
+      onChangeText={v => onOutput(v, id)}
       placeholderTextColor={Colors.secondaryText}
       placeholder='Vote'
       value={input}

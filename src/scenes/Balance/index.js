@@ -3,9 +3,16 @@ import moment from 'moment'
 import axios from 'axios'
 import Config from 'react-native-config'
 import { LineChart } from 'react-native-svg-charts'
-import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native'
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+  TouchableOpacity
+} from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
-import { Crashlytics, Answers } from 'react-native-fabric'
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
 import formatNumber from '../../utils/formatNumber'
@@ -13,7 +20,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
 import * as Utils from '../../components/Utils'
-import { Colors, Spacing } from '../../components/DesignSystem'
+import { Colors } from '../../components/DesignSystem'
 import TokenItem from './TokenItem'
 
 import getBalanceStore from '../../store/balance'
@@ -37,7 +44,7 @@ class BalanceScene extends Component {
     seedConfirmed: true
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     try {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()
@@ -48,11 +55,14 @@ class BalanceScene extends Component {
     } finally {
       this._loadData()
     }
-    this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
+    this._navListener = this.props.navigation.addListener(
+      'didFocus',
+      this._loadData
+    )
     this._dataListener = setInterval(this._loadData, POOLING_TIME)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
     clearInterval(this._dataListener)
   }
@@ -65,8 +75,7 @@ class BalanceScene extends Component {
 
   _getBalancesFromStore = async () => {
     const store = await getBalanceStore()
-    return store.objects('Balance')
-      .map(item => Object.assign({}, item))
+    return store.objects('Balance').map(item => Object.assign({}, item))
   }
 
   _updateBalancesStore = async balances => {
@@ -76,8 +85,11 @@ class BalanceScene extends Component {
 
   _getAssetsFromStore = async () => {
     const store = await getAssetsStore()
-    return store.objects('Asset')
-      .filtered(`percentage < 100 AND startTime < ${Date.now()} AND endTime > ${Date.now()}`)
+    return store
+      .objects('Asset')
+      .filtered(
+        `percentage < 100 AND startTime < ${Date.now()} AND endTime > ${Date.now()}`
+      )
       .map(item => Object.assign({}, item))
   }
 
@@ -94,8 +106,12 @@ class BalanceScene extends Component {
         Client.getTokenList()
       ])
 
-      const trxHistory = await axios.get(`${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`)
-      this.setState({ trxHistory: trxHistory.data.Data.map(item => item.close) })
+      const trxHistory = await axios.get(
+        `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
+      )
+      this.setState({
+        trxHistory: trxHistory.data.Data.map(item => item.close)
+      })
 
       await Promise.all([
         this._updateBalancesStore(getData[0]),
@@ -115,28 +131,34 @@ class BalanceScene extends Component {
         assetList,
         seedConfirmed: confirmed
       })
-
     } catch (error) {
       this.setState({ error: error.message })
     }
   }
 
   _navigateToParticipate = token => {
-    const { trxBalance, assetList } = this.state;
+    const { trxBalance, assetList } = this.state
     if (token.name !== 'TRX') {
-      const tokenToParticipate = assetList.find(asset => asset.name === token.name);
+      const tokenToParticipate = assetList.find(
+        asset => asset.name === token.name
+      )
       if (!tokenToParticipate) {
-        //Need to understand better the behavior if a token doesn't belong to 
-        //the participation list but belongs to the user's balance list
+        // Need to understand better the behavior if a token doesn't belong to
+        // the participation list but belongs to the user's balance list
         return
       }
-      this.props.navigation.navigate('Participate', { token: tokenToParticipate, trxBalance })
+      this.props.navigation.navigate('Participate', {
+        token: tokenToParticipate,
+        trxBalance
+      })
     }
   }
 
   listHeader = text => (
     <Utils.View align='flex-start'>
-      <Utils.Text size='xsmall' color={Colors.secondaryText}>{text}</Utils.Text>
+      <Utils.Text size='xsmall' color={Colors.secondaryText}>
+        {text}
+      </Utils.Text>
       <Utils.VerticalSpacer />
     </Utils.View>
   )
@@ -144,18 +166,25 @@ class BalanceScene extends Component {
   tokenSaleHeader = () => (
     <Utils.Row justify='space-between'>
       <Utils.View align='flex-start'>
-        <Utils.Text size='xsmall' color={Colors.secondaryText}>{'TOKEN SALE'}</Utils.Text>
+        <Utils.Text size='xsmall' color={Colors.secondaryText}>
+          {'TOKEN SALE'}
+        </Utils.Text>
       </Utils.View>
       <Utils.View align='flex-end' marginRight={12}>
-        <Utils.Text size='xsmall' color={Colors.secondaryText}>{'PRICE PER TOKEN (TRX)'}</Utils.Text>
-      </Utils.View>      
+        <Utils.Text size='xsmall' color={Colors.secondaryText}>
+          {'PRICE PER TOKEN (TRX)'}
+        </Utils.Text>
+      </Utils.View>
     </Utils.Row>
   )
-  
 
   renderParticipateButton = item => {
     const now = moment()
-    if (item.percentage >= 100 || moment(item.startTime).isAfter(now) || moment(item.endTime).isBefore(now)) {
+    if (
+      item.percentage >= 100 ||
+      moment(item.startTime).isAfter(now) ||
+      moment(item.endTime).isBefore(now)
+    ) {
       return (
         <View style={{ justifyContent: 'center', paddingY: 12 }}>
           <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
@@ -175,12 +204,20 @@ class BalanceScene extends Component {
   emptyListComponent = title => (
     <Utils.View align='center'>
       <Utils.VerticalSpacer size='medium' />
-      <Utils.Text size='xsmall' font='light' color={Colors.secondaryText}>{title}</Utils.Text>
+      <Utils.Text size='xsmall' font='light' color={Colors.secondaryText}>
+        {title}
+      </Utils.Text>
     </Utils.View>
   )
 
-  render() {
-    const { assetBalance, trxBalance, error, assetList, trxHistory } = this.state
+  render () {
+    const {
+      assetBalance,
+      trxBalance,
+      error,
+      assetList,
+      trxHistory
+    } = this.state
     return (
       <Utils.Container>
         <Utils.StatusBar />
@@ -204,25 +241,53 @@ class BalanceScene extends Component {
                   <Utils.VerticalSpacer size='medium' />
                   <Utils.Text secondary>BALANCE</Utils.Text>
                   <Utils.VerticalSpacer />
-                  <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance) }}>
-                    {value => <Utils.Text size='large'>{formatNumber(value.balance.toFixed(0))} TRX</Utils.Text>}
+                  <Motion
+                    defaultStyle={{ balance: 0 }}
+                    style={{ balance: spring(trxBalance) }}
+                  >
+                    {value => (
+                      <Utils.Text size='large'>
+                        {formatNumber(value.balance.toFixed(0))} TRX
+                      </Utils.Text>
+                    )}
                   </Motion>
                   <Utils.VerticalSpacer />
                   <Context.Consumer>
-                    {({ price }) => price.value && (
-                      <FadeIn name='usd-value'>
-                        <Motion defaultStyle={{ price: 0 }} style={{ price: spring(trxBalance * price.value, presets.gentle) }}>
-                          {value => <Utils.Text size='small' align='center'>{`${(value.price).toFixed(2)} USD`}</Utils.Text>}
-                        </Motion>
-                      </FadeIn>
-                    )}
+                    {({ price }) =>
+                      price.value && (
+                        <FadeIn name='usd-value'>
+                          <Motion
+                            defaultStyle={{ price: 0 }}
+                            style={{
+                              price: spring(
+                                trxBalance * price.value,
+                                presets.gentle
+                              )
+                            }}
+                          >
+                            {value => (
+                              <Utils.Text
+                                size='small'
+                                align='center'
+                              >{`${value.price.toFixed(2)} USD`}</Utils.Text>
+                            )}
+                          </Motion>
+                        </FadeIn>
+                      )
+                    }
                   </Context.Consumer>
                   {!this.state.seedConfirmed && (
                     <React.Fragment>
                       <Utils.VerticalSpacer />
                       <FadeIn name='seed-warning'>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('SeedCreate')}>
-                          <Utils.Text size='xsmall' secondary align='center'>Please, tap here to confim your 12 seed words.</Utils.Text>
+                        <TouchableOpacity
+                          onPress={() =>
+                            this.props.navigation.navigate('SeedCreate')
+                          }
+                        >
+                          <Utils.Text size='xsmall' secondary align='center'>
+                            Please, tap here to confim your 12 seed words.
+                          </Utils.Text>
                         </TouchableOpacity>
                       </FadeIn>
                       <Utils.VerticalSpacer />
@@ -247,56 +312,134 @@ class BalanceScene extends Component {
             )}
             <Utils.VerticalSpacer size='big' />
             <Context.Consumer>
-              {({ price }) => !price.value && (
-                <FadeIn name='loader'>
-                  <ActivityIndicator />
-                </FadeIn>
-              )}
+              {({ price }) =>
+                !price.value && (
+                  <FadeIn name='loader'>
+                    <ActivityIndicator />
+                  </FadeIn>
+                )
+              }
             </Context.Consumer>
             <Context.Consumer>
-              {({ price, freeze }) => (price.value && freeze.value) && (
-                <FadeIn name='tronprice'>
-                  <Utils.Row justify='space-between' marginBottom={24}>
-                    <Utils.View flex={1} align='center' padding={6}  borderRadius={8} borderColor={Colors.secondaryText} marginRight={4} >
-                      <Utils.Text secondary size='xsmall'>TRON POWER</Utils.Text>
-                      <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ power: 0 }} style={{ power: spring(freeze.value.total, presets.gentle) }}>
-                        {value => <Utils.Text size='small' align='center'>{`${value.power.toFixed(0)}`}</Utils.Text>}
-                      </Motion>
-                    </Utils.View>
-                    <Utils.View flex={1} align='center' padding={6}   borderRadius={8} borderColor={Colors.secondaryText}  >
-                      <Utils.Text secondary size='xsmall'>TRX PRICE</Utils.Text>
-                      <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ price: 0 }} style={{ price: spring(price.value, presets.gentle) }}>
-                        {value => <Utils.Text size='small' align='center'>{`${value.price.toFixed(PRICE_PRECISION)} USD`}</Utils.Text>}
-                      </Motion>
-                    </Utils.View>
-                    <Utils.View flex={1} align='center' padding={6}   borderRadius={8} borderColor={Colors.secondaryText} marginLeft={4}>
-                      <Utils.Text secondary size='xsmall'>BANDWIDTH</Utils.Text>
-                      <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ bandwidth: 0 }} style={{ bandwidth: spring(freeze.value.bandwidth.netRemaining, presets.gentle) }}>
-                        {value => <Utils.Text size='small' align='center'>{`${value.bandwidth.toFixed(0)}`}</Utils.Text>}
-                      </Motion>
-                    </Utils.View>
-                  </Utils.Row>
-                </FadeIn>
-              )}
+              {({ price, freeze }) =>
+                price.value &&
+                freeze.value && (
+                  <FadeIn name='tronprice'>
+                    <Utils.Row justify='space-between' marginBottom={24}>
+                      <Utils.View
+                        flex={1}
+                        align='center'
+                        padding={6}
+                        borderRadius={8}
+                        borderColor={Colors.secondaryText}
+                        marginRight={4}
+                      >
+                        <Utils.Text secondary size='xsmall'>
+                          TRON POWER
+                        </Utils.Text>
+                        <Utils.VerticalSpacer />
+                        <Motion
+                          defaultStyle={{ power: 0 }}
+                          style={{
+                            power: spring(freeze.value.total, presets.gentle)
+                          }}
+                        >
+                          {value => (
+                            <Utils.Text
+                              size='small'
+                              align='center'
+                            >{`${value.power.toFixed(0)}`}</Utils.Text>
+                          )}
+                        </Motion>
+                      </Utils.View>
+                      <Utils.View
+                        flex={1}
+                        align='center'
+                        padding={6}
+                        borderRadius={8}
+                        borderColor={Colors.secondaryText}
+                      >
+                        <Utils.Text secondary size='xsmall'>
+                          TRX PRICE
+                        </Utils.Text>
+                        <Utils.VerticalSpacer />
+                        <Motion
+                          defaultStyle={{ price: 0 }}
+                          style={{ price: spring(price.value, presets.gentle) }}
+                        >
+                          {value => (
+                            <Utils.Text
+                              size='small'
+                              align='center'
+                            >{`${value.price.toFixed(
+                                PRICE_PRECISION
+                              )} USD`}</Utils.Text>
+                          )}
+                        </Motion>
+                      </Utils.View>
+                      <Utils.View
+                        flex={1}
+                        align='center'
+                        padding={6}
+                        borderRadius={8}
+                        borderColor={Colors.secondaryText}
+                        marginLeft={4}
+                      >
+                        <Utils.Text secondary size='xsmall'>
+                          BANDWIDTH
+                        </Utils.Text>
+                        <Utils.VerticalSpacer />
+                        <Motion
+                          defaultStyle={{ bandwidth: 0 }}
+                          style={{
+                            bandwidth: spring(
+                              freeze.value.bandwidth.netRemaining,
+                              presets.gentle
+                            )
+                          }}
+                        >
+                          {value => (
+                            <Utils.Text
+                              size='small'
+                              align='center'
+                            >{`${value.bandwidth.toFixed(0)}`}</Utils.Text>
+                          )}
+                        </Motion>
+                      </Utils.View>
+                    </Utils.Row>
+                  </FadeIn>
+                )
+              }
             </Context.Consumer>
             <Utils.VerticalSpacer size='medium' />
             <FlatList
-              ListEmptyComponent={this.emptyListComponent('Participate to a token')}
+              ListEmptyComponent={this.emptyListComponent(
+                'Participate to a token'
+              )}
               ListHeaderComponent={this.listHeader('BALANCES')}
               data={assetBalance}
-              renderItem={({ item }) => <TokenItem item={item} onPress={() => this._navigateToParticipate(item)} />}
+              renderItem={({ item }) => (
+                <TokenItem
+                  item={item}
+                  onPress={() => this._navigateToParticipate(item)}
+                />
+              )}
               keyExtractor={item => item.name}
               scrollEnabled
             />
             <Utils.VerticalSpacer size='medium' />
             <FlatList
-              ListEmptyComponent={this.emptyListComponent('No tokens to Participate')}
+              ListEmptyComponent={this.emptyListComponent(
+                'No tokens to Participate'
+              )}
               ListHeaderComponent={this.tokenSaleHeader()}
               data={assetList}
-              renderItem={({ item }) => <TokenItem item={item} onPress={() => this._navigateToParticipate(item)} />}
+              renderItem={({ item }) => (
+                <TokenItem
+                  item={item}
+                  onPress={() => this._navigateToParticipate(item)}
+                />
+              )}
               keyExtractor={item => item.name}
               scrollEnabled
             />

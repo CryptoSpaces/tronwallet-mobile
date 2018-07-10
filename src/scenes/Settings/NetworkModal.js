@@ -1,24 +1,24 @@
 import React, { Component } from 'react'
-import { View, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet, Alert } from 'react-native'
 
-//Design
+// Design
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import NavigationHeader from '../../components/NavigationHeader'
 
-//Services
+// Services
 import NodesIp from '../../utils/nodeIp'
 
-
 class ChangeNetworkModal extends Component {
-
   static navigationOptions = ({ navigation }) => {
     return {
-      header: <NavigationHeader
-        title="Transaction Details"
-        onClose={() => navigation.goBack()}
-      />
+      header: (
+        <NavigationHeader
+          title='Transaction Details'
+          onClose={() => navigation.goBack()}
+        />
+      )
     }
   }
   state = {
@@ -27,17 +27,19 @@ class ChangeNetworkModal extends Component {
     solidityNode: null,
     solidityNodePort: null,
     loading: false,
-    error: false,
+    error: false
   }
 
-  componentDidMount() {
-    this.didFocusSubscription = this.props.navigation.addListener('didFocus', this._loadData)
+  componentDidMount () {
+    this.didFocusSubscription = this.props.navigation.addListener(
+      'didFocus',
+      this._loadData
+    )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.didFocusSubscription.remove()
   }
-
 
   _loadData = async () => {
     try {
@@ -47,17 +49,27 @@ class ChangeNetworkModal extends Component {
       this.setState({ mainNode, mainNodePort, solidityNode, solidityNodePort })
     } catch (error) {
       console.warn(error.message)
-      this.setState({ mainNode: NodesIp.nodeIp, solidityNode: NodesIp.nodeSolidityIp })
+      this.setState({
+        mainNode: NodesIp.nodeIp,
+        solidityNode: NodesIp.nodeSolidityIp
+      })
     }
   }
 
-  testIpValidity = (ip) => /^\d{1,3}(\.\d{1,3}){3}:\d{1,5}$/.test(ip)
+  testIpValidity = ip => /^\d{1,3}(\.\d{1,3}){3}:\d{1,5}$/.test(ip)
 
-  _submit = (type) => {
-    const { mainNode, mainNodePort, solidityNode, solidityNodePort } = this.state;
+  _submit = type => {
+    const {
+      mainNode,
+      mainNodePort,
+      solidityNode,
+      solidityNodePort
+    } = this.state
 
-    const ipToSubmit = type === 'solidity' ?
-      `${solidityNode}:${solidityNodePort}` : `${mainNode}:${mainNodePort}`
+    const ipToSubmit =
+      type === 'solidity'
+        ? `${solidityNode}:${solidityNodePort}`
+        : `${mainNode}:${mainNodePort}`
 
     this.setState({ loading: true })
 
@@ -65,28 +77,33 @@ class ChangeNetworkModal extends Component {
       this.setState({ loading: false, error: 'Please put a valid IP' })
       return
     }
-    this._updateNodes(type, ipToSubmit);
+    this._updateNodes(type, ipToSubmit)
   }
 
   _updateNodes = async (type, nodeip) => {
     try {
       await NodesIp.setNodeIp(type, nodeip)
-      alert('Nodes IP updated!')
+      Alert.alert('Nodes IP updated!')
       this.setState({ loading: false, error: null })
     } catch (error) {
-      this.setState({ loading: false, error: 'Something wrong while updating nodes ip' })
+      this.setState({
+        loading: false,
+        error: 'Something wrong while updating nodes ip'
+      })
     }
   }
 
-
-  _reset = async (type) => {
+  _reset = async type => {
     try {
       await NodesIp.resetNodesIp(type)
       this._loadData()
-      alert('Nodes IP reseted!')
+      Alert.alert('Nodes IP reseted!')
       this.setState({ loading: false, error: null })
     } catch (error) {
-      this.setState({ loading: false, error: 'Something wrong while reseting node ip' })
+      this.setState({
+        loading: false,
+        error: 'Something wrong while reseting node ip'
+      })
     }
   }
 
@@ -107,12 +124,14 @@ class ChangeNetworkModal extends Component {
     onClose()
   }
 
-  render() {
-    const { error,
+  render () {
+    const {
+      error,
       mainNode,
       mainNodePort,
       solidityNode,
-      solidityNodePort } = this.state
+      solidityNodePort
+    } = this.state
 
     return (
       <Utils.Container
@@ -125,7 +144,7 @@ class ChangeNetworkModal extends Component {
             <Utils.Text size='xsmall' secondary>
               Main Node
             </Utils.Text>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <Utils.FormInput
                 defaultValue={mainNode}
                 keyboardType='numeric'
@@ -143,27 +162,29 @@ class ChangeNetworkModal extends Component {
                 underlineColorAndroid='transparent'
               />
             </Utils.Row>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <View style={styles.buttonUpdate}>
                 <ButtonGradient
                   text='Update and Connect'
                   onPress={() => this._submit('main')}
-                  size='small' />
+                  size='small'
+                />
               </View>
               <View style={styles.buttonReset}>
                 <ButtonGradient
                   text='Reset'
                   onPress={() => this._reset('main')}
-                  size='small' />
+                  size='small'
+                />
               </View>
             </Utils.Row>
           </View>
-          <Utils.VerticalSpacer size="medium" />
+          <Utils.VerticalSpacer size='medium' />
           <View style={styles.card}>
             <Utils.Text size='xsmall' secondary>
               Solidity Node
             </Utils.Text>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <Utils.FormInput
                 defaultValue={solidityNode}
                 keyboardType='numeric'
@@ -177,33 +198,36 @@ class ChangeNetworkModal extends Component {
                 keyboardType='numeric'
                 placeholder='Loading port'
                 style={styles.buttonReset}
-                onChangeText={text => this.changeInput(text, 'solidityNodePort')}
+                onChangeText={text =>
+                  this.changeInput(text, 'solidityNodePort')
+                }
                 underlineColorAndroid='transparent'
               />
             </Utils.Row>
-            <Utils.Row justify="space-between">
+            <Utils.Row justify='space-between'>
               <View style={styles.buttonUpdate}>
                 <ButtonGradient
                   text='Update and Connect'
                   onPress={() => this._submit('solidity')}
-                  size='small' />
+                  size='small'
+                />
               </View>
               <View style={styles.buttonReset}>
                 <ButtonGradient
                   text='Reset'
                   onPress={() => this._reset('solidity')}
-                  size='small' />
+                  size='small'
+                />
               </View>
             </Utils.Row>
           </View>
           {error && <Utils.Error>{error}</Utils.Error>}
           <Utils.Content justify='center' align='center'>
-            <Utils.Text color="#ffffff" font="light" size="xsmall">
+            <Utils.Text color='#ffffff' font='light' size='xsmall'>
               With this option you can select the node that will better suit
-              your needs and preferences. Please be careful while updating
-              the node IP while wrong IP can lead to malfunctions within
-              your wallet.
-              Example: 35.231.121.122:50051
+              your needs and preferences. Please be careful while updating the
+              node IP while wrong IP can lead to malfunctions within your
+              wallet. Example: 35.231.121.122:50051
             </Utils.Text>
           </Utils.Content>
         </ScrollView>
@@ -219,7 +243,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: Colors.darkerBackground,
     borderColor: Colors.darkerBackground,
-    padding: 20,
+    padding: 20
   },
   buttonUpdate: {
     width: '70%'

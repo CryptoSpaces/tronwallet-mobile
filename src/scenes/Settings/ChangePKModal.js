@@ -52,7 +52,7 @@ class ChangePKModal extends PureComponent {
         animationType='slide'
         transparent={false}
         visible={visible}
-        onRequestClose={() => { }}
+        onRequestClose={() => {}}
       >
         <Utils.Container
           keyboardShouldPersistTaps={'always'}
@@ -77,7 +77,9 @@ class ChangePKModal extends PureComponent {
             <PasteInput
               value={newPk}
               field='from'
-              onChangeText={text => this.setState({newPk: text, errorMessage: null})}
+              onChangeText={text =>
+                this.setState({ newPk: text, errorMessage: null })
+              }
             />
             <ButtonGradient text='OK' onPress={this.setUser} size='medium' />
           </Utils.FormGroup>

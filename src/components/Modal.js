@@ -1,8 +1,13 @@
 import React from 'react'
 import { Modal } from 'react-native'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-const ModalComponent = ({modalOpened, closeModal, animationType, children}) => (
+const ModalComponent = ({
+  modalOpened,
+  closeModal,
+  animationType,
+  children
+}) => (
   <Modal
     animationType={animationType}
     transparent={false}
@@ -18,6 +23,6 @@ ModalComponent.propTypes = {
   closeModal: PropTypes.func.isRequired,
   animationType: PropTypes.oneOf(['none', 'slide', 'fade']),
   modalData: PropTypes.object
-};
+}
 
 export default ModalComponent

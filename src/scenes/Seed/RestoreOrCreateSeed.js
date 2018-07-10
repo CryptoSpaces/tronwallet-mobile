@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, ActivityIndicator } from 'react-native'
+import { Image, ActivityIndicator, Alert } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -17,7 +17,9 @@ class RestoreOrCreateSeed extends React.Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    alert("We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.")
+    Alert.alert(
+      'We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.'
+    )
   }
 
   _newWallet = async () => {
@@ -27,7 +29,7 @@ class RestoreOrCreateSeed extends React.Component {
     this.props.navigation.navigate('SeedCreate')
   }
 
-  render() {
+  render () {
     return (
       <Utils.Container>
         <Utils.Content flex={1} justify='center'>
@@ -36,24 +38,31 @@ class RestoreOrCreateSeed extends React.Component {
           </Utils.Row>
           <Utils.VerticalSpacer size='large' />
           <Utils.Text light secondary>
-            We detected that you have used our application before, either on this device or another.
-            Because your seed password is stored locally on your device, we need you to restore your seed to be able
-            to use your previous address.
+            We detected that you have used our application before, either on
+            this device or another. Because your seed password is stored locally
+            on your device, we need you to restore your seed to be able to use
+            your previous address.
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
-          {this.state.loading
-            ? <ActivityIndicator color="#ffffff"/>
-            : <ButtonGradient size='small' onPress={this._newWallet} text="Create a new wallet" />}
+          {this.state.loading ? (
+            <ActivityIndicator color='#ffffff' />
+          ) : (
+            <ButtonGradient
+              size='small'
+              onPress={this._newWallet}
+              text='Create a new wallet'
+            />
+          )}
           <Utils.VerticalSpacer size='medium' />
           <Utils.Text light secondary>
-            If you don't want to restore that address you can easily get a new one
-            by tapping on the button below.
+            If you don't want to restore that address you can easily get a new
+            one by tapping on the button below.
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
           <ButtonGradient
             size='small'
             onPress={() => this.props.navigation.navigate('SeedRestore')}
-            text="Restore previous wallet"
+            text='Restore previous wallet'
           />
         </Utils.Content>
       </Utils.Container>

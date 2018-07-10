@@ -40,7 +40,7 @@ class Settings extends Component {
     loading: true
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.onLoadData()
   }
 
@@ -55,22 +55,25 @@ class Settings extends Component {
     Alert.alert(
       'Logout',
       'Do you want to log out of your wallet?',
-      [{
-        text: 'Cancel',
-        style: 'cancel'
-      }, {
-        text: 'Yes',
-        onPress: async () => {
-          await Auth.signOut()
-          const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Auth' })],
-            key: null
-          })
-          this.props.navigation.dispatch(resetAction)
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel'
         },
-        style: 'default'
-      }],
+        {
+          text: 'Yes',
+          onPress: async () => {
+            await Auth.signOut()
+            const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'Auth' })],
+              key: null
+            })
+            this.props.navigation.dispatch(resetAction)
+          },
+          style: 'default'
+        }
+      ],
       { cancelable: true }
     )
   }
@@ -115,7 +118,8 @@ class Settings extends Component {
 
   renderList = () => {
     const { address, seed } = this.state
-    const shortAddress = address ? `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
+    const shortAddress = address
+      ? `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
       : 'Loading Account ...'
     const list = [
       {
@@ -182,8 +186,7 @@ class Settings extends Component {
     })
   }
 
-  render() {
-
+  render () {
     return (
       <Utils.Container
         keyboardShouldPersistTaps={'always'}

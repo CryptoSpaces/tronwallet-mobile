@@ -32,8 +32,9 @@ const TransactionSchema = {
   }
 }
 
-export default async () => Realm.open({
-  path: 'Realm.transactions',
-  schema: [TransactionSchema, ContractDataSchema, VoteSchema],
-  schemaVersion: 9
-})
+export default async () =>
+  Realm.open({
+    path: 'Realm.transactions',
+    schema: [TransactionSchema, ContractDataSchema, VoteSchema],
+    schemaVersion: 9
+  })

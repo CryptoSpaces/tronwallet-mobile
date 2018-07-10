@@ -1,12 +1,15 @@
 import React, { PureComponent } from 'react'
-import { Dimensions, Clipboard, ScrollView, SafeAreaView, Keyawa } from 'react-native'
+import {
+  Dimensions,
+  Clipboard,
+  SafeAreaView
+} from 'react-native'
 import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import Feather from 'react-native-vector-icons/Feather'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import QRCode from '../../components/QRCode'
-import LoadingScene from '../../components/LoadingScene'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import { getUserPublicKey } from '../../utils/userAccountUtils'
@@ -18,11 +21,14 @@ class ReceiveScreen extends PureComponent {
     loading: true
   }
 
-  componentDidMount() {
-    this._navListener = this.props.navigation.addListener('didFocus', this._loadPublicKey)
+  componentDidMount () {
+    this._navListener = this.props.navigation.addListener(
+      'didFocus',
+      this._loadPublicKey
+    )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
@@ -42,7 +48,7 @@ class ReceiveScreen extends PureComponent {
     this.setState({ publicKey, loading: false })
   }
 
-  render() {
+  render () {
     const { width } = Dimensions.get('window')
     const { publicKey } = this.state
 
@@ -67,14 +73,13 @@ class ReceiveScreen extends PureComponent {
             <Utils.VerticalSpacer size='medium' />
 
             <Utils.PasteButton onPress={this._copy}>
-              
               <Utils.Text>
                 <Feather
                   name='clipboard'
                   size={FontSize['small']}
                   color={Colors.primaryText}
                 />
-                 
+
                 {` Copy My Address`}
               </Utils.Text>
             </Utils.PasteButton>

@@ -15,14 +15,17 @@ export default ({ item }) => (
       </Utils.Tag>
       <Utils.View>
         <Utils.Text size='small'>
-          {item.contractData.frozenBalance / ONE_TRX} TRX  <Ionicons name='ios-snow-outline' size={20} color='#ffffff' />
+          {item.contractData.frozenBalance / ONE_TRX} TRX{' '}
+          <Ionicons name='ios-snow-outline' size={20} color='#ffffff' />
         </Utils.Text>
       </Utils.View>
     </Utils.Row>
     <Utils.VerticalSpacer size='xsmall' />
     <Utils.Row>
       <Utils.View>
-        <Utils.Text size='xsmall' secondary>{moment(item.timestamp).fromNow()}</Utils.Text>
+        <Utils.Text size='xsmall' secondary>
+          {moment(item.timestamp).fromNow()}
+        </Utils.Text>
       </Utils.View>
     </Utils.Row>
   </Utils.TransactionCard>

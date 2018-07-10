@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking, Alert, KeyboardAvoidingView, Modal } from 'react-native'
+import {
+  ActivityIndicator,
+  Linking,
+  Alert,
+  KeyboardAvoidingView,
+  Modal
+} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -13,7 +19,7 @@ import { Colors } from '../../components/DesignSystem'
 
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
-import { signTransaction } from '../../utils/transactionUtils';
+import { signTransaction } from '../../utils/transactionUtils'
 import getBalanceStore from '../../store/balance'
 import { Context } from '../../store/context'
 import { getUserPublicKey } from '../../utils/userAccountUtils'
@@ -32,25 +38,27 @@ class SendScene extends Component {
     QRModalVisible: false
   }
 
-  componentDidMount() {
-    this._navListener = this.props.navigation.addListener('didFocus', this.loadData)
+  componentDidMount () {
+    this._navListener = this.props.navigation.addListener(
+      'didFocus',
+      this.loadData
+    )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
   getBalancesFromStore = async () => {
     const store = await getBalanceStore()
-    return store.objects('Balance')
-      .map(item => Object.assign({}, item))
+    return store.objects('Balance').map(item => Object.assign({}, item))
   }
 
   loadData = async () => {
     this.setState({ loading: true })
     try {
       const balances = await this.getBalancesFromStore()
-      const userPublicKey = await getUserPublicKey();
+      const userPublicKey = await getUserPublicKey()
       const { balance } = balances.find(b => b.name === 'TRX')
       this.setState({
         from: userPublicKey,
@@ -95,7 +103,7 @@ class SendScene extends Component {
     this.transferAsset()
   }
 
-  onSelectToken = (value) => {
+  onSelectToken = value => {
     this.setState({ token: value })
   }
 
@@ -104,18 +112,21 @@ class SendScene extends Component {
       to: '',
       token: 'TRX',
       amount: ''
-    });
+    })
   }
 
   renderTokens = () => {
     const { balances } = this.state
     return balances.map(bl => {
-      const balanceValue = bl.balance > 1 ? bl.balance.toFixed(2) : bl.balance.toFixed(4)
-      return <Utils.PickerInput.Item
-        key={bl.name}
-        label={`${bl.name} ${balanceValue}`}
-        value={bl.name}
-      />
+      const balanceValue =
+        bl.balance > 1 ? bl.balance.toFixed(2) : bl.balance.toFixed(4)
+      return (
+        <Utils.PickerInput.Item
+          key={bl.name}
+          label={`${bl.name} ${balanceValue}`}
+          value={bl.name}
+        />
+      )
     })
   }
 
@@ -126,7 +137,12 @@ class SendScene extends Component {
       // TronScan
       // const data = await Client.getTransactionString({from,to,amount,token});
       // Serverless
-      const data = await Client.getTransferTransaction({ from, to, amount, token });
+      const data = await Client.getTransferTransaction({
+        from,
+        to,
+        amount,
+        token
+      })
 
       // Data to deep link, same format as Tron Wallet
       // const dataToSend = qs.stringify({
@@ -141,24 +157,25 @@ class SendScene extends Component {
       this.openTransactionDetails(data)
       // this.openDeepLink(dataToSend)
       this.clearInput()
-
     } catch (error) {
       this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
   }
 
-  openTransactionDetails = async (transactionUnsigned) => {
+  openTransactionDetails = async transactionUnsigned => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
+      const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false, error: null }, () => {
-        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
+        this.props.navigation.navigate('TransactionDetail', {
+          tx: transactionSigned
+        })
       })
     } catch (error) {
       this.setState({ error: 'Error getting transaction', loadingSign: false })
     }
   }
 
-  openDeepLink = async (dataToSend) => {
+  openDeepLink = async dataToSend => {
     try {
       const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
@@ -170,7 +187,7 @@ class SendScene extends Component {
     }
   }
 
-  readPublicKey = (e) => this.setState({ to: e.data }, this.closeModal)
+  readPublicKey = e => this.setState({ to: e.data }, this.closeModal)
 
   openModal = () => this.setState({ QRModalVisible: true })
 
@@ -201,7 +218,7 @@ class SendScene extends Component {
           leftIcon={
             <Ionicons name='md-menu' color={Colors.primaryText} size={24} />
           }
-          onLeftPress={() => { }}
+          onLeftPress={() => {}}
           rightIcon={
             <Ionicons name='ios-close' color={Colors.primaryText} size={40} />
           }
@@ -218,13 +235,10 @@ class SendScene extends Component {
     }
   }
 
-  render() {
+  render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        enabled
-      >
+      <KeyboardAvoidingView style={{ flex: 1 }} enabled>
         <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Container>
@@ -250,7 +264,11 @@ class SendScene extends Component {
                 onRequestClose={this.closeModal}
                 animationType='slide'
               >
-                <QRScanner onRead={this.readPublicKey} onClose={this.closeModal} checkAndroid6Permissions />
+                <QRScanner
+                  onRead={this.readPublicKey}
+                  onClose={this.closeModal}
+                  checkAndroid6Permissions
+                />
               </Modal>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
@@ -268,11 +286,10 @@ class SendScene extends Component {
                 Amount
               </Utils.Text>
               <Utils.Row align='center' justify='flex-start'>
-
                 <Utils.FormInput
                   underlineColorAndroid='transparent'
                   keyboardType='numeric'
-                  autoCapitalize="none"
+                  autoCapitalize='none'
                   onChangeText={text => this.changeInput(text, 'amount')}
                   placeholderTextColor='#fff'
                   style={{ marginRight: 15, width: '100%' }}
@@ -286,8 +303,12 @@ class SendScene extends Component {
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
-                  <ButtonGradient text='Send' onPress={this.submit} size='small' />
-                )}
+                <ButtonGradient
+                  text='Send'
+                  onPress={this.submit}
+                  size='small'
+                />
+              )}
               <Utils.VerticalSpacer size='medium' />
             </Utils.Content>
           </Utils.Container>

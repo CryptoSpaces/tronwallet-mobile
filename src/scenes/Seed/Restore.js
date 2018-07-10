@@ -42,7 +42,7 @@ class Restore extends React.Component {
       'Restore seed will erase all data on this device and pull information from the network for the restored account.',
       [
         { text: 'Cancel' },
-        { text: 'OK', onPress: () => this._restoreWallet() },
+        { text: 'OK', onPress: () => this._restoreWallet() }
       ],
       { cancelable: false }
     )
@@ -55,18 +55,20 @@ class Restore extends React.Component {
     try {
       await recoverUserKeypair(this.state.seed)
       await updateWalletData()
-      alert("Wallet recovered with success!")
+      Alert.alert('Wallet recovered with success!')
       this.setState({ loading: false }, () => {
         this._navigateToSettings()
       })
     } catch (err) {
       console.warn(err)
-      alert("Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again.")
+      Alert.alert(
+        "Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again."
+      )
       this.setState({ loading: false })
     }
   }
 
-  render() {
+  render () {
     const { loading } = this.state
     return (
       <Utils.Container>
@@ -74,7 +76,7 @@ class Restore extends React.Component {
         <Utils.Content>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'
-            multiline={true}
+            multiline
             numberOfLines={4}
             autoCapitalize='none'
             autoCorrect={false}
@@ -92,7 +94,9 @@ class Restore extends React.Component {
           />
         </Utils.Row>
         <Utils.VerticalSpacer />
-        <Utils.Button onPress={() => this.props.navigation.goBack()}>Back</Utils.Button>
+        <Utils.Button onPress={() => this.props.navigation.goBack()}>
+          Back
+        </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
     )

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, NetInfo, SafeAreaView } from 'react-native'
+import { ActivityIndicator, NetInfo } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
 
-//Design
+// Design
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -11,17 +11,19 @@ import DetailRow from './detailRow'
 import LoadingScene from '../../components/LoadingScene'
 import NavigationHeader from '../../components/NavigationHeader'
 
-//Service
+// Service
 import Client, { ONE_TRX } from '../../services/client'
 
 const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 class TransactionDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      header: <NavigationHeader
-        title="Transaction Details"
-        onClose={() => navigation.navigate('Balance')}
-      />
+      header: (
+        <NavigationHeader
+          title='Transaction Details'
+          onClose={() => navigation.navigate('Balance')}
+        />
+      )
     }
   }
 
@@ -36,7 +38,7 @@ class TransactionDetail extends Component {
     isConnected: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this._loadData()
     })
@@ -49,7 +51,7 @@ class TransactionDetail extends Component {
     })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
     NetInfo.isConnected.removeEventListener(
       'connectionChange',
@@ -93,15 +95,15 @@ class TransactionDetail extends Component {
     const { signedTransaction } = this.state
     this.setState({ loadingSubmit: true, submitError: null })
     try {
-      let success = false;
+      let success = false
       const { code } = await Client.broadcastTransaction(signedTransaction)
-      if (code === 'SUCCESS') success = true;
+      if (code === 'SUCCESS') success = true
 
       this.setState({
         loadingSubmit: false,
         success,
         submitted: true,
-        submitError: null,
+        submitError: null
       })
     } catch (error) {
       this.setState({
@@ -119,36 +121,35 @@ class TransactionDetail extends Component {
     const contractsElements = []
     for (const ctr in contracts[0]) {
       if (ctr === 'amount' || ctr === 'frozenBalance') {
-        const isTRX = !contracts[0].token  //weird api response
+        const isTRX = !contracts[0].token // weird api response
         contractsElements.push(
           <DetailRow
             key={ctr}
             title={firstLetterCapitalize(ctr)}
-            text={contracts[0][ctr] / (isTRX ? ONE_TRX : 1)} />
+            text={contracts[0][ctr] / (isTRX ? ONE_TRX : 1)}
+          />
         )
       } else if (ctr === 'votes') {
         const totalVotes = contracts[0][ctr].reduce((prev, curr) => {
           return prev + curr.voteCount
         }, 0)
         contractsElements.push(
-          <DetailRow
-            key={ctr}
-            title="TotalVotes"
-            text={totalVotes} />
+          <DetailRow key={ctr} title='TotalVotes' text={totalVotes} />
         )
       } else {
         contractsElements.push(
           <DetailRow
             key={ctr}
             title={firstLetterCapitalize(ctr)}
-            text={contracts[0][ctr]} />
+            text={contracts[0][ctr]}
+          />
         )
       }
     }
     contractsElements.push(
       <DetailRow
         key={'time'}
-        title={"Time"}
+        title={'Time'}
         text={moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}
       />
     )
@@ -159,30 +160,34 @@ class TransactionDetail extends Component {
   renderSubmitButton = () => {
     const { loadingSubmit, success } = this.state
     if (success) {
-      return <Utils.Content align='center' justify='center'>
-        <Feather
-          style={{ marginVertical: 5 }}
-          name='check-circle'
-          size={FontSize['large']}
-          color={Colors.green}
-        />
-        <Utils.Text success size='small'>
-          Transaction submitted to network !
+      return (
+        <Utils.Content align='center' justify='center'>
+          <Feather
+            style={{ marginVertical: 5 }}
+            name='check-circle'
+            size={FontSize['large']}
+            color={Colors.green}
+          />
+          <Utils.Text success size='small'>
+            Transaction submitted to network !
           </Utils.Text>
-      </Utils.Content>
+        </Utils.Content>
+      )
     }
 
-    return <Utils.Content align='center' justify='center'>
-      {loadingSubmit ? (
-        <ActivityIndicator size='small' color={Colors.primaryText} />
-      ) : (
+    return (
+      <Utils.Content align='center' justify='center'>
+        {loadingSubmit ? (
+          <ActivityIndicator size='small' color={Colors.primaryText} />
+        ) : (
           <ButtonGradient
             text='Submit Transaction'
             onPress={this.submitTransaction}
             size='small'
           />
         )}
-    </Utils.Content>
+      </Utils.Content>
+    )
   }
 
   renderRetryConnection = () => (
@@ -196,8 +201,8 @@ class TransactionDetail extends Component {
     </Utils.Content>
   )
 
-  render() {
-    const { submitError, loadingData, isConnected, success } = this.state
+  render () {
+    const { submitError, loadingData, isConnected } = this.state
 
     if (loadingData) return <LoadingScene />
 

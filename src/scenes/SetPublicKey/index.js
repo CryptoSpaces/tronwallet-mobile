@@ -5,14 +5,14 @@ import Feather from 'react-native-vector-icons/Feather'
 import { Auth } from 'aws-amplify'
 import qs from 'qs'
 
-//Design
+// Design
 import Header from '../../components/Header'
 import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import PasteInput from '../../components/PasteInput'
 import ButtonGradient from '../../components/ButtonGradient'
 
-//Services
+// Services
 import { isAddressValid } from '../../services/address'
 import Client from '../../services/client'
 import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
@@ -24,7 +24,7 @@ export default class SetPkScene extends Component {
     error: null
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     this._checkDeepLink(nextProps)
   }
 
@@ -74,7 +74,7 @@ export default class SetPkScene extends Component {
     }
   }
 
-  openDeepLink = async (dataToSend) => {
+  openDeepLink = async dataToSend => {
     try {
       const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
@@ -92,18 +92,29 @@ export default class SetPkScene extends Component {
   }
 
   renderButtonOptions = () => {
-    return <React.Fragment>
-      <ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} size='small' />
-      <Utils.VerticalSpacer size='large' />
-      <TouchableOpacity style={{
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        marginHorizontal: 5,
-        flexDirection: 'row'
-      }} onPress={this.getKeyFromVault}>
-        <Utils.Text secondary font='light' size='small'>CONNECT TRON VAULT</Utils.Text>
-      </TouchableOpacity>
-    </React.Fragment>
+    return (
+      <React.Fragment>
+        <ButtonGradient
+          text='CONFIRM PUBLIC KEY'
+          onPress={this.confirmPublicKey}
+          size='small'
+        />
+        <Utils.VerticalSpacer size='large' />
+        <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            marginHorizontal: 5,
+            flexDirection: 'row'
+          }}
+          onPress={this.getKeyFromVault}
+        >
+          <Utils.Text secondary font='light' size='small'>
+            CONNECT TRON VAULT
+          </Utils.Text>
+        </TouchableOpacity>
+      </React.Fragment>
+    )
   }
 
   renderLoadingView = () => (
@@ -111,7 +122,7 @@ export default class SetPkScene extends Component {
       <ActivityIndicator size='small' color={Colors.yellow} />
     </Utils.Content>
   )
-  render() {
+  render () {
     const { userPublicKey, loading, error } = this.state
     return (
       <Utils.Container>
