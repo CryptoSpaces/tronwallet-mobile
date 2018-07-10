@@ -1,20 +1,23 @@
 import React from 'react'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { RevisedFormInput, InputContainer } from '../Utils'
+import { RevisedFormInput, InputContainer, FormLabel, FormIcon, InputBorderContainer } from '../Utils'
+import { Colors } from '../DesignSystem'
 
-const Input = ({label, icon, type, value, onChange }) => (
+const Input = ({label, icon, type, value, onChange, placeholder }) => (
   <InputContainer>
     <FormLabel>{label}</FormLabel>
-    {icon && (
-      <Ionicons name={icon} size={24} color={Colors.primaryText} />
-    )}
-    <RevisedFormInput 
-      keyboardType={type}
-      autoCorrect={false}
-      value={value}
-      onChangeText={(value) => onChange(value)}
-      returnKeyType='send'
-    />
+    <InputBorderContainer>
+      {icon && (
+        <FormIcon name={icon} size={24} color={Colors.primaryText} />
+      )}
+      <RevisedFormInput 
+        keyboardType={type}
+        autoCorrect={false}
+        value={value}
+        onChangeText={(value) => onChange(value)}
+        returnKeyType='send'
+        placeholder={placeholder}
+      />
+    </InputBorderContainer>
   </InputContainer>
 )
 

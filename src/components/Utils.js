@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { ImageBackground, Image, Platform } from 'react-native'
 import _ from 'lodash'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 import { tint } from 'polished'
 
@@ -18,30 +19,73 @@ const tronWalletBorder = css`
 
 /* Form Input controls that follow the design scheme of 
 the project. */
-export const RevisedFormInput = styled.TextInput`
-  ${tronWalletBorder} 
+export const InputContainer = styled.View`
+  height: 90px;
+  justify-content: center;
+  position: relative;
+`
+
+export const InputBorderContainer = styled.View`
+  ${tronWalletBorder}
+  height: 70px;
+  justify-content: center;
+  position: relative;
+`
+
+export const RevisedFormInput = styled.TextInput.attrs({
+  placeholderTextColor: Colors.primaryText
+})`
+  position: relative;
+  text-align: right;
+  font-size: ${props => props.size ? FontSize[size] : FontSize['average']};
+  padding: 20px;
+  height: 70px;
+  color: ${Colors.primaryText};
+`
+
+export const FormIcon = styled(Ionicon)`
+  position: absolute;
+  padding: 15px;
+  color: ${Colors.lightestBackground};
+`
+
+export const FormLabel = styled.Text`
+  position: absolute;
+  left: 5px;
+  padding: 5px;
+  top: -5px;
+  background-color: ${Colors.background};
+  color: ${Colors.secondaryText};
+  z-index: 1;
+`
+
+export const SummaryInfo = styled.Text`
+  color: ${Colors.summaryText};
+  margin-vertical: 5px;
 `
 
 export const Header = styled.View`
   height: 90px;
+  ${props => props.paddingTop && css`padding-top: ${props.paddingTop}px`};
   flex-direction: row;
   align-items: center;
-  background-color: black;
+  background-color: ${props => props.background || 'black'};
   border-bottom-width: 1px;
   border-color: black;
+  ${props => props.noBorder && css`border-bottom-width: 0`};
 `
 
 export const Title = styled.Text`
   color: white;
   font-weight: 700;
-  padding-left: 16;
+  padding-left: ${props => Spacing[props.paddingLeft] || 16};
   font-size: 26;
 `
 
 export const TitleWrapper = styled.View`
   flex: 1;
   height: 100%;
-  background-color: black;
+  background-color: ${props => props.background || 'black'};
   justify-content: center;
 `
 
