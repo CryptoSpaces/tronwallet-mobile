@@ -156,10 +156,10 @@ class FreezeScene extends Component {
               <Input
                 label='FREEZE AMOUNT'
                 leftContent={this._leftContent}
-                type='numeric'
-                textAlign='right'
+                keyboardType='numeric'
+                align='right'
                 value={amount}
-                onChange={value => this._changeFreeze(value)}
+                onChangeText={value => this._changeFreeze(value)}
                 placeholder='0'
               />
               <Utils.SummaryInfo

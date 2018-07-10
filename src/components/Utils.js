@@ -609,7 +609,7 @@ export const InputBorderContainer = Row.extend`
 `
 
 export const RevisedFormInput = styled.TextInput.attrs({
-  placeholderTextColor: Colors.primaryText
+  placeholderTextColor: Colors.secondaryText
 })`
   position: relative;
   text-align: ${props => props.align};

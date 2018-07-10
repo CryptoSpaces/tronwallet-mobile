@@ -4,13 +4,9 @@ import * as Utils from '../Utils'
 
 const Input = ({
   label,
-  type,
-  value,
-  onChange,
-  placeholder,
   leftContent,
   rightContent,
-  textAlign
+  ...props
 }) => (
   <Utils.InputContainer>
     <Utils.FormLabel>{label}</Utils.FormLabel>
@@ -22,14 +18,9 @@ const Input = ({
         </React.Fragment>
       )}
       <Utils.RevisedFormInput
-        keyboardType={type}
         autoCorrect={false}
-        value={value}
-        align={textAlign}
         underlineColorAndroid='transparent'
-        onChangeText={onChange}
-        returnKeyType='send'
-        placeholder={placeholder}
+        {...props}
       />
       <Utils.HorizontalSpacer />
       {rightContent && (
@@ -41,5 +32,9 @@ const Input = ({
     </Utils.InputBorderContainer>
   </Utils.InputContainer>
 )
+
+Input.defaultProps = {
+  returnKeyType: 'send'
+}
 
 export default Input

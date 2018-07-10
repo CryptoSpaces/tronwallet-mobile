@@ -264,27 +264,7 @@ class SendScene extends Component {
               </Utils.View>
             </Header>
             <Utils.Content>
-              <Input
-                label='TO'
-                type='default'
-                leftContent={this._leftContent}
-                rightContent={this._rightContent}
-                value={to}
-                onChange={text => this.changeInput(text, 'to')}
-              />
-              <Modal
-                visible={this.state.QRModalVisible}
-                onRequestClose={this.closeModal}
-                animationType='slide'
-              >
-                <QRScanner
-                  onRead={this.readPublicKey}
-                  onClose={this.closeModal}
-                  checkAndroid6Permissions
-                />
-              </Modal>
-              <Utils.VerticalSpacer size='medium' />
-              <ModalSelector
+            <ModalSelector
                 data={this.state.balances.map(item => ({
                   key: item.name,
                   label: item.name
@@ -298,11 +278,30 @@ class SendScene extends Component {
               </ModalSelector>
               <Utils.VerticalSpacer size='medium' />
               <Input
+                label='TO'
+                leftContent={this._leftContent}
+                rightContent={this._rightContent}
+                value={to}
+                onChangeText={text => this.changeInput(text, 'to')}
+              />
+              <Modal
+                visible={this.state.QRModalVisible}
+                onRequestClose={this.closeModal}
+                animationType='slide'
+              >
+                <QRScanner
+                  onRead={this.readPublicKey}
+                  onClose={this.closeModal}
+                  checkAndroid6Permissions
+                />
+              </Modal>
+              <Utils.VerticalSpacer size='medium' />
+              <Input
                 label='AMOUNT'
-                type='numeric'
+                keyboardType='numeric'
                 placeholder='0'
                 value={to}
-                onChange={text => this.changeInput(text, 'amount')}
+                onChangeText={text => this.changeInput(text, 'amount')}
               />
             </Utils.Content>
             {error && <Utils.Error>{error}</Utils.Error>}
