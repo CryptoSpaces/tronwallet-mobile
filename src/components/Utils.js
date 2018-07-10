@@ -625,8 +625,7 @@ RevisedFormInput.defaultProps = {
 }
 
 export const FormIcon = styled(Ionicon)`
-  position: absolute;
-  padding: 15px;
+  padding-horizontal: ${Spacing.small};
   color: ${Colors.lightestBackground};
 `
 

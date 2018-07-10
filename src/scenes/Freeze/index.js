@@ -58,7 +58,6 @@ class FreezeScene extends Component {
   submit = async () => {
     const { amount, trxBalance } = this.state
     const convertedAmount = Number(amount)
-    console.log('submit', convertedAmount)
 
     this.setState({ loading: true })
     try {
@@ -119,9 +118,7 @@ class FreezeScene extends Component {
     })
   }
 
-  _leftContent = () => (
-    <Utils.FormIcon name='ios-unlock' size={24} color={Colors.primaryText} />
-  )
+  _leftContent = () => <Utils.FormIcon name='ios-unlock' size={24} color={Colors.primaryText} />
 
   render () {
     const { trxBalance, amount } = this.state
@@ -160,6 +157,7 @@ class FreezeScene extends Component {
                 label='FREEZE AMOUNT'
                 leftContent={this._leftContent}
                 type='numeric'
+                textAlign='right'
                 value={amount}
                 onChange={value => this._changeFreeze(value)}
                 placeholder='0'

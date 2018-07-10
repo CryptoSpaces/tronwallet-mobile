@@ -239,7 +239,7 @@ class SendScene extends Component {
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
-        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+        <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Container>
             <Header>
