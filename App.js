@@ -36,6 +36,7 @@ import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeScene from './src/scenes/Freeze/FreezeRoute'
 import RewardsScene from './src/scenes/Rewards'
+import NetworkConnection from './src/scenes/Settings/NetworkModal'
 import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
@@ -62,7 +63,8 @@ const SettingsStack = createStackNavigator(
   {
     Settings,
     SeedCreate,
-    SeedConfirm
+    SeedConfirm,
+    NetworkConnection,
   },
   {
     navigationOptions: {

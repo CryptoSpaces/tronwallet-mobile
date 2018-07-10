@@ -108,14 +108,14 @@ class BalanceScene extends Component {
       const trxBalance = assetBalance.find(item => item.name === 'TRX')
 
       const { confirmed } = await getUserSecrets()
-      
+
       this.setState({
         trxBalance: trxBalance.balance || 0,
         assetBalance,
         assetList,
         seedConfirmed: confirmed
       })
-      
+
     } catch (error) {
       this.setState({ error: error.message })
     }
@@ -125,6 +125,11 @@ class BalanceScene extends Component {
     const { trxBalance, assetList } = this.state;
     if (token.name !== 'TRX') {
       const tokenToParticipate = assetList.find(asset => asset.name === token.name);
+      if (!tokenToParticipate) {
+        //Need to understand better the behavior if a token doesn't belong to 
+        //the participation list but belongs to the user's balance list
+        return
+      }
       this.props.navigation.navigate('Participate', { token: tokenToParticipate, trxBalance })
     }
   }

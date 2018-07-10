@@ -33,7 +33,7 @@ class SignupScene extends Component {
   }
 
 
-  _navigateNext = async () => {
+  _navigateNext = async (username) => {
     const { navigation } = this.props
     try {
       const result = await WalletClient.giftUser()
@@ -41,7 +41,7 @@ class SignupScene extends Component {
         const address = await getUserPublicKey()
         //Adapt Reward here
         const rewardsParams = {
-          label: address,
+          label: username,
           amount: 1,
           token: 'TWX',
         }
@@ -72,7 +72,7 @@ class SignupScene extends Component {
       await Auth.signIn(username, password)
       await this._createKeyPair()
       this.setState({ loadingConfirm: false })
-      await this._navigateNext()
+      await this._navigateNext(username)
 
     } catch (error) {
       if (error.code === 'NotAuthorizedException') {

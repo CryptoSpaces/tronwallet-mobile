@@ -5653,9 +5653,9 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-tron@gettyio/react-native-tron#1.0.2:
+react-native-tron@gettyio/react-native-tron#1.0.4:
   version "1.0.0"
-  resolved "https://codeload.github.com/gettyio/react-native-tron/tar.gz/82d438048e05befe88014e7290381356186f046d"
+  resolved "https://codeload.github.com/gettyio/react-native-tron/tar.gz/36098741f9da81fc4776cbe9dbcd8a3b80ddd8d1"
 
 react-native-vector-icons@4.5.0:
   version "4.5.0"

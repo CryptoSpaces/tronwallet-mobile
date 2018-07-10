@@ -1,23 +1,16 @@
 import React from 'react'
-import { SafeAreaView, ActivityIndicator } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
+import NavigationHeader from '../../components/NavigationHeader'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
 
 class Create extends React.Component {
   static navigationOptions = () => ({
-    header: (
-      <SafeAreaView style={{ backgroundColor: Colors.darkerBackground }}>
-        <Utils.Header>
-          <Utils.TitleWrapper>
-            <Utils.Title>Confirm Wallet Seed</Utils.Title>
-          </Utils.TitleWrapper>
-        </Utils.Header>
-      </SafeAreaView>
-    )
+    header: <NavigationHeader title="Confirm Wallet Seed" />
   })
 
   state = {

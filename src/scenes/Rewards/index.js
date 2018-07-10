@@ -89,7 +89,7 @@ class RewardsScreen extends PureComponent {
                       width={65}
                       padding={8}
                       elevation={5}
-                      style={{ shadowOffset: { width: 15, height: 15, }, shadowColor: 'black', shadowRadius: 15, shadowOpacity: 0.5 }}>
+                      style={{ shadowOffset: { width: 4, height: 4 }, shadowColor: 'black', shadowRadius: 5, shadowOpacity: 0.4 }}>
                       <Utils.Text
                         size='smaller'
                         align='center'

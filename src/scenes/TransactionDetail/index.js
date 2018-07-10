@@ -2,31 +2,26 @@ import React, { Component } from 'react'
 import { ActivityIndicator, NetInfo, SafeAreaView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
+
+//Design
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import Client, { ONE_TRX } from '../../services/client'
-import LoadingScene from '../../components/LoadingScene'
 import DetailRow from './detailRow'
+import LoadingScene from '../../components/LoadingScene'
+import NavigationHeader from '../../components/NavigationHeader'
+
+//Service
+import Client, { ONE_TRX } from '../../services/client'
 
 const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 class TransactionDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>Transaction Detail</Utils.Title>
-            </Utils.TitleWrapper>
-            <Utils.LoadButtonWrapper>
-              <Utils.LoadButton onPress={() => navigation.navigate('Balance')}>
-                <Feather name='x' color='white' size={32} />
-              </Utils.LoadButton>
-            </Utils.LoadButtonWrapper>
-          </Utils.Header>
-        </SafeAreaView>
-      )
+      header: <NavigationHeader
+        title="Transaction Details"
+        onClose={() => navigation.navigate('Balance')}
+      />
     }
   }
 
@@ -109,14 +104,10 @@ class TransactionDetail extends Component {
         submitError: null,
       })
     } catch (error) {
-      let errorMessage = error.message
-      //TODO
-      //Refactor lambda function. Research GOAWAY error
-      console.warn("Error Transaction Details", error)
       this.setState({
         loadingSubmit: false,
         submitted: true,
-        submitError: errorMessage
+        submitError: error.message
       })
     }
   }

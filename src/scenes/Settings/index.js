@@ -12,8 +12,6 @@ import { createIconSetFromFontello } from 'react-native-vector-icons'
 
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
-import ChangeNodeModal from './ChangeNodeModal'
-import LoadingScene from '../../components/LoadingScene'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
 import fontelloConfig from '../../assets/icons/config.json'
@@ -126,10 +124,10 @@ class Settings extends Component {
         icon: 'user,-person,-avtar,-profile-picture,-dp'
       },
       {
-        title: 'Edit Nodes',
+        title: 'Edit Node Network',
         description: 'Choose a node of your preference',
-        icon: 'key,-password,-lock,-privacy,-login',
-        onPress: () => this.setState({ nodeModalVisible: true })
+        icon: 'share,-network,-connect,-community,-media',
+        onPress: () => this.props.navigation.navigate('NetworkConnection')
       },
       {
         title: 'Confirm Seed',
@@ -140,7 +138,7 @@ class Settings extends Component {
       {
         title: 'Restore Seed',
         description: 'Restore previously used seed words',
-        icon: 'key,-password,-lock,-privacy,-login',
+        icon: 'folder-sync,-data,-folder,-recovery,-sync',
         onPress: () => this.props.navigation.navigate('SeedRestore')
       }
     ]
@@ -185,7 +183,6 @@ class Settings extends Component {
   }
 
   render() {
-    const { nodeModalVisible } = this.state
 
     return (
       <Utils.Container
@@ -195,11 +192,6 @@ class Settings extends Component {
         {this.renderList()}
         <Utils.VerticalSpacer size='big' />
         {this.renderLogout()}
-        <ChangeNodeModal
-          visible={nodeModalVisible}
-          onClose={() => this.setState({ nodeModalVisible: false })}
-          onLoadData={this.onLoadData}
-        />
       </Utils.Container>
     )
   }

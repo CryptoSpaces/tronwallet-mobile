@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { SafeAreaView } from 'react-native'
 import styled from 'styled-components'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { ScrollView } from 'react-native'
@@ -15,8 +16,19 @@ const WordWrapper = styled.TouchableOpacity`
 `
 
 class Confirm extends React.Component {
-  static navigationOptions = () => ({
-    header: null
+  static navigationOptions = ({ navigation }) => ({
+    header: <SafeAreaView style={{ backgroundColor: 'black' }}>
+      <Utils.Header>
+        <Utils.TitleWrapper>
+          <Utils.Title>Confirm Seed</Utils.Title>
+        </Utils.TitleWrapper>
+        <ButtonGradient
+          size="medium"
+          onPress={navigation.getParam('onSubmit')}
+          text='SUBMIT'
+        />
+      </Utils.Header>
+    </SafeAreaView>
   })
 
   state = {
@@ -26,6 +38,11 @@ class Confirm extends React.Component {
         .sort(() => 0.5 - Math.random()),
     selected: []
   }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ onSubmit: this._handleSubmit })
+  }
+
 
   _handleSubmit = async () => {
     try {
@@ -37,8 +54,9 @@ class Confirm extends React.Component {
       const resetAction = StackActions.reset({
         index: 0,
         actions: [
-          NavigationActions.navigate({ routeName: 'Settings' })
-        ]
+          NavigationActions.navigate({ routeName: 'App' })
+        ],
+        key: null
       })
       this.props.navigation.dispatch(resetAction)
     } catch (error) {
@@ -69,47 +87,36 @@ class Confirm extends React.Component {
 
   render() {
     return (
-      <Fragment>
-        <Utils.Header>
-          <Utils.TitleWrapper>
-            <Utils.Title>Confirm Seed</Utils.Title>
-          </Utils.TitleWrapper>
-          <ButtonGradient
-            onPress={this._handleSubmit}
-            text='SUBMIT'
-          />
-        </Utils.Header>
-        <Utils.Container>
-          <ScrollView>
-            <Utils.View flex={1} />
-            <Utils.Content align='center' justify='center'>
-              <Utils.Text>Select the words below in the right order to confirm your secret phrase.</Utils.Text>
-            </Utils.Content>
-            <Utils.View flex={1} />
-            <Utils.Content background={Colors.darkerBackground}>
-              <Utils.Row wrap='wrap' justify='center'>
-                {this.state.selected.map(item => (
-                  <WordWrapper key={item} onPress={() => this._deselectWord(item)}>
-                    <Utils.Text>{item}</Utils.Text>
-                  </WordWrapper>
-                ))}
-              </Utils.Row>
-            </Utils.Content>
-            <Utils.View flex={1} />
-            <Utils.Content background={Colors.darkerBackground}>
-              <Utils.Row wrap='wrap' justify='center'>
-                {this.state.seed.map(item => (
-                  <WordWrapper key={item.word} onPress={() => this._selectWord(item)} disabled={item.used}>
-                    <Utils.Text secondary={item.used}>{item.word}</Utils.Text>
-                  </WordWrapper>
-                ))}
-              </Utils.Row>
-            </Utils.Content>
-            <Utils.VerticalSpacer />
-            <Utils.Button onPress={() => this.props.navigation.goBack()}>Back</Utils.Button>
-          </ScrollView>
-        </Utils.Container>
-      </Fragment>
+      <Utils.Container>
+        <ScrollView>
+          <Utils.View flex={1} />
+          <Utils.Content align='center' justify='center'>
+            <Utils.Text>Select the words below in the right order to confirm your secret phrase.</Utils.Text>
+          </Utils.Content>
+          <Utils.View flex={1} />
+          <Utils.Content background={Colors.darkerBackground}>
+            <Utils.Row wrap='wrap' justify='center'>
+              {this.state.selected.map(item => (
+                <WordWrapper key={item} onPress={() => this._deselectWord(item)}>
+                  <Utils.Text>{item}</Utils.Text>
+                </WordWrapper>
+              ))}
+            </Utils.Row>
+          </Utils.Content>
+          <Utils.View flex={1} />
+          <Utils.Content background={Colors.darkerBackground}>
+            <Utils.Row wrap='wrap' justify='center'>
+              {this.state.seed.map(item => (
+                <WordWrapper key={item.word} onPress={() => this._selectWord(item)} disabled={item.used}>
+                  <Utils.Text secondary={item.used}>{item.word}</Utils.Text>
+                </WordWrapper>
+              ))}
+            </Utils.Row>
+          </Utils.Content>
+          <Utils.VerticalSpacer />
+          <Utils.Button onPress={() => this.props.navigation.goBack()}>Back</Utils.Button>
+        </ScrollView>
+      </Utils.Container>
     )
   }
 }
