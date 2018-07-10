@@ -1,6 +1,6 @@
 // Dependencies
 import React, { PureComponent } from 'react'
-import { forIn, reduce, union, clamp } from 'lodash'
+import { forIn, reduce, union, clamp, debounce } from 'lodash'
 import { Linking, FlatList, Alert } from 'react-native'
 
 // Utils
@@ -50,6 +50,7 @@ class VoteScene extends PureComponent {
   state = INITIAL_STATE
 
   async componentDidMount() {
+    this._onSearch = debounce(this._onSearch, 500)
     this.didFocusSubscription = this.props.navigation.addListener(
       'didFocus',
       this._loadData
@@ -327,8 +328,8 @@ class VoteScene extends PureComponent {
     )
   }
 
-  render() {
-    const { totalVotes, totalRemaining, votesError } = this.state
+  render () {
+    const { totalVotes, totalRemaining, votesError, refreshing, loadingList } = this.state
     return (
       <Utils.Container>
         {totalVotes !== null &&
@@ -389,18 +390,20 @@ class VoteScene extends PureComponent {
             marginTop={0}
           />
         </Utils.Content>
-        <FadeIn name='candidates'>
-          <FlatList
-            keyExtractor={item => item.address}
-            data={this.state.voteList}
-            renderItem={this._renderRow}
-            onEndReachedThreshold={0.5}
-            onEndReached={this._loadMoreCandidates}
-            onRefresh={this._refreshCandidates}
-            refreshing={this.state.refreshing}
-            removeClippedSubviews
-          />
-        </FadeIn>
+        <Utils.Content flex={1}>
+          <FadeIn name='candidates'>
+            <FlatList
+              keyExtractor={item => item.address}
+              data={this.state.voteList}
+              renderItem={this._renderRow}
+              onEndReachedThreshold={0.5}
+              onEndReached={this._loadMoreCandidates}
+              onRefresh={this._refreshCandidates}
+              refreshing={refreshing || loadingList}
+              removeClippedSubviews
+            />
+          </FadeIn>
+        </Utils.Content>
       </Utils.Container>
     )
   }
