@@ -9,7 +9,8 @@ import { Auth } from 'aws-amplify'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import * as Utils from '../../components/Utils'
-import { Colors, Spacing } from '../../components/DesignSystem'
+import Input from '../../components/Input/Input'
+import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class SignupScene extends Component {
@@ -84,15 +85,21 @@ class SignupScene extends Component {
       )
     }
 
-    return <ButtonGradient text='SIGN UP' onPress={this.signUp} size='small' />
+    return  (
+      <ButtonGradient
+        text='SIGN UP'
+        onPress={this.signIn}
+        size='medium'
+        marginVertical='large'
+        font='bold'
+      />
+    )
   }
 
   render () {
-    const { signError } = this.state
+    const { signError, username, email, password } = this.state
     return (
       <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
         style={{ flex: 1, backgroundColor: Colors.background }}
         enabled
       >
@@ -106,57 +113,44 @@ class SignupScene extends Component {
               <Utils.VerticalSpacer size='medium' />
               <Image source={require('../../assets/login-circle.png')} />
               <Utils.VerticalSpacer size='small' />
-              <Utils.Text size='medium'>TRONWALLET</Utils.Text>
             </Utils.Content>
             <Utils.FormGroup>
-              <Utils.Text size='xsmall' secondary>
-                USERNAME
-              </Utils.Text>
-              <Utils.FormInput
-                innerRef={ref => {
-                  this.username = ref
-                }}
-                underlineColorAndroid='transparent'
-                marginBottom={20}
-                autoCapitalize='none'
-                autoCorrect={false}
-                onChangeText={text => this.changeInput(text, 'username')}
-                onSubmitEditing={() => this._nextInput('username')}
-                returnKeyType={'next'}
-                padding={Spacing.small}
-              />
-              <Utils.Text size='xsmall' secondary>
-                E-MAIL
-              </Utils.Text>
-              <Utils.FormInput
-                innerRef={ref => {
-                  this.email = ref
-                }}
-                keyboardType='email-address'
-                underlineColorAndroid='transparent'
-                marginBottom={20}
-                autoCapitalize='none'
-                autoCorrect={false}
-                onChangeText={text => this.changeInput(text, 'email')}
-                onSubmitEditing={() => this._nextInput('email')}
-                returnKeyType={'next'}
-                padding={Spacing.small}
-              />
-              <Utils.Text size='xsmall' secondary>
-                PASSWORD
-              </Utils.Text>
-              <Utils.FormInput
-                innerRef={ref => {
-                  this.password = ref
-                }}
-                letterSpacing={10}
-                marginBottom={10}
-                underlineColorAndroid='transparent'
+              <Input
+                innerRef={(input) => { this.username = input }}
+                label='USERNAME'
+                type='email-address'
                 secureTextEntry
+                placeholder='John Doe'
+                value={username}
+                onChangeText={text => this.changeInput(text, 'username')}
+                onSubmitEditing={() => this._submit('username')}
+                returnKeyType='next'
+                autoCapitalize='none'
+              />
+              <Input
+                innerRef={(input) => { this.email = input }}
+                label='EMAIL'
+                type='email-address'
+                secureTextEntry
+                placeholder='johndoe@yourdomain.com'
+                value={email}
+                onChangeText={text => this.changeInput(text, 'email')}
+                onSubmitEditing={() => this._submit('email')}
+                returnKeyType='next'
+                autoCapitalize='none'
+              />
+              <Input
+                innerRef={(input) => { this.password = input }}
+                label='PASSWORD'
+                type='email-address'
+                secureTextEntry
+                placeholder='.........'
+                letterSpacing={3}
+                value={password}
                 onChangeText={text => this.changeInput(text, 'password')}
-                onSubmitEditing={() => this._nextInput('password')}
-                returnKeyType={'send'}
-                padding={Spacing.small}
+                onSubmitEditing={() => this._submit('password')}
+                returnKeyType='send'
+                autoCapitalize='none'
               />
               <Utils.Text size='xsmall' secondary>
                 Password must be at least 8 characters in length, contain at
@@ -168,14 +162,6 @@ class SignupScene extends Component {
             </Utils.FormGroup>
             <Utils.Error>{signError}</Utils.Error>
             <Utils.Content justify='center' align='center'>
-              {/* <Utils.Text
-                onPress={() => this.props.navigation.navigate('ForgotPassword')}
-                size='small'
-                font='light'
-                secondary
-              >
-              PRIVACY POLICY
-              </Utils.Text> */}
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>

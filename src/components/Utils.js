@@ -617,6 +617,7 @@ export const RevisedFormInput = styled.TextInput.attrs({
   height: 70px;
   color: ${Colors.primaryText};
   flex: 1;
+  ${props => props.letterSpacing && `letter-spacing: ${props.letterSpacing}px`};
 `
 
 RevisedFormInput.defaultProps = {
