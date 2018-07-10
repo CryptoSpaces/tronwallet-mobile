@@ -11,6 +11,7 @@ export const Spacing = {
 export const Colors = {
   background: '#191A2A',
   darkerBackground: '#10101A',
+  lightBackground: '#212132',
   primaryText: '#FFFFFF',
   secondaryText: '#66688F',
   primaryGradient: ['#FF4465', '#F6CA1D'],

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, NetInfo } from 'react-native'
+import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 // Design
 import * as Utils from '../../components/Utils'
@@ -12,16 +13,18 @@ import LoadingScene from '../../components/LoadingScene'
 import NavigationHeader from '../../components/NavigationHeader'
 
 // Service
-import Client, { ONE_TRX } from '../../services/client'
+import Client from '../../services/client'
+import buildTransactionDetails from './detailMap'
 
-const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
+const CLOSE_SCREEN_TIME = 5000
+
 class TransactionDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       header: (
         <NavigationHeader
           title='Transaction Details'
-          onClose={() => navigation.navigate('Balance')}
+          onClose={navigation.getParam('onClose')}
         />
       )
     }
@@ -39,9 +42,8 @@ class TransactionDetail extends Component {
   }
 
   componentDidMount () {
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
-      this._loadData()
-    })
+    this.props.navigation.setParams({ 'onClose': this._navigateNext })
+    this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
     NetInfo.isConnected.addEventListener(
       'connectionChange',
       this._connectionEventListenner
@@ -57,14 +59,7 @@ class TransactionDetail extends Component {
       'connectionChange',
       this._handleConnectivityChange
     )
-  }
-
-  _connectionEventListenner = isConnected => {
-    this.setState({ isConnected }, () => {
-      if (isConnected) {
-        this._loadData()
-      }
-    })
+    if (this.closeTransactionDetails) clearTimeout(this.closeTransactionDetails)
   }
 
   _loadData = async () => {
@@ -91,13 +86,35 @@ class TransactionDetail extends Component {
     }
   }
 
+  _connectionEventListenner = isConnected => {
+    this.setState({ isConnected }, () => {
+      if (isConnected) {
+        this._loadData()
+      }
+    })
+  }
+
+  _navigateNext = () => {
+    // Reset navigation as transaction submition is the last step of a user interaction
+    const { navigation } = this.props
+    const navigateToHome = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'App' })],
+      key: null
+    })
+    navigation.dispatch(navigateToHome)
+  }
+
   submitTransaction = async () => {
     const { signedTransaction } = this.state
     this.setState({ loadingSubmit: true, submitError: null })
     try {
       let success = false
       const { code } = await Client.broadcastTransaction(signedTransaction)
-      if (code === 'SUCCESS') success = true
+      if (code === 'SUCCESS') {
+        success = true
+        this.closeTransactionDetails = setTimeout(this._navigateNext, CLOSE_SCREEN_TIME)
+      }
 
       this.setState({
         loadingSubmit: false,
@@ -118,43 +135,16 @@ class TransactionDetail extends Component {
     const { transactionData } = this.state
     if (!transactionData) return
     const { contracts } = transactionData
-    const contractsElements = []
-    for (const ctr in contracts[0]) {
-      if (ctr === 'amount' || ctr === 'frozenBalance') {
-        const isTRX = !contracts[0].token // weird api response
-        contractsElements.push(
-          <DetailRow
-            key={ctr}
-            title={firstLetterCapitalize(ctr)}
-            text={contracts[0][ctr] / (isTRX ? ONE_TRX : 1)}
-          />
-        )
-      } else if (ctr === 'votes') {
-        const totalVotes = contracts[0][ctr].reduce((prev, curr) => {
-          return prev + curr.voteCount
-        }, 0)
-        contractsElements.push(
-          <DetailRow key={ctr} title='TotalVotes' text={totalVotes} />
-        )
-      } else {
-        contractsElements.push(
-          <DetailRow
-            key={ctr}
-            title={firstLetterCapitalize(ctr)}
-            text={contracts[0][ctr]}
-          />
-        )
-      }
-    }
+    const contractsElements = buildTransactionDetails(contracts)
+    const now = moment()
     contractsElements.push(
       <DetailRow
-        key={'time'}
-        title={'Time'}
-        text={moment(transactionData.timestamp).format('MM/DD/YYYY HH:MM:SS')}
+        key={'TIME'}
+        title={'TIME'}
+        text={now.format('MM/DD/YYYY HH:MM:SS')} // TODO - Verify if API is sending timestamp correctly again
       />
     )
-
-    return <Utils.Content>{contractsElements}</Utils.Content>
+    return <Utils.View paddingX={'medium'} paddingY={'small'}>{contractsElements}</Utils.View>
   }
 
   renderSubmitButton = () => {
@@ -169,24 +159,24 @@ class TransactionDetail extends Component {
             color={Colors.green}
           />
           <Utils.Text success size='small'>
-            Transaction submitted to network !
+            Transaction submitted to network.
           </Utils.Text>
         </Utils.Content>
       )
     }
 
     return (
-      <Utils.Content align='center' justify='center'>
+      <Utils.View marginTop={5} paddingX={'medium'}>
         {loadingSubmit ? (
           <ActivityIndicator size='small' color={Colors.primaryText} />
         ) : (
           <ButtonGradient
             text='Submit Transaction'
             onPress={this.submitTransaction}
-            size='small'
+            size='medium'
           />
         )}
-      </Utils.Content>
+      </Utils.View>
     )
   }
 
@@ -208,14 +198,16 @@ class TransactionDetail extends Component {
 
     return (
       <Utils.Container>
-        {!isConnected && this.renderRetryConnection()}
-        {isConnected && this.renderContracts()}
-        {isConnected && this.renderSubmitButton()}
-        <Utils.Content align='center' justify='center'>
-          {submitError && (
-            <Utils.Error>Transaction Failed: {submitError}</Utils.Error>
-          )}
-        </Utils.Content>
+        <ScrollView>
+          {!isConnected && this.renderRetryConnection()}
+          {isConnected && this.renderContracts()}
+          {isConnected && this.renderSubmitButton()}
+          <Utils.Content align='center' justify='center'>
+            {submitError && (
+              <Utils.Error>Transaction Failed: {submitError}</Utils.Error>
+            )}
+          </Utils.Content>
+        </ScrollView>
       </Utils.Container>
     )
   }
