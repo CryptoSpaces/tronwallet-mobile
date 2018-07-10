@@ -2,36 +2,56 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { ImageBackground, Image, Platform } from 'react-native'
 import _ from 'lodash'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 import { tint } from 'polished'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
+/* Tron Wallet's border settings. Use it anywhere you need the default Tron Wallet
+border. */
 const tronWalletBorder = css`
+  border-width: 1px;
   border-color: ${Colors.secondaryText};
   border-radius: 5px;
 `
 
 export const Header = styled.View`
-  height: 90px;
+  height: 70px;
   flex-direction: row;
   align-items: center;
-  background-color: black;
+  justify-content: space-between;
+  padding: ${Spacing.medium}px;
+  border-color: ${Colors.lighterBackground};
   border-bottom-width: 1px;
-  border-color: black;
+  background-color: ${props => props.background};
+  ${props =>
+    props.paddingTop &&
+    css`
+      padding-top: ${props.paddingTop}px;
+    `};
+  ${props =>
+    props.noBorder &&
+    css`
+      border-bottom-width: 0;
+    `};
 `
+
+Header.defaultProps = {
+  background: Colors.background
+}
 
 export const Title = styled.Text`
   color: white;
   font-weight: 700;
-  padding-left: 16;
-  font-size: 26;
+  font-size: ${FontSize.medium};
 `
 
+Title.defaultProps = {
+  paddingLeft: 'medium'
+}
+
 export const TitleWrapper = styled.View`
-  flex: 1;
-  height: 100%;
-  background-color: black;
   justify-content: center;
 `
 
@@ -78,6 +98,10 @@ export const View = styled.View`
   props.padding &&
       css`
         top: ${props.padding};
+      `} ${props =>
+  props.margin &&
+      css`
+        margin: ${props.margin}px;
       `} ${props =>
   props.marginTop &&
       css`
@@ -292,13 +316,13 @@ export const Text = styled.Text`
   ${props =>
     props.size &&
     css`
-      font-size: ${FontSize[props.size]};
+      font-size: ${FontSize[props.size]}px;
     `};
   ${props =>
     props.light &&
     css`
       font-family: rubik-light;
-    `} font-family: ${props => `rubik-${_.capitalize(props.font || 'medium')}`};
+    `} font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
   ${props =>
     props.padding &&
     css`
@@ -348,6 +372,11 @@ export const Text = styled.Text`
     props.marginTop &&
     css`
       margin-top: ${Spacing[props.marginTop]}px;
+    `};
+  ${props =>
+    props.margin &&
+    css`
+      margin: ${props.margin}px;
     `};
   ${props =>
     props.position &&
@@ -567,4 +596,68 @@ export const NumPadWrapper = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   margin: ${Spacing.xsmall}px;
+`
+
+/* Form Input controls that follow the design scheme of
+the project. */
+export const InputContainer = styled.View`
+  height: 90px;
+  justify-content: center;
+  position: relative;
+`
+
+export const InputBorderContainer = Row.extend`
+  ${tronWalletBorder} position: relative;
+  align-items: center;
+  height: 70px;
+  padding: 10px;
+`
+
+export const RevisedFormInput = styled.TextInput.attrs({
+  placeholderTextColor: Colors.secondaryText
+})`
+  position: relative;
+  text-align: ${props => props.align};
+  font-size: ${props => FontSize[props.size]};
+  height: 70px;
+  color: ${Colors.primaryText};
+  flex: 1;
+  ${props => props.letterSpacing && `letter-spacing: ${props.letterSpacing}px`};
+`
+
+RevisedFormInput.defaultProps = {
+  size: 'average',
+  align: 'left'
+}
+
+export const FormIcon = styled(Ionicon)`
+  padding-horizontal: ${Spacing.small};
+  color: ${Colors.lightestBackground};
+`
+
+export const FormButton = styled.TouchableOpacity`
+  background-color: ${Colors.lighterBackground};
+  padding: 12px;
+  border-radius: 4px;
+  elevation: 15;
+  shadow-color: black;
+  shadow-offset: 4px 4px;
+  shadow-opacity: 0.25;
+  shadow-radius: 4px;
+`
+
+export const FormLabel = styled.Text`
+  font-family: Rubik-Bold;
+  position: absolute;
+  left: 5px;
+  padding: 5px;
+  top: -5px;
+  background-color: ${Colors.background};
+  color: ${Colors.secondaryText};
+  z-index: 1;
+`
+
+export const SummaryInfo = styled.Text`
+  color: ${Colors.summaryText};
+  margin-vertical: 5px;
 `

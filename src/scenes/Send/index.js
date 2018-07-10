@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
+  Clipboard,
   Linking,
   Alert,
   KeyboardAvoidingView,
@@ -13,10 +14,10 @@ import ModalSelector from 'react-native-modal-selector'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
 import Header from '../../components/Header'
-import PasteInput from '../../components/PasteInput'
+import Input from '../../components/Input/Input'
 import QRScanner from '../../components/QRScanner'
 import * as Utils from '../../components/Utils'
-import { Colors } from '../../components/DesignSystem'
+import { Colors, FontSize } from '../../components/DesignSystem'
 
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
@@ -160,7 +161,12 @@ class SendScene extends Component {
 
   readPublicKey = e => this.setState({ to: e.data }, this.closeModal)
 
-  openModal = () => this.setState({ QRModalVisible: true })
+  _openModal = () => this.setState({ QRModalVisible: true })
+
+  _onPaste = async () => {
+    const content = await Clipboard.getString()
+    this.changeInput(content, 'to')
+  }
 
   closeModal = () => {
     if (this.state.QRModalVisible) {
@@ -206,29 +212,77 @@ class SendScene extends Component {
     }
   }
 
+  _rightContent = () => (
+    <React.Fragment>
+      <Utils.FormButton onPress={this._onPaste}>
+        <Ionicons
+          name='md-clipboard'
+          size={FontSize['medium']}
+          color={Colors.buttonText}
+        />
+      </Utils.FormButton>
+      <Utils.HorizontalSpacer />
+      <Utils.FormButton onPress={this._openModal}>
+        <Ionicons
+          name='ios-qr-scanner'
+          size={FontSize['medium']}
+          color={Colors.buttonText}
+        />
+      </Utils.FormButton>
+    </React.Fragment>
+  )
+
   render () {
     const { loadingSign, loadingData, error, to, trxBalance } = this.state
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} enabled>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
         <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Container>
-            <Utils.StatusBar />
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>
-                Send Transaction
-              </Utils.Text>
-              <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-            </Utils.View>
+            <Header>
+              <Utils.View align='center'>
+                <Utils.Text size='xsmall' secondary>
+                  BALANCE
+                </Utils.Text>
+                <Utils.Row align='center'>
+                  <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
+                  <Utils.HorizontalSpacer size='xsmall' />
+                  <Utils.View
+                    style={{
+                      backgroundColor: Colors.lighterBackground,
+                      borderRadius: 3,
+                      paddingHorizontal: 8,
+                      paddingVertical: 6
+                    }}
+                  >
+                    <Utils.Text size='small'>TRX</Utils.Text>
+                  </Utils.View>
+                </Utils.Row>
+              </Utils.View>
+            </Header>
             <Utils.Content>
-              <Utils.Text size='xsmall' secondary>
-                To
-              </Utils.Text>
-              <PasteInput
+            <ModalSelector
+                data={this.state.balances.map(item => ({
+                  key: item.name,
+                  label: item.name
+                }))}
+                onChange={option => this.setState({ token: option.label })}
+              >
+                <Input
+                  label='TOKEN'
+                  value={this.state.token}
+                />
+              </ModalSelector>
+              <Utils.VerticalSpacer size='medium' />
+              <Input
+                label='TO'
+                leftContent={this._leftContent}
+                rightContent={this._rightContent}
                 value={to}
-                field='from'
                 onChangeText={text => this.changeInput(text, 'to')}
-                qrScan={this.openModal}
               />
               <Modal
                 visible={this.state.QRModalVisible}
@@ -242,50 +296,27 @@ class SendScene extends Component {
                 />
               </Modal>
               <Utils.VerticalSpacer size='medium' />
-              <Utils.Text size='xsmall' secondary>
-                Token
-              </Utils.Text>
-              <ModalSelector
-                data={this.state.balances.map(item => ({ key: item.name, label: item.name }))}
-                onChange={option => this.setState({ token: option.label })}
-              >
-                <Utils.Row align='center' justify='flex-start'>
-                  <Utils.FormInput
-                    style={{ marginRight: 15, width: '100%' }}
-                  >
-                    <Utils.Text>{this.state.token}</Utils.Text>
-                  </Utils.FormInput>
-                </Utils.Row>
-              </ModalSelector>
-              <Utils.VerticalSpacer size='medium' />
-              <Utils.Text size='xsmall' secondary>
-                Amount
-              </Utils.Text>
-              <Utils.Row align='center' justify='flex-start'>
-                <Utils.FormInput
-                  underlineColorAndroid='transparent'
-                  keyboardType='numeric'
-                  autoCapitalize='none'
-                  onChangeText={text => this.changeInput(text, 'amount')}
-                  placeholderTextColor='#fff'
-                  style={{ marginRight: 15, width: '100%' }}
-                >
-                  <Utils.Text>{this.state.amount}</Utils.Text>
-                </Utils.FormInput>
-              </Utils.Row>
+              <Input
+                label='AMOUNT'
+                keyboardType='numeric'
+                placeholder='0'
+                value={to}
+                onChangeText={text => this.changeInput(text, 'amount')}
+              />
             </Utils.Content>
             {error && <Utils.Error>{error}</Utils.Error>}
-            <Utils.Content justify='center' align='center'>
+            <Utils.Content justify='center'>
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
                 <ButtonGradient
-                  text='Send'
+                  text='SEND'
                   onPress={this.submit}
-                  size='small'
+                  size='medium'
+                  marginVertical='large'
                 />
               )}
-              <Utils.VerticalSpacer size='medium' />
+              <Utils.VerticalSpacer />
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>

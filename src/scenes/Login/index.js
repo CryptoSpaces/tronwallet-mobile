@@ -11,15 +11,15 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
-import { Colors, Spacing } from '../../components/DesignSystem'
+import Input from '../../components/Input/Input'
 import ButtonGradient from '../../components/ButtonGradient'
+import { Colors } from '../../components/DesignSystem'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 import { version } from '../../../package.json'
 
 class LoginScene extends Component {
   state = {
     username: '',
-    email: '',
     password: '',
     signError: null
   }
@@ -53,6 +53,8 @@ class LoginScene extends Component {
   signIn = async () => {
     const { navigation } = this.props
     const { username, password } = this.state
+    console.log('username', username)
+    console.log('passowrd', password)
     Keyboard.dismiss()
 
     this.setState({ loadingSign: true, signError: null })
@@ -102,6 +104,10 @@ class LoginScene extends Component {
     }
   }
 
+  _changeEmail = () => {
+
+  }
+
   renderSubmitButton = () => {
     const { loadingSign } = this.state
 
@@ -113,11 +119,18 @@ class LoginScene extends Component {
       )
     }
 
-    return <ButtonGradient text='SIGN IN' onPress={this.signIn} size='small' />
+    return (
+      <ButtonGradient
+        text='SIGN IN'
+        onPress={this.signIn}
+        size='medium'
+        marginVertical='large'
+      />
+    )
   }
 
   render () {
-    const { signError } = this.state
+    const { signError, username, password } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
       <KeyboardAvoidingView
@@ -131,44 +144,35 @@ class LoginScene extends Component {
             keyboardDismissMode='interactive'
           >
             <Utils.Content justify='center' align='center'>
-              <Utils.VerticalSpacer size='small' />
+              <Utils.VerticalSpacer size='large' />
               <Image source={require('../../assets/login-circle.png')} />
               <Utils.VerticalSpacer size='small' />
-              <Utils.Text size='medium'>TRONWALLET</Utils.Text>
             </Utils.Content>
             <Utils.FormGroup>
-              <Utils.Text size='xsmall' secondary>
-                USERNAME
-              </Utils.Text>
-              <Utils.FormInput
-                innerRef={ref => {
-                  this.email = ref
-                }}
-                underlineColorAndroid='transparent'
+              <Input
+                innerRef={(input) => { this.email = input }}
+                label='EMAIL/USERNAME'
                 keyboardType='email-address'
-                marginBottom={20}
-                autoCapitalize='none'
-                autoCorrect={false}
-                onChangeText={text => this.changeInput(text, 'username')}
+                placeholder='johndoe@somedomain.com'
+                value={username}
+                onChangeText={(text) => this.changeInput(text, 'username')}
                 onSubmitEditing={() => this._submit('username')}
-                returnKeyType={'next'}
-                padding={Spacing.small}
+                returnKeyType='next'
+                autoCapitalize='none'
               />
-              <Utils.Text size='xsmall' secondary>
-                PASSWORD
-              </Utils.Text>
-              <Utils.FormInput
-                innerRef={ref => {
-                  this.password = ref
-                }}
-                underlineColorAndroid='transparent'
+              <Input
+                innerRef={(input) => { this.password = input }}
+                label='PASSWORD'
                 secureTextEntry
-                letterSpacing={10}
+                placeholder='.........'
+                value={password}
+                letterSpacing={4}
                 onChangeText={text => this.changeInput(text, 'password')}
                 onSubmitEditing={() => this._submit('password')}
                 returnKeyType='send'
-                padding={Spacing.small}
+                autoCapitalize='none'
               />
+              <Utils.VerticalSpacer size='small' />
               {this.renderSubmitButton()}
             </Utils.FormGroup>
             <Utils.Content justify='center' align='center'>

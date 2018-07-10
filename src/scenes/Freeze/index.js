@@ -5,11 +5,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import * as Utils from '../../components/Utils'
 import Client from '../../services/client'
 import Header from '../../components/Header'
-import Card, { CardRow } from '../../components/Card'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils'
-
+import Input from '../../components/Input/Input'
+import ButtonGradient from '../../components/ButtonGradient'
 import { Context } from '../../store/context'
+
+import { Colors } from '../../components/DesignSystem'
 
 class FreezeScene extends Component {
   state = {
@@ -18,7 +20,7 @@ class FreezeScene extends Component {
     trxBalance: 0,
     bandwidth: 0,
     total: 0,
-    amount: 0,
+    amount: '',
     loading: true
   }
 
@@ -55,9 +57,11 @@ class FreezeScene extends Component {
 
   submit = async () => {
     const { amount, trxBalance } = this.state
+    const convertedAmount = Number(amount)
+
     this.setState({ loading: true })
     try {
-      if (trxBalance < amount) throw new Error('Insufficient TRX balance')
+      if (trxBalance < convertedAmount) { throw new Error('Insufficient TRX balance') }
       await this.freezeToken()
     } catch (error) {
       Alert.alert(error.message)
@@ -68,14 +72,11 @@ class FreezeScene extends Component {
 
   freezeToken = async () => {
     const { amount } = this.state
-    try {
-      // TronScan
-      // const data = await Client.freezeToken(amount)
-      // Serverless
-      const data = await Client.getFreezeTransaction(amount)
+    const convertedAmount = Number(amount)
 
+    try {
+      const data = await Client.getFreezeTransaction(convertedAmount)
       this.openTransactionDetails(data)
-      // this.openDeepLink(dataToSend)
     } catch (error) {
       Alert.alert('Error while building transaction, try again.')
       this.setState({ error: 'Error getting transaction', loadingSign: false })
@@ -108,39 +109,67 @@ class FreezeScene extends Component {
     }
   }
 
+  _changeFreeze = value => {
+    const validation = /^0[0-9]/
+    let amount = validation.test(value) ? value.slice(1, value.length) : value
+
+    this.setState({
+      amount: amount
+    })
+  }
+
+  _leftContent = () => <Utils.FormIcon name='ios-unlock' size={24} color={Colors.primaryText} />
+
   render () {
-    const { total, bandwidth, trxBalance, amount, loading } = this.state
+    const { trxBalance, amount } = this.state
 
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} enabled>
-        <KeyboardAwareScrollView>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: Colors.background }}
+        enabled
+      >
+        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
           <Utils.StatusBar />
           <Utils.Container>
-            <Utils.StatusBar />
             <Header>
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
-                  Freeze
+                  FREEZE
                 </Utils.Text>
-                <Utils.Text size='medium'>
-                  {trxBalance.toFixed(2)} TRX
-                </Utils.Text>
+                <Utils.Row align='center'>
+                  <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
+                  <Utils.HorizontalSpacer size='xsmall' />
+                  <Utils.View
+                    style={{
+                      backgroundColor: Colors.lighterBackground,
+                      borderRadius: 3,
+                      paddingHorizontal: 8,
+                      paddingVertical: 6
+                    }}
+                  >
+                    <Utils.Text size='small'>TRX</Utils.Text>
+                  </Utils.View>
+                </Utils.Row>
               </Utils.View>
             </Header>
-            <Utils.Content style={{ backgroundColor: 'transparent' }}>
-              <Card
-                isEditable
-                loading={loading}
-                buttonLabel='Freeze'
+            <Utils.Content>
+              <Input
+                label='FREEZE AMOUNT'
+                leftContent={this._leftContent}
+                keyboardType='numeric'
+                align='right'
+                value={amount}
+                onChangeText={value => this._changeFreeze(value)}
+                placeholder='0'
+              />
+              <Utils.SummaryInfo
+              >{`New freeze TRX: ${amount}`}</Utils.SummaryInfo>
+              <ButtonGradient
+                text='FREEZE'
                 onPress={this.submit}
-                onChange={amount => this.setState({ amount: Number(amount) })}
-              >
-                <CardRow label='New Frozen TRX' value={amount + total} />
-              </Card>
-              <Card>
-                <CardRow label='Frozen TRX' value={total} />
-                <CardRow label='Current Bandwidth' value={bandwidth} />
-              </Card>
+                size='medium'
+                marginVertical='large'
+              />
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>
