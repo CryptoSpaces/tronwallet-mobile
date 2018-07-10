@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { Colors, Spacing } from './DesignSystem'
 import * as Utils from './Utils'
 
-const ButtonGradient = ({ text, onPress, disabled, size, width, marginVertical }) => (
+const ButtonGradient = ({ text, onPress, disabled, size, width, marginVertical, font }) => (
   <TouchableOpacity onPress={onPress} disabled={disabled} style={{marginVertical: Spacing[marginVertical] || 0}}>
     <LinearGradient
       start={{ x: 0, y: 1 }}
@@ -18,9 +18,8 @@ const ButtonGradient = ({ text, onPress, disabled, size, width, marginVertical }
           opacity: disabled ? 0.4 : 1,
           width: width || '100%'
         }
-      ]}
-    >
-      <Utils.Text>{text}</Utils.Text>
+      ]}>
+      <Utils.Text font={font}>{text}</Utils.Text>
     </LinearGradient>
   </TouchableOpacity>
 )

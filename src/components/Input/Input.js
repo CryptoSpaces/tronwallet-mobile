@@ -1,22 +1,32 @@
 import React from 'react'
-import { RevisedFormInput, InputContainer, FormLabel, FormIcon, InputBorderContainer } from '../Utils'
+
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { RevisedFormInput, InputContainer, FormLabel, FormIcon, InputBorderContainer, PasteButton, FormButton, Row, FormContent } from '../Utils'
 import { Colors } from '../DesignSystem'
 
-const Input = ({label, icon, type, value, onChange, placeholder }) => (
+const Input = ({label, type, value, onChange, placeholder, leftContent, rightContent }) => (
   <InputContainer>
     <FormLabel>{label}</FormLabel>
     <InputBorderContainer>
-      {icon && (
-        <FormIcon name={icon} size={24} color={Colors.primaryText} />
+      {leftContent && (
+        <FormContent>
+          {leftContent()}
+        </FormContent>
       )}
       <RevisedFormInput 
         keyboardType={type}
         autoCorrect={false}
         value={value}
+        underlineColorAndroid='transparent'
         onChangeText={(value) => onChange(value)}
         returnKeyType='send'
         placeholder={placeholder}
       />
+      {rightContent && (
+        <FormContent>
+          {rightContent()}
+        </FormContent>
+      )}
     </InputBorderContainer>
   </InputContainer>
 )

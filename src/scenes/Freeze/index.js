@@ -119,15 +119,19 @@ class FreezeScene extends Component {
     })
   }
 
+  _leftContent = () => <Utils.FormIcon name='ios-unlock' size={24} color={Colors.primaryText} />
+
   render () {
-    const { trxBalance, amount } = this.state
+    const {
+      trxBalance,
+      amount
+    } = this.state
 
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} enabled>
         <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Container>
-            <Utils.StatusBar />
             <Header>
               <Utils.View align='center'>
                 <Utils.Text size='xsmall' secondary>
@@ -147,14 +151,14 @@ class FreezeScene extends Component {
             <Utils.Content>
               <Input
                 label='FREEZE AMOUNT'
+                leftContent={this._leftContent}
                 type='numeric'
-                icon={'ios-unlock'}
                 value={amount}
                 onChange={(value) => this._changeFreeze(value)}
                 placeholder='0'
               />
               <Utils.SummaryInfo>{`New freeze TRX: ${amount}`}</Utils.SummaryInfo>
-              <ButtonGradient text='FREEZE' onPress={this.submit} size='medium' marginVertical='large' />
+              <ButtonGradient text='FREEZE' onPress={this.submit} size='medium' marginVertical='large' font='bold' />
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>

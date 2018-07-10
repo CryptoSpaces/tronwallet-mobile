@@ -9,60 +9,13 @@ import { tint } from 'polished'
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
 /* Tron Wallet's border settings. Use it
-anywhere you need the default Tron Wallet 
+anywhere you need the default Tron Wallet
 border. */
 const tronWalletBorder = css`
   border-width: 1px;
   border-color: ${Colors.secondaryText};
   border-radius: 5px;
-`
-
-/* Form Input controls that follow the design scheme of 
-the project. */
-export const InputContainer = styled.View`
-  height: 90px;
-  justify-content: center;
-  position: relative;
-`
-
-export const InputBorderContainer = styled.View`
-  ${tronWalletBorder}
-  height: 70px;
-  justify-content: center;
-  position: relative;
-`
-
-export const RevisedFormInput = styled.TextInput.attrs({
-  placeholderTextColor: Colors.primaryText
-})`
-  position: relative;
-  text-align: right;
-  font-size: ${props => props.size ? FontSize[size] : FontSize['average']};
-  padding: 20px;
-  height: 70px;
-  color: ${Colors.primaryText};
-`
-
-export const FormIcon = styled(Ionicon)`
-  position: absolute;
-  padding: 15px;
-  color: ${Colors.lightestBackground};
-`
-
-export const FormLabel = styled.Text`
-  position: absolute;
-  left: 5px;
-  padding: 5px;
-  top: -5px;
-  background-color: ${Colors.background};
-  color: ${Colors.secondaryText};
-  z-index: 1;
-`
-
-export const SummaryInfo = styled.Text`
-  color: ${Colors.summaryText};
-  margin-vertical: 5px;
-`
+`;
 
 export const Header = styled.View`
   height: 90px;
@@ -288,7 +241,7 @@ export const Text = styled.Text`
   color: ${props => props.color};
   ${props => props.size && css`font-size: ${FontSize[props.size]}`};
   ${props => props.light && css`font-family: rubik-light;`}
-  font-family: ${props => `rubik-${_.capitalize(props.font || 'medium')}`};
+  font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
   ${props => props.padding && css`padding: ${props.padding}`};
   ${props => props.weight && css`font-weight: ${props.weight}`};
   ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};
@@ -506,4 +459,68 @@ export const NumPadWrapper = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   margin: ${Spacing.xsmall}px;
+`
+
+/* Form Input controls that follow the design scheme of
+the project. */
+export const InputContainer = styled.View`
+  height: 90px;
+  justify-content: center;
+  position: relative;
+`
+
+export const InputBorderContainer = Row.extend`
+  ${tronWalletBorder}
+  height: 70px;
+  align-items: center;
+  position: relative;
+  padding: 10px;
+`
+
+export const RevisedFormInput = styled.TextInput.attrs({
+  placeholderTextColor: Colors.primaryText
+})`
+  position: relative;
+  text-align: right;
+  font-size: ${props => props.size ? FontSize[props.size] : FontSize['average']};
+  height: 70px;
+  color: ${Colors.primaryText};
+  flex: 1;
+`
+
+export const FormIcon = styled(Ionicon)`
+  position: absolute;
+  padding: 15px;
+  color: ${Colors.lightestBackground};
+`
+
+export const FormButton = styled.TouchableOpacity`
+  background-color: ${Colors.lighterBackground};
+  padding: 12px;
+  border-radius: 4px;
+  elevation: 15;
+  shadow-color: black;
+  shadow-offset: 4px 4px;
+  shadow-opacity: 0.25;
+  shadow-radius: 4px;
+`
+
+export const FormContent = Row.extend`
+
+`
+
+export const FormLabel = styled.Text`
+  font-family: Rubik-Bold;
+  position: absolute;
+  left: 5px;
+  padding: 5px;
+  top: -5px;
+  background-color: ${Colors.background};
+  color: ${Colors.secondaryText};
+  z-index: 1;
+`
+
+export const SummaryInfo = styled.Text`
+  color: ${Colors.summaryText};
+  margin-vertical: 5px;
 `
