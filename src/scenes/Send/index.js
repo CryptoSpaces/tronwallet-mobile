@@ -233,7 +233,7 @@ class SendScene extends Component {
   )
 
   render () {
-    const { loadingSign, loadingData, error, to, trxBalance } = this.state
+    const { loadingSign, loadingData, error, to, trxBalance, amount } = this.state
     return (
       <KeyboardAvoidingView
         style={{ flex: 1, backgroundColor: Colors.background }}
@@ -300,7 +300,7 @@ class SendScene extends Component {
                 label='AMOUNT'
                 keyboardType='numeric'
                 placeholder='0'
-                value={to}
+                value={amount}
                 onChangeText={text => this.changeInput(text, 'amount')}
               />
             </Utils.Content>
