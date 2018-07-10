@@ -270,7 +270,7 @@ class SendScene extends Component {
                 leftContent={this._leftContent}
                 rightContent={this._rightContent}
                 value={to}
-                onChangeText={text => this.changeInput(text, 'to')}
+                onChange={text => this.changeInput(text, 'to')}
               />
               <Modal
                 visible={this.state.QRModalVisible}
@@ -302,7 +302,7 @@ class SendScene extends Component {
                 type='numeric'
                 placeholder='0'
                 value={to}
-                onChangeText={text => this.changeInput(text, 'amount')}
+                onChange={text => this.changeInput(text, 'amount')}
               />
             </Utils.Content>
             {error && <Utils.Error>{error}</Utils.Error>}

@@ -27,7 +27,7 @@ const Input = ({
         value={value}
         align={textAlign}
         underlineColorAndroid='transparent'
-        onChangeText={value => onChange(value)}
+        onChangeText={onChange}
         returnKeyType='send'
         placeholder={placeholder}
       />
