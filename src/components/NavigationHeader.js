@@ -11,12 +11,13 @@ const NavigationHeader = ({ title, onClose }) => (
       <Utils.TitleWrapper>
         <Utils.Title>{title}</Utils.Title>
       </Utils.TitleWrapper>
-      {onClose &&
+      {onClose && (
         <Utils.LoadButtonWrapper>
           <Utils.LoadButton onPress={onClose}>
             <Feather name='x' color='white' size={32} />
           </Utils.LoadButton>
-        </Utils.LoadButtonWrapper>}
+        </Utils.LoadButtonWrapper>
+      )}
     </Utils.Header>
   </SafeAreaView>
 )

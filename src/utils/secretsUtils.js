@@ -14,7 +14,10 @@ export const createUserKeyPair = async () => {
   }
 }
 
-export const recoverUserKeypair = async (mnemonic, randomlyGenerated = false) => {
+export const recoverUserKeypair = async (
+  mnemonic,
+  randomlyGenerated = false
+) => {
   try {
     await RNTron.validateMnemonic(mnemonic)
     await generateKeypair(mnemonic, randomlyGenerated)
@@ -29,7 +32,9 @@ const generateKeypair = async (mnemonic, randomlyGenerated) => {
   generatedKeypair.id = DeviceInfo.getUniqueID()
   generatedKeypair.confirmed = !randomlyGenerated
   const secretsStore = await getSecretsStore()
-  await secretsStore.write(() => secretsStore.create('Secrets', generatedKeypair, true))
+  await secretsStore.write(() =>
+    secretsStore.create('Secrets', generatedKeypair, true)
+  )
   await Client.setUserPk(generatedKeypair.address)
   await resetWalletData()
 }
@@ -57,7 +62,9 @@ const emptySecret = {
 export const getUserSecrets = async () => {
   try {
     const secretsStore = await getSecretsStore()
-    const secretsObject = secretsStore.objects('Secrets').map(item => Object.assign(item, {}))
+    const secretsObject = secretsStore
+      .objects('Secrets')
+      .map(item => Object.assign(item, {}))
     if (secretsObject.length) return secretsObject[0]
     return emptySecret
   } catch (error) {

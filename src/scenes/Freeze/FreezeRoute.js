@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Linking, KeyboardAvoidingView } from 'react-native'
+import { Linking, KeyboardAvoidingView, Alert } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import qs from 'qs'
 
@@ -34,7 +34,7 @@ class FreezeScene extends Component {
     this._navListener.remove()
   }
 
-  sendDeepLink = async (data) => {
+  sendDeepLink = async data => {
     const { from, amount } = this.state
     try {
       // Data to deep link, same format as Tron Wallet
@@ -54,19 +54,21 @@ class FreezeScene extends Component {
     }
   }
 
-  openTransactionDetails = async (transactionUnsigned) => {
+  openTransactionDetails = async transactionUnsigned => {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loading: false }, () => {
-        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
+        this.props.navigation.navigate('TransactionDetail', {
+          tx: transactionSigned
+        })
       })
     } catch (error) {
-      alert(error.message)
+      Alert.alert(error.message)
       this.setState({ error: 'Error getting transaction', loading: false })
     }
   }
 
-  openDeepLink = async (dataToSend) => {
+  openDeepLink = async dataToSend => {
     try {
       const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
@@ -103,7 +105,7 @@ class FreezeScene extends Component {
     this.setState({ loading: true })
     try {
       if (trxBalance < amount) {
-        alert('Insufficient TRX balance')
+        Alert.alert('Insufficient TRX balance')
         throw new Error('Insufficient TRX balance')
       }
       const transaction = await Client.getFreezeTransaction(amount)
@@ -118,22 +120,11 @@ class FreezeScene extends Component {
   }
 
   render () {
-    const {
-      total,
-      bandwidth,
-      trxBalance,
-      amount,
-      loading
-    } = this.state
+    const { total, bandwidth, trxBalance, amount, loading } = this.state
 
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        enabled
-      >
-        <KeyboardAwareScrollView
-          contentContainerStyle={{ flex: 1 }}
-        >
+      <KeyboardAvoidingView style={{ flex: 1 }} enabled>
+        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
           <Utils.StatusBar />
           <Utils.Container>
             <Utils.StatusBar />
@@ -142,12 +133,20 @@ class FreezeScene extends Component {
                 <Utils.Text size='xsmall' secondary>
                   Freeze
                 </Utils.Text>
-                <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
+                <Utils.Text size='medium'>
+                  {trxBalance.toFixed(2)} TRX
+                </Utils.Text>
               </Utils.View>
               <GoBackButton navigation={this.props.navigation} />
             </Header>
             <Utils.Content style={{ backgroundColor: 'transparent' }}>
-              <Card isEditable loading={loading} buttonLabel='Freeze' onPress={this.freezeToken} onChange={(amount) => this.setState({ amount: Number(amount) })} >
+              <Card
+                isEditable
+                loading={loading}
+                buttonLabel='Freeze'
+                onPress={this.freezeToken}
+                onChange={amount => this.setState({ amount: Number(amount) })}
+              >
                 <CardRow label='New Frozen TRX' value={amount + total} />
               </Card>
               {/* <Card buttonLabel='Unfreeze (0)' onPress={this.unfreezeToken}> */}

@@ -55,13 +55,15 @@ class Restore extends React.Component {
     try {
       await recoverUserKeypair(this.state.seed)
       await updateWalletData()
-      alert('Wallet recovered with success!')
+      Alert.alert('Wallet recovered with success!')
       this.setState({ loading: false }, () => {
         this._navigateToSettings()
       })
     } catch (err) {
       console.warn(err)
-      alert("Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again.")
+      Alert.alert(
+        "Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again."
+      )
       this.setState({ loading: false })
     }
   }
@@ -92,7 +94,9 @@ class Restore extends React.Component {
           />
         </Utils.Row>
         <Utils.VerticalSpacer />
-        <Utils.Button onPress={() => this.props.navigation.goBack()}>Back</Utils.Button>
+        <Utils.Button onPress={() => this.props.navigation.goBack()}>
+          Back
+        </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
     )

@@ -1,4 +1,3 @@
-
 import { Auth } from 'aws-amplify'
 import { getUserSecrets } from './secretsUtils'
 import getBalanceStore from '../store/balance'
@@ -18,14 +17,18 @@ const getAwsPublicKey = async () => {
     }
     return user['custom:publickey']
   } catch (error) {
-    if (error.code === 'UserNotFoundException' || error === 'not authenticated') {
+    if (
+      error.code === 'UserNotFoundException' ||
+      error === 'not authenticated'
+    ) {
       return null
     } else {
       throw error
     }
   }
 }
-const getUserAttributes = async () => {
+
+export const getUserAttributes = async () => {
   try {
     const authenticatedUser = await Auth.currentAuthenticatedUser()
     const userAttributes = await Auth.userAttributes(authenticatedUser)
@@ -35,7 +38,10 @@ const getUserAttributes = async () => {
     }
     return user
   } catch (error) {
-    if (error.code === 'UserNotFoundException' || error === 'not authenticated') {
+    if (
+      error.code === 'UserNotFoundException' ||
+      error === 'not authenticated'
+    ) {
       throw new Error(error.message || error)
     }
   }
@@ -59,7 +65,7 @@ export const checkPublicKeyReusability = async () => {
     const { address } = await getUserSecrets()
     const awsAddress = await getAwsPublicKey()
     // Return true or false if user's address/account is already saved in realm
-    return address == awsAddress
+    return address === awsAddress
   } catch (error) {
     throw error
   }
@@ -67,7 +73,10 @@ export const checkPublicKeyReusability = async () => {
 
 export const resetWalletData = async () => {
   try {
-    const [balanceStore, transactionStore] = await Promise.all([getBalanceStore(), getTransactionStore()])
+    const [balanceStore, transactionStore] = await Promise.all([
+      getBalanceStore(),
+      getTransactionStore()
+    ])
 
     const allBalances = balanceStore.objects('Balance')
     await balanceStore.write(() => balanceStore.delete(allBalances))

@@ -27,10 +27,7 @@ export default class TransferScene extends React.Component {
 
   state = {
     index: 0,
-    routes: [
-      { key: 'send', title: 'Send' },
-      { key: 'freeze', title: 'Freeze' }
-    ]
+    routes: [{ key: 'send', title: 'Send' }, { key: 'freeze', title: 'Freeze' }]
   }
 
   _handleIndexChange = index => this.setState({ index })
@@ -42,7 +39,7 @@ export default class TransferScene extends React.Component {
   _renderScene = SceneMap({
     send: () => <SendScreen {...this.props} />,
     freeze: () => <FreezeScreen {...this.props} />
-  });
+  })
 
   render () {
     return (

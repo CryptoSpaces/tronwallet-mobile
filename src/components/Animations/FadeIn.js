@@ -15,8 +15,12 @@ class FadeIn extends Component {
     const { name, children, didLeave } = this.props
     return (
       <TransitionMotion
-        defaultStyles={children ? [{ key: name, style: getDefaultStyles() }] : []}
-        styles={children ? [{ key: name, style: getStyles(), data: children }] : []}
+        defaultStyles={
+          children ? [{ key: name, style: getDefaultStyles() }] : []
+        }
+        styles={
+          children ? [{ key: name, style: getStyles(), data: children }] : []
+        }
         willLeave={willLeave}
         willEnter={willEnter}
         didLeave={didLeave}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Alert } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
@@ -23,7 +23,7 @@ class Create extends React.Component {
       this.setState({ seed: mnemonic })
     } catch (err) {
       console.warn(err)
-      alert('Oops, we have a problem. Please restart the application.')
+      Alert.alert('Oops, we have a problem. Please restart the application.')
     }
   }
 
@@ -34,17 +34,27 @@ class Create extends React.Component {
         <Utils.View flex={1} />
         <Utils.Content backgroundColor={Colors.darkerBackground}>
           {!seed && <ActivityIndicator />}
-          {seed && <Utils.Text lineHeight={24} letterSpacing={1.5} align='center'>{seed}</Utils.Text>}
+          {seed && (
+            <Utils.Text lineHeight={24} letterSpacing={1.5} align='center'>
+              {seed}
+            </Utils.Text>
+          )}
         </Utils.Content>
         <Utils.View flex={1} />
         <Utils.Row justify='center'>
           <ButtonGradient
-            onPress={() => this.props.navigation.navigate('SeedConfirm', { seed: seed.split(' ') })}
+            onPress={() =>
+              this.props.navigation.navigate('SeedConfirm', {
+                seed: seed.split(' ')
+              })
+            }
             text="I'VE WRITTEN IT DOWN"
           />
         </Utils.Row>
         <Utils.VerticalSpacer />
-        <Utils.Button onPress={() => this.props.navigation.goBack()}>Confirm later</Utils.Button>
+        <Utils.Button onPress={() => this.props.navigation.goBack()}>
+          Confirm later
+        </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
     )

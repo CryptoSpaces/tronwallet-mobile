@@ -14,8 +14,9 @@ const CandidateSchema = {
   }
 }
 
-export default async () => Realm.open({
-  path: 'Realm.candidates',
-  schema: [CandidateSchema],
-  schemaVersion: 1
-})
+export default async () =>
+  Realm.open({
+    path: 'Realm.candidates',
+    schema: [CandidateSchema],
+    schemaVersion: 1
+  })

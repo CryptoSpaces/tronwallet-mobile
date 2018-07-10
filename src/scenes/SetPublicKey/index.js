@@ -74,7 +74,7 @@ export default class SetPkScene extends Component {
     }
   }
 
-  openDeepLink = async (dataToSend) => {
+  openDeepLink = async dataToSend => {
     try {
       const url = `${TronVaultURL}auth/${dataToSend}`
       await Linking.openURL(url)
@@ -92,18 +92,29 @@ export default class SetPkScene extends Component {
   }
 
   renderButtonOptions = () => {
-    return <React.Fragment>
-      <ButtonGradient text='CONFIRM PUBLIC KEY' onPress={this.confirmPublicKey} size='small' />
-      <Utils.VerticalSpacer size='large' />
-      <TouchableOpacity style={{
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        marginHorizontal: 5,
-        flexDirection: 'row'
-      }} onPress={this.getKeyFromVault}>
-        <Utils.Text secondary font='light' size='small'>CONNECT TRON VAULT</Utils.Text>
-      </TouchableOpacity>
-    </React.Fragment>
+    return (
+      <React.Fragment>
+        <ButtonGradient
+          text='CONFIRM PUBLIC KEY'
+          onPress={this.confirmPublicKey}
+          size='small'
+        />
+        <Utils.VerticalSpacer size='large' />
+        <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            marginHorizontal: 5,
+            flexDirection: 'row'
+          }}
+          onPress={this.getKeyFromVault}
+        >
+          <Utils.Text secondary font='light' size='small'>
+            CONNECT TRON VAULT
+          </Utils.Text>
+        </TouchableOpacity>
+      </React.Fragment>
+    )
   }
 
   renderLoadingView = () => (

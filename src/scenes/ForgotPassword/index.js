@@ -43,9 +43,7 @@ class SignupScene extends Component {
           <Utils.VerticalSpacer size='small' />
           <Image source={require('../../assets/login-circle.png')} />
           <Utils.VerticalSpacer size='small' />
-          <Utils.Text size='medium'>
-            TRONWALLET
-          </Utils.Text>
+          <Utils.Text size='medium'>TRONWALLET</Utils.Text>
         </Utils.Content>
         <Utils.Content>
           <Utils.Text size='xsmall' secondary>
@@ -62,11 +60,15 @@ class SignupScene extends Component {
             onChangeText={text => this.changeInput(text, 'email')}
             padding={Spacing.medium}
           />
-          {
-            loadingForgot
-              ? <ActivityIndicator size='small' color={Colors.yellow} />
-              : <ButtonGradient text='Change Password' onPress={this.forgotPassword} size='medium' />
-          }
+          {loadingForgot ? (
+            <ActivityIndicator size='small' color={Colors.yellow} />
+          ) : (
+            <ButtonGradient
+              text='Change Password'
+              onPress={this.forgotPassword}
+              size='medium'
+            />
+          )}
         </Utils.Content>
         <Utils.Content justify='center' align='center'>
           <Utils.Text

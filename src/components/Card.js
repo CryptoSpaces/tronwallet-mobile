@@ -7,7 +7,9 @@ import ButtonGradient from '../components/ButtonGradient'
 export const CardRow = ({ label, value }) => (
   <View style={styles.cardRow}>
     <Utils.Text size='xsmall'>{label}:</Utils.Text>
-    <Utils.Text size='xsmall' style={{ paddingLeft: '2%' }}>{value}</Utils.Text>
+    <Utils.Text size='xsmall' style={{ paddingLeft: '2%' }}>
+      {value}
+    </Utils.Text>
   </View>
 )
 
@@ -26,17 +28,21 @@ class Card extends Component {
     if (isEditable) {
       return (
         <View style={styles.inputWrapper}>
-          <Utils.Text size='xsmall' secondary>FREEZE AMOUNT</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            FREEZE AMOUNT
+          </Utils.Text>
           <Utils.FormInput
-            innerRef={ref => { this.freezeAmount = ref }}
+            innerRef={ref => {
+              this.freezeAmount = ref
+            }}
             underlineColorAndroid='transparent'
             keyboardType='numeric'
             marginBottom={10}
             autoCapitalize='none'
             autoCorrect={false}
             value={this.props.value}
-            onChangeText={(value) => this.props.onChange(value)}
-            onSubmitEditing={() => { }}
+            onChangeText={value => this.props.onChange(value)}
+            onSubmitEditing={() => {}}
             returnKeyType='send'
             style={{
               color: Colors.secondaryText
@@ -57,17 +63,21 @@ class Card extends Component {
         {this.renderInput()}
         {children}
 
-        {
-          buttonLabel
-            ? (
-              <View style={styles.buttonWrapper}>
-                {loading ? <ActivityIndicator size='small' color={Colors.primaryText} />
-                  : <ButtonGradient text={buttonLabel} onPress={onPress} size='small' />}
-              </View>
-            )
-            : <View />
-
-        }
+        {buttonLabel ? (
+          <View style={styles.buttonWrapper}>
+            {loading ? (
+              <ActivityIndicator size='small' color={Colors.primaryText} />
+            ) : (
+              <ButtonGradient
+                text={buttonLabel}
+                onPress={onPress}
+                size='small'
+              />
+            )}
+          </View>
+        ) : (
+          <View />
+        )}
       </View>
     )
   }

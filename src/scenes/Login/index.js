@@ -40,16 +40,14 @@ class LoginScene extends Component {
 
   navigateToHome = () => {
     const { navigation } = this.props
-    this.setState({ loadingSign: false, signError: null },
-      () => {
-        const signToApp = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'App' })],
-          key: null
-        })
-        navigation.dispatch(signToApp)
-      }
-    )
+    this.setState({ loadingSign: false, signError: null }, () => {
+      const signToApp = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'App' })],
+        key: null
+      })
+      navigation.dispatch(signToApp)
+    })
   }
 
   signIn = async () => {
@@ -62,9 +60,8 @@ class LoginScene extends Component {
     try {
       const user = await Auth.signIn(username, password)
       if (user.challengeName && user.challengeName === 'SOFTWARE_TOKEN_MFA') {
-        this.setState(
-          { loadingSign: false, signError: null },
-          () => navigation.navigate('ConfirmLogin', { user })
+        this.setState({ loadingSign: false, signError: null }, () =>
+          navigation.navigate('ConfirmLogin', { user })
         )
       } else {
         try {
@@ -77,7 +74,10 @@ class LoginScene extends Component {
         } catch (err) {
           console.warn(err)
           await Auth.signOut()
-          this.setState({ signError: 'Oops. Login failed, try again', loadingSign: false })
+          this.setState({
+            signError: 'Oops. Login failed, try again',
+            loadingSign: false
+          })
         }
       }
     } catch (error) {
@@ -113,9 +113,7 @@ class LoginScene extends Component {
       )
     }
 
-    return (
-      <ButtonGradient text='SIGN IN' onPress={this.signIn} size='small' />
-    )
+    return <ButtonGradient text='SIGN IN' onPress={this.signIn} size='small' />
   }
 
   render () {
@@ -136,9 +134,7 @@ class LoginScene extends Component {
               <Utils.VerticalSpacer size='small' />
               <Image source={require('../../assets/login-circle.png')} />
               <Utils.VerticalSpacer size='small' />
-              <Utils.Text size='medium'>
-                TRONWALLET
-              </Utils.Text>
+              <Utils.Text size='medium'>TRONWALLET</Utils.Text>
             </Utils.Content>
             <Utils.FormGroup>
               <Utils.Text size='xsmall' secondary>
@@ -162,7 +158,9 @@ class LoginScene extends Component {
                 PASSWORD
               </Utils.Text>
               <Utils.FormInput
-                innerRef={ref => { this.password = ref }}
+                innerRef={ref => {
+                  this.password = ref
+                }}
                 underlineColorAndroid='transparent'
                 secureTextEntry
                 letterSpacing={10}

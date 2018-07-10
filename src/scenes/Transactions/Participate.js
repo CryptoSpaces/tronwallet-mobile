@@ -19,7 +19,8 @@ export default ({ item }) => {
         </Utils.Tag>
         <Utils.View>
           <Utils.Text size='small'>
-            {formatAmount(contractData.amount / ONE_TRX)}  <Feather name='users' size={20} color='#ffffff' />
+            {formatAmount(contractData.amount / ONE_TRX)}{' '}
+            <Feather name='users' size={20} color='#ffffff' />
           </Utils.Text>
         </Utils.View>
       </Utils.Row>
@@ -28,7 +29,9 @@ export default ({ item }) => {
           <Utils.VerticalSpacer size='xsmall' />
           <Utils.Text size='xsmall'>{contractData.token}</Utils.Text>
           <Utils.VerticalSpacer size='xsmall' />
-          <Utils.Text size='xsmall' secondary>{moment(item.timestamp).fromNow()}</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            {moment(item.timestamp).fromNow()}
+          </Utils.Text>
         </Utils.View>
       </Utils.Row>
     </Utils.TransactionCard>

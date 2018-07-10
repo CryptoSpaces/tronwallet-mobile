@@ -10,18 +10,17 @@ class GrowIn extends Component {
   render () {
     const { children } = this.props
     return (
-      <Motion
-        defaultStyles={this.getDefaultStyles()}
-        style={this.getStyles()}
-      >
-        {interpolatingStyle =>
-          <View style={{
-            ...interpolatingStyle,
-            overflow: 'hidden'
-          }}>
+      <Motion defaultStyles={this.getDefaultStyles()} style={this.getStyles()}>
+        {interpolatingStyle => (
+          <View
+            style={{
+              ...interpolatingStyle,
+              overflow: 'hidden'
+            }}
+          >
             {children}
           </View>
-        }
+        )}
       </Motion>
     )
   }

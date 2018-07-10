@@ -5,7 +5,10 @@ import { tint } from 'polished'
 import * as Utils from '../../components/Utils'
 
 export default ({ item }) => {
-  const voteCount = item.contractData.votes.reduce((prev, curr) => (prev + curr.voteCount), 0)
+  const voteCount = item.contractData.votes.reduce(
+    (prev, curr) => prev + curr.voteCount,
+    0
+  )
 
   return (
     <Utils.TransactionCard>
@@ -23,7 +26,9 @@ export default ({ item }) => {
       <Utils.Row>
         <Utils.View>
           <Utils.VerticalSpacer size='xsmall' />
-          <Utils.Text size='xsmall' secondary>{moment(item.timestamp).fromNow()}</Utils.Text>
+          <Utils.Text size='xsmall' secondary>
+            {moment(item.timestamp).fromNow()}
+          </Utils.Text>
         </Utils.View>
       </Utils.Row>
     </Utils.TransactionCard>

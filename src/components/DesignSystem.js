@@ -33,7 +33,8 @@ export const ScreenSize = {
   height
 }
 
-const getAdjustedFontSize = (size) => parseInt(size) * width * (1.8 - 0.002 * width) / 400
+const getAdjustedFontSize = size =>
+  parseInt(size) * width * (1.8 - 0.002 * width) / 400
 
 export const FontSize = {
   tiny: getAdjustedFontSize(11),

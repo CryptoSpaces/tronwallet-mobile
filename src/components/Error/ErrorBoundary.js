@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Text} from '../Utils'
+import { Text } from '../Utils'
 
 export default class ErrorBoundary extends Component {
   state = {
@@ -7,8 +7,8 @@ export default class ErrorBoundary extends Component {
     message: ''
   }
 
-  componentDidCatch (error, info) {
-    this.setState({error: true})
+  componentDidCatch () {
+    this.setState({ error: true })
   }
 
   render () {

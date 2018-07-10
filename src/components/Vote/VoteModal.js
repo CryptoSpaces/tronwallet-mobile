@@ -22,9 +22,9 @@ const VoteModal = ({
   navigation
 }) => {
   const convertedAmount = Number(currVoteAmount)
-  const notEnoughTrx = (convertedAmount > totalRemaining || totalRemaining === 0)
-  const amountIsZero = (convertedAmount === 0)
-  const disableSubmit = (amountIsZero || notEnoughTrx)
+  const notEnoughTrx = convertedAmount > totalRemaining || totalRemaining === 0
+  const amountIsZero = convertedAmount === 0
+  const disableSubmit = amountIsZero || notEnoughTrx
 
   return (
     <Modal
@@ -40,19 +40,28 @@ const VoteModal = ({
             <Ionicons name='ios-close' size={40} color={Colors.primaryText} />
           </Utils.ButtonWrapper>
           <View>
-            <Utils.Text size='medium' secondary>{formatUrl(candidateUrl)}</Utils.Text>
-            <Utils.Text size='large' align='right'>{currVoteAmount.length < 1 ? '0' : formatNumber(currVoteAmount)}</Utils.Text>
+            <Utils.Text size='medium' secondary>
+              {formatUrl(candidateUrl)}
+            </Utils.Text>
+            <Utils.Text size='large' align='right'>
+              {currVoteAmount.length < 1 ? '0' : formatNumber(currVoteAmount)}
+            </Utils.Text>
             <Utils.VerticalSpacer />
             {notEnoughTrx && (
               <React.Fragment>
                 <Utils.Text>
-                  {`You do not have enough frozen TRX. Freeze more TRX${totalRemaining ? ' or lower the vote amount' : ' to continue'}.`}
+                  {`You do not have enough frozen TRX. Freeze more TRX${
+                    totalRemaining
+                      ? ' or lower the vote amount'
+                      : ' to continue'
+                  }.`}
                 </Utils.Text>
                 <Utils.VerticalSpacer size='medium' />
-                <ButtonGradient onPress={() => {
-                  closeModal()
-                  navigation.navigate('Freeze')
-                }}
+                <ButtonGradient
+                  onPress={() => {
+                    closeModal()
+                    navigation.navigate('Freeze')
+                  }}
                   text='Freeze'
                   size='small'
                   width={100}
@@ -72,9 +81,7 @@ const VoteModal = ({
           {voteKeys.map((voteKey, index) => {
             return (
               <Utils.NumKeyWrapper key={voteKey}>
-                <Utils.NumKey
-                  onPress={() => addNumToVote(voteKey)}
-                >
+                <Utils.NumKey onPress={() => addNumToVote(voteKey)}>
                   <Utils.Text>{voteKey}</Utils.Text>
                 </Utils.NumKey>
               </Utils.NumKeyWrapper>
@@ -82,7 +89,11 @@ const VoteModal = ({
           })}
           <Utils.NumKeyWrapper>
             <Utils.NumKey onPress={removeNumFromVote} double>
-              <Ionicons name='ios-arrow-round-back' size={24} color={Colors.primaryText} />
+              <Ionicons
+                name='ios-arrow-round-back'
+                size={24}
+                color={Colors.primaryText}
+              />
               <Utils.HorizontalSpacer />
               <Utils.Text>DELETE</Utils.Text>
             </Utils.NumKey>

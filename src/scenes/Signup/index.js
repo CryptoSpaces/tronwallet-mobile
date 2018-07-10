@@ -46,7 +46,11 @@ class SignupScene extends Component {
           signError: null,
           loadingSign: false
         },
-        () => this.props.navigation.navigate('ConfirmSignup', { username, password })
+        () =>
+          this.props.navigation.navigate('ConfirmSignup', {
+            username,
+            password
+          })
       )
     } catch (error) {
       this.setState({ signError: error.message, loadingSign: false })
@@ -80,7 +84,7 @@ class SignupScene extends Component {
       )
     }
 
-    return (<ButtonGradient text='SIGN UP' onPress={this.signUp} size='small' />)
+    return <ButtonGradient text='SIGN UP' onPress={this.signUp} size='small' />
   }
 
   render () {
@@ -102,9 +106,7 @@ class SignupScene extends Component {
               <Utils.VerticalSpacer size='medium' />
               <Image source={require('../../assets/login-circle.png')} />
               <Utils.VerticalSpacer size='small' />
-              <Utils.Text size='medium'>
-                TRONWALLET
-              </Utils.Text>
+              <Utils.Text size='medium'>TRONWALLET</Utils.Text>
             </Utils.Content>
             <Utils.FormGroup>
               <Utils.Text size='xsmall' secondary>
@@ -157,7 +159,9 @@ class SignupScene extends Component {
                 padding={Spacing.small}
               />
               <Utils.Text size='xsmall' secondary>
-                Password must be at least 8 characters in length, contain at least one uppercase, lowercase letters, special characters and numbers
+                Password must be at least 8 characters in length, contain at
+                least one uppercase, lowercase letters, special characters and
+                numbers
               </Utils.Text>
               <Utils.VerticalSpacer size='medium' />
               {this.renderSubmitButton()}

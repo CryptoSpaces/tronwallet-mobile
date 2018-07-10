@@ -14,8 +14,8 @@ const QRCode = ({ size, value, bgColor, fgColor }) => (
     }}
   >
     <LinearGradient
-      start={{x: 0, y: 1}}
-      end={{x: 1, y: 0}}
+      start={{ x: 0, y: 1 }}
+      end={{ x: 1, y: 0 }}
       colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
       style={{ padding: 1, borderRadius: 10 }}
     >

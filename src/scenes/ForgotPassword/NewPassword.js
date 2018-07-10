@@ -28,11 +28,15 @@ class ConfirmNewPassword extends Component {
       await Auth.forgotPasswordSubmit(email, code, newPassword)
       this.setState({ loadingForgot: false })
       // Params can only be passed between children of same navigator
-      this.props.navigation.navigate('Login', {}, {
-        type: 'Navigate',
-        routeName: 'SecondView',
-        params: { error: 'Email confirmed but credentials failed' }
-      })
+      this.props.navigation.navigate(
+        'Login',
+        {},
+        {
+          type: 'Navigate',
+          routeName: 'SecondView',
+          params: { error: 'Email confirmed but credentials failed' }
+        }
+      )
 
       this.setState({ loadingForgot: false })
     } catch (error) {

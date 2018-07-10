@@ -28,7 +28,12 @@ class RewardsScreen extends PureComponent {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-          style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
+          style={{
+            flex: 1,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
         >
           <Utils.View
             align='center'
@@ -44,56 +49,50 @@ class RewardsScreen extends PureComponent {
               width='42px'
               height='42px'
             />
-            <Utils.Text
-              position='absolute'
-              top={60}
-              fontSize={11}
-            >REWARDS</Utils.Text>
+            <Utils.Text position='absolute' top={60} fontSize={11}>
+              REWARDS
+            </Utils.Text>
             <ImageBackground
               source={require('../../assets/circle-illustration.png')}
               resizeMode='contain'
               paddingSize='none'
               style={{ flex: 1, paddingTop: 50 }}
             >
-              <Utils.View
-                align='center'
-                justify='center'
-              >
+              <Utils.View align='center' justify='center'>
                 <ImageBackground
                   source={require('../../assets/bg-account.png')}
                   style={{ width: 300, height: 300 }}
                 >
-                  <Utils.View
-                    marginTop={65}
-                    align='center'
-                  >
-                    <Utils.Text
-                      font='light'
-                      align='center'
-                      size='average'
-                    >{label}</Utils.Text>
-                    <Utils.Text
-                      align='center'
-                      size='xsmall'
-                      weight='bold'
-                    >You have earned!</Utils.Text>
-                    <Utils.Text
-                      size='huge'
-                      align='center'
-                      marginY={15}
-                    >{amount}</Utils.Text>
+                  <Utils.View marginTop={65} align='center'>
+                    <Utils.Text font='light' align='center' size='average'>
+                      {label}
+                    </Utils.Text>
+                    <Utils.Text align='center' size='xsmall' weight='bold'>
+                      You have earned!
+                    </Utils.Text>
+                    <Utils.Text size='huge' align='center' marginY={15}>
+                      {amount}
+                    </Utils.Text>
                     <Utils.View
                       backgroundColor={Colors.primaryText}
                       borderRadius={3}
                       width={65}
                       padding={8}
                       elevation={5}
-                      style={{ shadowOffset: { width: 4, height: 4 }, shadowColor: 'black', shadowRadius: 5, shadowOpacity: 0.4 }}>
+                      style={{
+                        shadowOffset: { width: 4, height: 4 },
+                        shadowColor: 'black',
+                        shadowRadius: 5,
+                        shadowOpacity: 0.4
+                      }}
+                    >
                       <Utils.Text
                         size='smaller'
                         align='center'
                         color={Colors.orange}
-                      >{token}</Utils.Text>
+                      >
+                        {token}
+                      </Utils.Text>
                     </Utils.View>
                   </Utils.View>
                 </ImageBackground>
@@ -112,7 +111,11 @@ class RewardsScreen extends PureComponent {
             height={120}
           >
             <Utils.ButtonWrapper onPress={this._navigateHome}>
-              <Ionicons name='ios-arrow-round-forward' size={Spacing.large} color={Colors.primaryText} />
+              <Ionicons
+                name='ios-arrow-round-forward'
+                size={Spacing.large}
+                color={Colors.primaryText}
+              />
             </Utils.ButtonWrapper>
           </Utils.ContentWithBackground>
         </LinearGradient>
@@ -126,10 +129,8 @@ RewardsScreen.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         label: PropTypes.string.isRequired,
-        amount: PropTypes.oneOfType([
-          PropTypes.string,
-          PropTypes.number
-        ]).isRequired,
+        amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+          .isRequired,
         token: PropTypes.string.isRequired
       })
     })

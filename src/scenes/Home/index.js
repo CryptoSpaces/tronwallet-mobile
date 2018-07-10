@@ -11,7 +11,6 @@ import Gradient from '../../components/Gradient'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import FadeIn from '../../components/Animations/FadeIn'
-import { VerticalSpacer } from '../../components/Utils'
 
 const PRICE_PRECISION = 7
 const LAST_HOUR = Math.round(new Date().getTime() / 1000) - 3600
@@ -77,23 +76,34 @@ class HomeScene extends Component {
     let url
     switch (this.state.graph.timeSpan) {
       case '1H':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_HOUR}&aggregate=3`
+        url = `${
+          Config.TRX_HISTORY_API
+        }?fsym=TRX&tsym=USD&fromTs=${LAST_HOUR}&aggregate=3`
         break
       case '1D':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}&aggregate=2`
+        url = `${
+          Config.TRX_HISTORY_API
+        }?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}&aggregate=2`
         break
       case '1W':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_WEEK}&aggregate=1`
+        url = `${
+          Config.TRX_HISTORY_API
+        }?fsym=TRX&tsym=USD&fromTs=${LAST_WEEK}&aggregate=1`
         break
       case '1M':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_MONTH}&aggregate=1`
+        url = `${
+          Config.TRX_HISTORY_API
+        }?fsym=TRX&tsym=USD&fromTs=${LAST_MONTH}&aggregate=1`
         break
       case '1Y':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_YEAR}&limit=365&aggregate=1`
+        url = `${
+          Config.TRX_HISTORY_API
+        }?fsym=TRX&tsym=USD&fromTs=${LAST_YEAR}&limit=365&aggregate=1`
         break
       case 'ALL':
-        url =
-          `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&aggregate=1&allData=true`
+        url = `${
+          Config.TRX_HISTORY_API
+        }?fsym=TRX&tsym=USD&aggregate=1&allData=true`
         break
     }
     const response = await axios.get(url, { credentials: false })
@@ -141,8 +151,15 @@ class HomeScene extends Component {
               <Utils.Row>
                 <Utils.Text secondary />
                 <Utils.HorizontalSpacer />
-                <Motion defaultStyle={{ data: 0 }} style={{ data: spring(price, presets.gentle)}}>
-                  {value => <Utils.Text size='medium'>$ {value.data.toFixed(PRICE_PRECISION)}</Utils.Text>}
+                <Motion
+                  defaultStyle={{ data: 0 }}
+                  style={{ data: spring(price, presets.gentle) }}
+                >
+                  {value => (
+                    <Utils.Text size='medium'>
+                      $ {value.data.toFixed(PRICE_PRECISION)}
+                    </Utils.Text>
+                  )}
                 </Motion>
               </Utils.Row>
             </Utils.View>
@@ -171,23 +188,46 @@ class HomeScene extends Component {
                 </Utils.Content>
               </FadeIn>
             )}
-            {(marketcap && volume && supply) && (
-              <FadeIn name='home-info'>
-                <Utils.View>
-                  <Motion defaultStyle={{ data: 0 }} style={{ data: spring(marketcap, presets.gentle)}}>
-                    {value => <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(value.data)}`}</Utils.Text>}
-                  </Motion>
-                  <Utils.VerticalSpacer size='medium' />
-                  <Motion defaultStyle={{ data: 0 }} style={{ data: spring(volume, presets.gentle)}}>
-                    {value => <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(value.data)}`}</Utils.Text>}
-                  </Motion>
-                  <Utils.VerticalSpacer size='medium' />
-                  <Motion defaultStyle={{ data: 0 }} style={{ data: spring(supply, presets.gentle)}}>
-                    {value => <Utils.Text lineHeight={20}>{`${this._formatNumber(value.data)}`}</Utils.Text>}
-                  </Motion>
-                </Utils.View>
-              </FadeIn>
-            )}
+            {marketcap &&
+              volume &&
+              supply && (
+                <FadeIn name='home-info'>
+                  <Utils.View>
+                    <Motion
+                      defaultStyle={{ data: 0 }}
+                      style={{ data: spring(marketcap, presets.gentle) }}
+                    >
+                      {value => (
+                        <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(
+                          value.data
+                        )}`}</Utils.Text>
+                      )}
+                    </Motion>
+                    <Utils.VerticalSpacer size='medium' />
+                    <Motion
+                      defaultStyle={{ data: 0 }}
+                      style={{ data: spring(volume, presets.gentle) }}
+                    >
+                      {value => (
+                        <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(
+                          value.data
+                        )}`}</Utils.Text>
+                      )}
+                    </Motion>
+                    <Utils.VerticalSpacer size='medium' />
+                    <Motion
+                      defaultStyle={{ data: 0 }}
+                      style={{ data: spring(supply, presets.gentle) }}
+                    >
+                      {value => (
+                        <Utils.Text lineHeight={20}>{`${this._formatNumber(
+                          value.data
+                        )}`}</Utils.Text>
+                      )}
+                    </Motion>
+                  </Utils.View>
+                </FadeIn>
+              )}
           </Utils.Row>
         </Utils.Content>
         {graph.loading && (
@@ -199,7 +239,7 @@ class HomeScene extends Component {
         )}
         {!graph.loading && (
           <Fragment>
-            <VerticalSpacer />
+            <Utils.VerticalSpacer />
             <FadeIn name='graph'>
               <Utils.Row justify='space-evenly'>
                 {this.timeSpans.map(timeSpan => (

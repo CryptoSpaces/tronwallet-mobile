@@ -5,7 +5,7 @@ import * as Utils from './Utils'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 
-const PasteInput = ({ onChangeText, field, value, qrScan}) => {
+const PasteInput = ({ onChangeText, field, value, qrScan }) => {
   let content = null
   const paste = async () => {
     content = await Clipboard.getString()
@@ -21,11 +21,19 @@ const PasteInput = ({ onChangeText, field, value, qrScan}) => {
         marginTop={15}
       />
       <Utils.PasteButton onPress={paste}>
-        <Ionicons name='md-clipboard' size={FontSize['small']} color={Colors.primaryText} />
+        <Ionicons
+          name='md-clipboard'
+          size={FontSize['small']}
+          color={Colors.primaryText}
+        />
       </Utils.PasteButton>
       {qrScan && (
         <Utils.PasteButton onPress={qrScan}>
-          <Ionicons name='ios-qr-scanner' size={FontSize['small']} color={Colors.primaryText} />
+          <Ionicons
+            name='ios-qr-scanner'
+            size={FontSize['small']}
+            color={Colors.primaryText}
+          />
         </Utils.PasteButton>
       )}
     </Utils.Row>

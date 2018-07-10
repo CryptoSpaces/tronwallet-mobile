@@ -8,10 +8,18 @@ import * as Utils from './Utils'
 const ButtonGradient = ({ text, onPress, disabled, size, width }) => (
   <TouchableOpacity onPress={onPress} disabled={disabled}>
     <LinearGradient
-      start={{x: 0, y: 1}}
-      end={{x: 1, y: 0}}
+      start={{ x: 0, y: 1 }}
+      end={{ x: 1, y: 0 }}
       colors={[Colors.primaryGradient[0], Colors.primaryGradient[1]]}
-      style={[styles.btnGradient, { padding: Spacing[size], opacity: disabled ? 0.4 : 1, width: width || '100%' }]}>
+      style={[
+        styles.btnGradient,
+        {
+          padding: Spacing[size],
+          opacity: disabled ? 0.4 : 1,
+          width: width || '100%'
+        }
+      ]}
+    >
       <Utils.Text>{text}</Utils.Text>
     </LinearGradient>
   </TouchableOpacity>

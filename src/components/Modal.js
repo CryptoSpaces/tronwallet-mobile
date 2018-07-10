@@ -2,7 +2,12 @@ import React from 'react'
 import { Modal } from 'react-native'
 import PropTypes from 'prop-types'
 
-const ModalComponent = ({modalOpened, closeModal, animationType, children}) => (
+const ModalComponent = ({
+  modalOpened,
+  closeModal,
+  animationType,
+  children
+}) => (
   <Modal
     animationType={animationType}
     transparent={false}

@@ -21,7 +21,9 @@ class LoadingScene extends Component {
     try {
       await Promise.race([
         Auth.currentSession(),
-        new Promise((resolve, reject) => setTimeout(() => reject(new Error('Session expired.')), 5000))
+        new Promise((resolve, reject) =>
+          setTimeout(() => reject(new Error('Session expired.')), 5000)
+        )
       ])
       const isAddressReusable = await checkPublicKeyReusability()
       if (!isAddressReusable) {
