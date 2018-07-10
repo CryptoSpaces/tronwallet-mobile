@@ -15,7 +15,7 @@ import {
 import { Motion, spring, presets } from 'react-motion'
 import Client from '../../services/client'
 import Gradient from '../../components/Gradient'
-import formatNumber from '../../utils/formatNumber'
+import { formatNumber } from '../../utils/numberUtils'
 import ButtonGradient from '../../components/ButtonGradient'
 import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
@@ -44,7 +44,7 @@ class BalanceScene extends Component {
     seedConfirmed: true
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     try {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()
@@ -62,7 +62,7 @@ class BalanceScene extends Component {
     this._dataListener = setInterval(this._loadData, POOLING_TIME)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
     clearInterval(this._dataListener)
   }
@@ -210,7 +210,7 @@ class BalanceScene extends Component {
     </Utils.View>
   )
 
-  render () {
+  render() {
     const {
       assetBalance,
       trxBalance,
@@ -372,8 +372,8 @@ class BalanceScene extends Component {
                               size='small'
                               align='center'
                             >{`${value.price.toFixed(
-                                PRICE_PRECISION
-                              )} USD`}</Utils.Text>
+                              PRICE_PRECISION
+                            )} USD`}</Utils.Text>
                           )}
                         </Motion>
                       </Utils.View>
