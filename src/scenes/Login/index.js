@@ -53,6 +53,8 @@ class LoginScene extends Component {
   signIn = async () => {
     const { navigation } = this.props
     const { username, password } = this.state
+    console.log('username', username)
+    console.log('passowrd', password)
     Keyboard.dismiss()
 
     this.setState({ loadingSign: true, signError: null })
@@ -129,7 +131,7 @@ class LoginScene extends Component {
   }
 
   render () {
-    const { signError, email, username } = this.state
+    const { signError, username, password } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
       <KeyboardAvoidingView
@@ -150,11 +152,11 @@ class LoginScene extends Component {
             <Utils.FormGroup>
               <Input
                 innerRef={(input) => { this.email = input }}
-                label='USERNAME'
-                type='email-address'
+                label='EMAIL/USERNAME'
+                keyboardType='email-address'
                 placeholder='johndoe@somedomain.com'
                 value={username}
-                onChange={() => this.changeInput(text, 'username')}
+                onChangeText={(text) => this.changeInput(text, 'username')}
                 onSubmitEditing={() => this._submit('username')}
                 returnKeyType='next'
                 autoCapitalize='none'
@@ -162,10 +164,10 @@ class LoginScene extends Component {
               <Input
                 innerRef={(input) => { this.password = input }}
                 label='PASSWORD'
-                type='email-address'
                 secureTextEntry
                 placeholder='.........'
-                value={username}
+                value={password}
+                letterSpacing={4}
                 onChangeText={text => this.changeInput(text, 'password')}
                 onSubmitEditing={() => this._submit('password')}
                 returnKeyType='send'

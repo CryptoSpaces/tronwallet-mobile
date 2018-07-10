@@ -118,37 +118,34 @@ class SignupScene extends Component {
               <Input
                 innerRef={(input) => { this.username = input }}
                 label='USERNAME'
-                type='email-address'
-                secureTextEntry
+                keyboardType='email-address'
                 placeholder='John Doe'
                 value={username}
                 onChangeText={text => this.changeInput(text, 'username')}
-                onSubmitEditing={() => this._submit('username')}
+                onSubmitEditing={() => this._nextInput('username')}
                 returnKeyType='next'
                 autoCapitalize='none'
               />
               <Input
                 innerRef={(input) => { this.email = input }}
                 label='EMAIL'
-                type='email-address'
-                secureTextEntry
+                keyboardType='email-address'
                 placeholder='johndoe@yourdomain.com'
                 value={email}
                 onChangeText={text => this.changeInput(text, 'email')}
-                onSubmitEditing={() => this._submit('email')}
+                onSubmitEditing={() => this._nextInput('email')}
                 returnKeyType='next'
                 autoCapitalize='none'
               />
               <Input
                 innerRef={(input) => { this.password = input }}
                 label='PASSWORD'
-                type='email-address'
                 secureTextEntry
                 placeholder='.........'
-                letterSpacing={3}
+                letterSpacing={4}
                 value={password}
                 onChangeText={text => this.changeInput(text, 'password')}
-                onSubmitEditing={() => this._submit('password')}
+                onSubmitEditing={() => this._nextInput('password')}
                 returnKeyType='send'
                 autoCapitalize='none'
               />
