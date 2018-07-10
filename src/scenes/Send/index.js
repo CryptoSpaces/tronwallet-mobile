@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ModalSelector from 'react-native-modal-selector'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
@@ -103,10 +104,6 @@ class SendScene extends Component {
     this.transferAsset()
   }
 
-  onSelectToken = value => {
-    this.setState({ token: value })
-  }
-
   clearInput = () => {
     this.setState({
       to: '',
@@ -115,27 +112,10 @@ class SendScene extends Component {
     })
   }
 
-  renderTokens = () => {
-    const { balances } = this.state
-    return balances.map(bl => {
-      const balanceValue =
-        bl.balance > 1 ? bl.balance.toFixed(2) : bl.balance.toFixed(4)
-      return (
-        <Utils.PickerInput.Item
-          key={bl.name}
-          label={`${bl.name} ${balanceValue}`}
-          value={bl.name}
-        />
-      )
-    })
-  }
-
   transferAsset = async () => {
     const { from, to, amount, token } = this.state
     this.setState({ loadingSign: true, error: null })
     try {
-      // TronScan
-      // const data = await Client.getTransactionString({from,to,amount,token});
       // Serverless
       const data = await Client.getTransferTransaction({
         from,
@@ -143,22 +123,13 @@ class SendScene extends Component {
         amount,
         token
       })
-
-      // Data to deep link, same format as Tron Wallet
-      // const dataToSend = qs.stringify({
-      //   txDetails: { from, to, amount, Type: 'SEND' },
-      //   pk: from,
-      //   action: 'transaction',
-      //   from: 'mobile',
-      //   URL: MakeTronMobileURL('transaction'),
-      //   data
-      // })
-
       this.openTransactionDetails(data)
-      // this.openDeepLink(dataToSend)
       this.clearInput()
     } catch (error) {
-      this.setState({ error: 'Error getting transaction', loadingSign: false })
+      this.setState({
+        error: 'Error getting transaction',
+        loadingSign: false
+      })
     }
   }
 
@@ -274,13 +245,18 @@ class SendScene extends Component {
               <Utils.Text size='xsmall' secondary>
                 Token
               </Utils.Text>
-              <Utils.PickerInput
-                selectedValue={this.state.token}
-                onValueChange={this.onSelectToken}
-                placeholder={this.state.token}
+              <ModalSelector
+                data={this.state.balances.map(item => ({ key: item.name, label: item.name }))}
+                onChange={option => this.setState({ token: option.label })}
               >
-                {this.renderTokens()}
-              </Utils.PickerInput>
+                <Utils.Row align='center' justify='flex-start'>
+                  <Utils.FormInput
+                    style={{ marginRight: 15, width: '100%' }}
+                  >
+                    <Utils.Text>{this.state.token}</Utils.Text>
+                  </Utils.FormInput>
+                </Utils.Row>
+              </ModalSelector>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Text size='xsmall' secondary>
                 Amount

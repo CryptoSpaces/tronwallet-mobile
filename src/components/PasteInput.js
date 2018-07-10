@@ -18,6 +18,8 @@ const PasteInput = ({ onChangeText, field, value, qrScan }) => {
         style={{ flex: 1, width: '100%' }}
         underlineColorAndroid='transparent'
         onChangeText={onChangeText}
+        autoCapitalize='none'
+        autoCorrect={false}
         marginTop={15}
       />
       <Utils.PasteButton onPress={paste}>

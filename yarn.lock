@@ -6148,6 +6148,12 @@ react-native-maps@0.21.0:
     babel-plugin-module-resolver "^2.3.0"
     babel-preset-react-native "1.9.0"
 
+react-native-modal-selector@^0.0.27:
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/react-native-modal-selector/-/react-native-modal-selector-0.0.27.tgz#27f51168596f7ac6ed5edfbaa3e43c0ddfee6415"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-modal@^6.0.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.4.0.tgz#a6c2599b4c9d53ac99071bc658215367ee81e278"
