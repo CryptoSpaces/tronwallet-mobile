@@ -85,7 +85,7 @@ class SignupScene extends Component {
       )
     }
 
-    return  (
+    return (
       <ButtonGradient
         text='SIGN UP'
         onPress={this.signIn}
@@ -158,8 +158,7 @@ class SignupScene extends Component {
               {this.renderSubmitButton()}
             </Utils.FormGroup>
             <Utils.Error>{signError}</Utils.Error>
-            <Utils.Content justify='center' align='center'>
-            </Utils.Content>
+            <Utils.Content justify='center' align='center' />
           </Utils.Container>
         </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
