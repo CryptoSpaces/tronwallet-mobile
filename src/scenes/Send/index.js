@@ -270,6 +270,7 @@ class SendScene extends Component {
                   label: item.name
                 }))}
                 onChange={option => this.setState({ token: option.label })}
+                disabled={trxBalance === 0}
               >
                 <Input
                   label='TOKEN'
@@ -314,6 +315,7 @@ class SendScene extends Component {
                   onPress={this.submit}
                   size='medium'
                   marginVertical='large'
+                    disabled={trxBalance === 0}
                 />
               )}
               <Utils.VerticalSpacer />
