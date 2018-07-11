@@ -11,6 +11,7 @@ const ButtonGradient = ({
   disabled,
   size,
   width,
+  weight,
   marginVertical,
   font
 }) => (
@@ -27,25 +28,27 @@ const ButtonGradient = ({
       style={[
         styles.btnGradient,
         {
-          padding: Spacing[size],
           opacity: disabled ? 0.4 : 1,
-          width: width || '100%'
+          width: width || '100%',
+          height: size,
+          justifyContent: 'center'
         }
       ]}
     >
-      <Utils.Text size='xsmall' font={font}>{text}</Utils.Text>
+      <Utils.Text weight={weight} size={'button'} font={font}>{text}</Utils.Text>
     </LinearGradient>
   </TouchableOpacity>
 )
 
 ButtonGradient.defaultProps = {
   disabled: false,
-  size: 'medium'
+  size: 50,
+  font: 'medium'
 }
 
 ButtonGradient.propTypes = {
   disabled: PropTypes.bool,
-  size: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large'])
+  size: PropTypes.number
 }
 
 const styles = StyleSheet.create({
