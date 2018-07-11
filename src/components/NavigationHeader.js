@@ -21,9 +21,10 @@ const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
   }
 
   return <SafeAreaView style={{ backgroundColor: Colors.background }}>
-    <Utils.Header noBorder={noBorder}>
+    <Utils.VerticalSpacer size='medium' />
+    <Utils.Header justify='center' noBorder={noBorder}>
       <Utils.TitleWrapper>
-        <Utils.Title>{title}</Utils.Title>
+        <Utils.Text size='average' weight='100'>{title}</Utils.Text>
       </Utils.TitleWrapper>
       {rightElement}
     </Utils.Header>

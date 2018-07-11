@@ -18,7 +18,7 @@ const INDICATOR_WIDTH = 15
 export default class TransferScene extends React.Component {
   static navigationOptions = () => {
     return {
-      header: <NavigationHeader title='Transfers' noBorder />
+      header: <NavigationHeader title='TRANSFERS' noBorder />
     }
   }
 
@@ -46,7 +46,9 @@ export default class TransferScene extends React.Component {
         flex: 0.1,
         borderBottomWidth: 1,
         borderColor: Colors.lighterBackground,
-        paddingBottom: 10
+        paddingBottom: 10,
+        elevation: 0,
+        shadowOpacity: 0
       }}
     />
   )
