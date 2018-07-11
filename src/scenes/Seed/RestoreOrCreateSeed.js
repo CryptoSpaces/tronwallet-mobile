@@ -1,14 +1,24 @@
 import React from 'react'
-import { Image, ActivityIndicator, Alert } from 'react-native'
+import { Image, ActivityIndicator, Alert, SafeAreaView } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
+import { Colors } from '../../components/DesignSystem'
+import Logo from '../../components/Logo'
 
 import { createUserKeyPair } from '../../utils/secretsUtils'
 
 class RestoreOrCreateSeed extends React.Component {
-  static navigationOptions = {
-    header: null
+  static navigationOptions = () => {
+    return {
+      header: (
+        <SafeAreaView style={{backgroundColor: Colors.background}}>
+          <Utils.Header background={Colors.background} noBorder>
+            <Utils.Title paddingLeft='large'>My Wallet</Utils.Title>
+          </Utils.Header>
+        </SafeAreaView>
+      )
+    }
   }
 
   state = {
@@ -33,9 +43,7 @@ class RestoreOrCreateSeed extends React.Component {
     return (
       <Utils.Container>
         <Utils.Content flex={1} justify='center'>
-          <Utils.Row justify='center'>
-            <Image source={require('../../assets/login-circle.png')} />
-          </Utils.Row>
+          <Logo />
           <Utils.VerticalSpacer size='large' />
           <Utils.Text light secondary>
             We detected that you have used our application before, either on
