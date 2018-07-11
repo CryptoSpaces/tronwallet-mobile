@@ -309,20 +309,18 @@ class SendScene extends Component {
               />
             </Utils.Content>
             {error && <Utils.Error>{error}</Utils.Error>}
-            <Utils.Content justify='center'>
+            <Utils.View justify='center' paddingY='xsmall' paddingX='big'>
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
-                  <ButtonGradient
-                    text='SEND'
-                    onPress={this.submit}
-                    size='medium'
-                    marginVertical='large'
-                    disabled={trxBalance === 0}
-                  />
-                )}
-              <Utils.VerticalSpacer />
-            </Utils.Content>
+                <ButtonGradient
+                  text='SEND'
+                  onPress={this.submit}
+                  disabled={trxBalance === 0}
+                />
+              )}
+              <Utils.VerticalSpacer size='big'/>
+            </Utils.View>
           </Utils.Container>
         </KeyboardAwareScrollView>
       </KeyboardAvoidingView>

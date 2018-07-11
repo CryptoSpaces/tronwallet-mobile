@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Alert
@@ -14,6 +13,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
+import Logo from '../../components/Logo'
 
 // Services
 import { createUserKeyPair } from '../../utils/secretsUtils'
@@ -129,7 +129,7 @@ class SignupScene extends Component {
           >
             <Utils.Content justify='center' align='center'>
               <Utils.VerticalSpacer size='small' />
-              <Image source={require('../../assets/login-circle.png')} />
+              <Logo />
               <Utils.VerticalSpacer size='small' />
               <Utils.Text size='medium'>TRONWALLET</Utils.Text>
             </Utils.Content>

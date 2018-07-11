@@ -47,6 +47,7 @@ const getAdjustedFontSize = size =>
 
 export const FontSize = {
   tiny: getAdjustedFontSize(11),
+  button: getAdjustedFontSize(12),
   xsmall: getAdjustedFontSize(12),
   smaller: getAdjustedFontSize(14),
   small: getAdjustedFontSize(16),

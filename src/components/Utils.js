@@ -87,6 +87,10 @@ export const View = styled.View`
       css`
         border-radius: ${props.borderRadius}px;
       `} ${props =>
+  props.padding &&
+      css`
+        top: ${props.padding};
+      `} ${props =>
   props.paddingY &&
       css`
         padding-vertical: ${Spacing[props.paddingY]};
@@ -94,11 +98,7 @@ export const View = styled.View`
   props.paddingX &&
       css`
         padding-horizontal: ${Spacing[props.paddingX]};
-      `} ${props =>
-  props.padding &&
-      css`
-        top: ${props.padding};
-      `} ${props =>
+      `}  ${props =>
   props.margin &&
       css`
         margin: ${props.margin}px;
@@ -313,16 +313,12 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   color: ${props => props.color};
+  font-family: ${props => `Rubik-${_.capitalize(props.font || 'Medium')}`};
   ${props =>
     props.size &&
     css`
       font-size: ${FontSize[props.size]}px;
     `};
-  ${props =>
-    props.light &&
-    css`
-      font-family: rubik-light;
-    `} font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
   ${props =>
     props.padding &&
     css`
@@ -406,6 +402,7 @@ Text.propTypes = {
     'xsmall',
     'smaller',
     'small',
+    'button',
     'average',
     'medium',
     'large',
@@ -413,7 +410,7 @@ Text.propTypes = {
   ]),
   marginTop: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
   lineHeight: PropTypes.number,
-  font: PropTypes.oneOf(['bold', 'light'])
+  font: PropTypes.oneOf(['bold', 'light', 'black', 'medium'])
 }
 
 export const Item = styled.View`

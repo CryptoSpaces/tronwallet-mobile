@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
 import { Colors, Spacing } from '../../components/DesignSystem'
+import Logo from '../../components/Logo'
 import ButtonGradient from '../../components/ButtonGradient'
 
 class SignupScene extends Component {
@@ -39,12 +40,7 @@ class SignupScene extends Component {
     const { forgotError, loadingForgot } = this.state
     return (
       <Utils.Container>
-        <Utils.Content justify='center' align='center'>
-          <Utils.VerticalSpacer size='small' />
-          <Image source={require('../../assets/login-circle.png')} />
-          <Utils.VerticalSpacer size='small' />
-          <Utils.Text size='medium'>TRONWALLET</Utils.Text>
-        </Utils.Content>
+        <Logo />
         <Utils.Content>
           <Utils.Text size='xsmall' secondary>
             Change Password
