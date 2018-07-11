@@ -38,7 +38,8 @@ class TransactionDetail extends Component {
     success: null,
     submitError: null,
     submitted: false,
-    isConnected: null
+    isConnected: null,
+    nowDate: moment().format('MM/DD/YYYY HH:MM:SS')
   }
 
   componentDidMount () {
@@ -132,16 +133,15 @@ class TransactionDetail extends Component {
   }
 
   renderContracts = () => {
-    const { transactionData } = this.state
+    const { transactionData, nowDate } = this.state
     if (!transactionData) return
     const { contracts } = transactionData
     const contractsElements = buildTransactionDetails(contracts)
-    const now = moment()
     contractsElements.push(
       <DetailRow
         key={'TIME'}
         title={'TIME'}
-        text={now.format('MM/DD/YYYY HH:MM:SS')} // TODO - Verify if API is sending timestamp correctly again
+        text={nowDate}
       />
     )
     return <Utils.View paddingX={'medium'} paddingY={'small'}>{contractsElements}</Utils.View>

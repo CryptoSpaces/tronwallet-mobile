@@ -26,10 +26,19 @@ const toReadableField = (field) => {
 export default (contracts) => {
   const contractsRows = []
   for (const ctr in contracts[0]) {
-    if (ctr === 'contractTypeId') continue
+    if (ctr === 'contractTypeId') {
+      if (Number(contracts[0][ctr]) === 1) {
+        contractsRows.push(<DetailRow
+          key={'TOKEN'}
+          title={toReadableField('TOKEN')}
+          text={toReadableField('TRX')}
+        />)
+      }
+      continue
+    }
 
     if (ctr === 'ownerAddress' || ctr === 'toAddress' ||
-    ctr === 'from' || ctr === 'to') {
+      ctr === 'from' || ctr === 'to') {
       contractsRows.push(
         <DetailRow
           key={ctr}
@@ -38,11 +47,13 @@ export default (contracts) => {
         />
       )
     } else if (ctr === 'amount' || ctr === 'frozenBalance') {
+      const contractId = Number(contracts[0]['contractTypeId'])
+      const amountDivider = contractId === 1 || contractId === 11 ? ONE_TRX : 1
       contractsRows.push(
         <DetailRow
           key={ctr}
           title={toReadableField(ctr)}
-          text={contracts[0][ctr] / ONE_TRX}
+          text={contracts[0][ctr] / amountDivider}
         />
       )
     } else if (ctr === 'votes') {

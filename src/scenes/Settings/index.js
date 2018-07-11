@@ -3,8 +3,7 @@ import {
   StyleSheet,
   Alert,
   View,
-  TouchableWithoutFeedback,
-  SafeAreaView
+  TouchableWithoutFeedback
 } from 'react-native'
 import { Auth } from 'aws-amplify'
 import { StackActions, NavigationActions } from 'react-navigation'
@@ -15,21 +14,14 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
 import fontelloConfig from '../../assets/icons/config.json'
+import NavigationHeader from '../../components/NavigationHeader'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 class Settings extends Component {
   static navigationOptions = () => {
     return {
-      header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>Settings</Utils.Title>
-            </Utils.TitleWrapper>
-          </Utils.Header>
-        </SafeAreaView>
-      )
+      header: <NavigationHeader title='Settings' />
     }
   }
 

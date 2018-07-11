@@ -128,7 +128,7 @@ class SendScene extends Component {
       this.clearInput()
     } catch (error) {
       this.setState({
-        error: 'Error getting transaction',
+        error: 'Oops. Something wrong while building transaction. Please Try Again',
         loadingSign: false
       })
     }
@@ -143,7 +143,7 @@ class SendScene extends Component {
         })
       })
     } catch (error) {
-      this.setState({ error: 'Error getting transaction', loadingSign: false })
+      this.setState({ error: 'Oops. Something wrong while building transaction. Please Try Again', loadingSign: false })
     }
   }
 
@@ -264,7 +264,7 @@ class SendScene extends Component {
               </Utils.View>
             </Header>
             <Utils.Content>
-            <ModalSelector
+              <ModalSelector
                 data={this.state.balances.map(item => ({
                   key: item.name,
                   label: item.name
