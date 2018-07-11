@@ -328,7 +328,7 @@ class VoteScene extends PureComponent {
     )
   }
 
-  render () {
+  render() {
     const { totalVotes, totalRemaining, votesError, refreshing, loadingList } = this.state
     return (
       <Utils.Container>
@@ -382,6 +382,8 @@ class VoteScene extends PureComponent {
         )}
         <Utils.Content>
           <Utils.FormInput
+            autoCapitalize='none'
+            autoCorrect={false}
             underlineColorAndroid='transparent'
             onChangeText={text => this._onSearch(text, 'search')}
             placeholder='Search'
