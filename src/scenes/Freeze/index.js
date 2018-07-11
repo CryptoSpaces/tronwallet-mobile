@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
 import { Linking, KeyboardAvoidingView, Alert } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import * as Utils from '../../components/Utils'
-import Client from '../../services/client'
 import Header from '../../components/Header'
+import Input from '../../components/Input'
+import Badge from '../../components/Badge'
+import ButtonGradient from '../../components/ButtonGradient'
+import { Colors } from '../../components/DesignSystem'
+
+import Client from '../../services/client'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils'
-import Input from '../../components/Input/Input'
-import ButtonGradient from '../../components/ButtonGradient'
 import { Context } from '../../store/context'
-
-import { Colors } from '../../components/DesignSystem'
 
 class FreezeScene extends Component {
   state = {
@@ -118,7 +120,11 @@ class FreezeScene extends Component {
     })
   }
 
-  _leftContent = () => <Utils.FormIcon name='ios-unlock' size={24} color={Colors.primaryText} />
+  _leftContent = () => (
+    <Utils.View marginRight={8} marginLeft={8}>
+      <Ionicons name='ios-unlock' size={16} color={Colors.secondaryText} />
+    </Utils.View>
+  )
 
   render () {
     const { trxBalance, amount } = this.state
@@ -138,17 +144,8 @@ class FreezeScene extends Component {
                 </Utils.Text>
                 <Utils.Row align='center'>
                   <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
-                  <Utils.HorizontalSpacer size='xsmall' />
-                  <Utils.View
-                    style={{
-                      backgroundColor: Colors.lighterBackground,
-                      borderRadius: 3,
-                      paddingHorizontal: 8,
-                      paddingVertical: 6
-                    }}
-                  >
-                    <Utils.Text size='small'>TRX</Utils.Text>
-                  </Utils.View>
+                  <Utils.HorizontalSpacer />
+                  <Badge>TRX</Badge>
                 </Utils.Row>
               </Utils.View>
             </Header>

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { SafeAreaView, ScrollView, Alert } from 'react-native'
+import { ScrollView, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'

@@ -1,3 +1,4 @@
+/* eslint-disable prettier */
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { ImageBackground, Image, Platform } from 'react-native'
@@ -25,16 +26,8 @@ export const Header = styled.View`
   border-color: ${Colors.lighterBackground};
   border-bottom-width: 1px;
   background-color: ${props => props.background};
-  ${props =>
-    props.paddingTop &&
-    css`
-      padding-top: ${props.paddingTop}px;
-    `};
-  ${props =>
-    props.noBorder &&
-    css`
-      border-bottom-width: 0;
-    `};
+  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px; `};
+  ${props => props.noBorder && css` border-bottom-width: 0; `};
 `
 
 Header.defaultProps = {
@@ -58,87 +51,26 @@ export const TitleWrapper = styled.View`
 export const View = styled.View`
   align-items: ${props => props.align};
   justify-content: ${props => props.justify};
-  ${props =>
-    props.flex &&
-    css`
-      flex: ${props.flex};
-    `} ${props =>
-  props.height &&
-      css`
-        height: ${props.height};
-      `} ${props =>
-  props.width &&
-      css`
-        width: ${props.width};
-      `} ${props =>
-  props.background &&
-      css`
-        background-color: ${props.background};
-      `} ${props =>
-  props.borderWidth &&
-      css`
-        border-width: ${props.borderWidth};
-      `} ${props =>
-  props.borderColor &&
-      css`
-        border-color: ${props.borderColor};
-      `} ${props =>
-  props.borderRadius &&
-      css`
-        border-radius: ${props.borderRadius}px;
-      `} ${props =>
-  props.paddingY &&
-      css`
-        padding-vertical: ${Spacing[props.paddingY]};
-      `} ${props =>
-  props.paddingX &&
-      css`
-        padding-horizontal: ${Spacing[props.paddingX]};
-      `} ${props =>
-  props.padding &&
-      css`
-        top: ${props.padding};
-      `} ${props =>
-  props.margin &&
-      css`
-        margin: ${props.margin}px;
-      `} ${props =>
-  props.marginTop &&
-      css`
-        margin-top: ${props.marginTop}px;
-      `} ${props =>
-  props.marginBottom &&
-      css`
-        margin-bottom: ${props.marginBottom}px;
-      `} ${props =>
-  props.marginRight &&
-      css`
-        margin-right: ${props.marginRight}px;
-      `} ${props =>
-  props.marginLeft &&
-      css`
-        margin-left: ${props.marginLeft}px;
-      `} ${props =>
-  props.position &&
-      css`
-        position: ${props.position};
-      `} ${props =>
-  props.top &&
-      css`
-        top: ${props.top};
-      `} ${props =>
-  props.bottom &&
-      css`
-        bottom: ${props.bottom};
-      `} ${props =>
-  props.right &&
-      css`
-        right: ${props.right};
-      `} ${props =>
-  props.left &&
-      css`
-        left: ${props.left};
-      `};
+  ${props => props.flex && css`flex: ${props.flex};`}
+  ${props => props.height && css`height: ${props.height};`}
+  ${props => props.width && css`width: ${props.width};`}
+  ${props => props.background && css`background-color: ${props.background};`}
+  ${props => props.borderWidth && css`border-width: ${props.borderWidth};`}
+  ${props => props.borderColor && css`border-color: ${props.borderColor};`}
+  ${props => props.borderRadius && css`border-radius: ${props.borderRadius}px;`}
+  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]};`}
+  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]};`}
+  ${props => props.padding && css`top: ${props.padding};`}
+  ${props => props.margin && css`margin: ${props.margin}px;`}
+  ${props => props.marginTop && css`margin-top: ${props.marginTop}px;`}
+  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px;`}
+  ${props => props.marginRight && css`margin-right: ${props.marginRight}px;`}
+  ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px;`}
+  ${props => props.position && css`position: ${props.position};`}
+  ${props => props.top && css`top: ${props.top};`}
+  ${props => props.bottom && css`bottom: ${props.bottom};`}
+  ${props => props.right && css`right: ${props.right};`}
+  ${props => props.left && css`left: ${props.left};`};
 `
 
 View.defaultProps = {
@@ -175,78 +107,17 @@ export const Container = View.extend.attrs({
 export const Content = View.extend.attrs({
   paddingSize: 'big'
 })`
-  padding: ${props =>
-    props.paddingSize !== 'none' ? `${Spacing[props.paddingSize]}px` : 0};
-  ${props =>
-    props.flex &&
-    css`
-      flex: ${props.flex};
-    `}
-  ${props =>
-    props.background &&
-    css`
-      background-color: ${props.background};
-    `}
-  ${props =>
-    props.marginY &&
-    css`
-      margin-vertical: ${props.marginY}px;
-    `}
-  ${props =>
-    props.marginX &&
-    css`
-      margin-horizontal: ${props.marginX}px;
-    `}
-  ${props =>
-    props.paddingTop &&
-    css`
-      padding-top: ${props.paddingTop}px;
-    `}
-  ${props =>
-    props.position &&
-    css`
-      position: ${props.position};
-    `}
-  ${props =>
-    props.height &&
-    css`
-      height: ${props.height};
-    `}
-  ${props =>
-    props.width &&
-    css`
-      width: ${props.width};
-    `}
-  ${props =>
-    props.top &&
-    css`
-      top: ${props.top};
-    `}
-  ${props =>
-    props.bottom &&
-    css`
-      bottom: ${props.bottom};
-    `}
-  ${props =>
-    props.right &&
-    css`
-      right: ${props.right};
-    `}
-  ${props =>
-    props.left &&
-    css`
-      left: ${props.left};
-    `}
+  padding: ${props => props.paddingSize !== 'none' ? `${Spacing[props.paddingSize]}px` : 0};
+  ${props => props.flex && css` flex: ${props.flex}; `}
+  ${props => props.background && css` background-color: ${props.background}; `}
+  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px; `}
+  ${props => props.position && css` position: ${props.position}; `}
 `
 
 export const StatusBar = styled.View`
   height: 12px;
   background-color: ${Colors.background};
-  ${props =>
-    props.transparent &&
-    css`
-      background-color: transparent;
-    `};
+  ${props => props.transparent && css` background-color: transparent; `};
 `
 
 export const LoadButton = styled.TouchableOpacity`
@@ -268,19 +139,9 @@ export const Img = View.withComponent(Image)
 
 export const Row = View.extend`
   flex-direction: row;
-  ${props =>
-    props.background &&
-    css`
-      background-color: ${props.background};
-    `} ${props =>
-  props.position &&
-      css`
-        position: ${props.position};
-      `} ${props =>
-  props.wrap &&
-      css`
-        flex-wrap: ${props.wrap};
-      `};
+  ${props => props.background && css` background-color: ${props.background}; `}
+${props => props.position && css` position: ${props.position}; `}
+  ${props => props.wrap && css` flex-wrap: ${props.wrap}; `};
 `
 
 export const Column = View.extend`
@@ -313,86 +174,23 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   color: ${props => props.color};
-  ${props =>
-    props.size &&
-    css`
-      font-size: ${FontSize[props.size]}px;
-    `};
-  ${props =>
-    props.light &&
-    css`
-      font-family: rubik-light;
-    `} font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
-  ${props =>
-    props.padding &&
-    css`
-      padding: ${props.padding};
-    `};
-  ${props =>
-    props.weight &&
-    css`
-      font-weight: ${props.weight};
-    `};
-  ${props =>
-    props.marginY &&
-    css`
-      margin-vertical: ${props.marginY}px;
-    `};
-  ${props =>
-    props.align &&
-    css`
-      text-align: ${props.align};
-    `};
-  ${props =>
-    props.secondary &&
-    css`
-      color: ${Colors.secondaryText};
-    `};
-  ${props =>
-    props.success &&
-    css`
-      color: ${Colors.green};
-    `};
-  ${props =>
-    props.lineHeight &&
-    css`
-      line-height: ${props.lineHeight};
-    `};
-  ${props =>
-    props.letterSpacing &&
-    css`
-      letter-spacing: ${props.letterSpacing};
-    `};
-  ${props =>
-    props.marginBottom &&
-    css`
-      margin-bottom: ${props.marginBottom}px;
-    `};
-  ${props =>
-    props.marginTop &&
-    css`
-      margin-top: ${Spacing[props.marginTop]}px;
-    `};
-  ${props =>
-    props.margin &&
-    css`
-      margin: ${props.margin}px;
-    `};
-  ${props =>
-    props.position &&
-    css`
-      position: ${props.position};
-    `};
-  ${props =>
-    props.top &&
-    css`
-      top: ${props.top};
-    `};
-  ${props =>
-    props.background &&
-    css`
-      background-color: ${props.background};
-    `};
+  font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
+  ${props => props.size && css` font-size: ${FontSize[props.size]}px; `};
+  ${props => props.light && css` font-family: rubik-light; `}
+  ${props => props.padding && css` padding: ${props.padding}; `};
+  ${props => props.weight && css` font-weight: ${props.weight}; `};
+  ${props => props.marginY && css` margin-vertical: ${props.marginY}px; `};
+  ${props => props.align && css` text-align: ${props.align}; `};
+  ${props => props.secondary && css` color: ${Colors.secondaryText}; `};
+  ${props => props.success && css` color: ${Colors.green}; `};
+  ${props => props.lineHeight && css` line-height: ${props.lineHeight}; `};
+  ${props => props.letterSpacing && css` letter-spacing: ${props.letterSpacing}; `};
+  ${props => props.marginBottom && css` margin-bottom: ${props.marginBottom}px; `};
+  ${props => props.marginTop && css` margin-top: ${Spacing[props.marginTop]}px; `};
+  ${props => props.margin && css` margin: ${props.margin}px; `};
+  ${props => props.position && css` position: ${props.position}; `};
+  ${props => props.top && css` top: ${props.top}; `};
+  ${props => props.background && css` background-color: ${props.background}; `};
 `
 
 Text.defaultProps = {
@@ -417,23 +215,11 @@ Text.propTypes = {
 }
 
 export const Item = styled.View`
-  ${props =>
-    props.padding &&
-    css`
-      padding: ${props.padding}px;
-    `};
+  ${props => props.padding && css` padding: ${props.padding}px; `};
   border-color: ${Colors.secondaryText};
-  ${props =>
-    props.borderColor &&
-    css`
-      border-color: ${props.borderColor};
-    `};
+  ${props => props.borderColor && css` border-color: ${props.borderColor}; `};
   border-bottom-width: 0.2px;
-  ${props =>
-    props.top &&
-    css`
-      border-top-width: 0.2px;
-    `};
+  ${props => props.top && css` border-top-width: 0.2px; `};
 `
 
 export const Label = styled.View`
@@ -471,11 +257,7 @@ FormInput.defaultProps = {
 
 export const FormGroup = styled.KeyboardAvoidingView`
   padding: ${Spacing.big}px;
-  ${props =>
-    props.background &&
-    css`
-      background-color: ${props.background};
-    `};
+  ${props => props.background && css` background-color: ${props.background}; `};
 `
 export const Error = styled.Text`
   font-size: ${FontSize['small']};
@@ -537,11 +319,7 @@ export const ButtonWrapper = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   ${props => props.side && `${props.side}: ${Spacing.medium}`};
-  ${props =>
-    props.marginBottom &&
-    css`
-      margin-bottom: ${Spacing[props.marginBottom]}px;
-    `};
+  ${props => props.marginBottom && css` margin-bottom: ${Spacing[props.marginBottom]}px; `};
 `
 ButtonWrapper.propTypes = {
   marginBottom: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large']),
@@ -578,20 +356,18 @@ export const NumKeyWrapper = styled.View`
   align-items: stretch;
   justify-content: center;
   ${props =>
-    props.double &&
-    css`
-      flex-basis: 66%;
-      flex-grow: 2;
+    props.double && css`
+      flex-basis: 66%; flex-grow: 2;
     `};
 `
 
 export const NumKey = styled.TouchableOpacity`
   ${props =>
-    props.double &&
-    css`
+    props.double && css`
       flex-direction: row;
       justify-content: center;
-    `} align-items: center;
+    `}
+  align-items: center;
   padding: ${Spacing.medium}px;
   background-color: ${tint(0.9, Colors.background)};
 `

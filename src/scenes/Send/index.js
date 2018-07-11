@@ -14,10 +14,12 @@ import ModalSelector from 'react-native-modal-selector'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
 import Header from '../../components/Header'
-import Input from '../../components/Input/Input'
+import Input from '../../components/Input'
 import QRScanner from '../../components/QRScanner'
+import IconButton from '../../components/IconButton'
+import Badge from '../../components/Badge'
 import * as Utils from '../../components/Utils'
-import { Colors, FontSize } from '../../components/DesignSystem'
+import { Colors } from '../../components/DesignSystem'
 
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
@@ -41,14 +43,14 @@ class SendScene extends Component {
     QRModalVisible: false
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._navListener = this.props.navigation.addListener(
       'didFocus',
       this.loadData
     )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
   }
 
@@ -216,25 +218,13 @@ class SendScene extends Component {
 
   _rightContent = () => (
     <React.Fragment>
-      <Utils.FormButton onPress={this._onPaste}>
-        <Ionicons
-          name='md-clipboard'
-          size={FontSize['medium']}
-          color={Colors.buttonText}
-        />
-      </Utils.FormButton>
+      <IconButton onPress={this._onPaste} icon='md-clipboard' />
       <Utils.HorizontalSpacer />
-      <Utils.FormButton onPress={this._openModal}>
-        <Ionicons
-          name='ios-qr-scanner'
-          size={FontSize['medium']}
-          color={Colors.buttonText}
-        />
-      </Utils.FormButton>
+      <IconButton onPress={this._openModa} icon='ios-qr-scanner' />
     </React.Fragment>
   )
 
-  render() {
+  render () {
     const { loadingSign, loadingData, error, warning, to, trxBalance, amount } = this.state
     return (
       <KeyboardAvoidingView
@@ -251,17 +241,8 @@ class SendScene extends Component {
                 </Utils.Text>
                 <Utils.Row align='center'>
                   <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
-                  <Utils.HorizontalSpacer size='xsmall' />
-                  <Utils.View
-                    style={{
-                      backgroundColor: Colors.lighterBackground,
-                      borderRadius: 3,
-                      paddingHorizontal: 8,
-                      paddingVertical: 6
-                    }}
-                  >
-                    <Utils.Text size='small'>TRX</Utils.Text>
-                  </Utils.View>
+                  <Utils.HorizontalSpacer />
+                  <Badge>TRX</Badge>
                 </Utils.Row>
                 {warning && <Utils.Warning>{warning}</Utils.Warning>}
               </Utils.View>
@@ -307,21 +288,18 @@ class SendScene extends Component {
                 value={amount}
                 onChangeText={text => this.changeInput(text, 'amount')}
               />
-            </Utils.Content>
-            {error && <Utils.Error>{error}</Utils.Error>}
-            <Utils.Content justify='center'>
+              {error && <Utils.Error>{error}</Utils.Error>}
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
-                  <ButtonGradient
-                    text='SEND'
-                    onPress={this.submit}
-                    size='medium'
-                    marginVertical='large'
-                    disabled={trxBalance === 0}
-                  />
-                )}
-              <Utils.VerticalSpacer />
+                <ButtonGradient
+                  text='SEND'
+                  onPress={this.submit}
+                  size='medium'
+                  marginVertical='large'
+                  disabled={trxBalance === 0}
+                />
+              )}
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>

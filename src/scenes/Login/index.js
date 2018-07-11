@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
-import Input from '../../components/Input/Input'
+import Input from '../../components/Input'
 import ButtonGradient from '../../components/ButtonGradient'
 import { Colors } from '../../components/DesignSystem'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
@@ -53,8 +53,6 @@ class LoginScene extends Component {
   signIn = async () => {
     const { navigation } = this.props
     const { username, password } = this.state
-    console.log('username', username)
-    console.log('passowrd', password)
     Keyboard.dismiss()
 
     this.setState({ loadingSign: true, signError: null })

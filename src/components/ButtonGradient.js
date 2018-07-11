@@ -22,7 +22,7 @@ const ButtonGradient = ({
     <LinearGradient
       start={{ x: 0, y: 1 }}
       end={{ x: 1, y: 0 }}
-      colors={ [Colors.buttonGradient[0], Colors.buttonGradient[1]]}
+      colors={[Colors.buttonGradient[0], Colors.buttonGradient[1]]}
 
       style={[
         styles.btnGradient,
