@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Image,
   Keyboard,
   KeyboardAvoidingView
 } from 'react-native'
@@ -16,6 +15,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import { Colors } from '../../components/DesignSystem'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 import { version } from '../../../package.json'
+import Logo from '../../components/Logo'
 
 class LoginScene extends Component {
   state = {
@@ -143,7 +143,7 @@ class LoginScene extends Component {
           >
             <Utils.Content justify='center' align='center'>
               <Utils.VerticalSpacer size='large' />
-              <Image source={require('../../assets/login-circle.png')} />
+              <Logo />
               <Utils.VerticalSpacer size='small' />
             </Utils.Content>
             <Utils.FormGroup>

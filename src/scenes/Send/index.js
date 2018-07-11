@@ -295,8 +295,6 @@ class SendScene extends Component {
                 <ButtonGradient
                   text='SEND'
                   onPress={this.submit}
-                  size='medium'
-                  marginVertical='large'
                   disabled={trxBalance === 0}
                 />
               )}

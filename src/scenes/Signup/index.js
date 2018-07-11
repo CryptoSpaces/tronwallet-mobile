@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Image,
   Keyboard,
   KeyboardAvoidingView
 } from 'react-native'
@@ -12,6 +11,7 @@ import * as Utils from '../../components/Utils'
 import Input from '../../components/Input'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
+import Logo from '../../components/Logo'
 
 class SignupScene extends Component {
   state = {
@@ -110,7 +110,7 @@ class SignupScene extends Component {
           >
             <Utils.Content justify='center' align='center'>
               <Utils.VerticalSpacer size='medium' />
-              <Image source={require('../../assets/login-circle.png')} />
+              <Logo />
               <Utils.VerticalSpacer size='small' />
             </Utils.Content>
             <Utils.FormGroup>

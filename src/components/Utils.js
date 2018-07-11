@@ -204,6 +204,7 @@ Text.propTypes = {
     'xsmall',
     'smaller',
     'small',
+    'button',
     'average',
     'medium',
     'large',
@@ -211,7 +212,7 @@ Text.propTypes = {
   ]),
   marginTop: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
   lineHeight: PropTypes.number,
-  font: PropTypes.oneOf(['bold', 'light'])
+  font: PropTypes.oneOf(['bold', 'light', 'black', 'medium'])
 }
 
 export const Item = styled.View`
