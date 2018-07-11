@@ -288,6 +288,7 @@ class SendScene extends Component {
                 value={amount}
                 onChangeText={text => this.changeInput(text, 'amount')}
               />
+              <Utils.VerticalSpacer size='medium' />
               {error && <Utils.Error>{error}</Utils.Error>}
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
