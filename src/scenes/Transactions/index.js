@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  SafeAreaView,
   FlatList,
   RefreshControl,
   Image,
@@ -15,6 +14,7 @@ import ParticipateCard from './Participate'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
+import NavigationHeader from '../../components/NavigationHeader'
 
 import getTransactionStore from '../../store/transactions'
 
@@ -23,15 +23,7 @@ const POOLING_TIME = 30000
 class TransactionsScene extends Component {
   static navigationOptions = () => {
     return {
-      header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>My Transactions</Utils.Title>
-            </Utils.TitleWrapper>
-          </Utils.Header>
-        </SafeAreaView>
-      )
+      header: <NavigationHeader title='My Transactions' />
     }
   }
 

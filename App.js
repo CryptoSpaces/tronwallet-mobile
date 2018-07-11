@@ -87,7 +87,7 @@ const VoteStack = createStackNavigator(
     initialRouteName: 'VoteScene',
     navigationOptions: ({ navigation }) => ({
       header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
+        <SafeAreaView style={{ backgroundColor: Colors.background }}>
           <Utils.Header>
             <Utils.TitleWrapper>
               <Utils.Title>Vote</Utils.Title>

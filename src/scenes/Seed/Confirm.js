@@ -8,6 +8,7 @@ import { Spacing, Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 import { confirmSecret } from '../../utils/secretsUtils'
+import NavigationHeader from '../../components/NavigationHeader'
 
 const WordWrapper = styled.TouchableOpacity`
   padding-vertical: ${Spacing.small};
@@ -17,18 +18,14 @@ const WordWrapper = styled.TouchableOpacity`
 class Confirm extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
-      <SafeAreaView style={{ backgroundColor: 'black' }}>
-        <Utils.Header>
-          <Utils.TitleWrapper>
-            <Utils.Title>Confirm Seed</Utils.Title>
-          </Utils.TitleWrapper>
-          <ButtonGradient
-            size='medium'
-            onPress={navigation.getParam('onSubmit')}
-            text='SUBMIT'
-          />
-        </Utils.Header>
-      </SafeAreaView>
+      <NavigationHeader
+        title='Confirm Seed'
+        rightButton={<ButtonGradient
+          size='small'
+          onPress={navigation.getParam('onSubmit')}
+          text='SUBMIT'
+        />}
+      />
     )
   })
 

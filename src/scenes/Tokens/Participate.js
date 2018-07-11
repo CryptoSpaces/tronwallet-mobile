@@ -40,24 +40,27 @@ class ParticipateScene extends Component {
 
   _submit = async () => {
     const { navigation } = this.props
+    const { token, trxBalance } = navigation.state.params
     try {
       this.setState({ loading: true })
-
-      if (navigation.state.params.trxBalance < this.state.value) {
-        Alert.alert('Insufficient TRX balance')
-        throw new Error('Insufficient TRX balance')
+      const trxToUse = this.state.value * token.price / ONE_TRX
+      if (trxBalance < trxToUse) {
+        throw new Error('INSUFFICIENT_BALANCE')
       }
 
       const data = await Client.getParticipateTransaction({
         participateAddress: navigation.state.params.token.ownerAddress,
         participateToken: navigation.state.params.token.name,
-        participateAmount: Number(this.state.value)
+        participateAmount: this.state.value
       })
 
       this.openTransactionDetails(data)
     } catch (err) {
-      Alert.alert('Error while building transaction, try again.')
-      console.warn(err.response)
+      if (err.message === 'INSUFFICIENT_BALANCE') {
+        Alert.alert('Not enough funds (TRX) to participate.')
+      } else {
+        Alert.alert('Oops something wrong while building transaction, try again.')
+      }
     } finally {
       this.setState({ loading: false })
     }
@@ -108,7 +111,7 @@ class ParticipateScene extends Component {
     )
   }
 
-  render() {
+  render () {
     const token = this.props.navigation.getParam('token')
     return (
       <KeyboardAwareScrollView>
