@@ -18,19 +18,18 @@ export const LabelWrapper = styled.View`
   padding-vertical: 2px;
   padding-horizontal: 4px;
   background-color: #191A2A;
+  z-index: 999;
   position: absolute;
-  top: -6px;
   left: 5px;
   
 `
 
 export const Label = styled.Text`
-  font-family: Rubik-Medium;
   font-size: 10px;
+  font-family: Rubik-Medium;
   letter-spacing: 0.55;
   line-height: 11px;
   color: #66688F;
-
 `
 
 export const TextInput = styled.TextInput`

@@ -10,10 +10,10 @@ const Input = ({
   ...props
 }) => (
   <Elements.Wrapper>
+    <Elements.LabelWrapper>
+      <Elements.Label>{label}</Elements.Label>
+    </Elements.LabelWrapper>
     <Elements.InputWrapper>
-      <Elements.LabelWrapper>
-        <Elements.Label>{label}</Elements.Label>
-      </Elements.LabelWrapper>
       {leftContent && leftContent()}
       <Elements.TextInput
         innerRef={innerRef}
