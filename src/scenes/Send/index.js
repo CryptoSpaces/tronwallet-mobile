@@ -34,20 +34,21 @@ class SendScene extends Component {
     token: 'TRX',
     balances: [],
     error: null,
+    warning: null,
     loadingSign: false,
     loadingData: true,
     trxBalance: 0.0,
     QRModalVisible: false
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._navListener = this.props.navigation.addListener(
       'didFocus',
       this.loadData
     )
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._navListener.remove()
   }
 
@@ -66,7 +67,8 @@ class SendScene extends Component {
         from: userPublicKey,
         balances,
         loadingData: false,
-        trxBalance: balance
+        trxBalance: balance,
+        warning: balance === 0 ? 'NO BALANCE' : null
       })
     } catch (error) {
       Alert.alert('Error while getting balance data')
@@ -195,7 +197,7 @@ class SendScene extends Component {
           leftIcon={
             <Ionicons name='md-menu' color={Colors.primaryText} size={24} />
           }
-          onLeftPress={() => {}}
+          onLeftPress={() => { }}
           rightIcon={
             <Ionicons name='ios-close' color={Colors.primaryText} size={40} />
           }
@@ -232,8 +234,8 @@ class SendScene extends Component {
     </React.Fragment>
   )
 
-  render () {
-    const { loadingSign, loadingData, error, to, trxBalance, amount } = this.state
+  render() {
+    const { loadingSign, loadingData, error, warning, to, trxBalance, amount } = this.state
     return (
       <KeyboardAvoidingView
         style={{ flex: 1, backgroundColor: Colors.background }}
@@ -261,6 +263,7 @@ class SendScene extends Component {
                     <Utils.Text size='small'>TRX</Utils.Text>
                   </Utils.View>
                 </Utils.Row>
+                {warning && <Utils.Warning>{warning}</Utils.Warning>}
               </Utils.View>
             </Header>
             <Utils.Content>
@@ -270,6 +273,7 @@ class SendScene extends Component {
                   label: item.name
                 }))}
                 onChange={option => this.setState({ token: option.label })}
+                disabled={trxBalance === 0}
               >
                 <Input
                   label='TOKEN'
@@ -309,13 +313,14 @@ class SendScene extends Component {
               {loadingSign || loadingData ? (
                 <ActivityIndicator size='small' color={Colors.primaryText} />
               ) : (
-                <ButtonGradient
-                  text='SEND'
-                  onPress={this.submit}
-                  size='medium'
-                  marginVertical='large'
-                />
-              )}
+                  <ButtonGradient
+                    text='SEND'
+                    onPress={this.submit}
+                    size='medium'
+                    marginVertical='large'
+                    disabled={trxBalance === 0}
+                  />
+                )}
               <Utils.VerticalSpacer />
             </Utils.Content>
           </Utils.Container>

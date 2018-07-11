@@ -494,6 +494,10 @@ InputError.defaultProps = {
   marginBottom: Spacing.small
 }
 
+export const Warning = Error.extend`
+  color: ${Colors.orange};
+`
+
 export const PasteButton = styled.TouchableOpacity`
   margin-horizontal: 5px;
   /* padding: ${Spacing.medium - 5}px; */
