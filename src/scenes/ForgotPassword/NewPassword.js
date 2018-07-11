@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Auth } from 'aws-amplify'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
+import Logo from '../../components/Logo'
 
 class ConfirmNewPassword extends Component {
   state = {
@@ -48,9 +49,7 @@ class ConfirmNewPassword extends Component {
     const { forgotError, loadingForgot } = this.state
     return (
       <Utils.Container>
-        <Utils.Content height={80} justify='center' align='center'>
-          <Image source={require('../../assets/login-circle.png')} />
-        </Utils.Content>
+        <Logo />
         <Utils.Content>
           <Utils.Text size='xsmall'>
             We sent you an email, please submit the code with the new password
