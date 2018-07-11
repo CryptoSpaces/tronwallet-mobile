@@ -30,7 +30,7 @@ const ButtonGradient = ({
         {
           opacity: disabled ? 0.4 : 1,
           width: width || '100%',
-          height: size,
+          height: size === 'small' ? 20 : 50,
           justifyContent: 'center'
         }
       ]}
@@ -42,13 +42,13 @@ const ButtonGradient = ({
 
 ButtonGradient.defaultProps = {
   disabled: false,
-  size: 50,
+  size: 'large',
   font: 'medium'
 }
 
 ButtonGradient.propTypes = {
   disabled: PropTypes.bool,
-  size: PropTypes.number
+  size: PropTypes.string
 }
 
 const styles = StyleSheet.create({

@@ -87,6 +87,10 @@ export const View = styled.View`
       css`
         border-radius: ${props.borderRadius}px;
       `} ${props =>
+  props.padding &&
+      css`
+        top: ${props.padding};
+      `} ${props =>
   props.paddingY &&
       css`
         padding-vertical: ${Spacing[props.paddingY]};
@@ -94,11 +98,7 @@ export const View = styled.View`
   props.paddingX &&
       css`
         padding-horizontal: ${Spacing[props.paddingX]};
-      `} ${props =>
-  props.padding &&
-      css`
-        top: ${props.padding};
-      `} ${props =>
+      `}  ${props =>
   props.margin &&
       css`
         margin: ${props.margin}px;
