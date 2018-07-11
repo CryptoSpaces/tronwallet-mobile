@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, ActivityIndicator, Alert, SafeAreaView, Text } from 'react-native'
+import { ActivityIndicator, Alert, SafeAreaView } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -43,13 +43,13 @@ class RestoreOrCreateSeed extends React.Component {
       <Utils.Container>
         <Utils.Content flex={1} justify='flex-start'>
           <Utils.VerticalSpacer />
-          <Utils.Text weight="300" font='light' secondary>
+          <Utils.Text weight='300' font='light' secondary>
             We detected that you have used our application before, either on
             this device or another. Because your seed password is stored locally
             on your device, we need you to restore your seed to be able to use
             your previous address.
           </Utils.Text>
-          <Utils.VerticalSpacer size="medium" />
+          <Utils.VerticalSpacer size='medium' />
           {this.state.loading ? (
             <ActivityIndicator color='#ffffff' />
           ) : (
@@ -63,7 +63,7 @@ class RestoreOrCreateSeed extends React.Component {
             If you don't want to restore that address you can easily get a new
             one by tapping on the button below.
           </Utils.Text>
-          <Utils.VerticalSpacer size="medium" />
+          <Utils.VerticalSpacer size='medium' />
           <ButtonGradient
             onPress={() => this.props.navigation.navigate('SeedRestore')}
             text='RESTORE WALLET'
