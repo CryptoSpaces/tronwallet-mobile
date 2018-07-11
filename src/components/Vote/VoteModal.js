@@ -63,7 +63,7 @@ const VoteModal = ({
                     navigation.navigate('Freeze')
                   }}
                   text='Freeze'
-                  size='small'
+                  size='medium'
                   width={100}
                 />
               </React.Fragment>

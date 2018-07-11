@@ -123,8 +123,7 @@ class LoginScene extends Component {
       <ButtonGradient
         text='SIGN IN'
         onPress={this.signIn}
-        size='medium'
-        marginVertical='large'
+        marginVertical='medium'
       />
     )
   }

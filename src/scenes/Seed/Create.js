@@ -40,7 +40,7 @@ class Create extends React.Component {
             </Utils.Text>
           )}
         </Utils.Content>
-        <Utils.View flex={1} />
+        <Utils.VerticalSpacer size='large' />
         <Utils.Row justify='center'>
           <ButtonGradient
             onPress={() =>
@@ -51,7 +51,7 @@ class Create extends React.Component {
             text="I'VE WRITTEN IT DOWN"
           />
         </Utils.Row>
-        <Utils.VerticalSpacer />
+        <Utils.VerticalSpacer size='medium'/>
         <Utils.Button onPress={() => this.props.navigation.goBack()}>
           Confirm later
         </Utils.Button>
