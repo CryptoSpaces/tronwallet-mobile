@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import PropTypes from 'prop-types'
-import { Colors, Spacing } from './DesignSystem'
+import { Colors, Spacing, ButtonSize } from './DesignSystem'
 import * as Utils from './Utils'
 
 const ButtonGradient = ({
@@ -30,7 +30,8 @@ const ButtonGradient = ({
         {
           opacity: disabled ? 0.4 : 1,
           width: width || '100%',
-          height: size === 'small' ? 20 : 50,
+          height: ButtonSize[size],
+          paddingHorizontal: size === 'small' ? 8 : 16,
           justifyContent: 'center'
         }
       ]}

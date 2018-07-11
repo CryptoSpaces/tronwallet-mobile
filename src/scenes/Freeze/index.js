@@ -167,7 +167,6 @@ class FreezeScene extends Component {
               <ButtonGradient
                 text='FREEZE'
                 onPress={this.submit}
-                size='medium'
                 marginVertical='large'
               />
             </Utils.Content>

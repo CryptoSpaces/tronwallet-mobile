@@ -89,8 +89,7 @@ class SignupScene extends Component {
       <ButtonGradient
         text='SIGN UP'
         onPress={this.signIn}
-        size='medium'
-        marginVertical='large'
+        marginVertical='medium'
       />
     )
   }
