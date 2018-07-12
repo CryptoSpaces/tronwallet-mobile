@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, KeyboardAvoidingView } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import { Colors, Spacing } from '../../components/DesignSystem'
@@ -11,6 +10,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import Logo from '../../components/Logo'
 
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
+import KeyboardScreen from '../../components/KeyboardScreen'
 
 class ConfirmLogin extends Component {
   state = {
@@ -106,57 +106,52 @@ class ConfirmLogin extends Component {
   render () {
     const { confirmError, loadingConfirm } = this.state
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: Colors.background }}
-        enabled
-      >
-        <KeyboardAwareScrollView>
-          <Utils.StatusBar />
-          <Utils.Container>
-            <Logo />
-            <Utils.Content>
-              <Utils.Text size='xsmall' secondary>
-                PASTE GOOGLE AUTHENTICATOR CODE HERE
-              </Utils.Text>
-              <Utils.FormInput
-                padding={Spacing.small}
-                underlineColorAndroid='transparent'
-                onSubmitEditing={this.confirmLogin}
-                onChangeText={text => this.changeInput(text, 'code')}
-              />
-              {loadingConfirm ? (
-                <Utils.Content height={80} justify='center' align='center'>
-                  <ActivityIndicator size='small' color={Colors.primaryText} />
-                </Utils.Content>
-              ) : (
-                <ButtonGradient
-                  text='CONFIRM LOGIN'
-                  onPress={this.confirmLogin}
-                  size='medium'
-                />
-              )}
-            </Utils.Content>
-            <Utils.Error>{confirmError}</Utils.Error>
-            <Utils.Content justify='center' align='center'>
-              <Utils.Text
-                size='small'
-                font='light'
-                secondary
-                onPress={this.goBackLogin}
-              >
-                Back to Login
-              </Utils.Text>
-            </Utils.Content>
-            <Toast
-              ref='toast'
-              position='center'
-              fadeInDuration={750}
-              fadeOutDuration={1000}
-              opacity={0.8}
+      <KeyboardScreen>
+        <Utils.StatusBar />
+        <Utils.Container>
+          <Logo />
+          <Utils.Content>
+            <Utils.Text size='xsmall' secondary>
+              PASTE GOOGLE AUTHENTICATOR CODE HERE
+            </Utils.Text>
+            <Utils.FormInput
+              padding={Spacing.small}
+              underlineColorAndroid='transparent'
+              onSubmitEditing={this.confirmLogin}
+              onChangeText={text => this.changeInput(text, 'code')}
             />
-          </Utils.Container>
-        </KeyboardAwareScrollView>
-      </KeyboardAvoidingView>
+            {loadingConfirm ? (
+              <Utils.Content height={80} justify='center' align='center'>
+                <ActivityIndicator size='small' color={Colors.primaryText} />
+              </Utils.Content>
+            ) : (
+              <ButtonGradient
+                text='CONFIRM LOGIN'
+                onPress={this.confirmLogin}
+                size='medium'
+              />
+            )}
+          </Utils.Content>
+          <Utils.Error>{confirmError}</Utils.Error>
+          <Utils.Content justify='center' align='center'>
+            <Utils.Text
+              size='small'
+              font='light'
+              secondary
+              onPress={this.goBackLogin}
+            >
+              Back to Login
+            </Utils.Text>
+          </Utils.Content>
+          <Toast
+            ref='toast'
+            position='center'
+            fadeInDuration={750}
+            fadeOutDuration={1000}
+            opacity={0.8}
+          />
+        </Utils.Container>
+      </KeyboardScreen>
     )
   }
 }

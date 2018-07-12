@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Keyboard,
-  KeyboardAvoidingView
+  Keyboard
 } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
@@ -16,6 +14,7 @@ import { Colors } from '../../components/DesignSystem'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 import { version } from '../../../package.json'
 import Logo from '../../components/Logo'
+import KeyboardScreen from '../../components/KeyboardScreen'
 
 class LoginScene extends Component {
   state = {
@@ -130,78 +129,73 @@ class LoginScene extends Component {
     const { signError, username, password } = this.state
     const ChangedPassword = this.props.navigation.getParam('changedPassword')
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: Colors.background }}
-        enabled
-      >
-        <KeyboardAwareScrollView>
-          <Utils.StatusBar />
-          <Utils.Container
-            keyboardShouldPersistTaps={'always'}
-            keyboardDismissMode='interactive'
-          >
-            <Utils.Content justify='center' align='center'>
-              <Utils.VerticalSpacer size='large' />
-              <Logo />
-              <Utils.VerticalSpacer size='small' />
-            </Utils.Content>
-            <Utils.FormGroup>
-              <Input
-                innerRef={(input) => { this.email = input }}
-                label='EMAIL/USERNAME'
-                keyboardType='email-address'
-                placeholder='johndoe@somedomain.com'
-                value={username}
-                onChangeText={(text) => this.changeInput(text, 'username')}
-                onSubmitEditing={() => this._submit('username')}
-                returnKeyType='next'
-                autoCapitalize='none'
-              />
-              <Input
-                innerRef={(input) => { this.password = input }}
-                label='PASSWORD'
-                secureTextEntry
-                placeholder='.........'
-                value={password}
-                letterSpacing={4}
-                onChangeText={text => this.changeInput(text, 'password')}
-                onSubmitEditing={() => this._submit('password')}
-                returnKeyType='send'
-                autoCapitalize='none'
-              />
-              <Utils.VerticalSpacer size='small' />
-              {this.renderSubmitButton()}
-            </Utils.FormGroup>
-            <Utils.Content justify='center' align='center'>
-              {ChangedPassword && (
-                <Utils.Text size='small' success>
-                  Password Changed
-                </Utils.Text>
-              )}
-              <Utils.Error>{signError}</Utils.Error>
-              <Utils.Text
-                onPress={() => this.props.navigation.navigate('ForgotPassword')}
-                size='small'
-                font='light'
-                secondary
-              >
-                FORGOT PASSWORD ?
-              </Utils.Text>
-              <Utils.VerticalSpacer size='large' />
-              <Utils.Text size='xsmall' secondary>
-                {`v${version}`}
-              </Utils.Text>
-            </Utils.Content>
-            <Toast
-              ref='toast'
-              position='center'
-              fadeInDuration={750}
-              fadeOutDuration={1000}
-              opacity={0.8}
+      <KeyboardScreen>
+        <Utils.StatusBar />
+        <Utils.Container
+          keyboardShouldPersistTaps={'always'}
+          keyboardDismissMode='interactive'
+        >
+          <Utils.Content justify='center' align='center'>
+            <Utils.VerticalSpacer size='large' />
+            <Logo />
+            <Utils.VerticalSpacer size='small' />
+          </Utils.Content>
+          <Utils.FormGroup>
+            <Input
+              innerRef={(input) => { this.email = input }}
+              label='EMAIL/USERNAME'
+              keyboardType='email-address'
+              placeholder='johndoe@somedomain.com'
+              value={username}
+              onChangeText={(text) => this.changeInput(text, 'username')}
+              onSubmitEditing={() => this._submit('username')}
+              returnKeyType='next'
+              autoCapitalize='none'
             />
-          </Utils.Container>
-        </KeyboardAwareScrollView>
-      </KeyboardAvoidingView>
+            <Input
+              innerRef={(input) => { this.password = input }}
+              label='PASSWORD'
+              secureTextEntry
+              placeholder='.........'
+              value={password}
+              letterSpacing={4}
+              onChangeText={text => this.changeInput(text, 'password')}
+              onSubmitEditing={() => this._submit('password')}
+              returnKeyType='send'
+              autoCapitalize='none'
+            />
+            <Utils.VerticalSpacer size='small' />
+            {this.renderSubmitButton()}
+          </Utils.FormGroup>
+          <Utils.Content justify='center' align='center'>
+            {ChangedPassword && (
+              <Utils.Text size='small' success>
+                Password Changed
+              </Utils.Text>
+            )}
+            <Utils.Error>{signError}</Utils.Error>
+            <Utils.Text
+              onPress={() => this.props.navigation.navigate('ForgotPassword')}
+              size='small'
+              font='light'
+              secondary
+            >
+              FORGOT PASSWORD ?
+            </Utils.Text>
+            <Utils.VerticalSpacer size='large' />
+            <Utils.Text size='xsmall' secondary>
+              {`v${version}`}
+            </Utils.Text>
+          </Utils.Content>
+          <Toast
+            ref='toast'
+            position='center'
+            fadeInDuration={750}
+            fadeOutDuration={1000}
+            opacity={0.8}
+          />
+        </Utils.Container>
+      </KeyboardScreen>
     )
   }
 }

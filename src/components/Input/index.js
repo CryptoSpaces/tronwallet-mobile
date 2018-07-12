@@ -15,13 +15,17 @@ const Input = ({
     </Elements.LabelWrapper>
     <Elements.InputWrapper>
       {leftContent && leftContent()}
+      {/* Do not change the order of props in the component
+        below. It needs to be first so that keyboardType comes
+        before autoCapitalize or it won't show with the decimal
+        button.  */}
       <Elements.TextInput
+        {...props}
         innerRef={innerRef}
         autoCorrect={false}
         autoCapitalize='none'
         underlineColorAndroid='transparent'
         placeholderTextColor='#66688F'
-        {...props}
       />
       {rightContent && rightContent()}
     </Elements.InputWrapper>

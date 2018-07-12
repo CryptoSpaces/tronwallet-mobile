@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Linking, KeyboardAvoidingView, Alert } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Linking, Alert } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import * as Utils from '../../components/Utils'
@@ -14,6 +13,7 @@ import Client from '../../services/client'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils'
 import { Context } from '../../store/context'
+import KeyboardScreen from '../../components/KeyboardScreen'
 
 class FreezeScene extends Component {
   state = {
@@ -130,47 +130,42 @@ class FreezeScene extends Component {
     const { trxBalance, amount } = this.state
 
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: Colors.background }}
-        enabled
-      >
-        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
-          <Utils.StatusBar />
-          <Utils.Container>
-            <Header>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>
-                  FREEZE
-                </Utils.Text>
-                <Utils.Row align='center'>
-                  <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
-                  <Utils.HorizontalSpacer />
-                  <Badge>TRX</Badge>
-                </Utils.Row>
-              </Utils.View>
-            </Header>
-            <Utils.Content>
-              <Input
-                label='FREEZE AMOUNT'
-                leftContent={this._leftContent}
-                keyboardType='numeric'
-                align='right'
-                value={amount}
-                onChangeText={value => this._changeFreeze(value)}
-                onSubmitEditing={this.submit}
-                placeholder='0'
-              />
-              <Utils.SummaryInfo
-              >{`New freeze TRX: ${amount}`}</Utils.SummaryInfo>
-              <ButtonGradient
-                text='FREEZE'
-                onPress={this.submit}
-                marginVertical='large'
-              />
-            </Utils.Content>
-          </Utils.Container>
-        </KeyboardAwareScrollView>
-      </KeyboardAvoidingView>
+      <KeyboardScreen>
+        <Utils.StatusBar />
+        <Utils.Container>
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>
+                FREEZE
+              </Utils.Text>
+              <Utils.Row align='center'>
+                <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
+                <Utils.HorizontalSpacer />
+                <Badge>TRX</Badge>
+              </Utils.Row>
+            </Utils.View>
+          </Header>
+          <Utils.Content>
+            <Input
+              label='FREEZE AMOUNT'
+              leftContent={this._leftContent}
+              keyboardType='numeric'
+              align='right'
+              value={amount}
+              onChangeText={value => this._changeFreeze(value)}
+              onSubmitEditing={this.submit}
+              placeholder='0'
+            />
+            <Utils.SummaryInfo
+            >{`New freeze TRX: ${amount}`}</Utils.SummaryInfo>
+            <ButtonGradient
+              text='FREEZE'
+              onPress={this.submit}
+              marginVertical='large'
+            />
+          </Utils.Content>
+        </Utils.Container>
+      </KeyboardScreen>
     )
   }
 }
