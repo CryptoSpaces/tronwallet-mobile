@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, StyleSheet, Alert } from 'react-native'
+import { View, ScrollView, StyleSheet, Alert, Switch } from 'react-native'
 
 // Design
 import * as Utils from '../../components/Utils'
@@ -23,6 +23,7 @@ class ChangeNetworkModal extends Component {
   }
 
   state = {
+    switchTestnet: false,
     mainNode: null,
     mainNodePort: null,
     solidityNode: null,
@@ -44,15 +45,19 @@ class ChangeNetworkModal extends Component {
 
   _loadData = async () => {
     try {
-      const { nodeIp, nodeSolidityIp } = await NodesIp.getAllNodesIp()
+      const { nodeIp, nodeSolidityIp, isTestnet } = await NodesIp.getAllNodesIp()
       const [mainNode, mainNodePort] = nodeIp.split(':')
       const [solidityNode, solidityNodePort] = nodeSolidityIp.split(':')
-      this.setState({ mainNode, mainNodePort, solidityNode, solidityNodePort })
+      this.setState({ mainNode,
+        mainNodePort,
+        solidityNode,
+        solidityNodePort,
+        switchTestnet: isTestnet
+      })
     } catch (error) {
       console.warn(error.message)
       this.setState({
-        mainNode: NodesIp.nodeIp,
-        solidityNode: NodesIp.nodeSolidityIp
+        error: 'Error getting node ip from local storage'
       })
     }
   }
@@ -84,8 +89,24 @@ class ChangeNetworkModal extends Component {
   _updateNodes = async (type, nodeip) => {
     try {
       await NodesIp.setNodeIp(type, nodeip)
-      Alert.alert('Nodes IP updated!')
+      Alert.alert('Updated', 'Nodes IP updated!')
       this.setState({ loading: false, error: null })
+    } catch (error) {
+      this.setState({
+        loading: false,
+        error: 'Something wrong while updating nodes ip'
+      })
+    }
+  }
+
+  _switchTestnet = async (switchValue) => {
+    this.setState({ switchTestnet: switchValue })
+    try {
+      await NodesIp.switchTestnet(switchValue)
+
+      const alertMessage = switchValue ? 'Switched nodes IP to Testnet' : 'Switched nodes IP to default main'
+      Alert.alert('Updated', alertMessage)
+      this.setState({ error: null })
     } catch (error) {
       this.setState({
         loading: false,
@@ -98,7 +119,7 @@ class ChangeNetworkModal extends Component {
     try {
       await NodesIp.resetNodesIp(type)
       this._loadData()
-      Alert.alert('Nodes IP reseted!')
+      Alert.alert('Node IP reseted!')
       this.setState({ loading: false, error: null })
     } catch (error) {
       this.setState({
@@ -131,7 +152,8 @@ class ChangeNetworkModal extends Component {
       mainNode,
       mainNodePort,
       solidityNode,
-      solidityNodePort
+      solidityNodePort,
+      switchTestnet
     } = this.state
 
     return (
@@ -168,6 +190,7 @@ class ChangeNetworkModal extends Component {
                 <ButtonGradient
                   text='Update and Connect'
                   onPress={() => this._submit('main')}
+                  disabled={switchTestnet}
                   size='small'
                 />
               </View>
@@ -175,6 +198,7 @@ class ChangeNetworkModal extends Component {
                 <ButtonGradient
                   text='Reset'
                   onPress={() => this._reset('main')}
+                  disabled={switchTestnet}
                   size='small'
                 />
               </View>
@@ -210,6 +234,7 @@ class ChangeNetworkModal extends Component {
                 <ButtonGradient
                   text='Update and Connect'
                   onPress={() => this._submit('solidity')}
+                  disabled={switchTestnet}
                   size='small'
                 />
               </View>
@@ -217,9 +242,22 @@ class ChangeNetworkModal extends Component {
                 <ButtonGradient
                   text='Reset'
                   onPress={() => this._reset('solidity')}
+                  disabled={switchTestnet}
                   size='small'
                 />
               </View>
+            </Utils.Row>
+          </View>
+          <Utils.VerticalSpacer size='medium' />
+          <View style={styles.card}>
+            <Utils.Row justify='space-between'>
+              <Utils.Text size='smaller' color={Colors.secondaryText}>TestNet</Utils.Text>
+              <Switch
+                thumbTintColor={Colors.orange}
+                onTintColor={Colors.yellow}
+                tintColor={Colors.secondaryText}
+                value={switchTestnet}
+                onValueChange={this._switchTestnet} />
             </Utils.Row>
           </View>
           {error && <Utils.Error>{error}</Utils.Error>}
