@@ -250,7 +250,7 @@ class ChangeNetworkModal extends Component {
           </View>
           <Utils.VerticalSpacer size='medium' />
           <View style={styles.card}>
-            <Utils.Row justify='space-between'>
+            <Utils.Row justify='space-between' align='center'>
               <Utils.Text size='smaller' color={Colors.secondaryText}>TestNet</Utils.Text>
               <Switch
                 thumbTintColor={Colors.orange}
