@@ -4,11 +4,9 @@ import {
   Clipboard,
   Linking,
   Alert,
-  KeyboardAvoidingView,
   Modal
 } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ModalSelector from 'react-native-modal-selector'
 
 import ButtonGradient from '../../components/ButtonGradient'
@@ -27,6 +25,7 @@ import { signTransaction } from '../../utils/transactionUtils'
 import getBalanceStore from '../../store/balance'
 import { Context } from '../../store/context'
 import { getUserPublicKey } from '../../utils/userAccountUtils'
+import KeyboardScreen from '../../components/KeyboardScreen'
 
 class SendScene extends Component {
   state = {
@@ -227,82 +226,77 @@ class SendScene extends Component {
   render () {
     const { loadingSign, loadingData, error, warning, to, trxBalance, amount } = this.state
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: Colors.background }}
-        enabled
-      >
-        <KeyboardAwareScrollView>
-          <Utils.StatusBar />
-          <Utils.Container>
-            <Header>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>
-                  BALANCE
-                </Utils.Text>
-                <Utils.Row align='center'>
-                  <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
-                  <Utils.HorizontalSpacer />
-                  <Badge>TRX</Badge>
-                </Utils.Row>
-                {warning && <Utils.Warning>{warning}</Utils.Warning>}
-              </Utils.View>
-            </Header>
-            <Utils.Content>
-              <ModalSelector
-                data={this.state.balances.map(item => ({
-                  key: item.name,
-                  label: item.name
-                }))}
-                onChange={option => this.setState({ token: option.label })}
+      <KeyboardScreen>
+        <Utils.StatusBar />
+        <Utils.Container>
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>
+                BALANCE
+              </Utils.Text>
+              <Utils.Row align='center'>
+                <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
+                <Utils.HorizontalSpacer />
+                <Badge>TRX</Badge>
+              </Utils.Row>
+              {warning && <Utils.Warning>{warning}</Utils.Warning>}
+            </Utils.View>
+          </Header>
+          <Utils.Content>
+            <ModalSelector
+              data={this.state.balances.map(item => ({
+                key: item.name,
+                label: item.name
+              }))}
+              onChange={option => this.setState({ token: option.label })}
+              disabled={trxBalance === 0}
+            >
+              <Input
+                label='TOKEN'
+                value={this.state.token}
+              />
+            </ModalSelector>
+            <Utils.VerticalSpacer size='medium' />
+            <Input
+              label='TO'
+              leftContent={this._leftContent}
+              rightContent={this._rightContent}
+              value={to}
+              onChangeText={text => this.changeInput(text, 'to')}
+            />
+            <Modal
+              visible={this.state.QRModalVisible}
+              onRequestClose={this.closeModal}
+              animationType='slide'
+            >
+              <QRScanner
+                onRead={this.readPublicKey}
+                onClose={this.closeModal}
+                checkAndroid6Permissions
+              />
+            </Modal>
+            <Utils.VerticalSpacer size='medium' />
+            <Input
+              label='AMOUNT'
+              keyboardType='numeric'
+              placeholder='0'
+              value={amount}
+              onChangeText={text => this.changeInput(text, 'amount')}
+            />
+            <Utils.VerticalSpacer size='medium' />
+            {error && <Utils.Error>{error}</Utils.Error>}
+            {loadingSign || loadingData ? (
+              <ActivityIndicator size='small' color={Colors.primaryText} />
+            ) : (
+              <ButtonGradient
+                text='SEND'
+                onPress={this.submit}
                 disabled={trxBalance === 0}
-              >
-                <Input
-                  label='TOKEN'
-                  value={this.state.token}
-                />
-              </ModalSelector>
-              <Utils.VerticalSpacer size='medium' />
-              <Input
-                label='TO'
-                leftContent={this._leftContent}
-                rightContent={this._rightContent}
-                value={to}
-                onChangeText={text => this.changeInput(text, 'to')}
               />
-              <Modal
-                visible={this.state.QRModalVisible}
-                onRequestClose={this.closeModal}
-                animationType='slide'
-              >
-                <QRScanner
-                  onRead={this.readPublicKey}
-                  onClose={this.closeModal}
-                  checkAndroid6Permissions
-                />
-              </Modal>
-              <Utils.VerticalSpacer size='medium' />
-              <Input
-                label='AMOUNT'
-                keyboardType='numeric'
-                placeholder='0'
-                value={amount}
-                onChangeText={text => this.changeInput(text, 'amount')}
-              />
-              <Utils.VerticalSpacer size='medium' />
-              {error && <Utils.Error>{error}</Utils.Error>}
-              {loadingSign || loadingData ? (
-                <ActivityIndicator size='small' color={Colors.primaryText} />
-              ) : (
-                <ButtonGradient
-                  text='SEND'
-                  onPress={this.submit}
-                  disabled={trxBalance === 0}
-                />
-              )}
-            </Utils.Content>
-          </Utils.Container>
-        </KeyboardAwareScrollView>
-      </KeyboardAvoidingView>
+            )}
+          </Utils.Content>
+        </Utils.Container>
+      </KeyboardScreen>
     )
   }
 }

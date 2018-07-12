@@ -6,11 +6,11 @@ import { ActivityIndicator, SafeAreaView, Linking, Alert } from 'react-native'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils'
 import { formatNumber } from '../../utils/numberUtils'
+import KeyboardScreen from '../../components/KeyboardScreen'
 
 class ParticipateScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -107,14 +107,14 @@ class ParticipateScene extends Component {
     if (this.state.loading) return <ActivityIndicator color={'#ffffff'} />
 
     return (
-      <ButtonGradient onPress={this._submit} text='Confirm' size='xsmall' />
+      <ButtonGradient onPress={this._submit} text='Confirm' size='small' />
     )
   }
 
   render () {
     const token = this.props.navigation.getParam('token')
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardScreen>
         <Utils.Container>
           <Utils.Content>
             <Utils.View>
@@ -260,7 +260,7 @@ class ParticipateScene extends Component {
             </Utils.View>
           </Utils.Content>
         </Utils.Container>
-      </KeyboardAwareScrollView>
+      </KeyboardScreen>
     )
   }
 }
