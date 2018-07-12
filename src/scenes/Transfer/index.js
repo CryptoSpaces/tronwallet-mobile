@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Dimensions, SafeAreaView } from 'react-native'
+import { Dimensions } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import FreezeScreen from '../Freeze/index'
 import { Colors } from '../../components/DesignSystem'
 import SendScreen from '../Send/index'
-import * as Utils from '../../components/Utils'
+import NavigationHeader from '../../components/NavigationHeader'
 
 const initialLayout = {
   height: 0,
@@ -13,18 +13,12 @@ const initialLayout = {
 
 const SCREENSIZE = Dimensions.get('window')
 const TAB_WIDTH = SCREENSIZE.width / 2
-const INDICATOR_WIDTH = 15
+const INDICATOR_WIDTH = 100
 
 export default class TransferScene extends React.Component {
   static navigationOptions = () => {
     return {
-      header: (
-        <SafeAreaView>
-          <Utils.Header background={Colors.background} noBorder>
-            <Utils.Title paddingLeft='large'>Transfers</Utils.Title>
-          </Utils.Header>
-        </SafeAreaView>
-      )
+      header: <NavigationHeader title='Transfers' noBorder />
     }
   }
 
@@ -41,18 +35,24 @@ export default class TransferScene extends React.Component {
   _renderHeader = props => (
     <TabBar
       {...props}
-      labelStyle={{ color: Colors.secondaryText }}
       indicatorStyle={{
         width: INDICATOR_WIDTH,
         height: 1,
         marginLeft: (TAB_WIDTH / 2 - INDICATOR_WIDTH / 2)
       }}
+      tabStyle={{
+        padding: 16
+      }}
+      labelStyle={{
+        fontFamily: 'Rubik-Medium',
+        fontSize: 12,
+        letterSpacing: 0.65,
+        lineHeight: 12
+      }}
       style={{
-        backgroundColor: Colors.background,
-        flex: 0.1,
         borderBottomWidth: 1,
-        borderColor: Colors.lighterBackground,
-        paddingBottom: 10
+        backgroundColor: Colors.background,
+        borderColor: Colors.lighterBackground
       }}
     />
   )

@@ -10,7 +10,8 @@ import {
   View,
   ActivityIndicator,
   RefreshControl,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
 import Client from '../../services/client'
@@ -41,10 +42,11 @@ class BalanceScene extends Component {
     trxHistory: [],
     trxBalance: 0,
     refreshing: false,
+    loadingData: true,
     seedConfirmed: true
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     try {
       const assetList = await this._getAssetsFromStore()
       const assetBalance = await this._getBalancesFromStore()
@@ -62,7 +64,7 @@ class BalanceScene extends Component {
     this._dataListener = setInterval(this._loadData, POOLING_TIME)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
     clearInterval(this._dataListener)
   }
@@ -99,6 +101,7 @@ class BalanceScene extends Component {
   }
 
   _loadData = async () => {
+    this.setState({loadingData: true})
     try {
       const { updateWalletData } = this.props.context
       const getData = await Promise.all([
@@ -133,17 +136,19 @@ class BalanceScene extends Component {
       })
     } catch (error) {
       this.setState({ error: error.message })
+    } finally {
+      this.setState({loadingData: false})
     }
   }
 
   _navigateToParticipate = token => {
-    const { trxBalance, assetList } = this.state
-    if (token.name !== 'TRX') {
+    const { trxBalance, assetList, loadingData } = this.state
+    if (token.name !== 'TRX' && trxBalance > 0) {
       const tokenToParticipate = assetList.find(
         asset => asset.name === token.name
       )
       if (!tokenToParticipate) {
-        // Need to understand better the behavior if a token doesn't belong to
+        // TODO -Need to understand better the behavior if a token doesn't belong to
         // the participation list but belongs to the user's balance list
         return
       }
@@ -152,6 +157,7 @@ class BalanceScene extends Component {
         trxBalance
       })
     }
+    if (trxBalance === 0 && !loadingData) Alert.alert("You don't have TRX to participate to assets.")
   }
 
   listHeader = text => (
@@ -210,7 +216,7 @@ class BalanceScene extends Component {
     </Utils.View>
   )
 
-  render() {
+  render () {
     const {
       assetBalance,
       trxBalance,
@@ -372,8 +378,8 @@ class BalanceScene extends Component {
                               size='small'
                               align='center'
                             >{`${value.price.toFixed(
-                              PRICE_PRECISION
-                            )} USD`}</Utils.Text>
+                                PRICE_PRECISION
+                              )} USD`}</Utils.Text>
                           )}
                         </Motion>
                       </Utils.View>

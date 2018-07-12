@@ -87,7 +87,7 @@ const VoteStack = createStackNavigator(
     initialRouteName: 'VoteScene',
     navigationOptions: ({ navigation }) => ({
       header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
+        <SafeAreaView style={{ backgroundColor: Colors.background }}>
           <Utils.Header>
             <Utils.TitleWrapper>
               <Utils.Title>Vote</Utils.Title>
@@ -272,7 +272,6 @@ const RootNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'Loading',
-    mode: 'modal',
     navigationOptions: {
       gesturesEnabled: false,
       header: null
@@ -280,7 +279,8 @@ const RootNavigator = createStackNavigator(
   }
 )
 
-const prefix = Platform.OS === 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
+const prefix =
+  Platform.OS === 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
 
 class App extends Component {
   state = {

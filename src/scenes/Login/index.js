@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Image,
   Keyboard,
   KeyboardAvoidingView
 } from 'react-native'
@@ -11,11 +10,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
-import Input from '../../components/Input/Input'
+import Input from '../../components/Input'
 import ButtonGradient from '../../components/ButtonGradient'
 import { Colors } from '../../components/DesignSystem'
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 import { version } from '../../../package.json'
+import Logo from '../../components/Logo'
 
 class LoginScene extends Component {
   state = {
@@ -53,8 +53,6 @@ class LoginScene extends Component {
   signIn = async () => {
     const { navigation } = this.props
     const { username, password } = this.state
-    console.log('username', username)
-    console.log('passowrd', password)
     Keyboard.dismiss()
 
     this.setState({ loadingSign: true, signError: null })
@@ -123,8 +121,7 @@ class LoginScene extends Component {
       <ButtonGradient
         text='SIGN IN'
         onPress={this.signIn}
-        size='medium'
-        marginVertical='large'
+        marginVertical='medium'
       />
     )
   }
@@ -145,7 +142,7 @@ class LoginScene extends Component {
           >
             <Utils.Content justify='center' align='center'>
               <Utils.VerticalSpacer size='large' />
-              <Image source={require('../../assets/login-circle.png')} />
+              <Logo />
               <Utils.VerticalSpacer size='small' />
             </Utils.Content>
             <Utils.FormGroup>

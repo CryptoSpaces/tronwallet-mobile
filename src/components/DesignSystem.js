@@ -8,6 +8,12 @@ export const Spacing = {
   large: 32
 }
 
+export const ButtonSize = {
+  small: 28,
+  medium: 42,
+  large: 50
+}
+
 export const Colors = {
   background: '#191A2A',
   darkerBackground: '#10101A',
@@ -47,6 +53,7 @@ const getAdjustedFontSize = size =>
 
 export const FontSize = {
   tiny: getAdjustedFontSize(11),
+  button: getAdjustedFontSize(12),
   xsmall: getAdjustedFontSize(12),
   smaller: getAdjustedFontSize(14),
   small: getAdjustedFontSize(16),

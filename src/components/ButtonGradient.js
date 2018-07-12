@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import PropTypes from 'prop-types'
-import { Colors, Spacing } from './DesignSystem'
+import { Colors, Spacing, ButtonSize } from './DesignSystem'
 import * as Utils from './Utils'
 
 const ButtonGradient = ({
@@ -11,6 +11,7 @@ const ButtonGradient = ({
   disabled,
   size,
   width,
+  weight,
   marginVertical,
   font
 }) => (
@@ -22,30 +23,33 @@ const ButtonGradient = ({
     <LinearGradient
       start={{ x: 0, y: 1 }}
       end={{ x: 1, y: 0 }}
-      colors={ [Colors.buttonGradient[0], Colors.buttonGradient[1]]}
+      colors={[Colors.buttonGradient[0], Colors.buttonGradient[1]]}
 
       style={[
         styles.btnGradient,
         {
-          padding: Spacing[size],
           opacity: disabled ? 0.4 : 1,
-          width: width || '100%'
+          width: width || '100%',
+          height: ButtonSize[size],
+          paddingHorizontal: size === 'small' ? 8 : 16,
+          justifyContent: 'center'
         }
       ]}
     >
-      <Utils.Text size='xsmall' font={font}>{text}</Utils.Text>
+      <Utils.Text weight={weight} size={'button'} font={font}>{text}</Utils.Text>
     </LinearGradient>
   </TouchableOpacity>
 )
 
 ButtonGradient.defaultProps = {
   disabled: false,
-  size: 'medium'
+  size: 'large',
+  font: 'medium'
 }
 
 ButtonGradient.propTypes = {
   disabled: PropTypes.bool,
-  size: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large'])
+  size: PropTypes.string
 }
 
 const styles = StyleSheet.create({

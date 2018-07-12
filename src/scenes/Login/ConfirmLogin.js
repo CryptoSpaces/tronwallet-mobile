@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, KeyboardAvoidingView } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import { Auth } from 'aws-amplify'
 import Toast from 'react-native-easy-toast'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -8,6 +8,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
+import Logo from '../../components/Logo'
 
 import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
 
@@ -112,9 +113,7 @@ class ConfirmLogin extends Component {
         <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Container>
-            <Utils.Content height={80} justify='center' align='center'>
-              <Image source={require('../../assets/login-circle.png')} />
-            </Utils.Content>
+            <Logo />
             <Utils.Content>
               <Utils.Text size='xsmall' secondary>
                 PASTE GOOGLE AUTHENTICATOR CODE HERE

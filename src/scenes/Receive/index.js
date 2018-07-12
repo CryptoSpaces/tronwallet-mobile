@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react'
-import { Dimensions, Clipboard, SafeAreaView } from 'react-native'
+import { Dimensions, Clipboard } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import Feather from 'react-native-vector-icons/Feather'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import NavigationHeader from '../../components/NavigationHeader'
 import QRCode from '../../components/QRCode'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
@@ -50,13 +51,7 @@ class ReceiveScreen extends PureComponent {
 
     return (
       <Utils.Container>
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>Receive</Utils.Title>
-            </Utils.TitleWrapper>
-          </Utils.Header>
-        </SafeAreaView>
+        <NavigationHeader title='Settings' />
         <KeyboardAwareScrollView>
           <Utils.StatusBar />
           <Utils.Content marginY='20' align='center'>

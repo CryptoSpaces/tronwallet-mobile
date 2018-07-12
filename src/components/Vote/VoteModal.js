@@ -54,7 +54,7 @@ const VoteModal = ({
                     totalRemaining
                       ? ' or lower the vote amount'
                       : ' to continue'
-                    }.`}
+                  }.`}
                 </Utils.Text>
                 <Utils.VerticalSpacer size='medium' />
                 <ButtonGradient
@@ -63,7 +63,7 @@ const VoteModal = ({
                     navigation.navigate('Freeze')
                   }}
                   text='Freeze'
-                  size='small'
+                  size='medium'
                   width={100}
                 />
               </React.Fragment>
