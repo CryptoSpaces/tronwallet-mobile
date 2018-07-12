@@ -5,7 +5,7 @@ import { View, ScrollView, StyleSheet, Alert, Switch } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import NavigationHeader from '../../components/Navigation/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 // Services
 import NodesIp from '../../utils/nodeIp'

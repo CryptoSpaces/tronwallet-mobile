@@ -6,7 +6,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import * as Utils from '../Utils'
 import { Colors } from '../DesignSystem'
 
-const NavigationHeader = ({ title, onClose, noBorder, onClick, rightButton }) => {
+const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
   let rightElement = null
 
   if (onClose && !rightButton) {

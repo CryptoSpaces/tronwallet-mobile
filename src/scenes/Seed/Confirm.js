@@ -7,8 +7,8 @@ import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 
 import { confirmSecret } from '../../utils/secretsUtils'
-import NavigationHeader from '../../components/Navigation/NavigationHeader'
-import NavigationButton from '../../components/Navigation/NavigationButtonHeader'
+import NavigationHeader from '../../components/Navigation/Header'
+import NavigationButton from '../../components/Navigation/ButtonHeader'
 
 const WordWrapper = styled.TouchableOpacity`
   padding-vertical: ${Spacing.small};
