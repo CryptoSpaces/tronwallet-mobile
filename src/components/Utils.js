@@ -252,7 +252,7 @@ Label.propTypes = {
 export const FormInput = styled.TextInput.attrs({
   placeholderTextColor: Colors.primaryText
 })`
-  height: ${props => props.height}px;
+  ${props => props.height && css`height: ${props.height}px`};
   color: ${Colors.primaryText};
   padding: ${props => props.padding}px;
   font-size: ${FontSize['small']};
