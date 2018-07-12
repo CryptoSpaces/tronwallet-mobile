@@ -51,7 +51,7 @@ class Create extends React.Component {
             text="I'VE WRITTEN IT DOWN"
           />
         </Utils.Row>
-        <Utils.VerticalSpacer size='medium'/>
+        <Utils.VerticalSpacer size='medium' />
         <Utils.Button onPress={() => this.props.navigation.goBack()}>
           Confirm later
         </Utils.Button>
