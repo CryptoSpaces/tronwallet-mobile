@@ -120,6 +120,7 @@ export const Content = View.extend.attrs({
   ${props => props.flex && css` flex: ${props.flex}; `}
   ${props => props.background && css` background-color: ${props.background}; `}
   ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px; `}
+  ${props => props.paddingBottom && css` padding-bottom: ${props.paddingBottom}px; `}
   ${props => props.position && css` position: ${props.position}; `}
 `
 
@@ -184,22 +185,22 @@ VerticalSpacer.propTypes = {
 export const Text = styled.Text`
   color: ${props => props.color};
   font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
-  ${props => props.size && css` font-size: ${FontSize[props.size]}px; `};
-  ${props => props.light && css` font-family: rubik-light; `}
-  ${props => props.padding && css` padding: ${props.padding}; `};
-  ${props => props.weight && css` font-weight: ${props.weight}; `};
-  ${props => props.marginY && css` margin-vertical: ${props.marginY}px; `};
-  ${props => props.align && css` text-align: ${props.align}; `};
-  ${props => props.secondary && css` color: ${Colors.secondaryText}; `};
-  ${props => props.success && css` color: ${Colors.green}; `};
-  ${props => props.lineHeight && css` line-height: ${props.lineHeight}; `};
-  ${props => props.letterSpacing && css` letter-spacing: ${props.letterSpacing}; `};
-  ${props => props.marginBottom && css` margin-bottom: ${props.marginBottom}px; `};
-  ${props => props.marginTop && css` margin-top: ${Spacing[props.marginTop]}px; `};
-  ${props => props.margin && css` margin: ${props.margin}px; `};
-  ${props => props.position && css` position: ${props.position}; `};
-  ${props => props.top && css` top: ${props.top}; `};
-  ${props => props.background && css` background-color: ${props.background}; `};
+  ${props => props.size && css` font-size: ${FontSize[props.size]}px`};
+  ${props => props.light && css` font-family: rubik-light`};
+  ${props => props.padding && css` padding: ${props.padding}`};
+  ${props => props.weight && css` font-weight: ${props.weight}`};
+  ${props => props.marginY && css` margin-vertical: ${props.marginY}px`};
+  ${props => props.align && css` text-align: ${props.align}`};
+  ${props => props.secondary && css` color: ${Colors.secondaryText}`};
+  ${props => props.success && css` color: ${Colors.green}`};
+  ${props => props.lineHeight && css` line-height: ${props.lineHeight}`};
+  ${props => props.letterSpacing && css` letter-spacing: ${props.letterSpacing}`};
+  ${props => props.marginBottom && css` margin-bottom: ${props.marginBottom}px`};
+  ${props => props.marginTop && css` margin-top: ${Spacing[props.marginTop]}px`};
+  ${props => props.margin && css` margin: ${props.margin}px`};
+  ${props => props.position && css` position: ${props.position}`};
+  ${props => props.top && css` top: ${props.top}`};
+  ${props => props.background && css` background-color: ${props.background}`};
 `
 
 Text.defaultProps = {
@@ -251,6 +252,7 @@ Label.propTypes = {
 export const FormInput = styled.TextInput.attrs({
   placeholderTextColor: Colors.primaryText
 })`
+  height: ${props => props.height}px;
   color: ${Colors.primaryText};
   padding: ${props => props.padding}px;
   font-size: ${FontSize['small']};
