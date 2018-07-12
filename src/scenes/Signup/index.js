@@ -8,7 +8,7 @@ import { Auth } from 'aws-amplify'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import * as Utils from '../../components/Utils'
-import Input from '../../components/Input/Input'
+import Input from '../../components/Input'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import Logo from '../../components/Logo'

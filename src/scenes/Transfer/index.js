@@ -13,7 +13,7 @@ const initialLayout = {
 
 const SCREENSIZE = Dimensions.get('window')
 const TAB_WIDTH = SCREENSIZE.width / 2
-const INDICATOR_WIDTH = 15
+const INDICATOR_WIDTH = 100
 
 export default class TransferScene extends React.Component {
   static navigationOptions = () => {
@@ -35,18 +35,25 @@ export default class TransferScene extends React.Component {
   _renderHeader = props => (
     <TabBar
       {...props}
-      labelStyle={{ color: Colors.secondaryText }}
       indicatorStyle={{
         width: INDICATOR_WIDTH,
         height: 1,
         marginLeft: (TAB_WIDTH / 2 - INDICATOR_WIDTH / 2)
       }}
+      tabStyle={{
+        padding: 16
+      }}
+      labelStyle={{
+        fontFamily: 'Rubik-Medium',
+        fontSize: 12,
+        letterSpacing: 0.65,
+        lineHeight: 12
+      }}
       style={{
-        backgroundColor: Colors.background,
-        flex: 0.1,
         borderBottomWidth: 1,
         borderColor: Colors.lighterBackground,
-        paddingBottom: 10,
+        backgroundColor: Colors.background,
+        borderColor: Colors.lighterBackground,
         elevation: 0,
         shadowOpacity: 0
       }}
