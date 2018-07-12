@@ -52,11 +52,10 @@ export default class TransferScene extends React.Component {
       style={{
         borderBottomWidth: 1,
         borderColor: Colors.lighterBackground,
-        paddingBottom: 10,
+        backgroundColor: Colors.background,
         elevation: 0,
         shadowOpacity: 0,
-        backgroundColor: Colors.background,
-        borderColor: Colors.lighterBackground
+        paddingBottom: 10
       }}
     />
   )

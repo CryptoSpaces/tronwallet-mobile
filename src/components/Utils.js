@@ -26,8 +26,9 @@ export const Header = styled.View`
   border-color: ${Colors.lighterBackground};
   border-bottom-width: ${props => props.border};
   background-color: ${props => props.background};
-  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px; `};
-  ${props => props.noBorder && css` border-bottom-width: 0; `};
+  ${props => props.position && css`position: ${props.position}`};
+  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px`};
+  ${props => props.noBorder && css` border-bottom-width: 0`};
 `
 
 Header.defaultProps = {
