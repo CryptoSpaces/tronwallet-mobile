@@ -7,8 +7,8 @@ import { ONE_TRX } from '../../services/client'
 
 // const formatAmount = value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
-export default ({ item }) => (
-  <Utils.TransactionCard>
+export default ({ item, onPress }) => (
+  <Utils.TransactionCard onPress={onPress}>
     <Utils.Row align='center' justify='space-between'>
       <Utils.Tag color={tint(0.9, '#38b8f3')}>
         <Utils.Text size='xsmall'>{item.type}</Utils.Text>

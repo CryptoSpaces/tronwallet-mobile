@@ -4,14 +4,14 @@ import Feather from 'react-native-vector-icons/Feather'
 import { tint } from 'polished'
 import * as Utils from '../../components/Utils'
 
-export default ({ item }) => {
+export default ({ item, onPress }) => {
   const voteCount = item.contractData.votes.reduce(
     (prev, curr) => prev + curr.voteCount,
     0
   )
 
   return (
-    <Utils.TransactionCard>
+    <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
         <Utils.Tag color={tint(0.9, '#bd1dc6')}>
           <Utils.Text size='xsmall'>{item.type}</Utils.Text>

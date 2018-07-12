@@ -348,7 +348,7 @@ export const Card = styled.View`
   width: 100%;
   border-radius: 6px;
 `
-export const TransactionCard = styled.View`
+export const TransactionCard = styled.TouchableOpacity`
   padding-top: ${Spacing.medium};
   background-color: ${Colors.background};
   width: 100%;

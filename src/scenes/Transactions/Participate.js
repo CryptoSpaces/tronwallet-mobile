@@ -9,10 +9,10 @@ const formatAmount = value => {
   return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-export default ({ item }) => {
+export default ({ item, onPress }) => {
   const { contractData } = item
   return (
-    <Utils.TransactionCard>
+    <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
         <Utils.Tag color={tint(0.9, '#0cd94d')}>
           <Utils.Text size='xsmall'>{item.type}</Utils.Text>

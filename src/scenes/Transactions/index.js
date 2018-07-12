@@ -96,15 +96,15 @@ class TransactionsScene extends Component {
   renderCard = item => {
     switch (item.type) {
       case 'Transfer':
-        return <TransferCard item={item} />
+        return <TransferCard item={item} onPress={() => this.props.navigation.navigate('TransactionDetails')} />
       case 'Freeze':
-        return <FreezeCard item={item} />
+        return <FreezeCard item={item} onPress={() => this.props.navigation.navigate('TransactionDetails')} />
       case 'Vote':
-        return <VoteCard item={item} />
+        return <VoteCard item={item} onPress={() => this.props.navigation.navigate('TransactionDetails')} />
       case 'Participate':
-        return <ParticipateCard item={item} />
+        return <ParticipateCard item={item} onPress={() => this.props.navigation.navigate('TransactionDetails')} />
       default:
-        return <Default item={item} />
+        return <Default item={item} onPress={() => this.props.navigation.navigate('TransactionDetails')} />
     }
   }
 

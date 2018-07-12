@@ -142,7 +142,7 @@ class SendScene extends Component {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false, error: null }, () => {
-        this.props.navigation.navigate('TransactionDetail', {
+        this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
       })
@@ -285,7 +285,7 @@ class SendScene extends Component {
               </ModalSelector>
               <Utils.VerticalSpacer size='medium' />
               <Input
-                innerRef={(input) => this.to = input}
+                innerRef={(input) => { this.to = input }}
                 label='TO'
                 rightContent={this._rightContent}
                 value={to}
@@ -305,7 +305,7 @@ class SendScene extends Component {
               </Modal>
               <Utils.VerticalSpacer size='medium' />
               <Input
-                innerRef={(input) => this.amount = input}
+                innerRef={(input) => { this.amount = input }}
                 label='AMOUNT'
                 keyboardType='numeric'
                 placeholder='0'

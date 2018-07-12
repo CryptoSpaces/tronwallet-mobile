@@ -6,7 +6,7 @@ import * as Utils from '../../components/Utils'
 import { ONE_TRX } from '../../services/client'
 import { formatNumber } from '../../utils/numberUtils'
 
-const TransferItem = ({ item }) => {
+const TransferItem = ({ item, onPress }) => {
   const amount =
     item.contractData.tokenName === 'TRX'
       ? item.contractData.amount / ONE_TRX
@@ -16,7 +16,7 @@ const TransferItem = ({ item }) => {
       ? { icon: 'arrow-down-left', color: 'green' }
       : { icon: 'arrow-up-right', color: 'red' }
   return (
-    <Utils.TransactionCard>
+    <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
         <Utils.Tag color={tint(0.9, '#1f90e6')}>
           <Utils.Text size='xsmall'>{item.type}</Utils.Text>
