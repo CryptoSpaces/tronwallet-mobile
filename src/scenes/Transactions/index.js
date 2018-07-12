@@ -14,7 +14,7 @@ import ParticipateCard from './Participate'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
-import NavigationHeader from '../../components/Navigation/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import getTransactionStore from '../../store/transactions'
 

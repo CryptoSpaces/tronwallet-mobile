@@ -42,8 +42,8 @@ import SeedConfirm from './src/scenes/Seed/Confirm'
 import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
 
 import fontelloConfig from './src/assets/icons/config.json'
-import NavigationHeader from './src/components/Navigation/NavigationHeader'
-import NavigationButton from './src/components/Navigation/NavigationButtonHeader'
+import NavigationHeader from './src/components/Navigation/Header'
+import NavigationButton from './src/components/Navigation/ButtonHeader'
 
 import Client from './src/services/client'
 import { getUserPublicKey } from './src/utils/userAccountUtils'

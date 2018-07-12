@@ -4,7 +4,7 @@ import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import FreezeScreen from '../Freeze/index'
 import { Colors } from '../../components/DesignSystem'
 import SendScreen from '../Send/index'
-import NavigationHeader from '../../components/Navigation/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 const initialLayout = {
   height: 0,
