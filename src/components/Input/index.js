@@ -16,12 +16,12 @@ const Input = ({
     <Elements.InputWrapper>
       {leftContent && leftContent()}
       <Elements.TextInput
+        {...props}
         innerRef={innerRef}
         autoCorrect={false}
         autoCapitalize='none'
         underlineColorAndroid='transparent'
         placeholderTextColor='#66688F'
-        {...props}
       />
       {rightContent && rightContent()}
     </Elements.InputWrapper>
