@@ -337,17 +337,19 @@ class VoteScene extends PureComponent {
             <GrowIn name='vote-header' height={63}>
               <Header>
                 <Utils.View align='center'>
-                  <Utils.Text size='xsmall' secondary>
+                  <Utils.Text size='tiny' weight='500' secondary>
                     TOTAL VOTES
                   </Utils.Text>
+                  <Utils.VerticalSpacer />
                   <Utils.Text size='small'>
                     {formatNumber(totalVotes)}
                   </Utils.Text>
                 </Utils.View>
                 <Utils.View align='center'>
-                  <Utils.Text size='xsmall' secondary>
+                  <Utils.Text size='tiny' weight='500' secondary>
                     VOTES AVAILABLE
                   </Utils.Text>
+                  <Utils.VerticalSpacer />
                   <Utils.Text
                     size='small'
                     style={{

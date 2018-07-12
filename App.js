@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform, SafeAreaView, YellowBox } from 'react-native'
+import { StatusBar, Platform, SafeAreaView, YellowBox, TouchableOpacity } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -88,23 +88,25 @@ const VoteStack = createStackNavigator(
     navigationOptions: ({ navigation }) => ({
       header: (
         <SafeAreaView style={{ backgroundColor: Colors.background }}>
-          <Utils.Header>
+          <Utils.VerticalSpacer size='medium' />
+          <Utils.Header justify='center' border={0} position='relative'>
             <Utils.TitleWrapper>
-              <Utils.Title>Vote</Utils.Title>
+              <Utils.Text size='average' weight='100'>VOTES</Utils.Text>
             </Utils.TitleWrapper>
             {(navigation.getParam('votesError') || navigation.getParam('listError'))
-              ? <ButtonGradient
-                size='small'
-                text='Sync'
-                onPress={navigation.getParam('loadData')}
-              />
-              : <ButtonGradient
-                disabled={navigation.getParam('disabled')}
-                size='small'
-                text='Submit'
+              ? ( 
+                <TouchableOpacity onPress={navigation.getParam('loadData')} style={{ position: 'absolute', right: 0 }}>
+                  <Utils.Text style={{ padding: 32, color: Colors.secondaryText, fontSize: 12}}>SYNC</Utils.Text>
+                </TouchableOpacity>
+              ) : (
+              <TouchableOpacity 
                 onPress={navigation.getParam('onSubmit')}
-              />
-            }
+                disabled={navigation.getParam('disabled')}
+                style={{ position: 'absolute', right: 0 }}
+              >
+                <Utils.Text style={{padding: 32, color: Colors.secondaryText, fontSize: 12}}>SUBMIT</Utils.Text>
+              </TouchableOpacity>
+            )}
           </Utils.Header>
         </SafeAreaView>
       )

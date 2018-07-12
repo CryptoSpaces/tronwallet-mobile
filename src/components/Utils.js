@@ -21,17 +21,20 @@ export const Header = styled.View`
   height: 70px;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${props => props.justify};
   padding: ${Spacing.medium}px;
   border-color: ${Colors.lighterBackground};
-  border-bottom-width: 1px;
+  border-bottom-width: ${props => props.border};
   background-color: ${props => props.background};
-  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px; `};
-  ${props => props.noBorder && css` border-bottom-width: 0; `};
+  ${props => props.position && css`position: ${props.position}`};
+  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px`};
+  ${props => props.noBorder && css` border-bottom-width: 0`};
 `
 
 Header.defaultProps = {
-  background: Colors.background
+  background: Colors.background,
+  justify: 'space-between',
+  border: '1px'
 }
 
 export const Title = styled.Text`
@@ -45,8 +48,14 @@ Title.defaultProps = {
 }
 
 export const TitleWrapper = styled.View`
-  justify-content: center;
+  justify-content: ${props => props.justify};
+  align-items: ${props => props.align};
 `
+
+TitleWrapper.defaultProps = {
+  justify: 'center',
+  align: 'flex-start'
+}
 
 export const View = styled.View`
   align-items: ${props => props.align};
