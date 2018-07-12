@@ -54,7 +54,7 @@ const VoteModal = ({
                     totalRemaining
                       ? ' or lower the vote amount'
                       : ' to continue'
-                    }.`}
+                  }.`}
                 </Utils.Text>
                 <Utils.VerticalSpacer size='medium' />
                 <ButtonGradient

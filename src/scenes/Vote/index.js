@@ -49,7 +49,7 @@ const INITIAL_STATE = {
 class VoteScene extends PureComponent {
   state = INITIAL_STATE
 
-  async componentDidMount() {
+  async componentDidMount () {
     this._onSearch = debounce(this._onSearch, 500)
     this.didFocusSubscription = this.props.navigation.addListener(
       'didFocus',
@@ -57,7 +57,7 @@ class VoteScene extends PureComponent {
     )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.didFocusSubscription.remove()
   }
 
@@ -263,7 +263,7 @@ class VoteScene extends PureComponent {
         [errorType]: "Oops, something didn't load correctly. Try to sync again",
         loading: false
       },
-      function setErrorParams() {
+      function setErrorParams () {
         this.props.navigation.setParams({
           loadData: this._loadData,
           [errorType]: this.state[errorType]
@@ -328,7 +328,7 @@ class VoteScene extends PureComponent {
     )
   }
 
-  render() {
+  render () {
     const { totalVotes, totalRemaining, votesError, refreshing, loadingList } = this.state
     return (
       <Utils.Container>
