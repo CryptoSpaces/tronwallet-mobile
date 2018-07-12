@@ -3,18 +3,16 @@ import { SafeAreaView, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import Feather from 'react-native-vector-icons/Feather'
 
-import * as Utils from './Utils'
-import { Colors } from './DesignSystem'
+import * as Utils from '../Utils'
+import { Colors } from '../DesignSystem'
 
-const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
+const NavigationHeader = ({ title, onClose, noBorder, onClick, rightButton }) => {
   let rightElement = null
 
   if (onClose && !rightButton) {
-    rightElement = <Utils.View justify='center' align='center' marginRight={5}>
-      <TouchableOpacity onPress={onClose}>
-        <Feather name='x' color='white' size={32} />
-      </TouchableOpacity>
-    </Utils.View>
+    rightElement = <TouchableOpacity onPress={onClose}>
+      <Feather name='x' color='white' size={32} />
+    </TouchableOpacity>
   }
   if (rightButton && !onClose) {
     rightElement = rightButton
@@ -23,10 +21,12 @@ const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
   return <SafeAreaView style={{ backgroundColor: Colors.background }}>
     <Utils.VerticalSpacer size='medium' />
     <Utils.Header justify='center' noBorder={noBorder}>
-      <Utils.TitleWrapper>
-        <Utils.Text size='average' weight='100'>{title}</Utils.Text>
-      </Utils.TitleWrapper>
-      {rightElement}
+      <Utils.View justify='center' align='center'>
+        <Utils.Text size='average' weight='300'>{title}</Utils.Text>
+      </Utils.View>
+      <Utils.View style={{ position: 'absolute', right: 10 }}>
+        {rightElement}
+      </Utils.View>
     </Utils.Header>
   </SafeAreaView>
 }
