@@ -60,26 +60,26 @@ TitleWrapper.defaultProps = {
 export const View = styled.View`
   align-items: ${props => props.align};
   justify-content: ${props => props.justify};
-  ${props => props.flex && css`flex: ${props.flex};`}
-  ${props => props.height && css`height: ${props.height};`}
-  ${props => props.width && css`width: ${props.width};`}
-  ${props => props.background && css`background-color: ${props.background};`}
-  ${props => props.borderWidth && css`border-width: ${props.borderWidth};`}
-  ${props => props.borderColor && css`border-color: ${props.borderColor};`}
-  ${props => props.borderRadius && css`border-radius: ${props.borderRadius}px;`}
-  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]};`}
-  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]};`}
-  ${props => props.padding && css`top: ${props.padding};`}
-  ${props => props.margin && css`margin: ${props.margin}px;`}
-  ${props => props.marginTop && css`margin-top: ${props.marginTop}px;`}
-  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px;`}
-  ${props => props.marginRight && css`margin-right: ${props.marginRight}px;`}
-  ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px;`}
-  ${props => props.position && css`position: ${props.position};`}
-  ${props => props.top && css`top: ${props.top};`}
-  ${props => props.bottom && css`bottom: ${props.bottom};`}
-  ${props => props.right && css`right: ${props.right};`}
-  ${props => props.left && css`left: ${props.left};`};
+  ${props => props.flex && css`flex: ${props.flex}`};
+  ${props => props.height && css`height: ${props.height}`};
+  ${props => props.width && css`width: ${props.width}`};
+  ${props => props.background && css`background-color: ${props.background}`};
+  ${props => props.borderWidth && css`border-width: ${props.borderWidth}`};
+  ${props => props.borderColor && css`border-color: ${props.borderColor}`};
+  ${props => props.borderRadius && css`border-radius: ${props.borderRadius}px`};
+  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]}`};
+  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]}`};
+  ${props => props.padding && css`top: ${props.padding}`};
+  ${props => props.margin && css`margin: ${props.margin}px`};
+  ${props => props.marginTop && css`margin-top: ${props.marginTop}px`};
+  ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
+  ${props => props.marginRight && css`margin-right: ${props.marginRight}px`};
+  ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px`};
+  ${props => props.position && css`position: ${props.position}`};
+  ${props => props.top && css`top: ${props.top}`};
+  ${props => props.bottom && css`bottom: ${props.bottom}`};
+  ${props => props.right && css`right: ${props.right}`};
+  ${props => props.left && css`left: ${props.left}`};
 `
 
 View.defaultProps = {
@@ -117,17 +117,17 @@ export const Content = View.extend.attrs({
   paddingSize: 'big'
 })`
   padding: ${props => props.paddingSize !== 'none' ? `${Spacing[props.paddingSize]}px` : 0};
-  ${props => props.flex && css` flex: ${props.flex}; `}
-  ${props => props.background && css` background-color: ${props.background}; `}
-  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px; `}
-  ${props => props.paddingBottom && css` padding-bottom: ${props.paddingBottom}px; `}
-  ${props => props.position && css` position: ${props.position}; `}
+  ${props => props.flex && css` flex: ${props.flex}`};
+  ${props => props.background && css` background-color: ${props.background}`};
+  ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px`};
+  ${props => props.paddingBottom && css` padding-bottom: ${props.paddingBottom}px`};
+  ${props => props.position && css` position: ${props.position}`};
 `
 
 export const StatusBar = styled.View`
   height: 12px;
   background-color: ${Colors.background};
-  ${props => props.transparent && css` background-color: transparent; `};
+  ${props => props.transparent && css` background-color: transparent`};
 `
 
 export const LoadButton = styled.TouchableOpacity`
@@ -149,9 +149,9 @@ export const Img = View.withComponent(Image)
 
 export const Row = View.extend`
   flex-direction: row;
-  ${props => props.background && css` background-color: ${props.background}; `}
-${props => props.position && css` position: ${props.position}; `}
-  ${props => props.wrap && css` flex-wrap: ${props.wrap}; `};
+  ${props => props.background && css` background-color: ${props.background}`};
+  ${props => props.position && css` position: ${props.position}`};
+  ${props => props.wrap && css` flex-wrap: ${props.wrap}`};
 `
 
 export const Column = View.extend`
@@ -226,11 +226,11 @@ Text.propTypes = {
 }
 
 export const Item = styled.View`
-  ${props => props.padding && css` padding: ${props.padding}px; `};
+  ${props => props.padding && css` padding: ${props.padding}px`};
   border-color: ${Colors.secondaryText};
-  ${props => props.borderColor && css` border-color: ${props.borderColor}; `};
+  ${props => props.borderColor && css` border-color: ${props.borderColor}`};
   border-bottom-width: 0.2px;
-  ${props => props.top && css` border-top-width: 0.2px; `};
+  ${props => props.top && css` border-top-width: 0.2px`};
 `
 
 export const Label = styled.View`
@@ -269,7 +269,7 @@ FormInput.defaultProps = {
 
 export const FormGroup = styled.KeyboardAvoidingView`
   padding: ${Spacing.big}px;
-  ${props => props.background && css` background-color: ${props.background}; `};
+  ${props => props.background && css` background-color: ${props.background}`};
 `
 export const Error = styled.Text`
   font-size: ${FontSize['small']};
@@ -294,7 +294,6 @@ export const Warning = Error.extend`
 
 export const PasteButton = styled.TouchableOpacity`
   margin-horizontal: 5px;
-  /* padding: ${Spacing.medium - 5}px; */
   padding: ${Spacing.small}px;
   border-width: 1px;
   ${tronWalletBorder}
@@ -331,7 +330,7 @@ export const ButtonWrapper = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   ${props => props.side && `${props.side}: ${Spacing.medium}`};
-  ${props => props.marginBottom && css` margin-bottom: ${Spacing[props.marginBottom]}px; `};
+  ${props => props.marginBottom && css` margin-bottom: ${Spacing[props.marginBottom]}px`};
 `
 ButtonWrapper.propTypes = {
   marginBottom: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large']),
