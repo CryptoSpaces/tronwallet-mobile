@@ -157,6 +157,7 @@ class FreezeScene extends Component {
                 align='right'
                 value={amount}
                 onChangeText={value => this._changeFreeze(value)}
+                onSubmitEditing={this.submit}
                 placeholder='0'
               />
               <Utils.SummaryInfo

@@ -1,4 +1,5 @@
 import React from 'react'
+import { SafeAreaView } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
@@ -7,18 +8,20 @@ import * as Utils from '../components/Utils'
 
 const QRCodeComponent = ({ onRead, onClose }) => (
   <Utils.Container>
-    <Utils.Header>
-      <Utils.TitleWrapper>
-        <Utils.Title>Address Scanner</Utils.Title>
-      </Utils.TitleWrapper>
-      <Utils.CloseButton onPress={onClose}>
-        <Ionicons
-          name='ios-close-circle-outline'
-          size={32}
-          color={Colors.primaryText}
-        />
-      </Utils.CloseButton>
-    </Utils.Header>
+    <SafeAreaView style={{ backgroundColor: 'black' }}>
+      <Utils.Header>
+        <Utils.TitleWrapper>
+          <Utils.Title>Address Scanner</Utils.Title>
+        </Utils.TitleWrapper>
+        <Utils.CloseButton onPress={onClose}>
+          <Ionicons
+            name='ios-close-circle-outline'
+            size={32}
+            color={Colors.primaryText}
+          />
+        </Utils.CloseButton>
+      </Utils.Header>
+    </SafeAreaView>
     <QRCodeScanner
       showMarker
       fadeIn

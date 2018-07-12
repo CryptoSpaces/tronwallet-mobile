@@ -163,13 +163,19 @@ class SendScene extends Component {
     }
   }
 
-  readPublicKey = e => this.setState({ to: e.data }, this.closeModal)
+  readPublicKey = e => this.setState({ to: e.data }, () => {
+    this.closeModal()
+    this._nextInput('to')
+  })
 
   _openModal = () => this.setState({ QRModalVisible: true })
 
   _onPaste = async () => {
     const content = await Clipboard.getString()
-    this.changeInput(content, 'to')
+    if (content) {
+      this.changeInput(content, 'to')
+      this._nextInput('to')
+    }
   }
 
   closeModal = () => {
@@ -224,6 +230,22 @@ class SendScene extends Component {
     </React.Fragment>
   )
 
+  _nextInput = currentInput => {
+    if (currentInput === 'token') {
+      this.to.focus()
+      return
+    }
+
+    if (currentInput === 'to') {
+      this.amount.focus()
+      return
+    }
+
+    if (currentInput === 'amount' && this.state.trxBalance !== 0) {
+      this.submit()
+    }
+  }
+
   render () {
     const { loadingSign, loadingData, error, warning, to, trxBalance, amount } = this.state
     return (
@@ -253,7 +275,7 @@ class SendScene extends Component {
                   key: item.name,
                   label: item.name
                 }))}
-                onChange={option => this.setState({ token: option.label })}
+                onChange={option => this.setState({ token: option.label }, this._nextInput('token'))}
                 disabled={trxBalance === 0}
               >
                 <Input
@@ -263,11 +285,12 @@ class SendScene extends Component {
               </ModalSelector>
               <Utils.VerticalSpacer size='medium' />
               <Input
+                innerRef={(input) => this.to = input}
                 label='TO'
-                leftContent={this._leftContent}
                 rightContent={this._rightContent}
                 value={to}
                 onChangeText={text => this.changeInput(text, 'to')}
+                onSubmitEditing={() => this._nextInput('to')}
               />
               <Modal
                 visible={this.state.QRModalVisible}
@@ -282,11 +305,13 @@ class SendScene extends Component {
               </Modal>
               <Utils.VerticalSpacer size='medium' />
               <Input
+                innerRef={(input) => this.amount = input}
                 label='AMOUNT'
                 keyboardType='numeric'
                 placeholder='0'
                 value={amount}
                 onChangeText={text => this.changeInput(text, 'amount')}
+                onSubmitEditing={() => this._nextInput('amount')}
               />
               <Utils.VerticalSpacer size='medium' />
               {error && <Utils.Error>{error}</Utils.Error>}
@@ -302,7 +327,7 @@ class SendScene extends Component {
             </Utils.Content>
           </Utils.Container>
         </KeyboardAwareScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAvoidingView >
     )
   }
 }
