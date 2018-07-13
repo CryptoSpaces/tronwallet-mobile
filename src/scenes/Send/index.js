@@ -71,7 +71,7 @@ class SendScene extends Component {
         loadingData: false,
         trxBalance: balance,
         formattedToken: this._formatBalance('TRX', balance),
-        warning: balance === 0 ? 'NO BALANCE' : null
+        warning: balance === 0 ? 'Not enough balance.' : null
       })
     } catch (error) {
       Alert.alert('Error while getting balance data')

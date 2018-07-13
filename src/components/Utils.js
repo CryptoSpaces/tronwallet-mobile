@@ -18,23 +18,19 @@ const tronWalletBorder = css`
 `
 
 export const Header = styled.View`
-  height: 70px;
+  height: 64px;
   flex-direction: row;
   align-items: center;
   justify-content: ${props => props.justify};
   padding: ${Spacing.medium}px;
-  border-color: ${Colors.lighterBackground};
-  border-bottom-width: ${props => props.border};
   background-color: ${props => props.background};
   ${props => props.position && css`position: ${props.position}`};
   ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px`};
-  ${props => props.noBorder && css` border-bottom-width: 0`};
 `
 
 Header.defaultProps = {
   background: Colors.background,
-  justify: 'space-between',
-  border: '1px'
+  justify: 'space-between'
 }
 
 export const Title = styled.Text`

@@ -23,7 +23,7 @@ const POOLING_TIME = 30000
 class TransactionsScene extends Component {
   static navigationOptions = () => {
     return {
-      header: <NavigationHeader title='My Transactions' />
+      header: <NavigationHeader title='MY TRANSACTIONS' />
     }
   }
 
@@ -69,7 +69,8 @@ class TransactionsScene extends Component {
             type: item.type,
             contractData: item.contractData,
             ownerAddress: item.ownerAddress,
-            timestamp: item.timestamp
+            timestamp: item.timestamp,
+            confirmed: true
           }
           if (item.type === 'Transfer') {
             transaction.id = item.transactionHash

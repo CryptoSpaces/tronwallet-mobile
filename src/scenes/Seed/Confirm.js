@@ -19,7 +19,7 @@ class Confirm extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <NavigationHeader
-        title='Confirm Seed'
+        title='CONFIRM SEED'
         rightButton={<NavigationButton
           onPress={navigation.getParam('onSubmit')}
           title='SUBMIT'

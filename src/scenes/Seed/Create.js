@@ -10,7 +10,7 @@ import { getUserSecrets } from '../../utils/secretsUtils'
 
 class Create extends React.Component {
   static navigationOptions = () => ({
-    header: <NavigationHeader title='Confirm Wallet Seed' />
+    header: <NavigationHeader title='CONFIRM WALLET SEED' />
   })
 
   state = {
