@@ -116,14 +116,16 @@ class TransactionDetail extends Component {
     const store = await getTransactionStore()
     const transaction = {
       id: hash,
-      type: 'Pending',
+      type: Client.getContractType(contracts[0].contractTypeId),
       contractData: {
         transferFromAddress: contracts[0].from,
         transferToAddress: contracts[0].to,
-        amount: contracts[0].amount
+        amount: contracts[0].amount,
+        tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
       },
       ownerAddress: contracts[0].from,
-      timestamp: timestamp
+      timestamp: timestamp,
+      confirmed: false
     }
     try {
       let success = false

@@ -69,7 +69,8 @@ class TransactionsScene extends Component {
             type: item.type,
             contractData: item.contractData,
             ownerAddress: item.ownerAddress,
-            timestamp: item.timestamp
+            timestamp: item.timestamp,
+            confirmed: true
           }
           if (item.type === 'Transfer') {
             transaction.id = item.transactionHash
