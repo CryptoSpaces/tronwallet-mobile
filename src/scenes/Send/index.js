@@ -70,7 +70,7 @@ class SendScene extends Component {
         balances,
         loadingData: false,
         trxBalance: balance,
-        formattedToken: `TRX (${formatNumber(balance)})`,
+        formattedToken: this._formatBalance('TRX', balance),
         warning: balance === 0 ? 'NO BALANCE' : null
       })
     } catch (error) {
@@ -223,6 +223,8 @@ class SendScene extends Component {
     }
   }
 
+  _formatBalance = (token, balance) => `${token} (${formatNumber(balance)} available)`
+
   _rightContentTo = () => (
     <React.Fragment>
       <IconButton onPress={this._onPaste} icon='md-clipboard' />
@@ -257,31 +259,29 @@ class SendScene extends Component {
     const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
     return (
       <KeyboardScreen>
-        <Utils.Container>
+        <Utils.Container style={{borderColor: Colors.secondaryText, borderTopWidth: 0.5}}>
           <Utils.Content>
             {balances.length !== 0 &&
-              <React.Fragment>
-                <ModalSelector
-                  data={balances.map(item => ({
-                    key: item.name,
-                    label: `${item.name} (${formatNumber(item.balance)} available)`
-                  }))}
-                  onChange={option => this.setState({
-                    token: option.key,
-                    formattedToken: option.label
-                  },
-                  this._nextInput('token'))}
-                  disabled={trxBalance === 0}
-                >
-                  <Input
-                    label='TOKEN'
-                    value={this.state.formattedToken}
-                    rightContent={this._rightContentToken}
-                  />
-                </ModalSelector>
-                <Utils.VerticalSpacer size='medium' />
-              </React.Fragment>
+              <ModalSelector
+                data={balances.map(item => ({
+                  key: item.name,
+                  label: this._formatBalance(item.name, item.balance)
+                }))}
+                onChange={option => this.setState({
+                  token: option.key,
+                  formattedToken: option.label
+                },
+                this._nextInput('token'))}
+                disabled={trxBalance === 0}
+              >
+                <Input
+                  label='TOKEN'
+                  value={this.state.formattedToken}
+                  rightContent={this._rightContentToken}
+                />
+              </ModalSelector>
             }
+            <Utils.VerticalSpacer size='medium' />
             <Input
               innerRef={(input) => { this.to = input }}
               label='TO'
@@ -313,11 +313,13 @@ class SendScene extends Component {
               align='right'
             />
             <Utils.VerticalSpacer size='medium' />
+            <Utils.VerticalSpacer />
             {error && <Utils.Error>{error}</Utils.Error>}
             {loadingSign || loadingData ? (
               <ActivityIndicator size='small' color={Colors.primaryText} />
             ) : (
               <ButtonGradient
+                font='bold'
                 text='SEND'
                 onPress={this.submit}
                 disabled={trxBalance === 0}
