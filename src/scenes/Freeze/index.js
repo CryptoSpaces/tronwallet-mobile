@@ -64,6 +64,7 @@ class FreezeScene extends Component {
     this.setState({ loading: true })
     try {
       if (trxBalance < convertedAmount) { throw new Error('Insufficient TRX balance') }
+      if (!Number.isInteger(amount)) { throw new Error('Can only freeze round numbers') }
       await this.freezeToken()
     } catch (error) {
       Alert.alert(error.message)
@@ -128,16 +129,18 @@ class FreezeScene extends Component {
 
   render () {
     const { trxBalance, amount } = this.state
+    const { freeze } = this.props.context
 
     return (
       <KeyboardScreen>
-        <Utils.StatusBar />
-        <Utils.Container>
+        <Utils.Container style={{borderColor: Colors.secondaryText, borderTopWidth: 0.5}}>
           <Header>
             <Utils.View align='center'>
+              <Utils.VerticalSpacer size='xsmall' />
               <Utils.Text size='xsmall' secondary>
-                FREEZE
+                BALANCE
               </Utils.Text>
+              <Utils.VerticalSpacer size='medium' />
               <Utils.Row align='center'>
                 <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
                 <Utils.HorizontalSpacer />
@@ -145,7 +148,7 @@ class FreezeScene extends Component {
               </Utils.Row>
             </Utils.View>
           </Header>
-          <Utils.Content>
+          <Utils.Content paddingTop={8}>
             <Input
               label='FREEZE AMOUNT'
               leftContent={this._leftContent}
@@ -156,12 +159,14 @@ class FreezeScene extends Component {
               onSubmitEditing={this.submit}
               placeholder='0'
             />
+            <Utils.VerticalSpacer size='small' />
             <Utils.SummaryInfo
-            >{`New freeze TRX: ${amount}`}</Utils.SummaryInfo>
+            >{`TRON POWER: ${freeze.value.total + Number(amount)}`}</Utils.SummaryInfo>
+            <Utils.VerticalSpacer size='medium' />
             <ButtonGradient
+              font='bold'
               text='FREEZE'
               onPress={this.submit}
-              marginVertical='large'
             />
           </Utils.Content>
         </Utils.Container>
