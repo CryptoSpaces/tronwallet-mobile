@@ -71,6 +71,7 @@ export const View = styled.View`
   ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
   ${props => props.marginRight && css`margin-right: ${props.marginRight}px`};
   ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px`};
+  ${props => props.marginLeftPercent && css`margin-left: ${props.marginLeftPercent}%`};
   ${props => props.position && css`position: ${props.position}`};
   ${props => props.top && css`top: ${props.top}`};
   ${props => props.bottom && css`bottom: ${props.bottom}`};
