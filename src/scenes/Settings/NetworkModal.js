@@ -9,6 +9,7 @@ import NavigationHeader from '../../components/Navigation/Header'
 
 // Services
 import NodesIp from '../../utils/nodeIp'
+import { resetWalletData, resetListsData } from '../../utils/userAccountUtils'
 
 class ChangeNetworkModal extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -100,13 +101,14 @@ class ChangeNetworkModal extends Component {
   }
 
   _switchTestnet = async (switchValue) => {
-    this.setState({ switchTestnet: switchValue })
+    this.setState({ error: null })
     try {
       await NodesIp.switchTestnet(switchValue)
-
+      this.setState({ switchTestnet: switchValue })
+      this._loadData()
       const alertMessage = switchValue ? 'Switched nodes IP to Testnet' : 'Switched nodes IP to default main'
       Alert.alert('Updated', alertMessage)
-      this.setState({ error: null })
+      await Promise.all([resetWalletData(), resetListsData()])
     } catch (error) {
       this.setState({
         loading: false,
