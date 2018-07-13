@@ -5,10 +5,10 @@ import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
-import ButtonGradient from '../../components/ButtonGradient'
 
 import { confirmSecret } from '../../utils/secretsUtils'
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
+import NavigationButton from '../../components/Navigation/ButtonHeader'
 
 const WordWrapper = styled.TouchableOpacity`
   padding-vertical: ${Spacing.small};
@@ -20,10 +20,9 @@ class Confirm extends React.Component {
     header: (
       <NavigationHeader
         title='Confirm Seed'
-        rightButton={<ButtonGradient
-          size='small'
+        rightButton={<NavigationButton
           onPress={navigation.getParam('onSubmit')}
-          text='SUBMIT'
+          title='SUBMIT'
         />}
       />
     )
@@ -47,7 +46,7 @@ class Confirm extends React.Component {
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
       await confirmSecret()
-      Alert.alert('Wallet successfully confirmed.')
+      Alert.alert('Success', 'Wallet successfully confirmed.')
       const resetAction = StackActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'App' })],
@@ -57,6 +56,7 @@ class Confirm extends React.Component {
     } catch (error) {
       console.warn(error)
       Alert.alert(
+        'Wrong Combination',
         'Selected words dont match. Make sure you wrote the words in the correct order.'
       )
     }

@@ -5,7 +5,7 @@ import { View, ScrollView, StyleSheet, Alert } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 // Services
 import NodesIp from '../../utils/nodeIp'
@@ -15,12 +15,13 @@ class ChangeNetworkModal extends Component {
     return {
       header: (
         <NavigationHeader
-          title='Transaction Details'
+          title='Network'
           onClose={() => navigation.goBack()}
         />
       )
     }
   }
+
   state = {
     mainNode: null,
     mainNodePort: null,

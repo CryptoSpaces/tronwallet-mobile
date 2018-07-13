@@ -10,7 +10,7 @@ import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import DetailRow from './detailRow'
 import LoadingScene from '../../components/LoadingScene'
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 // Service
 import Client from '../../services/client'
