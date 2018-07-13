@@ -8,6 +8,7 @@ export const ONE_TRX = 1000000
 class ClientWallet {
   constructor (opt = null) {
     this.api = Config.MAIN_API_URL
+    this.apiTest = Config.API_URL
     this.notifier = Config.NOTIFIER_API_URL
     this.tronwalletApi = Config.TRON_WALLET_API_URL
   }
@@ -21,9 +22,16 @@ class ClientWallet {
   }
 
   //* ============TronScan Api============*//
+
+  async getTronscanUrl () {
+    const { isTestnet } = await NodesIp.getAllNodesIp()
+    return isTestnet ? this.apiTest : this.api
+  }
+
   async getTotalVotes () {
     try {
-      const { data } = await axios.get(`${this.api}/vote/current-cycle`)
+      const apiUrl = await this.getTronscanUrl()
+      const { data } = await axios.get(`${apiUrl}/vote/current-cycle`)
       const totalVotes = data.total_votes
       const candidates = data.candidates
       return { totalVotes, candidates }
@@ -34,8 +42,9 @@ class ClientWallet {
 
   async getTransactionDetails (tx) {
     try {
+      const apiUrl = await this.getTronscanUrl()
       const { data: { transaction } } = await axios.post(
-        `${this.api}/transaction?dry-run`,
+        `${apiUrl}/transaction?dry-run`,
         {
           transaction: tx
         }
@@ -46,36 +55,52 @@ class ClientWallet {
     }
   }
   async getBalances () {
-    const address = await getUserPublicKey()
-    const { data: { balances } } = await axios.get(
-      `${this.api}/account/${address}`
-    )
-    const sortedBalances = balances.sort(
-      (a, b) => Number(b.balance) - Number(a.balance)
-    )
-    return sortedBalances
+    try {
+      const apiUrl = await this.getTronscanUrl()
+      const address = await getUserPublicKey()
+      const { data: { balances } } = await axios.get(
+        `${apiUrl}/account/${address}`
+      )
+      const sortedBalances = balances.sort(
+        (a, b) => Number(b.balance) - Number(a.balance)
+      )
+      return sortedBalances
+    } catch (error) {
+      throw error
+    }
   }
 
   async getFreeze () {
-    const address = await getUserPublicKey()
-    const { data: { frozen, bandwidth, balances } } = await axios.get(
-      `${this.api}/account/${address}`
-    )
-    return { ...frozen, total: frozen.total / ONE_TRX, bandwidth, balances }
+    try {
+      const apiUrl = await this.getTronscanUrl()
+      const address = await getUserPublicKey()
+      const { data: { frozen, bandwidth, balances } } = await axios.get(
+        `${apiUrl}/account/${address}`
+      )
+      return { ...frozen, total: frozen.total / ONE_TRX, bandwidth, balances }
+    } catch (error) {
+      throw error
+    }
   }
 
   async getUserVotes () {
-    const address = await getUserPublicKey()
-    const { data: { votes } } = await axios.get(
-      `${this.api}/account/${address}/votes`
-    )
-    return votes
+    try {
+      const apiUrl = await this.getTronscanUrl()
+      const address = await getUserPublicKey()
+      const { data: { votes } } = await axios.get(
+        `${apiUrl}/account/${address}/votes`
+      )
+      return votes
+    } catch (error) {
+      throw error
+    }
   }
 
   async getTokenList () {
     try {
+      const apiUrl = await this.getTronscanUrl()
       const { data: { data } } = await axios.get(
-        `${this.api}/token?sort=-name&start=0&status=ico`
+        `${apiUrl}/token?sort=-name&start=0&status=ico`
       )
       return data
     } catch (error) {
@@ -84,14 +109,15 @@ class ClientWallet {
   }
 
   async getTransactionList () {
+    const apiUrl = await this.getTronscanUrl()
     const address = await getUserPublicKey()
     const tx = () =>
       axios.get(
-        `${this.api}/transaction?sort=-timestamp&limit=50&address=${address}`
+        `${apiUrl}/transaction?sort=-timestamp&limit=50&address=${address}`
       )
     const tf = () =>
       axios.get(
-        `${this.api}/transfer?sort=-timestamp&limit=50&address=${address}`
+        `${apiUrl}/transfer?sort=-timestamp&limit=50&address=${address}`
       )
     const transactions = await Promise.all([tx(), tf()])
     const txs = transactions[0].data.data.filter(d => d.contractType !== 1)

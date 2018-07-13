@@ -4,13 +4,13 @@ import { ActivityIndicator, Alert } from 'react-native'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
 
 class Create extends React.Component {
   static navigationOptions = () => ({
-    header: <NavigationHeader title='Confirm Wallet Seed' />
+    header: <NavigationHeader title='CONFIRM WALLET SEED' />
   })
 
   state = {

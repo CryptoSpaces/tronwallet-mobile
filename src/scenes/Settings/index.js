@@ -14,14 +14,14 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
 import fontelloConfig from '../../assets/icons/config.json'
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 class Settings extends Component {
   static navigationOptions = () => {
     return {
-      header: <NavigationHeader title='Settings' />
+      header: <NavigationHeader title='SETTINGS' />
     }
   }
 

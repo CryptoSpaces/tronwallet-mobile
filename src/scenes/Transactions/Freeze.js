@@ -10,9 +10,16 @@ import { ONE_TRX } from '../../services/client'
 export default ({ item, onPress }) => (
   <Utils.TransactionCard onPress={onPress}>
     <Utils.Row align='center' justify='space-between'>
-      <Utils.Tag color={tint(0.9, '#38b8f3')}>
-        <Utils.Text size='xsmall'>{item.type}</Utils.Text>
-      </Utils.Tag>
+      <Utils.Row>
+        <Utils.Tag marginRight={10} color={tint(0.9, '#38b8f3')}>
+          <Utils.Text size='xsmall'>{item.type}</Utils.Text>
+        </Utils.Tag>
+        {!item.confirmed &&
+          <Utils.Tag color={tint(0.9, '#ff7f28')}>
+            <Utils.Text size='xsmall'>Unconfirmed</Utils.Text>
+          </Utils.Tag>
+        }
+      </Utils.Row>
       <Utils.View>
         <Utils.Text size='small'>
           {item.contractData.frozenBalance / ONE_TRX} TRX{' '}

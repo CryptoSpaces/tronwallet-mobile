@@ -10,11 +10,12 @@ import { Colors, FontSize } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import DetailRow from './detailRow'
 import LoadingScene from '../../components/LoadingScene'
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 // Service
 import Client from '../../services/client'
 import buildTransactionDetails from './detailMap'
+import getTransactionStore from '../../store/transactions'
 
 const CLOSE_SCREEN_TIME = 5000
 
@@ -23,7 +24,7 @@ class TransactionDetail extends Component {
     return {
       header: (
         <NavigationHeader
-          title='Transaction Details'
+          title='TRANSACTION DETAILS'
           onClose={navigation.getParam('onClose')}
         />
       )
@@ -107,10 +108,28 @@ class TransactionDetail extends Component {
   }
 
   submitTransaction = async () => {
-    const { signedTransaction } = this.state
+    const {
+      signedTransaction,
+      transactionData: { hash, contracts, timestamp }
+    } = this.state
     this.setState({ loadingSubmit: true, submitError: null })
+    const store = await getTransactionStore()
+    const transaction = {
+      id: hash,
+      type: Client.getContractType(contracts[0].contractTypeId),
+      contractData: {
+        transferFromAddress: contracts[0].from,
+        transferToAddress: contracts[0].to,
+        amount: contracts[0].amount,
+        tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
+      },
+      ownerAddress: contracts[0].from,
+      timestamp: timestamp,
+      confirmed: false
+    }
     try {
       let success = false
+      store.write(() => { store.create('Transaction', transaction, true) })
       const { code } = await Client.broadcastTransaction(signedTransaction)
       if (code === 'SUCCESS') {
         success = true
@@ -129,6 +148,7 @@ class TransactionDetail extends Component {
         submitted: true,
         submitError: error.message
       })
+      store.write(() => { store.delete(transaction) })
     }
   }
 

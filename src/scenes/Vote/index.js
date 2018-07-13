@@ -382,7 +382,7 @@ class VoteScene extends PureComponent {
             navigation={this.props.navigation}
           />
         )}
-        <Utils.Content>
+        <Utils.View paddingX={'small'} paddingY={'small'}>
           <Utils.FormInput
             autoCapitalize='none'
             autoCorrect={false}
@@ -393,8 +393,8 @@ class VoteScene extends PureComponent {
             marginBottom={0}
             marginTop={0}
           />
-        </Utils.Content>
-        <Utils.Content flex={1}>
+        </Utils.View>
+        <Utils.View>
           <FadeIn name='candidates'>
             <FlatList
               keyExtractor={item => item.address}
@@ -407,7 +407,7 @@ class VoteScene extends PureComponent {
               removeClippedSubviews
             />
           </FadeIn>
-        </Utils.Content>
+        </Utils.View>
       </Utils.Container>
     )
   }

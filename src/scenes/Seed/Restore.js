@@ -1,27 +1,15 @@
 import React from 'react'
-import { SafeAreaView, Alert, Keyboard } from 'react-native'
+import { Alert, Keyboard } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
-import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 
 import { recoverUserKeypair } from '../../utils/secretsUtils'
 import { Context } from '../../store/context'
+import NavigationHeader from '../../components/Navigation/Header'
 
 class Restore extends React.Component {
-  static navigationOptions = () => ({
-    header: (
-      <SafeAreaView style={{ backgroundColor: Colors.darkerBackground }}>
-        <Utils.Header>
-          <Utils.TitleWrapper>
-            <Utils.Title>Restore Wallet</Utils.Title>
-          </Utils.TitleWrapper>
-        </Utils.Header>
-      </SafeAreaView>
-    )
-  })
-
   state = {
     seed: '',
     loading: false
@@ -50,10 +38,12 @@ class Restore extends React.Component {
 
   _restoreWallet = async () => {
     const { updateWalletData } = this.props.context
+    const seed = this.state.seed.trim()
+
     Keyboard.dismiss()
     this.setState({ loading: true })
     try {
-      await recoverUserKeypair(this.state.seed)
+      await recoverUserKeypair(seed)
       await updateWalletData()
       Alert.alert('Wallet recovered with success!')
       this.setState({ loading: false }, () => {
@@ -68,35 +58,46 @@ class Restore extends React.Component {
     }
   }
 
+  _rightContent = () => (
+    <Utils.ButtonWrapper onPress={() => this.props.navigation.goBack()} absolute side='right'>
+      <Utils.Text>Back</Utils.Text>
+    </Utils.ButtonWrapper>
+  )
+
   render () {
     const { loading } = this.state
     return (
       <Utils.Container>
-        <Utils.View flex={1} />
-        <Utils.Content>
+        <NavigationHeader title='RESTORE WALLET' rightButton={this._rightContent()} noBorder />
+        <Utils.Content paddingBottom='2'>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'
+            height={90}
+            padding={16}
             multiline
             numberOfLines={4}
             autoCapitalize='none'
             autoCorrect={false}
-            autoFocus
             value={this.state.seed}
             onChangeText={seed => this.setState({ seed })}
           />
         </Utils.Content>
-        <Utils.View flex={1} />
-        <Utils.Row justify='center'>
+        <Utils.Content paddingTop='2' paddingBottom='4'>
           <ButtonGradient
             disabled={!this.state.seed.length || loading}
             onPress={this._handleRestore}
             text='RESTORE'
           />
-        </Utils.Row>
+        </Utils.Content>
+        <Utils.Content paddingTop='8'>
+          <Utils.Text weight='300' font='light' secondary size='smaller'>
+            To restore your wallet, please provide the same 12 words
+            that you wrote on paper when you created your wallet for the first time.
+            If you enter a different sequence of words, a new empty wallet will be
+            created.
+          </Utils.Text>
+        </Utils.Content>
         <Utils.VerticalSpacer />
-        <Utils.Button onPress={() => this.props.navigation.goBack()}>
-          Back
-        </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
     )

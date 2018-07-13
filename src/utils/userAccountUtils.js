@@ -2,6 +2,8 @@ import { Auth } from 'aws-amplify'
 import { getUserSecrets } from './secretsUtils'
 import getBalanceStore from '../store/balance'
 import getTransactionStore from '../store/transactions'
+import getAssetsStore from '../store/assets'
+import getCandidatesStore from '../store/candidates'
 
 // TODO
 // Put all Account Info related functions Here
@@ -83,6 +85,23 @@ export const resetWalletData = async () => {
 
     const allTransactions = transactionStore.objects('Transaction')
     await transactionStore.write(() => transactionStore.delete(allTransactions))
+  } catch (error) {
+    throw error
+  }
+}
+
+export const resetListsData = async () => {
+  try {
+    const [assetsStore, candidatesStore] = await Promise.all([
+      getAssetsStore(),
+      getCandidatesStore()
+    ])
+
+    const assetsList = assetsStore.objects('Asset')
+    await assetsStore.write(() => assetsStore.delete(assetsList))
+
+    const candidateList = candidatesStore.objects('Candidate')
+    await candidatesStore.write(() => candidatesStore.delete(candidateList))
   } catch (error) {
     throw error
   }

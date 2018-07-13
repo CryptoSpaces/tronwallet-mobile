@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform, SafeAreaView, YellowBox, TouchableOpacity } from 'react-native'
+import { StatusBar, Platform, YellowBox } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -43,8 +43,8 @@ import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
 import TransactionDetails from './src/scenes/TransactionDetails'
 
 import fontelloConfig from './src/assets/icons/config.json'
-import * as Utils from './src/components/Utils'
-import ButtonGradient from './src/components/ButtonGradient'
+import NavigationHeader from './src/components/Navigation/Header'
+import NavigationButton from './src/components/Navigation/ButtonHeader'
 
 import Client from './src/services/client'
 import { getUserPublicKey } from './src/utils/userAccountUtils'
@@ -87,29 +87,18 @@ const VoteStack = createStackNavigator(
   {
     initialRouteName: 'VoteScene',
     navigationOptions: ({ navigation }) => ({
-      header: (
-        <SafeAreaView style={{ backgroundColor: Colors.background }}>
-          <Utils.VerticalSpacer size='medium' />
-          <Utils.Header justify='center' border={0} position='relative'>
-            <Utils.TitleWrapper>
-              <Utils.Text size='average' weight='100'>VOTES</Utils.Text>
-            </Utils.TitleWrapper>
-            {(navigation.getParam('votesError') || navigation.getParam('listError'))
-              ? ( 
-                <TouchableOpacity onPress={navigation.getParam('loadData')} style={{ position: 'absolute', right: 0 }}>
-                  <Utils.Text style={{ padding: 32, color: Colors.secondaryText, fontSize: 12}}>SYNC</Utils.Text>
-                </TouchableOpacity>
-              ) : (
-              <TouchableOpacity 
-                onPress={navigation.getParam('onSubmit')}
-                disabled={navigation.getParam('disabled')}
-                style={{ position: 'absolute', right: 0 }}
-              >
-                <Utils.Text style={{padding: 32, color: Colors.secondaryText, fontSize: 12}}>SUBMIT</Utils.Text>
-              </TouchableOpacity>
-            )}
-          </Utils.Header>
-        </SafeAreaView>
+      header: (<NavigationHeader
+        title='VOTES'
+        rightButton={(navigation.getParam('votesError') || navigation.getParam('listError'))
+          ? <NavigationButton
+            title='SYNC'
+            onPress={navigation.getParam('loadData')}
+          />
+          : <NavigationButton
+            title='SUBMIT'
+            onPress={navigation.getParam('onSubmit')}
+            disabled={navigation.getParam('disabled')}
+          />} />
       )
     })
   }

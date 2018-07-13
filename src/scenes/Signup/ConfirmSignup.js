@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import {
   ActivityIndicator,
   Keyboard,
-  KeyboardAvoidingView,
   Alert
 } from 'react-native'
 import { Auth } from 'aws-amplify'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 // Design
@@ -18,6 +16,7 @@ import Logo from '../../components/Logo'
 // Services
 import { createUserKeyPair } from '../../utils/secretsUtils'
 import WalletClient from '../../services/client'
+import KeyboardScreen from '../../components/KeyboardScreen'
 
 class SignupScene extends Component {
   state = {
@@ -115,60 +114,52 @@ class SignupScene extends Component {
   render () {
     const { confirmError } = this.state
     return (
-      <KeyboardAvoidingView
-        // behavior='padding'
-        // keyboardVerticalOffset={150}
-        style={{ flex: 1, backgroundColor: Colors.background }}
-        enabled
-      >
-        <KeyboardAwareScrollView>
-          <Utils.StatusBar />
-          <Utils.Container
-            keyboardShouldPersistTaps={'always'}
-            keyboardDismissMode='interactive'
-          >
-            <Utils.Content justify='center' align='center'>
-              <Utils.VerticalSpacer size='small' />
-              <Logo />
-              <Utils.VerticalSpacer size='small' />
-              <Utils.Text size='medium'>TRONWALLET</Utils.Text>
-            </Utils.Content>
+      <KeyboardScreen>
+        <Utils.StatusBar />
+        <Utils.Container
+          keyboardShouldPersistTaps={'always'}
+          keyboardDismissMode='interactive'
+        >
+          <Utils.Content justify='center' align='center'>
+            <Utils.VerticalSpacer size='small' />
+            <Logo />
+            <Utils.VerticalSpacer size='small' />
+          </Utils.Content>
 
-            <Utils.Content>
-              <Utils.Text size='xsmall'>
-                We sent you an email with the verification code from
-                no-reply@verificationemail.com, please check your spam folder if
-                you don't find it.
-              </Utils.Text>
-              <Utils.VerticalSpacer size='medium' />
+          <Utils.Content>
+            <Utils.Text size='xsmall'>
+              We sent you an email with the verification code from
+              no-reply@verificationemail.com, please check your spam folder if
+              you don't find it.
+            </Utils.Text>
+            <Utils.VerticalSpacer size='medium' />
 
-              <Utils.Text size='xsmall' secondary>
-                EMAIL VERIFICATION CODE
-              </Utils.Text>
-              <Utils.FormInput
-                keyboardType='numeric'
-                onChangeText={text => this.changeInput(text, 'code')}
-                onSubmitEditing={this.confirmSignup}
-                returnKeyType={'send'}
-                padding={Spacing.medium}
-              />
-              <Utils.VerticalSpacer size='medium' />
-              {this.renderSubmitButton()}
-            </Utils.Content>
-            <Utils.Error>{confirmError}</Utils.Error>
-            <Utils.Content justify='center' align='center'>
-              <Utils.Text
-                onPress={() => this.props.navigation.goBack()}
-                size='small'
-                font='light'
-                secondary
-              >
-                Go back
-              </Utils.Text>
-            </Utils.Content>
-          </Utils.Container>
-        </KeyboardAwareScrollView>
-      </KeyboardAvoidingView>
+            <Utils.Text size='xsmall' secondary>
+              EMAIL VERIFICATION CODE
+            </Utils.Text>
+            <Utils.FormInput
+              keyboardType='numeric'
+              onChangeText={text => this.changeInput(text, 'code')}
+              onSubmitEditing={this.confirmSignup}
+              returnKeyType={'send'}
+              padding={Spacing.medium}
+            />
+            <Utils.VerticalSpacer size='medium' />
+            {this.renderSubmitButton()}
+          </Utils.Content>
+          <Utils.Error>{confirmError}</Utils.Error>
+          <Utils.Content justify='center' align='center'>
+            <Utils.Text
+              onPress={() => this.props.navigation.goBack()}
+              size='small'
+              font='light'
+              secondary
+            >
+              Go back
+            </Utils.Text>
+          </Utils.Content>
+        </Utils.Container>
+      </KeyboardScreen>
     )
   }
 }
