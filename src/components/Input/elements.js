@@ -21,7 +21,6 @@ export const LabelWrapper = styled.View`
   z-index: 999;
   position: absolute;
   left: 5px;
-  
 `
 
 export const Label = styled.Text`
@@ -39,4 +38,5 @@ export const TextInput = styled.TextInput`
   color: #FFFFFF;
   flex: 1;
   padding: 8px;
+  ${props => props.align && `text-align: ${props.align}`};
 `
