@@ -69,7 +69,7 @@ class SendScene extends Component {
         balances,
         loadingData: false,
         trxBalance: balance,
-        warning: balance === 0 ? 'NO BALANCE' : null
+        warning: balance === 0 ? 'NOT ENOUGH BALANCE' : null
       })
     } catch (error) {
       Alert.alert('Error while getting balance data')
