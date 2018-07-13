@@ -13,9 +13,16 @@ export default ({ item }) => {
   return (
     <Utils.TransactionCard>
       <Utils.Row align='center' justify='space-between'>
-        <Utils.Tag color={tint(0.9, '#bd1dc6')}>
-          <Utils.Text size='xsmall'>{item.type}</Utils.Text>
-        </Utils.Tag>
+        <Utils.Row>
+          <Utils.Tag marginRight={10} color={tint(0.9, '#bd1dc6')}>
+            <Utils.Text size='xsmall'>{item.type}</Utils.Text>
+          </Utils.Tag>
+          {!item.confirmed &&
+            <Utils.Tag color={tint(0.9, '#ff7f28')}>
+              <Utils.Text size='xsmall'>Unconfirmed</Utils.Text>
+            </Utils.Tag>
+          }
+        </Utils.Row>
         <Utils.View>
           <Utils.Text size='small'>
             {voteCount} <Feather name='thumbs-up' size={20} color='#ffffff' />
