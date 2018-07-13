@@ -28,7 +28,8 @@ const TransactionSchema = {
     timestamp: 'int',
     type: 'string',
     ownerAddress: 'string',
-    contractData: 'ContractData'
+    contractData: 'ContractData',
+    confirmed: 'bool?'
   }
 }
 
@@ -36,5 +37,5 @@ export default async () =>
   Realm.open({
     path: 'Realm.transactions',
     schema: [TransactionSchema, ContractDataSchema, VoteSchema],
-    schemaVersion: 9
+    schemaVersion: 10
   })
