@@ -21,7 +21,7 @@ const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 class Settings extends Component {
   static navigationOptions = () => {
     return {
-      header: <NavigationHeader title='Settings' />
+      header: <NavigationHeader title='SETTINGS' />
     }
   }
 

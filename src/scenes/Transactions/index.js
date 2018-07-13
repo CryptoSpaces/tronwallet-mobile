@@ -23,7 +23,7 @@ const POOLING_TIME = 30000
 class TransactionsScene extends Component {
   static navigationOptions = () => {
     return {
-      header: <NavigationHeader title='My Transactions' />
+      header: <NavigationHeader title='MY TRANSACTIONS' />
     }
   }
 
