@@ -41,7 +41,7 @@ export default class TransferScene extends React.Component {
         marginLeft: (TAB_WIDTH / 2 - INDICATOR_WIDTH / 2)
       }}
       tabStyle={{
-        padding: 16
+        padding: 8
       }}
       labelStyle={{
         fontFamily: 'Rubik-Medium',

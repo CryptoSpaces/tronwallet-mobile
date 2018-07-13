@@ -257,7 +257,6 @@ class SendScene extends Component {
     const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
     return (
       <KeyboardScreen>
-        <Utils.StatusBar />
         <Utils.Container>
           <Utils.Content>
             {balances.length !== 0 &&
