@@ -14,6 +14,18 @@ export const Text = styled.Text`
   letter-spacing: 1.25;
 `
 
+export const CardHeader = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 14px;
+  color: #9C9EB9;
+`
+
+export const CardText = styled.Text`
+  font-size: 16px;
+  color: #FFFFFF;
+  font-weight: 700;
+`
+
 export const BadgeText = Text.extend`
   line-height: 16px;
   color: #000000;
