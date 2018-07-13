@@ -15,6 +15,7 @@ import NavigationHeader from '../../components/Navigation/Header'
 // Service
 import Client from '../../services/client'
 import buildTransactionDetails from './detailMap'
+import getTransactionStore from '../../store/transactions'
 
 const CLOSE_SCREEN_TIME = 5000
 
@@ -107,10 +108,26 @@ class TransactionDetail extends Component {
   }
 
   submitTransaction = async () => {
-    const { signedTransaction } = this.state
+    const {
+      signedTransaction,
+      transactionData: { hash, contracts, timestamp }
+    } = this.state
     this.setState({ loadingSubmit: true, submitError: null })
+    const store = await getTransactionStore()
+    const transaction = {
+      id: hash,
+      type: 'Pending',
+      contractData: {
+        transferFromAddress: contracts[0].from,
+        transferToAddress: contracts[0].to,
+        amount: contracts[0].amount
+      },
+      ownerAddress: contracts[0].from,
+      timestamp: timestamp
+    }
     try {
       let success = false
+      store.write(() => { store.create('Transaction', transaction, true) })
       const { code } = await Client.broadcastTransaction(signedTransaction)
       if (code === 'SUCCESS') {
         success = true
@@ -129,6 +146,7 @@ class TransactionDetail extends Component {
         submitted: true,
         submitError: error.message
       })
+      store.write(() => { store.delete(transaction) })
     }
   }
 
