@@ -4,19 +4,22 @@ class NodeIp {
   constructor () {
     this.nodeIp = '35.231.121.122:50051'
     this.nodeSolidityIp = '35.231.121.122:50052'
+    this.nodeIpTestnet = '39.106.220.120:50051'
+    this.nodeSolidityIpTestnet = '39.106.220.120:50051'
   }
 
   getStorageNodes = async () => {
     try {
-      const [nodeIp, nodeSolidityIp] = await Promise.all([
+      const [nodeIp, nodeSolidityIp, nodeType] = await Promise.all([
         AsyncStorage.getItem('NODE_IP'),
-        AsyncStorage.getItem('NODE_SOLIDITY_IP')
+        AsyncStorage.getItem('NODE_SOLIDITY_IP'),
+        AsyncStorage.getItem('NODE_TYPE')
       ])
-      if (nodeIp && nodeSolidityIp) return { nodeIp, nodeSolidityIp }
+      if (nodeIp && nodeSolidityIp) return { nodeIp, nodeSolidityIp, isTestnet: nodeType === 'test' }
       else return null
     } catch (error) {
       console.warn(error)
-      return { nodeIp: this.nodeIp, nodeSolidityIp: this.nodeSolidityIp }
+      return { nodeIp: this.nodeIp, nodeSolidityIp: this.nodeSolidityIp, isTestnet: false }
     }
   }
 
@@ -24,13 +27,14 @@ class NodeIp {
     try {
       const nodes = await this.getStorageNodes()
       if (nodes) return
+      const setSwitchTestnet = () => AsyncStorage.setItem('NODE_TYPE', 'main')
       const setNode = () => AsyncStorage.setItem('NODE_IP', this.nodeIp)
       const setSolidityNode = () =>
         AsyncStorage.setItem('NODE_SOLIDITY_IP', this.nodeSolidityIp)
-      await Promise.all([setNode(), setSolidityNode()])
+      await Promise.all([setNode(), setSolidityNode(), setSwitchTestnet()])
     } catch (error) {
       console.warn(error)
-      throw new Error(error)
+      throw error
     }
   }
 
@@ -42,7 +46,7 @@ class NodeIp {
       await AsyncStorage.setItem(item, nodeip)
     } catch (error) {
       console.warn(error)
-      throw new Error(error)
+      throw error
     }
   }
   async setAllNodesIp (mainnode, soliditynode) {
@@ -53,18 +57,30 @@ class NodeIp {
       await Promise.all([setNode(), setSolidityNode()])
     } catch (error) {
       console.warn(error)
-      throw new Error(error)
+      throw error
     }
   }
 
   async getAllNodesIp () {
     try {
-      const nodes = this.getStorageNodes()
+      const nodes = await this.getStorageNodes()
       if (nodes) return nodes
       else throw new Error('No node found!')
     } catch (error) {
       console.warn(error)
-      throw new Error(error)
+      throw error
+    }
+  }
+
+  async setToTestnet () {
+    try {
+      const setNode = () => AsyncStorage.setItem('NODE_IP', this.nodeIpTestnet)
+      const setSolidityNode = () =>
+        AsyncStorage.setItem('NODE_SOLIDITY_IP', this.nodeSolidityIpTestnet)
+      await Promise.all([setNode(), setSolidityNode()])
+    } catch (error) {
+      console.warn(error)
+      throw error
     }
   }
 
@@ -77,7 +93,24 @@ class NodeIp {
       await AsyncStorage.setItem(item, newIp)
     } catch (error) {
       console.warn(error)
-      throw new Error(error)
+      throw error
+    }
+  }
+
+  async switchTestnet (switchValue) {
+    // Node Types
+    // 'main' for main net  or 'test'test net
+    try {
+      if (switchValue) {
+        await this.setToTestnet()
+      } else {
+        await Promise.all([this.resetNodesIp('main'), this.resetNodesIp('solidity')])
+      }
+      const type = switchValue ? 'test' : 'main'
+      await AsyncStorage.setItem('NODE_TYPE', type)
+    } catch (error) {
+      console.warn(error)
+      throw error
     }
   }
 }

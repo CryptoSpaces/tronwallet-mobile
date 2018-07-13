@@ -4,7 +4,7 @@ import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import Feather from 'react-native-vector-icons/Feather'
 
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 import QRCode from '../../components/QRCode'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'

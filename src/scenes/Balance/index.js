@@ -28,6 +28,7 @@ import getBalanceStore from '../../store/balance'
 import getAssetsStore from '../../store/assets'
 import { Context } from '../../store/context'
 import { getUserSecrets } from '../../utils/secretsUtils'
+import NodesIp from '../../utils/nodeIp'
 
 const PRICE_PRECISION = 4
 const LINE_CHART_HEIGHT = 40
@@ -43,7 +44,8 @@ class BalanceScene extends Component {
     trxBalance: 0,
     refreshing: false,
     loadingData: true,
-    seedConfirmed: true
+    seedConfirmed: true,
+    isTestnet: false
   }
 
   async componentDidMount () {
@@ -112,8 +114,11 @@ class BalanceScene extends Component {
       const trxHistory = await axios.get(
         `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
       )
+      const { isTestnet } = await NodesIp.getAllNodesIp()
+
       this.setState({
-        trxHistory: trxHistory.data.Data.map(item => item.close)
+        trxHistory: trxHistory.data.Data.map(item => item.close),
+        isTestnet
       })
 
       await Promise.all([
@@ -222,7 +227,8 @@ class BalanceScene extends Component {
       trxBalance,
       error,
       assetList,
-      trxHistory
+      trxHistory,
+      isTestnet
     } = this.state
     return (
       <Utils.Container>
@@ -246,6 +252,13 @@ class BalanceScene extends Component {
                   />
                   <Utils.VerticalSpacer size='medium' />
                   <Utils.Text secondary>BALANCE</Utils.Text>
+                  {isTestnet &&
+                  <Utils.Text
+                    secondary
+                    light
+                    size='small'>
+                  TestNet
+                  </Utils.Text>}
                   <Utils.VerticalSpacer />
                   <Motion
                     defaultStyle={{ balance: 0 }}
