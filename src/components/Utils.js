@@ -446,5 +446,5 @@ export const FormLabel = styled.Text`
 
 export const SummaryInfo = styled.Text`
   color: ${Colors.summaryText};
-  margin-vertical: 5px;
+  font-weight: 500;
 `

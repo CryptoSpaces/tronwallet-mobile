@@ -15,7 +15,6 @@ import Header from '../../components/Header'
 import Input from '../../components/Input'
 import QRScanner from '../../components/QRScanner'
 import IconButton from '../../components/IconButton'
-import Badge from '../../components/Badge'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 
@@ -26,6 +25,7 @@ import getBalanceStore from '../../store/balance'
 import { Context } from '../../store/context'
 import { getUserPublicKey } from '../../utils/userAccountUtils'
 import KeyboardScreen from '../../components/KeyboardScreen'
+import { formatNumber } from '../../utils/numberUtils'
 
 class SendScene extends Component {
   state = {
@@ -33,6 +33,7 @@ class SendScene extends Component {
     to: '',
     amount: '',
     token: 'TRX',
+    formattedToken: ``,
     balances: [],
     error: null,
     warning: null,
@@ -69,6 +70,7 @@ class SendScene extends Component {
         balances,
         loadingData: false,
         trxBalance: balance,
+        formattedToken: this._formatBalance('TRX', balance),
         warning: balance === 0 ? 'Not enough balance.' : null
       })
     } catch (error) {
@@ -221,12 +223,20 @@ class SendScene extends Component {
     }
   }
 
-  _rightContent = () => (
+  _formatBalance = (token, balance) => `${token} (${formatNumber(balance)} available)`
+
+  _rightContentTo = () => (
     <React.Fragment>
       <IconButton onPress={this._onPaste} icon='md-clipboard' />
       <Utils.HorizontalSpacer />
       <IconButton onPress={this._openModal} icon='ios-qr-scanner' />
     </React.Fragment>
+  )
+
+  _rightContentToken = () => (
+    <Utils.View paddingX='small'>
+      <Ionicons name='ios-arrow-down' color={Colors.primaryText} size={24} />
+    </Utils.View>
   )
 
   _nextInput = currentInput => {
@@ -246,43 +256,36 @@ class SendScene extends Component {
   }
 
   render () {
-    const { loadingSign, loadingData, error, warning, to, trxBalance, amount } = this.state
+    const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
     return (
       <KeyboardScreen>
-        <Utils.StatusBar />
-        <Utils.Container>
-          <Header>
-            <Utils.View align='center'>
-              <Utils.Text size='xsmall' secondary>
-                BALANCE
-              </Utils.Text>
-              <Utils.Row align='center'>
-                <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
-                <Utils.HorizontalSpacer />
-                <Badge>TRX</Badge>
-              </Utils.Row>
-              {warning && <Utils.Warning>{warning}</Utils.Warning>}
-            </Utils.View>
-          </Header>
+        <Utils.Container style={{borderColor: Colors.secondaryText, borderTopWidth: 0.5}}>
           <Utils.Content>
-            <ModalSelector
-              data={this.state.balances.map(item => ({
-                key: item.name,
-                label: item.name
-              }))}
-              onChange={option => this.setState({ token: option.label }, this._nextInput('token'))}
-              disabled={trxBalance === 0}
-            >
-              <Input
-                label='TOKEN'
-                value={this.state.token}
-              />
-            </ModalSelector>
+            {balances.length !== 0 &&
+              <ModalSelector
+                data={balances.map(item => ({
+                  key: item.name,
+                  label: this._formatBalance(item.name, item.balance)
+                }))}
+                onChange={option => this.setState({
+                  token: option.key,
+                  formattedToken: option.label
+                },
+                this._nextInput('token'))}
+                disabled={trxBalance === 0}
+              >
+                <Input
+                  label='TOKEN'
+                  value={this.state.formattedToken}
+                  rightContent={this._rightContentToken}
+                />
+              </ModalSelector>
+            }
             <Utils.VerticalSpacer size='medium' />
             <Input
               innerRef={(input) => { this.to = input }}
               label='TO'
-              rightContent={this._rightContent}
+              rightContent={this._rightContentTo}
               value={to}
               onChangeText={text => this.changeInput(text, 'to')}
               onSubmitEditing={() => this._nextInput('to')}
@@ -307,13 +310,16 @@ class SendScene extends Component {
               value={amount}
               onChangeText={text => this.changeInput(text, 'amount')}
               onSubmitEditing={() => this._nextInput('amount')}
+              align='right'
             />
             <Utils.VerticalSpacer size='medium' />
+            <Utils.VerticalSpacer />
             {error && <Utils.Error>{error}</Utils.Error>}
             {loadingSign || loadingData ? (
               <ActivityIndicator size='small' color={Colors.primaryText} />
             ) : (
               <ButtonGradient
+                font='bold'
                 text='SEND'
                 onPress={this.submit}
                 disabled={trxBalance === 0}
