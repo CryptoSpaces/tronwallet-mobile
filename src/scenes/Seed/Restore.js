@@ -7,7 +7,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 
 import { recoverUserKeypair } from '../../utils/secretsUtils'
 import { Context } from '../../store/context'
-import NavigationHeader from '../../components/NavigationHeader'
+import NavigationHeader from '../../components/Navigation/Header'
 
 class Restore extends React.Component {
   state = {
