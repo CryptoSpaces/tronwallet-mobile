@@ -4,8 +4,7 @@ import styled from 'styled-components'
 const Wrapper = styled.View`
   background-color: ${props => props.bg};
   border-radius: 4px;
-  padding-vertical: 6px;
-  padding-horizontal: 8px;
+  padding: 8px;
   shadow-offset: 0 5px;
   shadow-radius: 10px;
   shadow-color: #000000;
