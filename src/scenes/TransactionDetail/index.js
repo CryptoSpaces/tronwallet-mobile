@@ -23,7 +23,7 @@ class TransactionDetail extends Component {
     return {
       header: (
         <NavigationHeader
-          title='Transaction Details'
+          title='TRANSACTION DETAILS'
           onClose={navigation.getParam('onClose')}
         />
       )

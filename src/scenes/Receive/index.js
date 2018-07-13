@@ -51,7 +51,7 @@ class ReceiveScreen extends PureComponent {
 
     return (
       <Utils.Container>
-        <NavigationHeader title='Settings' />
+        <NavigationHeader title='SETTINGS' />
         <KeyboardScreen>
           <Utils.StatusBar />
           <Utils.Content marginY='20' align='center'>
