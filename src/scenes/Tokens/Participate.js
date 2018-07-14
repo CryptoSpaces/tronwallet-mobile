@@ -51,7 +51,7 @@ class ParticipateScene extends Component {
       const data = await Client.getParticipateTransaction({
         participateAddress: navigation.state.params.token.ownerAddress,
         participateToken: navigation.state.params.token.name,
-        participateAmount: this.state.value
+        participateAmount: trxToUse
       })
 
       this.openTransactionDetails(data)
