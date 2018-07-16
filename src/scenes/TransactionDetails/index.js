@@ -1,7 +1,9 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 import IconButton from '../../components/IconButton'
+import Badge from '../../components/Badge'
 import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import * as Elements from './Elements'
@@ -60,6 +62,32 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _renderHeader = () => {
+    return (
+      <Utils.Content align='center'>
+        <Badge bg='#3FE77B'>
+          <Elements.BadgeText>VOTE</Elements.BadgeText>
+        </Badge>
+        <Utils.VerticalSpacer size='medium' />
+        <Elements.CardHeader>AMOUNT</Elements.CardHeader>
+        <Utils.VerticalSpacer />
+        <Utils.Row align='center'>
+          <Elements.AmountText>94.00</Elements.AmountText>
+          <Utils.HorizontalSpacer size='medium' />
+          <Badge bg={Colors.secondaryText}>
+            <Elements.BadgeText>TRX</Elements.BadgeText>
+          </Badge>
+          <Utils.HorizontalSpacer size='medium' />
+          <Icon
+            name='ios-arrow-round-down'
+            size={45}
+            color='red'
+          />
+        </Utils.Row>
+      </Utils.Content>
+    )
+  }
+
   render () {
     return (
       <Utils.Container>
@@ -67,6 +95,7 @@ class TransactionDetails extends React.Component {
           <Utils.Title>Transaction Details</Utils.Title>
         </Utils.Header>
         <ScrollView>
+          {this._renderHeader()}
           {this._renderCard()}
           <Utils.Content>
             <Elements.Heading>Contracts</Elements.Heading>

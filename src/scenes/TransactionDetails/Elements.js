@@ -27,8 +27,17 @@ export const CardText = styled.Text`
 `
 
 export const BadgeText = Text.extend`
-  line-height: 16px;
-  color: #000000;
+  font-size: 16px;
+  color: #FFFFFF;
+  font-weight: 700;
+`
+
+export const AmountText = Text.extend`
+  font-size: 45px;
+  line-height: 55px;
+  text-align: center;
+  color: white;
+  font-weight: 700;
 `
 
 export const Heading = styled.Text`
