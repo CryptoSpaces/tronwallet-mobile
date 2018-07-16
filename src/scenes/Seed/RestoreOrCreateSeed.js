@@ -49,8 +49,8 @@ class RestoreOrCreateSeed extends React.Component {
             <ActivityIndicator color='#ffffff' />
           ) : (
             <ButtonGradient
-              onPress={this._newWallet}
-              text='CREATE WALLET'
+              onPress={() => this.props.navigation.navigate('SeedRestore')}
+              text='RESTORE WALLET'
             />
           )}
           <Utils.VerticalSpacer size='large' />
@@ -60,8 +60,8 @@ class RestoreOrCreateSeed extends React.Component {
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
           <ButtonGradient
-            onPress={() => this.props.navigation.navigate('SeedRestore')}
-            text='RESTORE WALLET'
+            onPress={this._newWallet}
+            text='CREATE WALLET'
           />
         </Utils.Content>
       </Utils.Container>
