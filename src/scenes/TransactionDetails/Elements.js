@@ -14,9 +14,7 @@ export const Text = styled.Text`
   letter-spacing: 1.25;
 `
 
-export const CardHeader = styled.Text`
-  font-family: Rubik-Medium;
-  font-size: 14px;
+export const CardLabel = Label.extend`
   color: #9C9EB9;
 `
 
@@ -35,9 +33,13 @@ export const BadgeText = Text.extend`
 export const AmountText = Text.extend`
   font-size: 45px;
   line-height: 55px;
-  text-align: center;
   color: white;
   font-weight: 700;
+`
+
+export const TokenText = AmountText.extend`
+  font-size: 30px;
+  line-height: 40px;
 `
 
 export const Heading = styled.Text`
@@ -52,4 +54,9 @@ export const SubHeading = styled.Text`
   font-size: 11px;
   line-height: 11px;
   color: #9C9EB9;
+`
+
+export const DescriptionText = CardText.extend`
+  font-weight: 100;
+  line-height: 24px;
 `

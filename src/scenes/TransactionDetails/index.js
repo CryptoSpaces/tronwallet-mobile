@@ -38,7 +38,7 @@ class TransactionDetails extends React.Component {
         borderTopColor='#3FE77B'
       >
         <Utils.Content>
-          <Elements.CardHeader>HASH</Elements.CardHeader>
+          <Elements.CardLabel>HASH</Elements.CardLabel>
           <Utils.VerticalSpacer />
           <Utils.Row align='center'>
             <Utils.View flex={1}>
@@ -54,19 +54,19 @@ class TransactionDetails extends React.Component {
         <Utils.Content>
           <Utils.Row>
             <Utils.View>
-              <Elements.CardHeader>STATUS</Elements.CardHeader>
+              <Elements.CardLabel>STATUS</Elements.CardLabel>
               <Utils.VerticalSpacer />
               <Elements.CardText>Confirmed</Elements.CardText>
             </Utils.View>
             <Utils.View flex={1} />
             <Utils.View>
-              <Elements.CardHeader>BLOCK</Elements.CardHeader>
+              <Elements.CardLabel>BLOCK</Elements.CardLabel>
               <Utils.VerticalSpacer />
               <Elements.CardText>335019</Elements.CardText>
             </Utils.View>
             <Utils.View flex={1} />
             <Utils.View>
-              <Elements.CardHeader>TIME</Elements.CardHeader>
+              <Elements.CardLabel>TIME</Elements.CardLabel>
               <Utils.VerticalSpacer />
               <Elements.CardText>07/06/2018 2:00 PM</Elements.CardText>
             </Utils.View>
@@ -83,7 +83,7 @@ class TransactionDetails extends React.Component {
           <Elements.BadgeText>VOTE</Elements.BadgeText>
         </Badge>
         <Utils.VerticalSpacer size='medium' />
-        <Elements.CardHeader>AMOUNT</Elements.CardHeader>
+        <Elements.CardLabel>AMOUNT</Elements.CardLabel>
         <Utils.VerticalSpacer />
         <Utils.Row align='center'>
           <Elements.AmountText>94.00</Elements.AmountText>
@@ -129,6 +129,54 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _renderCreateBody = () => {
+    return (
+      <Utils.Content>
+        <Utils.Row>
+          <Utils.Column>
+            <Elements.Label>TOKEN NAME</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.TokenText>HTX</Elements.TokenText>
+          </Utils.Column>
+          <Utils.Column position='absolute' left='50%'>
+            <Elements.Label>UNITY VALUE</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.TokenText>0.02 TRX</Elements.TokenText>
+          </Utils.Column>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='big' />
+        <Utils.Column>
+          <Elements.Label>TOTAL SUPPLY</Elements.Label>
+          <Utils.VerticalSpacer size='xsmall' />
+          <Elements.AmountText>3,000,000</Elements.AmountText>
+        </Utils.Column>
+        <Utils.VerticalSpacer size='big' />
+        <Utils.Row>
+          <Utils.Column>
+            <Elements.Label>START TIME</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+          </Utils.Column>
+          <Utils.Column position='absolute' left='50%'>
+            <Elements.Label>END TIME</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+          </Utils.Column>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='big' />
+        <Utils.Column>
+          <Elements.Label>DESCRIPTION</Elements.Label>
+          <Utils.VerticalSpacer size='xsmall' />
+          <Elements.DescriptionText>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consequat scelerisque arcu,
+            vel lobortis sapien vestibulum et. Mauris sagittis lobortis tempus. Ut fermentum sem erat,
+            at ultrices tellus pharetra in.
+          </Elements.DescriptionText>
+        </Utils.Column>
+      </Utils.Content>
+    )
+  }
+
   render () {
     return (
       <Utils.Container>
@@ -136,6 +184,7 @@ class TransactionDetails extends React.Component {
           {this._renderHeader()}
           {this._renderCard()}
           {this._renderToFrom()}
+          {this._renderCreateBody()}
           <Utils.Content>
             <Elements.Heading>Contracts</Elements.Heading>
             <Elements.SubHeading>Vote for a witness</Elements.SubHeading>
