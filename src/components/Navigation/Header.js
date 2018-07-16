@@ -1,20 +1,21 @@
 import React from 'react'
 import { SafeAreaView, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
-import Feather from 'react-native-vector-icons/Feather'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 import * as Utils from '../Utils'
 import { Colors } from '../DesignSystem'
 
 const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
+  let leftElement = null
   let rightElement = null
 
-  if (onClose && !rightButton) {
-    rightElement = <TouchableOpacity onPress={onClose}>
-      <Feather name='x' color='white' size={32} />
+  if (onClose) {
+    leftElement = <TouchableOpacity onPress={onClose}>
+      <Icon name='ios-arrow-round-back' color='white' size={42} />
     </TouchableOpacity>
   }
-  if (rightButton && !onClose) {
+  if (rightButton) {
     rightElement = rightButton
   }
 
@@ -23,7 +24,10 @@ const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
       <Utils.View justify='center' align='center'>
         <Utils.Text lineHeight={36} size='small' font='bold'>{title.toUpperCase()}</Utils.Text>
       </Utils.View>
-      <Utils.View style={{ position: 'absolute', right: 10 }}>
+      <Utils.View style={{ position: 'absolute', left: 20 }}>
+        {leftElement}
+      </Utils.View>
+      <Utils.View style={{ position: 'absolute', right: 20 }}>
         {rightElement}
       </Utils.View>
     </Utils.Header>
