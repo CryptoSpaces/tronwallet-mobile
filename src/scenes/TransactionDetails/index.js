@@ -1,16 +1,30 @@
 import React from 'react'
-import { ScrollView } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { ScrollView, TouchableOpacity } from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Feather from 'react-native-vector-icons/Feather'
 
 import IconButton from '../../components/IconButton'
 import Badge from '../../components/Badge'
-import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import * as Elements from './Elements'
+import NavigationHeader from '../../components/Navigation/Header'
+import { Colors } from '../../components/DesignSystem'
 
 class TransactionDetails extends React.Component {
-  static navigationOptions = {
-    header: null
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: (
+        <NavigationHeader
+          title='TRANSACTION'
+          onClose={() => navigation.goBack()}
+          rightButton={
+            <TouchableOpacity onPress={() => { }}>
+              <Feather name='share-2' color='white' size={21} />
+            </TouchableOpacity>
+          }
+        />
+      )
+    }
   }
 
   _renderCard = () => {
@@ -78,7 +92,7 @@ class TransactionDetails extends React.Component {
             <Elements.BadgeText>TRX</Elements.BadgeText>
           </Badge>
           <Utils.HorizontalSpacer size='medium' />
-          <Icon
+          <Ionicons
             name='ios-arrow-round-down'
             size={45}
             color='red'
@@ -91,9 +105,6 @@ class TransactionDetails extends React.Component {
   render () {
     return (
       <Utils.Container>
-        <Utils.Header>
-          <Utils.Title>Transaction Details</Utils.Title>
-        </Utils.Header>
         <ScrollView>
           {this._renderHeader()}
           {this._renderCard()}
