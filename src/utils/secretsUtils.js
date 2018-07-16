@@ -1,5 +1,6 @@
 import RNTron from 'react-native-tron'
 import DeviceInfo from 'react-native-device-info'
+import { Alert } from 'react-native'
 
 import getSecretsStore from '../store/secrets'
 import Client from '../services/client'
@@ -9,9 +10,17 @@ export const createUserKeyPair = async () => {
   try {
     const mnemonic = await RNTron.generateMnemonic()
     await generateKeypair(mnemonic, true)
+    createUserKeyPairAlert()
   } catch (error) {
     throw error
   }
+}
+
+const createUserKeyPairAlert = () => {
+  Alert.alert(
+    'We created a secret list of words for you.',
+    'We highly recommend that you write it down on paper to be able to recover it later.'
+  )
 }
 
 export const recoverUserKeypair = async (

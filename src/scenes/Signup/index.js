@@ -86,7 +86,7 @@ class SignupScene extends Component {
     return (
       <ButtonGradient
         text='SIGN UP'
-        onPress={this.signIn}
+        onPress={this.signUp}
         marginVertical='medium'
       />
     )
