@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const Label = styled.Text`
   font-family: Rubik-Medium;
-  font-size: 11px;
+  font-size: 14px;
   color: #71739D;
 `
 

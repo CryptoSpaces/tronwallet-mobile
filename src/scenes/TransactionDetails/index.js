@@ -102,12 +102,40 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _renderToFrom = () => {
+    return (
+      <Utils.Content>
+        <Utils.Row justify='space-between' align='center'>
+          <Elements.Label flex={1}>TO</Elements.Label>
+          <Ionicons
+            name='ios-arrow-round-up'
+            size={45}
+            color='green'
+          />
+        </Utils.Row>
+        <Elements.CardText>4a1746f2f2842a8526185cf6f9f91b3217af564daa3c236358dbe3435e151476</Elements.CardText>
+        <Utils.VerticalSpacer size='medium' />
+        <Utils.View height={1} background='#51526B' />
+        <Utils.Row justify='space-between' align='center'>
+          <Elements.Label flex={1}>FROM</Elements.Label>
+          <Ionicons
+            name='ios-arrow-round-down'
+            size={45}
+            color='red'
+          />
+        </Utils.Row>
+        <Elements.CardText>4a1746f2f2842a8526185cf6f9f91b3217af564daa3c236358dbe3435e151476</Elements.CardText>
+      </Utils.Content>
+    )
+  }
+
   render () {
     return (
       <Utils.Container>
         <ScrollView>
           {this._renderHeader()}
           {this._renderCard()}
+          {this._renderToFrom()}
           <Utils.Content>
             <Elements.Heading>Contracts</Elements.Heading>
             <Elements.SubHeading>Vote for a witness</Elements.SubHeading>
