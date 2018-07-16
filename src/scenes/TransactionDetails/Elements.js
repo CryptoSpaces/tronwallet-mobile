@@ -42,20 +42,6 @@ export const TokenText = AmountText.extend`
   line-height: 40px;
 `
 
-export const Heading = styled.Text`
-  font-family: Rubik-Medium;
-  font-size: 20px;
-  line-height: 36px;
-  color: #FFFFFF;
-`
-
-export const SubHeading = styled.Text`
-  font-family: Rubik-Medium;
-  font-size: 11px;
-  line-height: 11px;
-  color: #9C9EB9;
-`
-
 export const DescriptionText = CardText.extend`
   font-weight: 100;
   line-height: 24px;
