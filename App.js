@@ -9,6 +9,7 @@ import Amplify from 'aws-amplify'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import axios from 'axios'
 import Config from 'react-native-config'
+import OneSignal from 'react-native-onesignal'
 
 import awsExports from './aws-exports'
 import { Colors, ScreenSize } from './src/components/DesignSystem'
@@ -281,9 +282,36 @@ class App extends Component {
   }
 
   componentDidMount () {
+    OneSignal.init('517e2517-ba6e-49ab-8338-a1c94cac4a95', { kOSSettingsKeyAutoPrompt: true })
+
+    OneSignal.addEventListener('received', this._onReceived)
+    OneSignal.addEventListener('opened', this._onOpened)
+    OneSignal.addEventListener('ids', this._onIds)
+
     this._getPrice()
     this._setNodes()
     this._loadUserData()
+  }
+
+  componentWillUnmount () {
+    OneSignal.removeEventListener('received', this._onReceived)
+    OneSignal.removeEventListener('opened', this._onOpened)
+    OneSignal.removeEventListener('ids', this._onIds)
+  }
+
+  _onReceived (notification) {
+    console.log('Notification received: ', notification)
+  }
+
+  _onOpened (openResult) {
+    console.log('Message: ', openResult.notification.payload.body)
+    console.log('Data: ', openResult.notification.payload.additionalData)
+    console.log('isActive: ', openResult.notification.isAppInFocus)
+    console.log('openResult: ', openResult)
+  }
+
+  _onIds (device) {
+    console.log('Device info: ', device)
   }
 
   _loadUserData = () => {

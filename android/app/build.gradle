@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal 
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.10.0, 0.99.99]'
+    }
+}
+
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
 apply plugin: "com.android.application"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
@@ -49,8 +60,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.3'
+    compileSdkVersion 27
+    buildToolsVersion '27.1.1'
 
     signingConfigs {
         release {
@@ -115,6 +126,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-onesignal')
     compile project(':react-native-fabric')
     compile project(':amazon-cognito-identity-js')
     compile project(':react-native-sentry')
@@ -130,7 +142,7 @@ dependencies {
     compile project(':react-native-svg')
     compile project(':react-native-linear-gradient')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:27.1.0'
+    compile 'com.android.support:appcompat-v7:27.1.1'
     compile 'com.facebook.react:react-native:+'
     compile('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true;
