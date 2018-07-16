@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Keyboard,
-  Alert
+  Keyboard
 } from 'react-native'
 import { Auth } from 'aws-amplify'
 import { StackActions, NavigationActions } from 'react-navigation'
@@ -33,9 +32,6 @@ class SignupScene extends Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    Alert.alert(
-      'We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.'
-    )
   }
 
   _navigateNext = async username => {
