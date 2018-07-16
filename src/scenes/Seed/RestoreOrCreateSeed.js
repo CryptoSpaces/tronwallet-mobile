@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, Alert, SafeAreaView } from 'react-native'
+import { ActivityIndicator, SafeAreaView } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -26,9 +26,6 @@ class RestoreOrCreateSeed extends React.Component {
 
   _createKeyPair = async () => {
     await createUserKeyPair()
-    Alert.alert(
-      'We created a secret list of words for you. We highly recommend that you write it down on paper to be able to recover it later.'
-    )
   }
 
   _newWallet = async () => {
