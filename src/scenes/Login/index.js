@@ -145,7 +145,6 @@ class LoginScene extends Component {
               innerRef={(input) => { this.email = input }}
               label='EMAIL/USERNAME'
               keyboardType='email-address'
-              placeholder='johndoe@somedomain.com'
               value={username}
               onChangeText={(text) => this.changeInput(text, 'username')}
               onSubmitEditing={() => this._submit('username')}
@@ -156,7 +155,6 @@ class LoginScene extends Component {
               innerRef={(input) => { this.password = input }}
               label='PASSWORD'
               secureTextEntry
-              placeholder='.........'
               value={password}
               letterSpacing={4}
               onChangeText={text => this.changeInput(text, 'password')}
