@@ -1,9 +1,9 @@
 import React from 'react'
-import { ActivityIndicator, SafeAreaView } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
-import { Colors } from '../../components/DesignSystem'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import { createUserKeyPair } from '../../utils/secretsUtils'
 
@@ -11,11 +11,9 @@ class RestoreOrCreateSeed extends React.Component {
   static navigationOptions = () => {
     return {
       header: (
-        <SafeAreaView style={{backgroundColor: Colors.background}}>
-          <Utils.Header background={Colors.background} noBorder>
-            <Utils.Title paddingLeft='large'>My Wallet</Utils.Title>
-          </Utils.Header>
-        </SafeAreaView>
+        <NavigationHeader
+          title='MY WALLET'
+        />
       )
     }
   }
