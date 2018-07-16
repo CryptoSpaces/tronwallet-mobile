@@ -177,6 +177,34 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _renderVotes = () => {
+    return (
+      <Utils.Content>
+        <Utils.Column>
+          <Utils.Row justify='space-between'>
+            <Elements.Label>VOTED ADDRESS</Elements.Label>
+            <Elements.Label>AMOUNT</Elements.Label>
+          </Utils.Row>
+          <Utils.VerticalSpacer size='medium' />
+          <Utils.Row justify='space-between'>
+            <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
+            <Elements.CardText>0</Elements.CardText>
+          </Utils.Row>
+          <Utils.VerticalSpacer size='medium' />
+          <Utils.Row justify='space-between'>
+            <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
+            <Elements.CardText>0</Elements.CardText>
+          </Utils.Row>
+          <Utils.VerticalSpacer size='medium' />
+          <Utils.Row justify='space-between'>
+            <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
+            <Elements.CardText>0</Elements.CardText>
+          </Utils.Row>
+        </Utils.Column>
+      </Utils.Content>
+    )
+  }
+
   render () {
     return (
       <Utils.Container>
@@ -185,6 +213,7 @@ class TransactionDetails extends React.Component {
           {this._renderCard()}
           {this._renderToFrom()}
           {this._renderCreateBody()}
+          {this._renderVotes()}
           <Utils.Content>
             <Elements.Heading>Contracts</Elements.Heading>
             <Elements.SubHeading>Vote for a witness</Elements.SubHeading>
