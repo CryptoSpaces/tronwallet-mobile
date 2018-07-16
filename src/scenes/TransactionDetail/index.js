@@ -191,9 +191,9 @@ class TransactionDetail extends Component {
           <ActivityIndicator size='small' color={Colors.primaryText} />
         ) : (
           <ButtonGradient
-            text='Submit Transaction'
+            text='SUBMIT TRANSACTION'
             onPress={this.submitTransaction}
-            size='medium'
+            font='bold'
           />
         )}
       </Utils.View>
