@@ -282,7 +282,7 @@ class App extends Component {
   }
 
   componentDidMount () {
-    OneSignal.init('517e2517-ba6e-49ab-8338-a1c94cac4a95', { kOSSettingsKeyAutoPrompt: true })
+    OneSignal.init('2e2c3325-aea9-45b7-bd23-8c9cde370580', { kOSSettingsKeyAutoPrompt: true })
 
     OneSignal.addEventListener('received', this._onReceived)
     OneSignal.addEventListener('opened', this._onOpened)
