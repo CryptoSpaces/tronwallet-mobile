@@ -7,6 +7,7 @@ import { formatNumber } from '../../utils/numberUtils'
 import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
 
+import ButtonGradient from '../../components/ButtonGradient'
 import Badge from '../../components/Badge'
 
 const POOLING_TIME = 30000
@@ -33,10 +34,11 @@ class BalanceScene extends Component {
     try {
       const getData = await Client.getBalances()
       await this._updateBalancesStore(getData)
-      const store = await this._getBalancesFromStore()
-      const { balance } = store.find(item => item.name === 'TRX')
+      const balances = await this._getBalancesFromStore()
+      const { balance } = balances.find(item => item.name === 'TRX')
       this.setState({
-        trxBalance: balance || 0
+        trxBalance: balance || 0,
+        balances
       })
     } catch (e) {
       this.setState({ error: e.message })
@@ -56,9 +58,10 @@ class BalanceScene extends Component {
   }
 
   render () {
-    const { trxBalance } = this.state
+    const { trxBalance, balances } = this.state
+
     return (
-      <Utils.Container justify='flex-start'>
+      <Utils.Container justify='flex-start' align='stretch'>
         <Utils.Row justify='center' align='center'>
           <Motion
             defaultStyle={{ balance: 0 }}
@@ -69,25 +72,63 @@ class BalanceScene extends Component {
                 <Utils.Text size='large' marginX={8}>
                   {formatNumber(value.balance.toFixed(0))}
                 </Utils.Text>
-                <Badge>TRX</Badge>
+                <Badge verified>TRX</Badge>
               </React.Fragment>
             )}
           </Motion>
         </Utils.Row>
-        <Utils.Row>
-          <Utils.Content>
-            <Utils.Text>TRON POWER</Utils.Text>
-            <Utils.Text>4</Utils.Text>
+        <Utils.Row justify='center'>
+          <Utils.Content align='center'>
+            <Utils.Text size='xsmall' secondary>TRON POWER</Utils.Text>
+            <Utils.Text padding={4}>4</Utils.Text>
           </Utils.Content>
-          <Utils.Content>
-            <Utils.Text>TRX PRICE</Utils.Text>
-            <Utils.Text>0.0331 USD</Utils.Text>
+          <Utils.Content align='center'>
+            <Utils.Text size='xsmall' secondary>TRX PRICE</Utils.Text>
+            <Utils.Text padding={4}>0.0331 USD</Utils.Text>
           </Utils.Content>
-          <Utils.Content>
-            <Utils.Text>BANDWIDTH</Utils.Text>
-            <Utils.Text>134</Utils.Text>
+          <Utils.Content align='center'>
+            <Utils.Text size='xsmall' secondary>BANDWIDTH</Utils.Text>
+            <Utils.Text padding={4}>134</Utils.Text>
           </Utils.Content>
         </Utils.Row>
+        <Utils.Content paddingVertical='xsmall'>
+          <Utils.Row>
+            <ButtonGradient
+              text='RECEIVE'
+              size='medium'
+              flex={1}
+              rightRadius={0}
+              onPress={() => {}}
+            />
+            <Utils.HorizontalSpacer size='tiny' />
+            <ButtonGradient
+              text='SEND'
+              size='medium'
+              flex={1}
+              leftRadius={0}
+              onPress={() => {}}
+            />
+          </Utils.Row>
+        </Utils.Content>
+        <Utils.Content paddingVertical='large'>
+          <Utils.Row justify='space-between'>
+            <Utils.Text size='xsmall' secondary>
+              TOKENS
+            </Utils.Text>
+            <Utils.Text size='xsmall' secondary>
+              HOLDINGS
+            </Utils.Text>
+          </Utils.Row>
+          <Utils.VerticalSpacer size='big' />
+          {balances && balances.map((item) => (
+            <Utils.Content key={item.name} paddingHorizontal='none' paddingVertical='medium'>
+              <Utils.Row justify='space-between'>
+                <Badge>{item.name}</Badge>
+                <Utils.Text>{formatNumber(item.balance)}</Utils.Text>
+              </Utils.Row>
+            </Utils.Content>
+          ))}
+        </Utils.Content>
       </Utils.Container>
     )
   }
