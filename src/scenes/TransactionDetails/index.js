@@ -156,7 +156,8 @@ class TransactionDetails extends React.Component {
 
   _renderHeader = () => {
     const { type, contractData: { amount, frozenBalance, tokenName } } = this.props.navigation.state.params.item
-    const amountText = type === 'freeze' || type === 'unfreeze' ? 'FROZEN BALANCE' : 'AMOUNT'
+    const lowerType = type.toLowerCase()
+    const amountText = lowerType === 'freeze' || lowerType === 'unfreeze' ? 'FROZEN BALANCE' : 'AMOUNT'
     const amountValue = amountText === 'FROZEN BALANCE' ? frozenBalance : amount
 
     return (
@@ -287,15 +288,29 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _renderDetails = () => {
+    const lowerType = this.props.navigation.state.params.item.type.toLowerCase()
+    switch (lowerType) {
+      case 'transfer':
+        return this._renderToFrom()
+      case 'vote':
+        return this._renderVotes()
+      case 'create':
+        return this._renderCreateBody()
+      case 'participate':
+        return this._renderToFrom()
+      default:
+        return null
+    }
+  }
+
   render () {
     return (
       <Utils.Container>
         <ScrollView>
           {this._renderHeader()}
           {this._renderCard()}
-          {this._renderToFrom()}
-          {this._renderCreateBody()}
-          {this._renderVotes()}
+          {this._renderDetails()}
           <Toast
             ref='toast'
             position='center'
