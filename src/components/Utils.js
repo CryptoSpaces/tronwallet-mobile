@@ -186,6 +186,7 @@ export const Text = styled.Text`
   ${props => props.padding && css` padding: ${props.padding}`};
   ${props => props.weight && css` font-weight: ${props.weight}`};
   ${props => props.marginY && css` margin-vertical: ${props.marginY}px`};
+  ${props => props.marginX && css` margin-horizontal: ${props.marginX}px`};
   ${props => props.align && css` text-align: ${props.align}`};
   ${props => props.secondary && css` color: ${Colors.secondaryText}`};
   ${props => props.success && css` color: ${Colors.green}`};
