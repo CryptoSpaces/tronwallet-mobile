@@ -1,5 +1,7 @@
 import React from 'react'
+import moment from 'moment'
 import { ScrollView, TouchableOpacity } from 'react-native'
+import { string, number, bool, shape } from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 
@@ -27,7 +29,31 @@ class TransactionDetails extends React.Component {
     }
   }
 
+  static propTypes = {
+    navigation: shape({
+      state: shape({
+        params: shape({
+          id: string,
+          type: string,
+          timestamp: number,
+          ownerAddress: string,
+          confirmed: bool,
+          block: string,
+          contractData: shape({
+            tokenName: string,
+            transferFromAddress: string,
+            transferToAddress: string,
+            amount: number,
+            frozenBalance: number
+          })
+        })
+      })
+    })
+  }
+
   _renderCard = () => {
+    const { id, confirmed, timestamp, block } = this.props.navigation.state.params.item
+
     return (
       <Utils.View
         background={Colors.secondaryText}
@@ -35,14 +61,14 @@ class TransactionDetails extends React.Component {
         marginRight={25}
         marginLeft={25}
         borderTopWidth={10}
-        borderTopColor='#3FE77B'
+        borderTopColor={confirmed ? Colors.green : Colors.orange}
       >
         <Utils.Content>
           <Elements.CardLabel>HASH</Elements.CardLabel>
           <Utils.VerticalSpacer />
           <Utils.Row align='center'>
             <Utils.View flex={1}>
-              <Elements.CardText>4a1746f2f2842a8526185cf6f9f91b3217af564daa3c236358dbe3435e151476</Elements.CardText>
+              <Elements.CardText>{id}</Elements.CardText>
             </Utils.View>
             <Utils.HorizontalSpacer size='big' />
             <Utils.View>
@@ -56,19 +82,19 @@ class TransactionDetails extends React.Component {
             <Utils.View>
               <Elements.CardLabel>STATUS</Elements.CardLabel>
               <Utils.VerticalSpacer />
-              <Elements.CardText>Confirmed</Elements.CardText>
+              <Elements.CardText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.CardText>
             </Utils.View>
             <Utils.View flex={1} />
             <Utils.View>
               <Elements.CardLabel>BLOCK</Elements.CardLabel>
               <Utils.VerticalSpacer />
-              <Elements.CardText>335019</Elements.CardText>
+              <Elements.CardText>{block}</Elements.CardText>
             </Utils.View>
             <Utils.View flex={1} />
             <Utils.View>
               <Elements.CardLabel>TIME</Elements.CardLabel>
               <Utils.VerticalSpacer />
-              <Elements.CardText>07/06/2018 2:00 PM</Elements.CardText>
+              <Elements.CardText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.CardText>
             </Utils.View>
           </Utils.Row>
         </Utils.Content>
