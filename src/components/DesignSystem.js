@@ -20,6 +20,7 @@ export const Colors = {
   lightBackground: '#212132',
   lighterBackground: '#2d2e46',
   lightestBackground: '#3f415d',
+  lightPurple: '#696A9C',
   primaryText: '#FFFFFF',
   secondaryText: '#66688F',
   summaryText: '#999bb5',

@@ -5,7 +5,6 @@ import { ImageBackground, Image, Platform } from 'react-native'
 import _ from 'lodash'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
-import { tint } from 'polished'
 
 import { Colors, Spacing, FontSize } from './DesignSystem'
 
@@ -65,7 +64,7 @@ export const View = styled.View`
   ${props => props.borderRadius && css`border-radius: ${props.borderRadius}px`};
   ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]}`};
   ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]}`};
-  ${props => props.padding && css`top: ${props.padding}`};
+  ${props => props.padding && css`padding: ${props.padding}px`};
   ${props => props.margin && css`margin: ${props.margin}px`};
   ${props => props.marginTop && css`margin-top: ${props.marginTop}px`};
   ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
@@ -145,9 +144,12 @@ export const Img = View.withComponent(Image)
 
 export const Row = View.extend`
   flex-direction: row;
+  align-items: ${props => props.align};
+  justify-content: ${props => props.justify};
   ${props => props.background && css` background-color: ${props.background}`};
   ${props => props.position && css` position: ${props.position}`};
   ${props => props.wrap && css` flex-wrap: ${props.wrap}`};
+  ${props => props.marginRight && css` margin-right: ${props.marginRight}px`};
 `
 
 export const Column = View.extend`
@@ -183,7 +185,7 @@ export const Text = styled.Text`
   font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
   ${props => props.size && css` font-size: ${FontSize[props.size]}px`};
   ${props => props.light && css` font-family: rubik-light`};
-  ${props => props.padding && css` padding: ${props.padding}`};
+  ${props => props.padding && css` padding: ${props.padding}`}px;
   ${props => props.weight && css` font-weight: ${props.weight}`};
   ${props => props.marginY && css` margin-vertical: ${props.marginY}px`};
   ${props => props.align && css` text-align: ${props.align}`};
@@ -356,18 +358,34 @@ Card.defaultProps = {
   paddingSize: 'medium'
 }
 
+/* Vote Components */
+export const VoteRow = styled.View`
+  borderBottomWidth: 2px;
+  borderBottomColor: ${Colors.lighterBackground};
+  marginRight: ${Spacing.large};
+`
+export const LeftBadge = styled.View`
+  justify-content: center;
+  backgroundColor: ${Colors.lighterBackground};
+  borderBottomRightRadius: 8px;
+  borderTopRightRadius: 8px;
+  width: 80px;
+  height: 35px;
+  marginVertical: 20px;
+  paddingRight: 15px;
+  marginRight: 20px;
+`
 export const NumKeyWrapper = styled.View`
-  flex-basis: 33%;
   flex-grow: 1;
   padding: ${Spacing.xsmall}px;
   align-items: stretch;
   justify-content: center;
+  ${props => props.flexBasis && css` flex-basis: ${props.flexBasis}%`};
   ${props =>
     props.double && css`
       flex-basis: 66%; flex-grow: 2;
     `};
 `
-
 export const NumKey = styled.TouchableOpacity`
   ${props =>
     props.double && css`
@@ -375,8 +393,27 @@ export const NumKey = styled.TouchableOpacity`
       justify-content: center;
     `}
   align-items: center;
-  padding: ${Spacing.medium}px;
-  background-color: ${tint(0.9, Colors.background)};
+  padding: ${Spacing.small}px;
+  background-color: ${Colors.lightestBackground};
+  border-radius: 4px;
+  border-width: 0.5px;
+  border-color:  ${Colors.lightestBackground};
+`
+
+export const VoteOption = styled.TouchableOpacity`
+  ${props =>
+    props.double && css`
+      flex-direction: row;
+      justify-content: center;
+    `}
+  ${props => props.background && css`background-color: ${props.background}`};
+  align-items: center;
+  padding-vertical: ${Spacing.medium}px;
+  padding-horizontal: ${Spacing.small}px;
+  border-radius: 4px;
+  border-width: 3px;
+  ${props => css`border-color: ${props.disabled ? Colors.lightestBackground
+    : Colors.lightPurple}`};
 `
 
 export const NumPadWrapper = styled.View`

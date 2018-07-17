@@ -74,7 +74,7 @@ class Restore extends React.Component {
     const { loading } = this.state
     return (
       <Utils.Container>
-        <NavigationHeader title='RESTORE WALLET' rightButton={this._rightContent()} noBorder />
+        <NavigationHeader title='RESTORE WALLET' onBack={() => this.props.navigation.goBack()} noBorder />
         <Utils.Content paddingBottom='2'>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'

@@ -44,6 +44,7 @@ import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
 import fontelloConfig from './src/assets/icons/config.json'
 import NavigationHeader from './src/components/Navigation/Header'
 import NavigationButton from './src/components/Navigation/ButtonHeader'
+import ClearVotes from './src/components/ClearButton'
 
 import Client from './src/services/client'
 import { getUserPublicKey } from './src/utils/userAccountUtils'
@@ -90,14 +91,13 @@ const VoteStack = createStackNavigator(
         title='VOTES'
         rightButton={(navigation.getParam('votesError') || navigation.getParam('listError'))
           ? <NavigationButton
-            title='SYNC'
+            title='RELOAD'
             onPress={navigation.getParam('loadData')}
           />
-          : <NavigationButton
-            title='SUBMIT'
-            onPress={navigation.getParam('onSubmit')}
-            disabled={navigation.getParam('disabled')}
+          : <ClearVotes
+            onPress={navigation.getParam('clearVotes')}
           />} />
+
       )
     })
   }

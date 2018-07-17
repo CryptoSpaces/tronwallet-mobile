@@ -17,7 +17,7 @@ class ChangeNetworkModal extends Component {
       header: (
         <NavigationHeader
           title='NETWORK'
-          onClose={() => navigation.goBack()}
+          onBack={() => navigation.goBack()}
         />
       )
     }
