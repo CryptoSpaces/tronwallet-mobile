@@ -9,6 +9,7 @@ const Wrapper = styled.TouchableOpacity`
   background-color: ${props => props.bg};
   align-items: center;
   justify-content: center;
+  elevation: 2;
   shadow-color: #000000;
   shadow-offset: 0 2px;
   shadow-radius: 4px;

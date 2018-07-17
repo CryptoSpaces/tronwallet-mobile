@@ -48,7 +48,7 @@ export default (contracts) => {
       )
     } else if (ctr === 'amount' || ctr === 'frozenBalance') {
       const contractId = Number(contracts[0]['contractTypeId'])
-      const amountDivider = contractId === 1 || contractId === 11 ? ONE_TRX : 1
+      const amountDivider = contractId === 1 || contractId === 11 || contractId === 9 ? ONE_TRX : 1
       contractsRows.push(
         <DetailRow
           key={ctr}

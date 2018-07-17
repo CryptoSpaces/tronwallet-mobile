@@ -123,7 +123,7 @@ class TransactionDetail extends Component {
         amount: contracts[0].amount,
         tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
       },
-      ownerAddress: contracts[0].from,
+      ownerAddress: contracts[0].from || contracts[0].ownerAddress,
       timestamp: timestamp,
       confirmed: false
     }
@@ -191,9 +191,9 @@ class TransactionDetail extends Component {
           <ActivityIndicator size='small' color={Colors.primaryText} />
         ) : (
           <ButtonGradient
-            text='Submit Transaction'
+            text='SUBMIT TRANSACTION'
             onPress={this.submitTransaction}
-            size='medium'
+            font='bold'
           />
         )}
       </Utils.View>

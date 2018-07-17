@@ -64,11 +64,17 @@ class Restore extends React.Component {
     </Utils.ButtonWrapper>
   )
 
+  _onKeyPress = (event) => {
+    if (event.nativeEvent.key === 'Enter') {
+      this._handleRestore()
+    }
+  }
+
   render () {
     const { loading } = this.state
     return (
       <Utils.Container>
-        <NavigationHeader title='RESTORE WALLET' rightButton={this._rightContent()} noBorder />
+        <NavigationHeader title='RESTORE WALLET' onBack={() => this.props.navigation.goBack()} noBorder />
         <Utils.Content paddingBottom='2'>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'
@@ -80,6 +86,7 @@ class Restore extends React.Component {
             autoCorrect={false}
             value={this.state.seed}
             onChangeText={seed => this.setState({ seed })}
+            onKeyPress={this._onKeyPress}
           />
         </Utils.Content>
         <Utils.Content paddingTop='2' paddingBottom='4'>

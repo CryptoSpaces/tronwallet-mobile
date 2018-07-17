@@ -1,35 +1,53 @@
 import React from 'react'
 import { SafeAreaView, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
-import Icon from 'react-native-vector-icons/Ionicons'
+import Feather from 'react-native-vector-icons/Feather'
 
 import * as Utils from '../Utils'
 import { Colors } from '../DesignSystem'
 
-const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
-  let leftElement = null
-  let rightElement = null
+const leftElement = (onBack, leftButton) => {
+  let element = null
 
-  if (onClose) {
-    leftElement = <TouchableOpacity onPress={onClose}>
-      <Icon name='ios-arrow-round-back' color='white' size={42} />
+  if (onBack && !leftButton) {
+    element = <TouchableOpacity onPress={onBack}>
+      <Feather name='arrow-left' color='white' size={28} />
     </TouchableOpacity>
+  } else {
+    element = leftButton
   }
-  if (rightButton) {
-    rightElement = rightButton
+  return <Utils.View margin={10} position='absolute' left={10}>
+    {element}
+  </Utils.View>
+}
+
+const rightElement = (onClose, rightButton) => {
+  let element = null
+  if (onClose && !rightButton) {
+    element = <TouchableOpacity onPress={onClose}>
+      <Feather name='x' color='white' size={28} />
+    </TouchableOpacity>
+  } else {
+    element = rightButton
   }
+  return <Utils.View margin={10} position='absolute' right={10}>
+    {element}
+  </Utils.View>
+}
+
+const NavigationHeader = ({ title, onClose, noBorder, rightButton, onBack, leftButton }) => {
+  /*
+    onClose = Right Button with X
+    onBack = Left Button with <
+  */
 
   return <SafeAreaView style={{ backgroundColor: Colors.background }}>
     <Utils.Header padding={16} justify='center' noBorder={noBorder}>
+      {leftElement(onBack, leftButton)}
       <Utils.View justify='center' align='center'>
         <Utils.Text lineHeight={36} size='small' font='bold'>{title.toUpperCase()}</Utils.Text>
       </Utils.View>
-      <Utils.View style={{ position: 'absolute', left: 20 }}>
-        {leftElement}
-      </Utils.View>
-      <Utils.View style={{ position: 'absolute', right: 20 }}>
-        {rightElement}
-      </Utils.View>
+      {rightElement(onClose, rightButton)}
     </Utils.Header>
   </SafeAreaView>
 }
@@ -38,7 +56,9 @@ NavigationHeader.propTypes = {
   title: PropTypes.string.isRequired,
   onClose: PropTypes.func,
   noBorder: PropTypes.bool,
-  rightButton: PropTypes.element
+  rightButton: PropTypes.element,
+  onBack: PropTypes.func,
+  leftButton: PropTypes.element
 }
 
 export default NavigationHeader

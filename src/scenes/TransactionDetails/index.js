@@ -19,7 +19,7 @@ class TransactionDetails extends React.Component {
       header: (
         <NavigationHeader
           title='TRANSACTION'
-          onClose={() => navigation.goBack()}
+          onBack={() => navigation.goBack()}
           rightButton={
             <TouchableOpacity onPress={() => { }}>
               <Feather name='share-2' color='white' size={21} />
