@@ -12,6 +12,7 @@ import * as Utils from '../../components/Utils'
 import * as Elements from './Elements'
 import NavigationHeader from '../../components/Navigation/Header'
 import { Colors } from '../../components/DesignSystem'
+import { ONE_TRX } from '../../services/client'
 
 class TransactionDetails extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -83,7 +84,7 @@ class TransactionDetails extends React.Component {
             </Utils.View>
             <Utils.HorizontalSpacer size='big' />
             <Utils.View>
-              <IconButton icon='md-clipboard' bg='#66688F' iconColor='#FFFFFF' onPress={() => this._copy()} />
+              <IconButton icon='md-clipboard' bg={Colors.summaryText} iconColor='#FFFFFF' onPress={() => this._copy()} />
             </Utils.View>
           </Utils.Row>
         </Utils.Content>
@@ -156,9 +157,13 @@ class TransactionDetails extends React.Component {
 
   _renderHeader = () => {
     const { type, contractData: { amount, frozenBalance, tokenName } } = this.props.navigation.state.params.item
+
+    const tokenToDisplay = tokenName || 'TRX'
+
     const lowerType = type.toLowerCase()
     const amountText = lowerType === 'freeze' || lowerType === 'unfreeze' ? 'FROZEN BALANCE' : 'AMOUNT'
     const amountValue = amountText === 'FROZEN BALANCE' ? frozenBalance : amount
+    const convertedAmount = tokenToDisplay === 'TRX' ? amountValue / ONE_TRX : amountValue
 
     return (
       <Utils.Content align='center'>
@@ -171,10 +176,10 @@ class TransactionDetails extends React.Component {
             <Elements.CardLabel>{amountText}</Elements.CardLabel>
             <Utils.VerticalSpacer />
             <Utils.Row align='center'>
-              <Elements.AmountText>{amountValue}</Elements.AmountText>
+              <Elements.AmountText>{convertedAmount.toFixed(2)}</Elements.AmountText>
               <Utils.HorizontalSpacer size='medium' />
-              <Badge bg={Colors.secondaryText}>
-                <Elements.BadgeText>{tokenName}</Elements.BadgeText>
+              <Badge bg={Colors.lightestBackground}>
+                <Elements.BadgeText>{tokenToDisplay}</Elements.BadgeText>
               </Badge>
               <Utils.HorizontalSpacer size='medium' />
               {this._getHeaderArrowIcon(type)}
