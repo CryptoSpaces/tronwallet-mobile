@@ -15,7 +15,7 @@ export default ({ item, onPress }) => {
     <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
         <Utils.Row>
-          <Utils.Tag marginRight={10} color={tint(0.9, '#0cd94d')}>
+          <Utils.Tag marginRight={10} color={tint(0.9, '#6442E4')}>
             <Utils.Text size='xsmall'>{item.type}</Utils.Text>
           </Utils.Tag>
           {!item.confirmed &&

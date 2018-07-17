@@ -114,7 +114,7 @@ class TransactionDetails extends React.Component {
   }
 
   _getHeaderBadgeColor = (type) => {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'create':
         return '#94C047'
       case 'unfreeze':
@@ -131,7 +131,9 @@ class TransactionDetails extends React.Component {
   }
 
   _getHeaderArrowIcon = (type) => {
-    if (type === 'freeze' || type === 'participate') {
+    const lowerType = type.toLowerCase()
+
+    if (lowerType === 'freeze' || lowerType === 'participate') {
       return (
         <Ionicons
           name='ios-arrow-round-up'
@@ -140,7 +142,7 @@ class TransactionDetails extends React.Component {
         />
       )
     }
-    if (type === 'vote' || type === 'transaction') {
+    if (lowerType === 'vote' || lowerType === 'transaction') {
       return (
         <Ionicons
           name='ios-arrow-round-down'
