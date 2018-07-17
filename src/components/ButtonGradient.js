@@ -13,38 +13,61 @@ const ButtonGradient = ({
   width,
   weight,
   marginVertical,
-  font
-}) => (
-  <TouchableOpacity
-    onPress={onPress}
-    disabled={disabled}
-    style={{ marginVertical: Spacing[marginVertical] || 0 }}
-  >
-    <LinearGradient
-      start={{ x: 0, y: 1 }}
-      end={{ x: 1, y: 0 }}
-      colors={[Colors.buttonGradient[0], Colors.buttonGradient[1]]}
+  font,
+  full,
+  rightRadius,
+  leftRadius,
+  multiColumnButton
+}) => {
+  const flexProps = {}
+  if (full) {
+    flexProps.flexGrow = 1
+    flexProps.flexBasis = 0
+  }
 
-      style={[
-        styles.btnGradient,
-        {
-          opacity: disabled ? 0.4 : 1,
-          width: width || '100%',
-          height: ButtonSize[size],
-          paddingHorizontal: size === 'small' ? 8 : 16,
-          justifyContent: 'center'
-        }
-      ]}
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      style={{
+        marginVertical: Spacing[marginVertical] || 0,
+        ...flexProps
+      }}
     >
-      <Utils.Text weight={weight} size={'button'} font={font}>{text}</Utils.Text>
-    </LinearGradient>
-  </TouchableOpacity>
-)
+      <LinearGradient
+        start={{ x: 0, y: 1 }}
+        end={{ x: 1, y: 0 }}
+        colors={multiColumnButton
+          ? [Colors.buttonGradient[multiColumnButton.x], Colors.buttonGradient[multiColumnButton.y]]
+          : [Colors.buttonGradient[0], Colors.buttonGradient[1]]}
+
+        style={[
+          styles.btnGradient,
+          {
+            opacity: disabled ? 0.4 : 1,
+            width: width || '100%',
+            height: ButtonSize[size],
+            paddingHorizontal: size === 'small' ? 8 : 16,
+            justifyContent: 'center',
+            borderBottomRightRadius: rightRadius,
+            borderTopRightRadius: rightRadius,
+            borderBottomLeftRadius: leftRadius,
+            borderTopLeftRadius: leftRadius
+          }
+        ]}
+      >
+        <Utils.Text weight={weight} size={'button'} font={font}>{text}</Utils.Text>
+      </LinearGradient>
+    </TouchableOpacity>
+  )
+}
 
 ButtonGradient.defaultProps = {
   disabled: false,
   size: 'large',
-  font: 'medium'
+  font: 'medium',
+  rightRadius: 4,
+  leftRadius: 4
 }
 
 ButtonGradient.propTypes = {
@@ -54,8 +77,7 @@ ButtonGradient.propTypes = {
 
 const styles = StyleSheet.create({
   btnGradient: {
-    alignItems: 'center',
-    borderRadius: 4
+    alignItems: 'center'
   }
 })
 
