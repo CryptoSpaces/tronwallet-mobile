@@ -103,7 +103,7 @@ class TransactionsScene extends Component {
 
     const item = {
       ...pressedItem,
-      block: filteredItem[0].block
+      block: filteredItem.length ? filteredItem[0].block : 'NONE'
     }
 
     this.props.navigation.navigate('TransactionDetails', { item })
