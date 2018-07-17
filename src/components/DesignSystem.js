@@ -1,6 +1,8 @@
 import { Dimensions } from 'react-native'
 
 export const Spacing = {
+  none: 0,
+  tiny: 2,
   xsmall: 4,
   small: 8,
   medium: 16,
@@ -25,7 +27,7 @@ export const Colors = {
   summaryText: '#999bb5',
   buttonText: '#9c9eb9',
   primaryGradient: ['#FF4465', '#F6CA1D'],
-  buttonGradient: ['#FF4465', '#f8a92f'],
+  buttonGradient: ['#FF4465', '#f8a92f', '#fc734b', '#f7b329'],
   yellow: '#F5FF30',
   green: '#a9ff68',
   red: '#9A2520',

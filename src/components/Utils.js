@@ -109,16 +109,19 @@ export const Container = View.extend.attrs({
   background: Colors.background
 })``
 
-export const Content = View.extend.attrs({
-  paddingSize: 'big'
-})`
-  padding: ${props => props.paddingSize !== 'none' ? `${Spacing[props.paddingSize]}px` : 0};
+export const Content = styled(View)`
+  padding-vertical: ${props => props.paddingVertical ? Spacing[props.paddingVertical] : Spacing[props.paddingSize]};
+  padding-horizontal: ${props => props.paddingHorizontal ? Spacing[props.paddingHorizontal] : Spacing[props.paddingSize]};
   ${props => props.flex && css` flex: ${props.flex}`};
   ${props => props.background && css` background-color: ${props.background}`};
   ${props => props.paddingTop && css` padding-top: ${props.paddingTop}px`};
   ${props => props.paddingBottom && css` padding-bottom: ${props.paddingBottom}px`};
   ${props => props.position && css` position: ${props.position}`};
 `
+
+Content.defaultProps = {
+  paddingSize: 'big'
+}
 
 export const StatusBar = styled.View`
   height: 12px;
@@ -163,7 +166,7 @@ HorizontalSpacer.defaultProps = {
 }
 
 HorizontalSpacer.propTypes = {
-  size: PropTypes.oneOf(['xsmall', 'small', 'medium', 'big', 'large'])
+  size: PropTypes.oneOf(['tiny', 'xsmall', 'small', 'medium', 'big', 'large'])
 }
 
 export const VerticalSpacer = styled.View`
@@ -183,7 +186,7 @@ export const Text = styled.Text`
   font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
   ${props => props.size && css` font-size: ${FontSize[props.size]}px`};
   ${props => props.light && css` font-family: rubik-light`};
-  ${props => props.padding && css` padding: ${props.padding}`};
+  ${props => props.padding && css` padding: ${props.padding}px`};
   ${props => props.weight && css` font-weight: ${props.weight}`};
   ${props => props.marginY && css` margin-vertical: ${props.marginY}px`};
   ${props => props.marginX && css` margin-horizontal: ${props.marginX}px`};

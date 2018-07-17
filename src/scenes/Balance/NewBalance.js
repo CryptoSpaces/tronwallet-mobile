@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
-
-import * as Utils from '../../components/Utils'
-import { Motion, spring } from 'react-motion'
-import { formatNumber } from '../../utils/numberUtils'
-
+import { RefreshControl, ScrollView } from 'react-native'
+import axios from 'axios'
+import Config from 'react-native-config'
 import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
+import { Context } from '../../store/context'
 
-import ButtonGradient from '../../components/ButtonGradient'
-import Badge from '../../components/Badge'
+import WalletBalances from './WalletBalances'
+import BalanceNavigation from './BalanceNavigation'
+import TrxValue from './TrxValue'
+import TrxInfo from './TrxInfo'
+import LineChart from './TrxLineChart'
+import * as Utils from '../../components/Utils'
 
+const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
 const POOLING_TIME = 30000
 
 class BalanceScene extends Component {
@@ -17,6 +21,7 @@ class BalanceScene extends Component {
     loading: false,
     error: null,
     balances: [],
+    trxHistory: [],
     trxBalance: 0
   }
 
@@ -26,17 +31,42 @@ class BalanceScene extends Component {
     } catch (e) {
       this.setState({error: 'An error occured while loading the data.'})
     }
+    this._navListener = this.props.navigation.addListener(
+      'didFocus',
+      this._loadData
+    )
     this._dataListener = setInterval(this._loadData, POOLING_TIME)
+  }
+
+  componentWillUnmount () {
+    this._navListener.remove()
+    clearInterval(this._dataListener)
+  }
+
+  _onRefresh = async () => {
+    this.setState({ refreshing: true })
+    await this._loadData()
+    this.setState({ refreshing: false })
   }
 
   _loadData = async () => {
     this.setState({loading: true})
     try {
-      const getData = await Client.getBalances()
-      await this._updateBalancesStore(getData)
+      const { updateWalletData } = this.props.context
+      const data = await Client.getBalances()
+
+      const trxHistory = await axios.get(
+        `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
+      )
+
+      await this._updateBalancesStore(data)
+      await updateWalletData()
+
       const balances = await this._getBalancesFromStore()
       const { balance } = balances.find(item => item.name === 'TRX')
+
       this.setState({
+        trxHistory: trxHistory.data.Data.map(item => item.close),
         trxBalance: balance || 0,
         balances
       })
@@ -58,80 +88,39 @@ class BalanceScene extends Component {
   }
 
   render () {
-    const { trxBalance, balances } = this.state
+    const {
+      trxBalance,
+      balances,
+      trxHistory
+    } = this.state
 
     return (
       <Utils.Container justify='flex-start' align='stretch'>
-        <Utils.Row justify='center' align='center'>
-          <Motion
-            defaultStyle={{ balance: 0 }}
-            style={{ balance: spring(trxBalance) }}
-          >
-            {value => (
-              <React.Fragment>
-                <Utils.Text size='large' marginX={8}>
-                  {formatNumber(value.balance.toFixed(0))}
-                </Utils.Text>
-                <Badge verified>TRX</Badge>
-              </React.Fragment>
-            )}
-          </Motion>
-        </Utils.Row>
-        <Utils.Row justify='center'>
-          <Utils.Content align='center'>
-            <Utils.Text size='xsmall' secondary>TRON POWER</Utils.Text>
-            <Utils.Text padding={4}>4</Utils.Text>
-          </Utils.Content>
-          <Utils.Content align='center'>
-            <Utils.Text size='xsmall' secondary>TRX PRICE</Utils.Text>
-            <Utils.Text padding={4}>0.0331 USD</Utils.Text>
-          </Utils.Content>
-          <Utils.Content align='center'>
-            <Utils.Text size='xsmall' secondary>BANDWIDTH</Utils.Text>
-            <Utils.Text padding={4}>134</Utils.Text>
-          </Utils.Content>
-        </Utils.Row>
-        <Utils.Content paddingVertical='xsmall'>
-          <Utils.Row>
-            <ButtonGradient
-              text='RECEIVE'
-              size='medium'
-              flex={1}
-              rightRadius={0}
-              onPress={() => {}}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this._onRefresh}
             />
-            <Utils.HorizontalSpacer size='tiny' />
-            <ButtonGradient
-              text='SEND'
-              size='medium'
-              flex={1}
-              leftRadius={0}
-              onPress={() => {}}
-            />
-          </Utils.Row>
-        </Utils.Content>
-        <Utils.Content paddingVertical='large'>
-          <Utils.Row justify='space-between'>
-            <Utils.Text size='xsmall' secondary>
-              TOKENS
-            </Utils.Text>
-            <Utils.Text size='xsmall' secondary>
-              HOLDINGS
-            </Utils.Text>
-          </Utils.Row>
-          <Utils.VerticalSpacer size='big' />
-          {balances && balances.map((item) => (
-            <Utils.Content key={item.name} paddingHorizontal='none' paddingVertical='medium'>
-              <Utils.Row justify='space-between'>
-                <Badge>{item.name}</Badge>
-                <Utils.Text>{formatNumber(item.balance)}</Utils.Text>
-              </Utils.Row>
-            </Utils.Content>
-          ))}
-        </Utils.Content>
+          }
+        >
+          <TrxValue trxBalance={trxBalance} />
+          <Utils.VerticalSpacer size='medium' />
+          {!!trxHistory.length && (
+            <LineChart chartHistory={trxHistory} />
+          )}
+          <Utils.VerticalSpacer size='medium' />
+          <TrxInfo />
+          <BalanceNavigation />
+          <WalletBalances balances={balances} />
+        </ScrollView>
       </Utils.Container>
     )
   }
 }
 
-export default BalanceScene
+export default props => (
+  <Context.Consumer>
+    {context => <BalanceScene context={context} {...props} />}
+  </Context.Consumer>
+)
