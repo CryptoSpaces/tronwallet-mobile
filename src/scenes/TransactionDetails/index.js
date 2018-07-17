@@ -1,9 +1,10 @@
 import React from 'react'
 import moment from 'moment'
-import { ScrollView, TouchableOpacity } from 'react-native'
+import { ScrollView, TouchableOpacity, Clipboard } from 'react-native'
 import { string, number, bool, shape } from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
+import Toast from 'react-native-easy-toast'
 
 import IconButton from '../../components/IconButton'
 import Badge from '../../components/Badge'
@@ -51,6 +52,16 @@ class TransactionDetails extends React.Component {
     })
   }
 
+  _copy = async () => {
+    const { id } = this.props.navigation.state.params.item
+    try {
+      await Clipboard.setString(id)
+      this.refs.toast.show('Hash Key copied to the clipboard')
+    } catch (error) {
+      this.refs.toast.show('Something wrong while copying')
+    }
+  }
+
   _renderCard = () => {
     const { id, confirmed, timestamp, block } = this.props.navigation.state.params.item
 
@@ -72,7 +83,7 @@ class TransactionDetails extends React.Component {
             </Utils.View>
             <Utils.HorizontalSpacer size='big' />
             <Utils.View>
-              <IconButton icon='md-clipboard' bg='#66688F' iconColor='#FFFFFF' onPress={() => { }} />
+              <IconButton icon='md-clipboard' bg='#66688F' iconColor='#FFFFFF' onPress={() => this._copy()} />
             </Utils.View>
           </Utils.Row>
         </Utils.Content>
@@ -240,6 +251,13 @@ class TransactionDetails extends React.Component {
           {this._renderToFrom()}
           {this._renderCreateBody()}
           {this._renderVotes()}
+          <Toast
+            ref='toast'
+            position='center'
+            fadeInDuration={750}
+            fadeOutDuration={1000}
+            opacity={0.8}
+          />
         </ScrollView>
       </Utils.Container>
     )
