@@ -24,11 +24,15 @@ const Text = styled.Text`
   color: #FFFFFF;
 `
 
-const Guarantee = styled.Image`
-  width: 15px;
-  height: 15px;
+const Guarantee = styled.View`
   z-index: 999;
   left: -3;
+  elevation: 1;
+`
+
+const Image = styled.Image`
+  width: 15px;
+  height: 15px;
 `
 
 const Badge = ({ bg = '#2E2F47', guarantee, children }) => (
@@ -37,7 +41,9 @@ const Badge = ({ bg = '#2E2F47', guarantee, children }) => (
       {typeof children === 'string' ? <Text>{children}</Text> : children}
     </Wrapper>
     {guarantee && (
-      <Guarantee source={require('../../assets/guarantee.png')} />
+      <Guarantee>
+        <Image source={require('../../assets/guarantee.png')} />
+      </Guarantee>
     )}
   </Utils.Row>
 )
