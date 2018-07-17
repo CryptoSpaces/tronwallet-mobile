@@ -223,116 +223,117 @@ class TransactionDetails extends React.Component {
     )
   }
 
-_renderCreateBody = () => {
-  return (
-    <Utils.Content>
-      <Utils.Row>
+  _renderCreateBody = () => {
+    return (
+      <Utils.Content>
+        <Utils.Row>
+          <Utils.Column>
+            <Elements.Label>TOKEN NAME</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.TokenText>HTX</Elements.TokenText>
+          </Utils.Column>
+          <Utils.Column position='absolute' left='50%'>
+            <Elements.Label>UNITY VALUE</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.TokenText>0.02 TRX</Elements.TokenText>
+          </Utils.Column>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='big' />
         <Utils.Column>
-          <Elements.Label>TOKEN NAME</Elements.Label>
+          <Elements.Label>TOTAL SUPPLY</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
-          <Elements.TokenText>HTX</Elements.TokenText>
+          <Elements.AmountText>3,000,000</Elements.AmountText>
         </Utils.Column>
-        <Utils.Column position='absolute' left='50%'>
-          <Elements.Label>UNITY VALUE</Elements.Label>
-          <Utils.VerticalSpacer size='xsmall' />
-          <Elements.TokenText>0.02 TRX</Elements.TokenText>
-        </Utils.Column>
-      </Utils.Row>
-      <Utils.VerticalSpacer size='big' />
-      <Utils.Column>
-        <Elements.Label>TOTAL SUPPLY</Elements.Label>
-        <Utils.VerticalSpacer size='xsmall' />
-        <Elements.AmountText>3,000,000</Elements.AmountText>
-      </Utils.Column>
-      <Utils.VerticalSpacer size='big' />
-      <Utils.Row>
+        <Utils.VerticalSpacer size='big' />
+        <Utils.Row>
+          <Utils.Column>
+            <Elements.Label>START TIME</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+          </Utils.Column>
+          <Utils.Column position='absolute' left='50%'>
+            <Elements.Label>END TIME</Elements.Label>
+            <Utils.VerticalSpacer size='xsmall' />
+            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+          </Utils.Column>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='big' />
         <Utils.Column>
-          <Elements.Label>START TIME</Elements.Label>
+          <Elements.Label>DESCRIPTION</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
-          <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+          <Elements.DescriptionText>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consequat scelerisque arcu,
+            vel lobortis sapien vestibulum et. Mauris sagittis lobortis tempus. Ut fermentum sem erat,
+            at ultrices tellus pharetra in.
+          </Elements.DescriptionText>
         </Utils.Column>
-        <Utils.Column position='absolute' left='50%'>
-          <Elements.Label>END TIME</Elements.Label>
-          <Utils.VerticalSpacer size='xsmall' />
-          <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
-        </Utils.Column>
-      </Utils.Row>
-      <Utils.VerticalSpacer size='big' />
-      <Utils.Column>
-        <Elements.Label>DESCRIPTION</Elements.Label>
-        <Utils.VerticalSpacer size='xsmall' />
-        <Elements.DescriptionText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consequat scelerisque arcu,
-          vel lobortis sapien vestibulum et. Mauris sagittis lobortis tempus. Ut fermentum sem erat,
-          at ultrices tellus pharetra in.
-        </Elements.DescriptionText>
-      </Utils.Column>
-    </Utils.Content>
-  )
-}
-
-_renderVotes = () => {
-  return (
-    <Utils.Content>
-      <Utils.Column>
-        <Utils.Row justify='space-between'>
-          <Elements.Label>VOTED ADDRESS</Elements.Label>
-          <Elements.Label>AMOUNT</Elements.Label>
-        </Utils.Row>
-        <Utils.VerticalSpacer size='medium' />
-        <Utils.Row justify='space-between'>
-          <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
-          <Elements.CardText>0</Elements.CardText>
-        </Utils.Row>
-        <Utils.VerticalSpacer size='medium' />
-        <Utils.Row justify='space-between'>
-          <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
-          <Elements.CardText>0</Elements.CardText>
-        </Utils.Row>
-        <Utils.VerticalSpacer size='medium' />
-        <Utils.Row justify='space-between'>
-          <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
-          <Elements.CardText>0</Elements.CardText>
-        </Utils.Row>
-      </Utils.Column>
-    </Utils.Content>
-  )
-}
-
-_renderDetails = () => {
-  const lowerType = this.props.navigation.state.params.item.type.toLowerCase()
-  switch (lowerType) {
-    case 'transfer':
-      return this._renderToFrom()
-    case 'vote':
-      return this._renderVotes()
-    case 'create':
-      return this._renderCreateBody()
-    case 'participate':
-      return this._renderToFrom()
-    default:
-      return null
+      </Utils.Content>
+    )
   }
-}
 
-render () {
-  return (
-    <Utils.Container>
-      <ScrollView>
-        {this._renderHeader()}
-        {this._renderCard()}
-        {this._renderDetails()}
-        <Toast
-          ref='toast'
-          position='center'
-          fadeInDuration={750}
-          fadeOutDuration={1000}
-          opacity={0.8}
-        />
-      </ScrollView>
-    </Utils.Container>
-  )
-}
+  _renderVotes = () => {
+    const { votes } = this.props.navigation.state.params.item.contractData
+
+    const votesToRender = votes.map((vote, index) => (
+      <React.Fragment
+        key={`${vote.voteAddress}-${index}`}
+      >
+        <Utils.Row justify='space-between'>
+          <Elements.DescriptionText>{vote.voteAddress}</Elements.DescriptionText>
+          <Elements.CardText>{vote.voteCount}</Elements.CardText>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='medium' />
+      </React.Fragment>
+    ))
+
+    return (
+      <Utils.Content>
+        <Utils.Column>
+          <Utils.Row justify='space-between'>
+            <Elements.Label>VOTED ADDRESS</Elements.Label>
+            <Elements.Label>AMOUNT</Elements.Label>
+          </Utils.Row>
+          <Utils.VerticalSpacer size='medium' />
+          {votesToRender}
+        </Utils.Column>
+      </Utils.Content>
+    )
+  }
+
+  _renderDetails = () => {
+    const lowerType = this.props.navigation.state.params.item.type.toLowerCase()
+    switch (lowerType) {
+      case 'transfer':
+        return this._renderToFrom()
+      case 'vote':
+        return this._renderVotes()
+      case 'create':
+        return this._renderCreateBody()
+      case 'participate':
+        return this._renderToFrom()
+      default:
+        return null
+    }
+  }
+
+  render () {
+    return (
+      <Utils.Container>
+        <ScrollView>
+          {this._renderHeader()}
+          {this._renderCard()}
+          {this._renderDetails()}
+          <Toast
+            ref='toast'
+            position='center'
+            fadeInDuration={750}
+            fadeOutDuration={1000}
+            opacity={0.8}
+          />
+        </ScrollView>
+      </Utils.Container>
+    )
+  }
 }
 
 export default TransactionDetails
