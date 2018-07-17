@@ -22,13 +22,9 @@ class RestoreOrCreateSeed extends React.Component {
     loading: false
   }
 
-  _createKeyPair = async () => {
-    await createUserKeyPair()
-  }
-
   _newWallet = async () => {
     this.setState({ loading: true })
-    await this._createKeyPair()
+    await createUserKeyPair()
     this.setState({ loading: false })
     this.props.navigation.navigate('SeedCreate')
   }
@@ -45,24 +41,23 @@ class RestoreOrCreateSeed extends React.Component {
             your previous address.
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
-          {this.state.loading ? (
-            <ActivityIndicator color='#ffffff' />
-          ) : (
-            <ButtonGradient
-              onPress={() => this.props.navigation.navigate('SeedRestore')}
-              text='RESTORE WALLET'
-            />
-          )}
+          <ButtonGradient
+            onPress={() => this.props.navigation.navigate('SeedRestore')}
+            text='RESTORE WALLET'
+          />
           <Utils.VerticalSpacer size='large' />
           <Utils.Text font='light' secondary>
             If you don't want to restore that address you can easily get a new
             one by tapping on the button below.
           </Utils.Text>
           <Utils.VerticalSpacer size='medium' />
-          <ButtonGradient
-            onPress={this._newWallet}
-            text='CREATE WALLET'
-          />
+          {this.state.loading ? (
+            <ActivityIndicator color='#ffffff' />
+          ) : (
+            <ButtonGradient
+              onPress={this._newWallet}
+              text='CREATE WALLET'
+            />)}
         </Utils.Content>
       </Utils.Container>
     )
