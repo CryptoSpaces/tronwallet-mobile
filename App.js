@@ -24,7 +24,7 @@ import ForgotPassword from './src/scenes/ForgotPassword'
 import NewPassword from './src/scenes/ForgotPassword/NewPassword'
 import SetPublicKey from './src/scenes/SetPublicKey'
 import HomeScene from './src/scenes/Home'
-import BalanceScene from './src/scenes/Balance'
+import BalanceScene from './src/scenes/Balance/NewBalance'
 import VoteScene from './src/scenes/Vote'
 import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
@@ -102,12 +102,16 @@ const VoteStack = createStackNavigator(
     })
   }
 )
-const TransferStack = createStackNavigator(
+
+const BalanceStack = createStackNavigator(
   {
-    TransferScene
+    BalanceScene
   },
   {
-    initialRouteName: 'TransferScene'
+    initialRouteName: 'BalanceScene',
+    navigationOptions: ({ navigation }) => ({
+      header: <NavigationHeader title='BALANCE' />
+    })
   }
 )
 
@@ -127,9 +131,7 @@ const AppTabs = createBottomTabNavigator(
       path: 'vote'
     },
     Transactions: TransactionList,
-    Balance: BalanceScene,
-    Transfer: TransferStack,
-    Receive: ReceiveScene,
+    Balance: BalanceStack,
     Settings: SettingsStack
   },
   {
