@@ -113,28 +113,71 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _getHeaderBadgeColor = (type) => {
+    switch (type) {
+      case 'create':
+        return '#94C047'
+      case 'unfreeze':
+        return 'teal'
+      case 'freeze':
+        return '#25B9E3'
+      case 'participate':
+        return '#6442E4'
+      case 'vote':
+        return '#BB2DC4'
+      default:
+        return '#1f90e6'
+    }
+  }
+
+  _getHeaderArrowIcon = (type) => {
+    if (type === 'freeze' || type === 'participate') {
+      return (
+        <Ionicons
+          name='ios-arrow-round-up'
+          size={45}
+          color='green'
+        />
+      )
+    }
+    if (type === 'vote' || type === 'transaction') {
+      return (
+        <Ionicons
+          name='ios-arrow-round-down'
+          size={45}
+          color='red'
+        />
+      )
+    }
+    return null
+  }
+
   _renderHeader = () => {
+    const { type, contractData: { amount, frozenBalance, tokenName } } = this.props.navigation.state.params.item
+    const amountText = type === 'freeze' || type === 'unfreeze' ? 'FROZEN BALANCE' : 'AMOUNT'
+    const amountValue = amountText === 'FROZEN BALANCE' ? frozenBalance : amount
+
     return (
       <Utils.Content align='center'>
-        <Badge bg='#3FE77B'>
-          <Elements.BadgeText>VOTE</Elements.BadgeText>
+        <Badge bg={this._getHeaderBadgeColor(type)}>
+          <Elements.BadgeText>{type.toUpperCase()}</Elements.BadgeText>
         </Badge>
         <Utils.VerticalSpacer size='medium' />
-        <Elements.CardLabel>AMOUNT</Elements.CardLabel>
-        <Utils.VerticalSpacer />
-        <Utils.Row align='center'>
-          <Elements.AmountText>94.00</Elements.AmountText>
-          <Utils.HorizontalSpacer size='medium' />
-          <Badge bg={Colors.secondaryText}>
-            <Elements.BadgeText>TRX</Elements.BadgeText>
-          </Badge>
-          <Utils.HorizontalSpacer size='medium' />
-          <Ionicons
-            name='ios-arrow-round-down'
-            size={45}
-            color='red'
-          />
-        </Utils.Row>
+        {type !== 'create' &&
+          <React.Fragment>
+            <Elements.CardLabel>{amountText}</Elements.CardLabel>
+            <Utils.VerticalSpacer />
+            <Utils.Row align='center'>
+              <Elements.AmountText>{amountValue}</Elements.AmountText>
+              <Utils.HorizontalSpacer size='medium' />
+              <Badge bg={Colors.secondaryText}>
+                <Elements.BadgeText>{tokenName}</Elements.BadgeText>
+              </Badge>
+              <Utils.HorizontalSpacer size='medium' />
+              {this._getHeaderArrowIcon(type)}
+            </Utils.Row>
+          </React.Fragment>
+        }
       </Utils.Content>
     )
   }
