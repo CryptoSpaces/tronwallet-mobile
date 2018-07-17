@@ -186,19 +186,25 @@ class TransactionDetails extends React.Component {
   }
 
   _renderToFrom = () => {
+    const { type, contractData: { transferFromAddress, transferToAddress } } = this.props.navigation.state.params.item
+
     return (
       <Utils.Content>
-        <Utils.Row justify='space-between' align='center'>
-          <Elements.Label flex={1}>TO</Elements.Label>
-          <Ionicons
-            name='ios-arrow-round-up'
-            size={45}
-            color='green'
-          />
-        </Utils.Row>
-        <Elements.CardText>4a1746f2f2842a8526185cf6f9f91b3217af564daa3c236358dbe3435e151476</Elements.CardText>
-        <Utils.VerticalSpacer size='medium' />
-        <Utils.View height={1} background='#51526B' />
+        {type.toLowerCase() === 'transfer' &&
+          <React.Fragment>
+            <Utils.Row justify='space-between' align='center'>
+              <Elements.Label flex={1}>TO</Elements.Label>
+              <Ionicons
+                name='ios-arrow-round-up'
+                size={45}
+                color='green'
+              />
+            </Utils.Row>
+            <Elements.CardText>{transferToAddress}</Elements.CardText>
+            <Utils.VerticalSpacer size='medium' />
+            <Utils.View height={1} background='#51526B' />
+          </React.Fragment>
+        }
         <Utils.Row justify='space-between' align='center'>
           <Elements.Label flex={1}>FROM</Elements.Label>
           <Ionicons
@@ -207,121 +213,121 @@ class TransactionDetails extends React.Component {
             color='red'
           />
         </Utils.Row>
-        <Elements.CardText>4a1746f2f2842a8526185cf6f9f91b3217af564daa3c236358dbe3435e151476</Elements.CardText>
+        <Elements.CardText>{transferFromAddress}</Elements.CardText>
       </Utils.Content>
     )
   }
 
-  _renderCreateBody = () => {
-    return (
-      <Utils.Content>
-        <Utils.Row>
-          <Utils.Column>
-            <Elements.Label>TOKEN NAME</Elements.Label>
-            <Utils.VerticalSpacer size='xsmall' />
-            <Elements.TokenText>HTX</Elements.TokenText>
-          </Utils.Column>
-          <Utils.Column position='absolute' left='50%'>
-            <Elements.Label>UNITY VALUE</Elements.Label>
-            <Utils.VerticalSpacer size='xsmall' />
-            <Elements.TokenText>0.02 TRX</Elements.TokenText>
-          </Utils.Column>
-        </Utils.Row>
-        <Utils.VerticalSpacer size='big' />
+_renderCreateBody = () => {
+  return (
+    <Utils.Content>
+      <Utils.Row>
         <Utils.Column>
-          <Elements.Label>TOTAL SUPPLY</Elements.Label>
+          <Elements.Label>TOKEN NAME</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
-          <Elements.AmountText>3,000,000</Elements.AmountText>
+          <Elements.TokenText>HTX</Elements.TokenText>
         </Utils.Column>
-        <Utils.VerticalSpacer size='big' />
-        <Utils.Row>
-          <Utils.Column>
-            <Elements.Label>START TIME</Elements.Label>
-            <Utils.VerticalSpacer size='xsmall' />
-            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
-          </Utils.Column>
-          <Utils.Column position='absolute' left='50%'>
-            <Elements.Label>END TIME</Elements.Label>
-            <Utils.VerticalSpacer size='xsmall' />
-            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
-          </Utils.Column>
-        </Utils.Row>
-        <Utils.VerticalSpacer size='big' />
-        <Utils.Column>
-          <Elements.Label>DESCRIPTION</Elements.Label>
+        <Utils.Column position='absolute' left='50%'>
+          <Elements.Label>UNITY VALUE</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
-          <Elements.DescriptionText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consequat scelerisque arcu,
-            vel lobortis sapien vestibulum et. Mauris sagittis lobortis tempus. Ut fermentum sem erat,
-            at ultrices tellus pharetra in.
-          </Elements.DescriptionText>
+          <Elements.TokenText>0.02 TRX</Elements.TokenText>
         </Utils.Column>
-      </Utils.Content>
-    )
-  }
-
-  _renderVotes = () => {
-    return (
-      <Utils.Content>
+      </Utils.Row>
+      <Utils.VerticalSpacer size='big' />
+      <Utils.Column>
+        <Elements.Label>TOTAL SUPPLY</Elements.Label>
+        <Utils.VerticalSpacer size='xsmall' />
+        <Elements.AmountText>3,000,000</Elements.AmountText>
+      </Utils.Column>
+      <Utils.VerticalSpacer size='big' />
+      <Utils.Row>
         <Utils.Column>
-          <Utils.Row justify='space-between'>
-            <Elements.Label>VOTED ADDRESS</Elements.Label>
-            <Elements.Label>AMOUNT</Elements.Label>
-          </Utils.Row>
-          <Utils.VerticalSpacer size='medium' />
-          <Utils.Row justify='space-between'>
-            <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
-            <Elements.CardText>0</Elements.CardText>
-          </Utils.Row>
-          <Utils.VerticalSpacer size='medium' />
-          <Utils.Row justify='space-between'>
-            <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
-            <Elements.CardText>0</Elements.CardText>
-          </Utils.Row>
-          <Utils.VerticalSpacer size='medium' />
-          <Utils.Row justify='space-between'>
-            <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
-            <Elements.CardText>0</Elements.CardText>
-          </Utils.Row>
+          <Elements.Label>START TIME</Elements.Label>
+          <Utils.VerticalSpacer size='xsmall' />
+          <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
         </Utils.Column>
-      </Utils.Content>
-    )
-  }
+        <Utils.Column position='absolute' left='50%'>
+          <Elements.Label>END TIME</Elements.Label>
+          <Utils.VerticalSpacer size='xsmall' />
+          <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+        </Utils.Column>
+      </Utils.Row>
+      <Utils.VerticalSpacer size='big' />
+      <Utils.Column>
+        <Elements.Label>DESCRIPTION</Elements.Label>
+        <Utils.VerticalSpacer size='xsmall' />
+        <Elements.DescriptionText>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consequat scelerisque arcu,
+          vel lobortis sapien vestibulum et. Mauris sagittis lobortis tempus. Ut fermentum sem erat,
+          at ultrices tellus pharetra in.
+        </Elements.DescriptionText>
+      </Utils.Column>
+    </Utils.Content>
+  )
+}
 
-  _renderDetails = () => {
-    const lowerType = this.props.navigation.state.params.item.type.toLowerCase()
-    switch (lowerType) {
-      case 'transfer':
-        return this._renderToFrom()
-      case 'vote':
-        return this._renderVotes()
-      case 'create':
-        return this._renderCreateBody()
-      case 'participate':
-        return this._renderToFrom()
-      default:
-        return null
-    }
-  }
+_renderVotes = () => {
+  return (
+    <Utils.Content>
+      <Utils.Column>
+        <Utils.Row justify='space-between'>
+          <Elements.Label>VOTED ADDRESS</Elements.Label>
+          <Elements.Label>AMOUNT</Elements.Label>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='medium' />
+        <Utils.Row justify='space-between'>
+          <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
+          <Elements.CardText>0</Elements.CardText>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='medium' />
+        <Utils.Row justify='space-between'>
+          <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
+          <Elements.CardText>0</Elements.CardText>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='medium' />
+        <Utils.Row justify='space-between'>
+          <Elements.DescriptionText>TronGr17.com</Elements.DescriptionText>
+          <Elements.CardText>0</Elements.CardText>
+        </Utils.Row>
+      </Utils.Column>
+    </Utils.Content>
+  )
+}
 
-  render () {
-    return (
-      <Utils.Container>
-        <ScrollView>
-          {this._renderHeader()}
-          {this._renderCard()}
-          {this._renderDetails()}
-          <Toast
-            ref='toast'
-            position='center'
-            fadeInDuration={750}
-            fadeOutDuration={1000}
-            opacity={0.8}
-          />
-        </ScrollView>
-      </Utils.Container>
-    )
+_renderDetails = () => {
+  const lowerType = this.props.navigation.state.params.item.type.toLowerCase()
+  switch (lowerType) {
+    case 'transfer':
+      return this._renderToFrom()
+    case 'vote':
+      return this._renderVotes()
+    case 'create':
+      return this._renderCreateBody()
+    case 'participate':
+      return this._renderToFrom()
+    default:
+      return null
   }
+}
+
+render () {
+  return (
+    <Utils.Container>
+      <ScrollView>
+        {this._renderHeader()}
+        {this._renderCard()}
+        {this._renderDetails()}
+        <Toast
+          ref='toast'
+          position='center'
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+          opacity={0.8}
+        />
+      </ScrollView>
+    </Utils.Container>
+  )
+}
 }
 
 export default TransactionDetails
