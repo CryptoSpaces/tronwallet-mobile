@@ -4,9 +4,11 @@ import axios from 'axios'
 import Config from 'react-native-config'
 import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
+import { getUserSecrets } from '../../utils/secretsUtils'
 import withContext from '../../utils/hocs/withContext'
 
 import WalletBalances from './WalletBalances'
+import BalanceWarning from './BalanceWarning'
 import BalanceNavigation from './BalanceNavigation'
 import NavigationHeader from '../../components/Navigation/Header'
 import TrxValue from './TrxValue'
@@ -27,6 +29,8 @@ class BalanceScene extends Component {
   state = {
     loading: false,
     error: null,
+    seedConfirmed: true,
+    seed: [],
     balances: [],
     trxHistory: [],
     trxBalance: 0
@@ -60,22 +64,26 @@ class BalanceScene extends Component {
     this.setState({loading: true})
     try {
       const { updateWalletData } = this.props.context
-      const data = await Client.getBalances()
 
-      const trxHistory = await axios.get(
-        `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
-      )
+      const data = await Promise.all([
+        Client.getBalances(),
+        getUserSecrets(),
+        axios.get(
+          `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
+        )
+      ])
 
-      await this._updateBalancesStore(data)
       await updateWalletData()
-
+      await this._updateBalancesStore(data[0])
       const balances = await this._getBalancesFromStore()
       const { balance } = balances.find(item => item.name === 'TRX')
 
       this.setState({
-        trxHistory: trxHistory.data.Data.map(item => item.close),
+        trxHistory: data[2].data.Data.map(item => item.close),
         trxBalance: balance || 0,
-        balances
+        balances: data[0],
+        seedConfirmed: data[1].confirmed,
+        seed: data[1].mnemonic.split(' ')
       })
     } catch (e) {
       this.setState({ error: e.message })
@@ -98,7 +106,9 @@ class BalanceScene extends Component {
     const {
       trxBalance,
       balances,
-      trxHistory
+      trxHistory,
+      seed,
+      seedConfirmed
     } = this.state
 
     return (
@@ -119,6 +129,9 @@ class BalanceScene extends Component {
           <Utils.VerticalSpacer size='medium' />
           <TrxInfo />
           <BalanceNavigation navigation={this.props.navigation} />
+          {!seedConfirmed && (
+            <BalanceWarning seed={seed} navigation={this.props.navigation}>Please tap to confirm your 12 seed words</BalanceWarning>
+          )}
           <WalletBalances balances={balances} />
         </ScrollView>
       </Utils.Container>
