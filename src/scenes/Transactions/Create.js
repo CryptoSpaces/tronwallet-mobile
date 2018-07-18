@@ -6,9 +6,6 @@ import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 
 const TransferItem = ({ item, onPress }) => {
-  const statusColor = item.confirmed ? 'green' : Colors.orange
-  const statusText = item.confirmed ? 'Confirmed' : 'Unconfirmed'
-
   return (
     <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
@@ -16,9 +13,11 @@ const TransferItem = ({ item, onPress }) => {
           <Utils.Tag marginRight={10} color={tint(0.9, '#94C047')}>
             <Utils.Text size='xsmall'>{item.type}</Utils.Text>
           </Utils.Tag>
-          <Utils.Tag color={tint(0.9, statusColor)}>
-            <Utils.Text size='xsmall'>{statusText}</Utils.Text>
-          </Utils.Tag>
+          {!item.confirmed &&
+            <Utils.Tag color={tint(0.9, Colors.unconfirmed)}>
+              <Utils.Text size='xsmall'>Unconfirmed</Utils.Text>
+            </Utils.Tag>
+          }
         </Utils.Row>
         <Utils.View>
           <Utils.Text size='small'>
