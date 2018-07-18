@@ -4,8 +4,8 @@ class NodeIp {
   constructor () {
     this.nodeIp = '35.231.121.122:50051'
     this.nodeSolidityIp = '35.231.121.122:50052'
-    this.nodeIpTestnet = '39.106.220.120:50051'
-    this.nodeSolidityIpTestnet = '39.106.220.120:50051'
+    this.nodeIpTestnet = '18.216.36.219:50051'
+    this.nodeSolidityIpTestnet = '18.204.117.182:50051 '
   }
 
   getStorageNodes = async () => {

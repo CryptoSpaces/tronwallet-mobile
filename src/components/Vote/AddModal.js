@@ -152,11 +152,7 @@ class VoteModal extends Component {
               {notEnoughTrx && (
                 <Utils.View paddingY='medium' align='center'>
                   <Utils.Text secondary light size='small'>
-                    {`You do not have enough frozen TRX. Freeze more TRX${
-                      totalRemaining
-                        ? ' or lower the vote amount'
-                        : ' to continue'
-                    }.`}
+                    If you need more votes you can Freeze more TRX.
                   </Utils.Text>
                   <Utils.VerticalSpacer size='medium' />
                   <ButtonGradient
@@ -164,7 +160,7 @@ class VoteModal extends Component {
                       closeModal()
                       navigation.navigate('Freeze')
                     }}
-                    text='Freeze'
+                    text='FREEZE'
                     size='medium'
                     width={100}
                   />

@@ -33,7 +33,7 @@ import TransferScene from './src/scenes/Transfer'
 import Settings from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
-import FreezeScene from './src/scenes/Freeze/FreezeRoute'
+import FreezeVoteScene from './src/components/Vote/Freeze'
 import RewardsScene from './src/scenes/Rewards'
 import NetworkConnection from './src/scenes/Settings/NetworkModal'
 import SeedCreate from './src/scenes/Seed/Create'
@@ -258,7 +258,7 @@ const RootNavigator = createStackNavigator(
       screen: TransactionDetailScene,
       path: 'transaction/:tx'
     },
-    Freeze: FreezeScene,
+    Freeze: FreezeVoteScene,
     Rewards: RewardsScene
   },
   {

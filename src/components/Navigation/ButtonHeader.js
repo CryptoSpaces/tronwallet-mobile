@@ -7,7 +7,7 @@ import { Colors } from '../DesignSystem'
 
 const NavigationButtonHeader = ({ title, onPress, disabled }) => {
   return <TouchableOpacity disabled={disabled} onPress={onPress} style={{ marginRight: 10 }}>
-    <Utils.Text size={'xsmall'} light color={disabled ? Colors.secondaryText : Colors.primaryText}>{title}</Utils.Text>
+    <Utils.Text size={'xsmall'} medium color={disabled ? Colors.secondaryText : Colors.primaryText}>{title}</Utils.Text>
   </TouchableOpacity>
 }
 
@@ -18,7 +18,7 @@ NavigationButtonHeader.defaultProps = {
 
 NavigationButtonHeader.propTypes = {
   title: PropTypes.string.isRequired,
-  onPress: PropTypes.func, // isRequired but is causing unwatend warnings because of async loads
+  onPress: PropTypes.func,
   disabled: PropTypes.bool
 }
 
