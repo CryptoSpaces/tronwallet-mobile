@@ -79,12 +79,12 @@ class TransactionDetails extends React.Component {
         marginRight={25}
         marginLeft={25}
         borderTopWidth={10}
-        borderTopColor={confirmed ? Colors.green : Colors.orange}
+        borderTopColor={confirmed ? Colors.confirmed : Colors.unconfirmed}
       >
         <LinearGradient
           start={{ x: 0, y: 1 }}
           end={{ x: 1, y: 0 }}
-          colors={[Colors.secondaryText, Colors.lighterBackground]}
+          colors={[Colors.transactionCardGradient[0], Colors.transactionCardGradient[1]]}
         >
           <Utils.Content>
             <Utils.Row align='center' justify='space-between'>
