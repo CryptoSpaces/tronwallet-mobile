@@ -14,6 +14,7 @@ import ParticipateCard from './Participate'
 import CreateCard from './Create'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
+import UnfreezeCard from './Unfreeze'
 import Default from './Default'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -113,6 +114,8 @@ class TransactionsScene extends Component {
         return <TransferCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Freeze':
         return <FreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
+      case 'Unfreeze':
+        return <UnfreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Vote':
         return <VoteCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Participate':
