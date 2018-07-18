@@ -70,6 +70,7 @@ export const View = styled.View`
   ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
   ${props => props.marginRight && css`margin-right: ${props.marginRight}px`};
   ${props => props.marginLeft && css`margin-left: ${props.marginLeft}px`};
+  ${props => props.marginLeftPercent && css`margin-left: ${props.marginLeftPercent}%`};
   ${props => props.position && css`position: ${props.position}`};
   ${props => props.top && css`top: ${props.top}`};
   ${props => props.bottom && css`bottom: ${props.bottom}`};
@@ -347,7 +348,7 @@ export const Card = styled.View`
   width: 100%;
   border-radius: 6px;
 `
-export const TransactionCard = styled.View`
+export const TransactionCard = styled.TouchableOpacity`
   padding-top: ${Spacing.medium};
   background-color: ${Colors.background};
   width: 100%;
