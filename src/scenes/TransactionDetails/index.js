@@ -81,17 +81,16 @@ class TransactionDetails extends React.Component {
         borderTopColor={confirmed ? Colors.green : Colors.orange}
       >
         <Utils.Content>
-          <Elements.CardLabel>HASH</Elements.CardLabel>
-          <Utils.VerticalSpacer />
-          <Utils.Row align='center'>
-            <Utils.View flex={1}>
-              <Elements.CardText>{id}</Elements.CardText>
-            </Utils.View>
-            <Utils.HorizontalSpacer size='big' />
+          <Utils.Row align='center' justify='space-between'>
+            <Elements.CardLabel>HASH</Elements.CardLabel>
             <Utils.View>
               <IconButton icon='md-clipboard' bg={Colors.summaryText} iconColor='#FFFFFF' onPress={() => this._copy()} />
             </Utils.View>
           </Utils.Row>
+          <Utils.VerticalSpacer />
+          <Utils.View flex={1}>
+            <Elements.CardText>{id}</Elements.CardText>
+          </Utils.View>
         </Utils.Content>
         <Utils.View height={1} marginLeftPercent={5} width='90%' background='black' />
         <Utils.Content>
