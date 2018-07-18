@@ -5,6 +5,7 @@ import { string, number, bool, shape, array } from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Toast from 'react-native-easy-toast'
+import LinearGradient from 'react-native-linear-gradient'
 
 import IconButton from '../../components/IconButton'
 import Badge from '../../components/Badge'
@@ -74,47 +75,51 @@ class TransactionDetails extends React.Component {
 
     return (
       <Utils.View
-        background={Colors.secondaryText}
         borderRadius={10}
         marginRight={25}
         marginLeft={25}
         borderTopWidth={10}
         borderTopColor={confirmed ? Colors.green : Colors.orange}
       >
-        <Utils.Content>
-          <Utils.Row align='center' justify='space-between'>
-            <Elements.CardLabel>HASH</Elements.CardLabel>
-            <Utils.View>
-              <IconButton icon='md-clipboard' bg={Colors.summaryText} iconColor='#FFFFFF' onPress={() => this._copy()} />
+        <LinearGradient
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          colors={[Colors.secondaryText, Colors.lighterBackground]}
+        >
+          <Utils.Content>
+            <Utils.Row align='center' justify='space-between'>
+              <Elements.CardLabel>HASH</Elements.CardLabel>
+              <Utils.View>
+                <IconButton icon='md-clipboard' bg={Colors.summaryText} iconColor='#FFFFFF' onPress={() => this._copy()} />
+              </Utils.View>
+            </Utils.Row>
+            <Utils.View flex={1}>
+              <Elements.CardText>{id}</Elements.CardText>
             </Utils.View>
-          </Utils.Row>
-          <Utils.VerticalSpacer />
-          <Utils.View flex={1}>
-            <Elements.CardText>{id}</Elements.CardText>
-          </Utils.View>
-        </Utils.Content>
-        <Utils.View height={1} marginLeftPercent={5} width='90%' background='black' />
-        <Utils.Content>
-          <Utils.Row>
-            <Utils.View>
-              <Elements.CardLabel>STATUS</Elements.CardLabel>
-              <Utils.VerticalSpacer />
-              <Elements.CardText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.CardText>
-            </Utils.View>
-            <Utils.View flex={1} />
-            <Utils.View>
-              <Elements.CardLabel>BLOCK</Elements.CardLabel>
-              <Utils.VerticalSpacer />
-              <Elements.CardText>{block}</Elements.CardText>
-            </Utils.View>
-            <Utils.View flex={1} />
-            <Utils.View>
-              <Elements.CardLabel>TIME</Elements.CardLabel>
-              <Utils.VerticalSpacer />
-              <Elements.CardText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.CardText>
-            </Utils.View>
-          </Utils.Row>
-        </Utils.Content>
+          </Utils.Content>
+          <Utils.View height={1} marginLeftPercent={5} width='90%' background='black' />
+          <Utils.Content>
+            <Utils.Row>
+              <Utils.View>
+                <Elements.CardLabel>STATUS</Elements.CardLabel>
+                <Utils.VerticalSpacer />
+                <Elements.CardText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.CardText>
+              </Utils.View>
+              <Utils.View flex={1} />
+              <Utils.View>
+                <Elements.CardLabel>BLOCK</Elements.CardLabel>
+                <Utils.VerticalSpacer />
+                <Elements.CardText>{block}</Elements.CardText>
+              </Utils.View>
+              <Utils.View flex={1} />
+              <Utils.View>
+                <Elements.CardLabel>TIME</Elements.CardLabel>
+                <Utils.VerticalSpacer />
+                <Elements.CardText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.CardText>
+              </Utils.View>
+            </Utils.Row>
+          </Utils.Content>
+        </LinearGradient>
       </Utils.View>
     )
   }
