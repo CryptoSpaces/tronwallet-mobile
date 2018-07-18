@@ -80,6 +80,7 @@ class TransactionDetails extends React.Component {
         marginLeft={25}
         borderTopWidth={10}
         borderTopColor={confirmed ? Colors.confirmed : Colors.unconfirmed}
+        overflow='hidden'
       >
         <LinearGradient
           start={{ x: 0, y: 1 }}
