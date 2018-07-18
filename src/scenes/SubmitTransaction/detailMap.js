@@ -10,19 +10,35 @@ const dic = {
   'ParticipateAssetIssueContract': 'Participate',
   'TransferAssetContract': 'Transfer',
   'TransferContract': 'Transfer',
+  'UnfreezeBalanceContract': 'Unfreeze',
   'FreezeBalanceContract': 'Freeze',
   'AssetIssueContract': 'Create',
   'VoteWitnessContract': 'Vote',
   'frozenDuration': 'Duration',
   'frozenBalance': 'Total to Freeze'
 }
+
+export const errorDic = {
+  'CONTRACT_VALIDATE_ERROR': 'Transaction data not valid. Please try again later.',
+  'SIGERROR': 'Transaction signature not valid',
+  'DUP_TRANSACTION_ERROR': 'Transaction already broadcasted',
+  'CONTRACT_EXE_ERROR': 'Transaction data not valid (CEE). Please try again later.',
+  'BANDWITH_ERROR': 'Not enought bandwidth. Please try again later',
+  'TAPOS_ERROR': 'Transaction data not valid (TAPOS). Please try again later.',
+  'TOO_BIG_TRANSACTION_ERROR': 'Transaction too big to be submitted.',
+  'TRANSACTION_EXPIRATION_ERROR': 'Transaction expired. Please try again.',
+  'SERVER_BUSY': 'Server busy'
+}
+
 export const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 const truncateAddress = str => `${str.substring(0, 8)}...${str.substring(str.length - 8, str.length)}`
 const toReadableField = (field) => {
   const translated = dic.hasOwnProperty(field) ? dic[field] : field
   return isNaN(translated) ? translated.toUpperCase() : translated
 }
-
+export const translateError = (errorMessage) => (
+  errorDic[errorMessage] ? errorDic[errorMessage] : errorMessage
+)
 export default (contracts) => {
   const contractsRows = []
   for (const ctr in contracts[0]) {

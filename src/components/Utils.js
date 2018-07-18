@@ -486,3 +486,13 @@ export const SummaryInfo = styled.Text`
   color: ${Colors.summaryText};
   font-weight: 500;
 `
+
+export const LightButton = styled.TouchableOpacity`  
+  align-items: center;
+  ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]}`};
+  ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]}`};
+  background-color: ${props => props.disabled ? Colors.background : Colors.lightestBackground};
+  border-radius: 4px;
+  border-width: 2px;
+  border-color:  ${Colors.lightestBackground};
+`

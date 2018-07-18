@@ -14,7 +14,7 @@ import NavigationHeader from '../../components/Navigation/Header'
 
 // Service
 import Client from '../../services/client'
-import buildTransactionDetails from './detailMap'
+import buildTransactionDetails, { translateError } from './detailMap'
 import getTransactionStore from '../../store/transactions'
 
 const CLOSE_SCREEN_TIME = 5000
@@ -26,6 +26,7 @@ class TransactionDetail extends Component {
         <NavigationHeader
           title='TRANSACTION DETAILS'
           onClose={navigation.getParam('onClose')}
+          onBack={() => navigation.goBack()}
         />
       )
     }
@@ -114,6 +115,7 @@ class TransactionDetail extends Component {
     } = this.state
     this.setState({ loadingSubmit: true, submitError: null })
     const store = await getTransactionStore()
+
     const transaction = {
       id: hash,
       type: Client.getContractType(contracts[0].contractTypeId),
@@ -127,6 +129,7 @@ class TransactionDetail extends Component {
       timestamp: Date.now(),
       confirmed: false
     }
+
     try {
       let success = false
       store.write(() => { store.create('Transaction', transaction, true) })
@@ -146,9 +149,12 @@ class TransactionDetail extends Component {
       this.setState({
         loadingSubmit: false,
         submitted: true,
-        submitError: error.message
+        submitError: translateError(error.message)
       })
-      store.write(() => { store.delete(transaction) })
+      store.write(() => {
+        const lastTransaction = store.objectForPrimaryKey('Transaction', hash)
+        store.delete(lastTransaction)
+      })
     }
   }
 
@@ -224,7 +230,7 @@ class TransactionDetail extends Component {
           {isConnected && this.renderSubmitButton()}
           <Utils.Content align='center' justify='center'>
             {submitError && (
-              <Utils.Error>Transaction Failed: {submitError}</Utils.Error>
+              <Utils.Error>{submitError}</Utils.Error>
             )}
           </Utils.Content>
         </ScrollView>
