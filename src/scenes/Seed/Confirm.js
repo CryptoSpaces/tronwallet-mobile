@@ -8,7 +8,7 @@ import { Spacing, Colors } from '../../components/DesignSystem'
 
 import { confirmSecret } from '../../utils/secretsUtils'
 import NavigationHeader from '../../components/Navigation/Header'
-import NavigationButton from '../../components/Navigation/ButtonHeader'
+import ButtonGradient from '../../components/ButtonGradient'
 
 const WordWrapper = styled.TouchableOpacity`
   padding-vertical: ${Spacing.small};
@@ -20,10 +20,7 @@ class Confirm extends React.Component {
     header: (
       <NavigationHeader
         title='CONFIRM SEED'
-        rightButton={<NavigationButton
-          onPress={navigation.getParam('onSubmit')}
-          title='SUBMIT'
-        />}
+        onBack={() => navigation.goBack()}
       />
     )
   })
@@ -34,10 +31,6 @@ class Confirm extends React.Component {
       .map(item => ({ word: item, used: false }))
       .sort(() => 0.5 - Math.random()),
     selected: []
-  }
-
-  componentDidMount () {
-    this.props.navigation.setParams({ onSubmit: this._handleSubmit })
   }
 
   _handleSubmit = async () => {
@@ -121,9 +114,12 @@ class Confirm extends React.Component {
             </Utils.Row>
           </Utils.Content>
           <Utils.VerticalSpacer />
-          <Utils.Button onPress={() => this.props.navigation.goBack()}>
-            Back
-          </Utils.Button>
+          <Utils.View align='center' paddingY='medium'>
+            <ButtonGradient
+              text='CONFIRM SEED'
+              onPress={this._handleSubmit}
+            />
+          </Utils.View>
         </ScrollView>
       </Utils.Container>
     )

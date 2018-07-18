@@ -1,10 +1,9 @@
 import React from 'react'
-import { SafeAreaView, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import Feather from 'react-native-vector-icons/Feather'
 
 import * as Utils from '../Utils'
-import { Colors } from '../DesignSystem'
 
 const leftElement = (onBack, leftButton) => {
   let element = null
@@ -41,15 +40,13 @@ const NavigationHeader = ({ title, onClose, noBorder, rightButton, onBack, leftB
     onBack = Left Button with <
   */
 
-  return <SafeAreaView style={{ backgroundColor: Colors.background }}>
-    <Utils.Header padding={16} justify='center' noBorder={noBorder}>
-      {leftElement(onBack, leftButton)}
-      <Utils.View justify='center' align='center'>
-        <Utils.Text lineHeight={36} size='small' font='bold'>{title.toUpperCase()}</Utils.Text>
-      </Utils.View>
-      {rightElement(onClose, rightButton)}
-    </Utils.Header>
-  </SafeAreaView>
+  return <Utils.Header padding={16} justify='center' noBorder={noBorder}>
+    {leftElement(onBack, leftButton)}
+    <Utils.View justify='center' align='center'>
+      <Utils.Text lineHeight={36} size='small' font='bold'>{title.toUpperCase()}</Utils.Text>
+    </Utils.View>
+    {rightElement(onClose, rightButton)}
+  </Utils.Header>
 }
 
 NavigationHeader.propTypes = {

@@ -240,6 +240,24 @@ class ClientWallet {
     }
   }
 
+  async getUnfreezeTransaction () {
+    try {
+      const address = await getUserPublicKey()
+      const { nodeIp } = await NodesIp.getAllNodesIp()
+      const reqBody = {
+        address,
+        node: nodeIp
+      }
+      const { data: { transaction } } = await axios.post(
+        `${this.tronwalletApi}/unsigned/unfreeze`,
+        reqBody
+      )
+      return transaction
+    } catch (error) {
+      throw new Error(error.message || error)
+    }
+  }
+
   async getParticipateTransaction ({
     participateAmount,
     participateToken,

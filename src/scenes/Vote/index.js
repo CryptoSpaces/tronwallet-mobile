@@ -1,7 +1,7 @@
 // Dependencies
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp, debounce } from 'lodash'
-import { Linking, FlatList, Alert } from 'react-native'
+import { Linking, FlatList, Alert, ActivityIndicator } from 'react-native'
 
 // Utils
 import { TronVaultURL } from '../../utils/deeplinkUtils'
@@ -22,6 +22,7 @@ import { signTransaction } from '../../utils/transactionUtils'
 
 import getCandidateStore from '../../store/candidates'
 import { Context } from '../../store/context'
+import { Colors } from '../../components/DesignSystem'
 
 const LIST_STEP_SIZE = 20
 
@@ -383,7 +384,6 @@ class VoteScene extends PureComponent {
     const {
       totalVotes,
       totalRemaining,
-      votesError,
       refreshing,
       loadingList,
       currentVotes,
@@ -421,13 +421,6 @@ class VoteScene extends PureComponent {
             </Utils.View>
           </Header>
         </GrowIn>
-        {votesError.length > 0 && (
-          <FadeIn name='error'>
-            <Utils.Text align='center' marginY={20}>
-              {votesError}
-            </Utils.Text>
-          </FadeIn>
-        )}
         {this.state.modalVisible && (
           <AddVotesModal
             acceptCurrentVote={this._acceptCurrentVote}
@@ -461,20 +454,23 @@ class VoteScene extends PureComponent {
             marginTop={0}
           />
         </Utils.View>
-        <Utils.View>
-          <FadeIn name='candidates'>
-            <FlatList
-              keyExtractor={item => item.address}
-              extraData={[totalUserVotes, currentFullVotes]}
-              data={voteList}
-              renderItem={this._renderRow}
-              onEndReachedThreshold={0.5}
-              onEndReached={this._loadMoreCandidates}
-              refreshing={refreshing || loadingList}
-              removeClippedSubviews
-            />
-          </FadeIn>
-        </Utils.View>
+        {(loadingList || refreshing) &&
+        <GrowIn name='loading'>
+          <ActivityIndicator size='small' color={Colors.primaryText} />
+        </GrowIn>
+        }
+        <FadeIn name='candidates'>
+          <FlatList
+            keyExtractor={item => item.address + item.url}
+            extraData={[totalUserVotes, currentFullVotes]}
+            data={voteList}
+            renderItem={this._renderRow}
+            onEndReachedThreshold={0.5}
+            onEndReached={this._loadMoreCandidates}
+            refreshing={refreshing || loadingList}
+            removeClippedSubviews
+          />
+        </FadeIn>
         {(totalUserVotes > 0 && startedVoting) && <ConfirmVotes onPress={this._openConfirmModal} voteCount={currentFullVotes.length} />}
       </Utils.Container>
     )
