@@ -110,7 +110,7 @@ class TransactionDetail extends Component {
   submitTransaction = async () => {
     const {
       signedTransaction,
-      transactionData: { hash, contracts, timestamp }
+      transactionData: { hash, contracts }
     } = this.state
     this.setState({ loadingSubmit: true, submitError: null })
     const store = await getTransactionStore()
@@ -124,7 +124,7 @@ class TransactionDetail extends Component {
         tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
       },
       ownerAddress: contracts[0].from || contracts[0].ownerAddress,
-      timestamp: timestamp,
+      timestamp: Date.now(),
       confirmed: false
     }
     try {
