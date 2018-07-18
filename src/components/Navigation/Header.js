@@ -21,7 +21,7 @@ const NavigationHeader = ({ title, onClose, noBorder, rightButton }) => {
   return <SafeAreaView style={{ backgroundColor: Colors.background }}>
     <Utils.Header padding={16} justify='center' noBorder={noBorder}>
       <Utils.View justify='center' align='center'>
-        <Utils.Text lineHeight={36} size='small' font='bold'>{title.toUpperCase()}</Utils.Text>
+        <Utils.Text lineHeight={36} size='average' font='medium' weight={500}>{title.toUpperCase()}</Utils.Text>
       </Utils.View>
       <Utils.View style={{ position: 'absolute', right: 10 }}>
         {rightElement}
