@@ -26,7 +26,7 @@ export default ({ item, onPress }) => {
         <Utils.View>
           <Utils.Text size='small'>
             {item.contractData.frozenBalance / ONE_TRX} TRX{' '}
-            <Ionicons name='ios-sunny' size={20} color='#ffffff' />
+            <Ionicons name='ios-unlock' size={20} color='#ffffff' />
           </Utils.Text>
         </Utils.View>
       </Utils.Row>

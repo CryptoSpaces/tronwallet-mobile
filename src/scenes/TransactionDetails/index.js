@@ -144,7 +144,25 @@ class TransactionDetails extends React.Component {
   _getHeaderArrowIcon = (type) => {
     const lowerType = type.toLowerCase()
 
-    if (lowerType === 'freeze' || lowerType === 'participate') {
+    if (lowerType === 'unfreeze') {
+      return (
+        <Ionicons
+          name='ios-unlock'
+          size={45}
+          color='#ffffff'
+        />
+      )
+    }
+    if (lowerType === 'freeze') {
+      return (
+        <Ionicons
+          name='ios-lock'
+          size={45}
+          color='#ffffff'
+        />
+      )
+    }
+    if (lowerType === 'participate') {
       return (
         <Ionicons
           name='ios-arrow-round-up'
