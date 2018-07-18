@@ -17,9 +17,6 @@ const TransferItem = ({ item, onPress }) => {
       ? { icon: 'arrow-down-left', color: 'green' }
       : { icon: 'arrow-up-right', color: 'red' }
 
-  const statusColor = item.confirmed ? 'green' : Colors.orange
-  const statusText = item.confirmed ? 'Confirmed' : 'Unconfirmed'
-
   return (
     <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
@@ -27,9 +24,11 @@ const TransferItem = ({ item, onPress }) => {
           <Utils.Tag marginRight={10} color={tint(0.9, '#1f90e6')}>
             <Utils.Text size='xsmall'>{item.type}</Utils.Text>
           </Utils.Tag>
-          <Utils.Tag color={tint(0.9, statusColor)}>
-            <Utils.Text size='xsmall'>{statusText}</Utils.Text>
-          </Utils.Tag>
+          {!item.confirmed &&
+            <Utils.Tag color={tint(0.9, Colors.unconfirmed)}>
+              <Utils.Text size='xsmall'>Unconfirmed</Utils.Text>
+            </Utils.Tag>
+          }
         </Utils.Row>
         <Utils.View>
           <Utils.Text size='small'>

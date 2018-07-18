@@ -79,12 +79,13 @@ class TransactionDetails extends React.Component {
         marginRight={25}
         marginLeft={25}
         borderTopWidth={10}
-        borderTopColor={confirmed ? Colors.green : Colors.orange}
+        borderTopColor={confirmed ? Colors.confirmed : Colors.unconfirmed}
+        overflow='hidden'
       >
         <LinearGradient
           start={{ x: 0, y: 1 }}
           end={{ x: 1, y: 0 }}
-          colors={[Colors.secondaryText, Colors.lighterBackground]}
+          colors={[Colors.transactionCardGradient[0], Colors.transactionCardGradient[1]]}
         >
           <Utils.Content>
             <Utils.Row align='center' justify='space-between'>
@@ -250,6 +251,8 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _truncateAddress = address => `${address.substring(0, 8)}...${address.substring(address.length - 8, address.length)}`
+
   _renderToFrom = () => {
     const { type, contractData: { transferFromAddress, transferToAddress } } = this.props.navigation.state.params.item
 
@@ -265,7 +268,7 @@ class TransactionDetails extends React.Component {
                 color='green'
               />
             </Utils.Row>
-            <Elements.CardText>{transferToAddress}</Elements.CardText>
+            <Elements.CardText>{this._truncateAddress(transferToAddress)}</Elements.CardText>
             <Utils.VerticalSpacer size='medium' />
             <Utils.View height={1} background='#51526B' />
           </React.Fragment>
@@ -278,7 +281,7 @@ class TransactionDetails extends React.Component {
             color='red'
           />
         </Utils.Row>
-        <Elements.CardText>{transferFromAddress}</Elements.CardText>
+        <Elements.CardText>{this._truncateAddress(transferFromAddress)}</Elements.CardText>
       </Utils.Content>
     )
   }
@@ -341,7 +344,7 @@ class TransactionDetails extends React.Component {
         key={`${vote.voteAddress}-${index}`}
       >
         <Utils.Row justify='space-between'>
-          <Elements.DescriptionText>{vote.voteAddress}</Elements.DescriptionText>
+          <Elements.DescriptionText>{this._truncateAddress(vote.voteAddress)}</Elements.DescriptionText>
           <Elements.CardText>{vote.voteCount}</Elements.CardText>
         </Utils.Row>
         <Utils.VerticalSpacer size='medium' />
