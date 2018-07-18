@@ -491,9 +491,8 @@ export const LightButton = styled.TouchableOpacity`
   align-items: center;
   ${props => props.paddingY && css`padding-vertical: ${Spacing[props.paddingY]}`};
   ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]}`};
-  background-color: ${Colors.lightestBackground};
+  background-color: ${props => props.disabled ? Colors.background : Colors.lightestBackground};
   border-radius: 4px;
-  border-width: 0.5px;
-  ${props => props.disabled && css`opacity: 0.5`};
+  border-width: 2px;
   border-color:  ${Colors.lightestBackground};
 `
