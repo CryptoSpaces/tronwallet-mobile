@@ -217,8 +217,8 @@ class VoteScene extends PureComponent {
   _openTransactionDetails = async transactionUnsigned => {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned)
-      this.setState({ loadingList: false }, () => {
-        this.props.navigation.navigate('TransactionDetail', {
+      this.setState({ loadingSign: false }, () => {
+        this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
       })

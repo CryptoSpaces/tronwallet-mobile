@@ -6,6 +6,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 
+import getAssetsStore from '../../store/assets'
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
@@ -94,18 +95,32 @@ class TransactionsScene extends Component {
     }
   }
 
+  _navigateToDetails = async (pressedItem) => {
+    const store = await getAssetsStore()
+    const filteredItem = await store
+      .objects('Asset')
+      .filtered(`name == "${pressedItem.contractData.tokenName}"`)
+
+    const item = {
+      ...pressedItem,
+      block: filteredItem.length ? filteredItem[0].block : 'NONE'
+    }
+
+    this.props.navigation.navigate('TransactionDetails', { item })
+  }
+
   renderCard = item => {
     switch (item.type) {
       case 'Transfer':
-        return <TransferCard item={item} />
+        return <TransferCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Freeze':
-        return <FreezeCard item={item} />
+        return <FreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Vote':
-        return <VoteCard item={item} />
+        return <VoteCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Participate':
-        return <ParticipateCard item={item} />
+        return <ParticipateCard item={item} onPress={() => this._navigateToDetails(item)} />
       default:
-        return <Default item={item} />
+        return <Default item={item} onPress={() => this._navigateToDetails(item)} />
     }
   }
 

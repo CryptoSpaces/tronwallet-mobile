@@ -15,12 +15,12 @@ const Text = styled.Text`
   font-size: 13px;
   font-family: Rubik-Medium;
   line-height: 14px;
-  color: #FFFFFF;
+  color: ${props => props.color};
 `
 
-const Badge = ({ bg = '#2E2F47', children }) => (
+const Badge = ({ bg = '#2E2F47', textColor = '#FFFFFF', children }) => (
   <Wrapper bg={bg}>
-    {typeof children === 'string' ? <Text>{children}</Text> : children}
+    {typeof children === 'string' ? <Text color={textColor}>{children}</Text> : children}
   </Wrapper>
 )
 

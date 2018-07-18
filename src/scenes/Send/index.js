@@ -162,7 +162,7 @@ class SendScene extends Component {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false, error: null }, () => {
-        this.props.navigation.navigate('TransactionDetail', {
+        this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
       })

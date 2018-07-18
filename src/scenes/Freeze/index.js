@@ -143,8 +143,8 @@ class FreezeScene extends Component {
   openTransactionDetails = async transactionUnsigned => {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned)
-      this.setState({ loading: false }, () => {
-        this.props.navigation.navigate('TransactionDetail', {
+      this.setState({ loadingSign: false }, () => {
+        this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
       })

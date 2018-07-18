@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform, YellowBox } from 'react-native'
+import { StatusBar, Platform, YellowBox, SafeAreaView } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -28,7 +28,7 @@ import BalanceScene from './src/scenes/Balance'
 import VoteScene from './src/scenes/Vote'
 import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
-import TransactionDetailScene from './src/scenes/TransactionDetail'
+import SubmitTransactionScene from './src/scenes/SubmitTransaction'
 import TransferScene from './src/scenes/Transfer'
 import Settings from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
@@ -40,6 +40,7 @@ import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
 import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
+import TransactionDetails from './src/scenes/TransactionDetails'
 
 import fontelloConfig from './src/assets/icons/config.json'
 import NavigationHeader from './src/components/Navigation/Header'
@@ -113,7 +114,8 @@ const TransferStack = createStackNavigator(
 
 const TransactionList = createStackNavigator(
   {
-    TransactionListScene
+    TransactionListScene,
+    TransactionDetails
   }, {
     initialRouteName: 'TransactionListScene'
   }
@@ -254,8 +256,8 @@ const RootNavigator = createStackNavigator(
       screen: SetPublicKey,
       path: 'getkey/:data'
     },
-    TransactionDetail: {
-      screen: TransactionDetailScene,
+    SubmitTransaction: {
+      screen: SubmitTransactionScene,
       path: 'transaction/:tx'
     },
     Freeze: FreezeVoteScene,
@@ -335,10 +337,12 @@ class App extends Component {
       getPublicKey: this._getPublicKey
     }
     return (
-      <Context.Provider value={contextProps}>
-        <StatusBar barStyle='light-content' />
-        <RootNavigator uriPrefix={prefix} />
-      </Context.Provider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
+        <Context.Provider value={contextProps}>
+          <StatusBar barStyle='light-content' />
+          <RootNavigator uriPrefix={prefix} />
+        </Context.Provider>
+      </SafeAreaView>
     )
   }
 }
