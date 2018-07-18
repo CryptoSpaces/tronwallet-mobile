@@ -21,7 +21,7 @@ const Text = styled.Text`
   font-size: 13px;
   font-family: Rubik-Medium;
   line-height: 14px;
-  color: #FFFFFF;
+  color: ${props => props.color};
 `
 
 const Guarantee = styled.View`
@@ -35,10 +35,10 @@ const Image = styled.Image`
   height: 15px;
 `
 
-const Badge = ({ bg = '#2E2F47', guarantee, children }) => (
+const Badge = ({ bg = '#2E2F47', guarantee, textColor = '#FFFFFF', children }) => (
   <Utils.Row align='center'>
     <Wrapper bg={bg}>
-      {typeof children === 'string' ? <Text>{children}</Text> : children}
+      {typeof children === 'string' ? <Text color={textColor}>{children}</Text> : children}
     </Wrapper>
     {guarantee && (
       <Guarantee>

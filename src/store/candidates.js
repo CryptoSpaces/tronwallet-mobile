@@ -10,7 +10,8 @@ const CandidateSchema = {
     change_day: 'int',
     hasPage: 'bool',
     url: 'string',
-    votes: 'int'
+    votes: 'int',
+    rank: 'int'
   }
 }
 
@@ -18,5 +19,5 @@ export default async () =>
   Realm.open({
     path: 'Realm.candidates',
     schema: [CandidateSchema],
-    schemaVersion: 1
+    schemaVersion: 2
   })

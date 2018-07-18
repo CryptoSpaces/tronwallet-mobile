@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform, YellowBox } from 'react-native'
+import { StatusBar, Platform, YellowBox, SafeAreaView } from 'react-native'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -28,22 +28,24 @@ import BalanceScene from './src/scenes/Balance/NewBalance'
 import VoteScene from './src/scenes/Vote'
 import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
-import TransactionDetailScene from './src/scenes/TransactionDetail'
+import SubmitTransactionScene from './src/scenes/SubmitTransaction'
 import TransferScene from './src/scenes/Transfer'
 import Settings from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import GetVaultScene from './src/scenes/GetVault'
-import FreezeScene from './src/scenes/Freeze/FreezeRoute'
+import FreezeVoteScene from './src/components/Vote/Freeze'
 import RewardsScene from './src/scenes/Rewards'
 import NetworkConnection from './src/scenes/Settings/NetworkModal'
 import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
 import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
+import TransactionDetails from './src/scenes/TransactionDetails'
 
 import fontelloConfig from './src/assets/icons/config.json'
 import NavigationHeader from './src/components/Navigation/Header'
 import NavigationButton from './src/components/Navigation/ButtonHeader'
+import ClearVotes from './src/components/ClearButton'
 
 import Client from './src/services/client'
 import { getUserPublicKey } from './src/utils/userAccountUtils'
@@ -90,14 +92,13 @@ const VoteStack = createStackNavigator(
         title='VOTES'
         rightButton={(navigation.getParam('votesError') || navigation.getParam('listError'))
           ? <NavigationButton
-            title='SYNC'
+            title='RELOAD'
             onPress={navigation.getParam('loadData')}
           />
-          : <NavigationButton
-            title='SUBMIT'
-            onPress={navigation.getParam('onSubmit')}
-            disabled={navigation.getParam('disabled')}
+          : <ClearVotes
+            onPress={navigation.getParam('clearVotes')}
           />} />
+
       )
     })
   }
@@ -116,7 +117,8 @@ const BalanceStack = createStackNavigator(
 
 const TransactionList = createStackNavigator(
   {
-    TransactionListScene
+    TransactionListScene,
+    TransactionDetails
   }, {
     initialRouteName: 'TransactionListScene'
   }
@@ -255,11 +257,11 @@ const RootNavigator = createStackNavigator(
       screen: SetPublicKey,
       path: 'getkey/:data'
     },
-    TransactionDetail: {
-      screen: TransactionDetailScene,
+    SubmitTransaction: {
+      screen: SubmitTransactionScene,
       path: 'transaction/:tx'
     },
-    Freeze: FreezeScene,
+    Freeze: FreezeVoteScene,
     Rewards: RewardsScene
   },
   {
@@ -336,10 +338,12 @@ class App extends Component {
       getPublicKey: this._getPublicKey
     }
     return (
-      <Context.Provider value={contextProps}>
-        <StatusBar barStyle='light-content' />
-        <RootNavigator uriPrefix={prefix} />
-      </Context.Provider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
+        <Context.Provider value={contextProps}>
+          <StatusBar barStyle='light-content' />
+          <RootNavigator uriPrefix={prefix} />
+        </Context.Provider>
+      </SafeAreaView>
     )
   }
 }

@@ -4,8 +4,8 @@ import Feather from 'react-native-vector-icons/Feather'
 
 import * as Utils from '../../components/Utils'
 
-export default ({ item }) => (
-  <Utils.TransactionCard>
+export default ({ item, onPress }) => (
+  <Utils.TransactionCard onPress={onPress}>
     <Utils.Row style={{ justifyContent: 'space-between' }}>
       <Utils.Text size='small' secondary>
         Transaction Type {item.type}

@@ -71,6 +71,7 @@ ButtonGradient.defaultProps = {
 }
 
 ButtonGradient.propTypes = {
+  text: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   size: PropTypes.string
 }

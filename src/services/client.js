@@ -34,6 +34,8 @@ class ClientWallet {
       const { data } = await axios.get(`${apiUrl}/vote/current-cycle`)
       const totalVotes = data.total_votes
       const candidates = data.candidates
+        .sort((a, b) => a.votes > b.votes ? -1 : a.votes < b.votes ? 1 : 0)
+        .map((candidate, index) => ({...candidate, rank: index + 1}))
       return { totalVotes, candidates }
     } catch (error) {
       console.warn(error)
@@ -234,6 +236,24 @@ class ClientWallet {
       return transaction
     } catch (error) {
       console.warn(error.response)
+      throw new Error(error.message || error)
+    }
+  }
+
+  async getUnfreezeTransaction () {
+    try {
+      const address = await getUserPublicKey()
+      const { nodeIp } = await NodesIp.getAllNodesIp()
+      const reqBody = {
+        address,
+        node: nodeIp
+      }
+      const { data: { transaction } } = await axios.post(
+        `${this.tronwalletApi}/unsigned/unfreeze`,
+        reqBody
+      )
+      return transaction
+    } catch (error) {
       throw new Error(error.message || error)
     }
   }

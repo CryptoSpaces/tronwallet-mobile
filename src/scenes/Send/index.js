@@ -54,6 +54,18 @@ class SendScene extends Component {
     this._navListener.remove()
   }
 
+  _orderBalances = (balances) => {
+    let orderedBalances = []
+    balances.forEach((balance) => {
+      if (balance.name === 'TRX') {
+        orderedBalances[0] = balance
+      } else if (balance.name === 'TWX') {
+        orderedBalances[1] = balance
+      }
+    })
+    return [...orderedBalances, ...balances.filter((balance) => balance.name !== 'TRX' && balance.name !== 'TWX')]
+  }
+
   getBalancesFromStore = async () => {
     const store = await getBalanceStore()
     return store.objects('Balance').map(item => Object.assign({}, item))
@@ -64,10 +76,17 @@ class SendScene extends Component {
     try {
       const balances = await this.getBalancesFromStore()
       const userPublicKey = await getUserPublicKey()
-      const { balance } = balances.find(b => b.name === 'TRX')
+      let orderedBalances = []
+      let balance = 0
+
+      if (balances.length) {
+        balance = balances.find(b => b.name === 'TRX').balance
+        orderedBalances = this._orderBalances(balances)
+      }
+
       this.setState({
         from: userPublicKey,
-        balances,
+        balances: orderedBalances,
         loadingData: false,
         trxBalance: balance,
         formattedToken: this._formatBalance('TRX', balance),
@@ -102,7 +121,7 @@ class SendScene extends Component {
       return
     }
 
-    if (!amount || balanceSelected.balance < amount) {
+    if (!amount || balanceSelected.balance < amount || amount < 1) {
       this.setState({ error: 'Invalid amount' })
       return
     }
@@ -143,7 +162,7 @@ class SendScene extends Component {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false, error: null }, () => {
-        this.props.navigation.navigate('TransactionDetail', {
+        this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
       })
@@ -261,26 +280,24 @@ class SendScene extends Component {
       <KeyboardScreen>
         <Utils.Container style={{borderColor: Colors.secondaryText, borderTopWidth: 0.5}}>
           <Utils.Content>
-            {balances.length !== 0 &&
-              <ModalSelector
-                data={balances.map(item => ({
-                  key: item.name,
-                  label: this._formatBalance(item.name, item.balance)
-                }))}
-                onChange={option => this.setState({
-                  token: option.key,
-                  formattedToken: option.label
-                },
-                this._nextInput('token'))}
-                disabled={trxBalance === 0}
-              >
-                <Input
-                  label='TOKEN'
-                  value={this.state.formattedToken}
-                  rightContent={this._rightContentToken}
-                />
-              </ModalSelector>
-            }
+            <ModalSelector
+              data={balances.map(item => ({
+                key: item.name,
+                label: this._formatBalance(item.name, item.balance)
+              }))}
+              onChange={option => this.setState({
+                token: option.key,
+                formattedToken: option.label
+              },
+              this._nextInput('token'))}
+              disabled={trxBalance === 0}
+            >
+              <Input
+                label='TOKEN'
+                value={this.state.formattedToken}
+                rightContent={this._rightContentToken}
+              />
+            </ModalSelector>
             <Utils.VerticalSpacer size='medium' />
             <Input
               innerRef={(input) => { this.to = input }}
@@ -312,9 +329,16 @@ class SendScene extends Component {
               onSubmitEditing={() => this._nextInput('amount')}
               align='right'
             />
-            <Utils.VerticalSpacer size='medium' />
-            <Utils.VerticalSpacer />
-            {error && <Utils.Error>{error}</Utils.Error>}
+            <Utils.Text size='xsmall' secondary>
+              The minimum amount for any send transaction is 1.
+            </Utils.Text>
+            <Utils.VerticalSpacer size='large' />
+            {error && (
+              <React.Fragment>
+                <Utils.Error>{error}</Utils.Error>
+                <Utils.VerticalSpacer size='large' />
+              </React.Fragment>
+            )}
             {loadingSign || loadingData ? (
               <ActivityIndicator size='small' color={Colors.primaryText} />
             ) : (

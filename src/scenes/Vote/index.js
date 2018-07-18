@@ -1,56 +1,82 @@
 // Dependencies
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp, debounce } from 'lodash'
-import { Linking, FlatList, Alert } from 'react-native'
+import { Linking, FlatList, Alert, ActivityIndicator } from 'react-native'
 
 // Utils
-import * as Utils from '../../components/Utils'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
-import formatUrl from '../../utils/formatUrl'
 import { formatNumber } from '../../utils/numberUtils'
 
 // Components
+import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
-import VoteItem from '../../components/Vote/VoteItem'
-import VoteModal from '../../components/Vote/VoteModal'
+import VoteItem from '../../components/Vote/list/Item'
+import AddVotesModal from '../../components/Vote/AddModal'
+import ConfirmModal from '../../components/Vote/ConfirmModal'
 import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
-
+import ConfirmVotes from '../../components/Vote/ConfirmButton'
 // Service
-import Client from '../../services/client'
+import WalletClient from '../../services/client'
 import { signTransaction } from '../../utils/transactionUtils'
 
 import getCandidateStore from '../../store/candidates'
 import { Context } from '../../store/context'
+import { Colors } from '../../components/DesignSystem'
 
 const LIST_STEP_SIZE = 20
 
 const INITIAL_STATE = {
+  // Numbers of Interest
+  totalVotes: 0,
+  totalRemaining: 0,
+  totalUserVotes: 0,
+  amountToVote: 0,
+  // Vote Lists
   voteList: [],
-  currentItem: null,
-  search: '',
-  loading: true,
-  loadingList: false,
-  totalVotes: null,
-  totalRemaining: null,
-  refreshing: false,
-  from: '',
   currentVotes: {},
+  currentFullVotes: [],
   userVotes: {},
-  modalVisible: false,
-  currentItemUrl: null,
-  currentItemAddress: null,
-  currentAmountToVote: '',
+  // Items
+  search: '',
+  currentVoteItem: {},
+  // Loading
+  loadingList: true,
+  refreshing: false,
+  // Flags
   offset: 0,
+  modalVisible: false,
+  confirmModalVisible: false,
+  startedVoting: false,
+  // Errors
   votesError: '',
   listError: ''
+
 }
 
 class VoteScene extends PureComponent {
-  state = INITIAL_STATE
+  constructor () {
+    super()
+    this.state = INITIAL_STATE
+
+    this.resetAddModal = {
+      currentVoteItem: {},
+      amountToVote: 0,
+      modalVisible: false
+    }
+    this.resetVoteData = {
+      amountToVote: 0,
+      loadingList: true,
+      currentVoteItem: {},
+      startedVoting: false,
+      userVotes: {},
+      search: ''
+    }
+  }
 
   async componentDidMount () {
     this._onSearch = debounce(this._onSearch, 500)
+    this._loadCandidates()
     this.didFocusSubscription = this.props.navigation.addListener(
       'didFocus',
       this._loadData
@@ -62,38 +88,44 @@ class VoteScene extends PureComponent {
   }
 
   _loadData = async () => {
-    this.props.navigation.setParams({
-      onSubmit: this._submit,
+    const { navigation } = this.props
+
+    this.setState(this.resetVoteData, async () => {
+      await this._refreshCandidates()
+      await this._loadUserData()
+      this.setState({ loadingList: false })
+    })
+
+    navigation.setParams({
+      clearVotes: this._clearVotesFromList,
       disabled: true,
       votesError: null,
       listError: null
     })
-
-    this.setState(INITIAL_STATE)
-    this._loadCandidates()
-    this._refreshCandidates()
-    this._loadFreeze()
-    await this._loadUserVotes()
-    this.setState({ loading: false })
   }
 
-  _getVoteList = store =>
-    store
+  _getVoteListFromStore = async (store = null) => {
+    let voteStore
+    if (store) voteStore = store
+    else voteStore = await getCandidateStore()
+    return voteStore
       .objects('Candidate')
       .sorted([['votes', true], ['url', false]])
       .slice(
         this.state.offset,
         clamp(
           this.state.offset + LIST_STEP_SIZE,
-          store.objects('Candidate').length
+          voteStore.objects('Candidate').length
         )
       )
       .map(item => Object.assign({}, item))
+  }
 
   _loadCandidates = async () => {
     try {
-      const store = await getCandidateStore()
-      this.setState({ voteList: this._getVoteList(store) })
+      const voteList = await this._getVoteListFromStore()
+
+      this.setState({ voteList })
     } catch (e) {
       e.name = 'Load Candidates Error'
       this._throwError(e)
@@ -101,32 +133,33 @@ class VoteScene extends PureComponent {
   }
 
   _refreshCandidates = async () => {
+    this.setState({ offset: 0, refreshing: true })
     try {
-      if (!this.state.refreshing) {
-        this.setState({ refreshing: true })
-        const { candidates, totalVotes } = await Client.getTotalVotes()
-        const store = await getCandidateStore()
-        store.write(() =>
-          candidates.map(item => store.create('Candidate', item, true))
-        )
-        this.setState({
-          voteList: this._getVoteList(store),
-          totalVotes,
-          refreshing: false
-        })
-      }
+      const { candidates, totalVotes } = await WalletClient.getTotalVotes()
+      const store = await getCandidateStore()
+      store.write(() =>
+        candidates.map(item => store.create('Candidate', item, true))
+      )
+      const voteList = await this._getVoteListFromStore(store)
+      this.setState({
+        voteList,
+        totalVotes
+      })
     } catch (e) {
       e.name = 'Refresh Candidates Error'
       this._throwError(e)
+    } finally {
+      this.setState({ refreshing: false })
     }
   }
 
   _loadMoreCandidates = async () => {
     try {
-      this.setState({ offset: this.state.offset + LIST_STEP_SIZE })
-      const store = await getCandidateStore()
-      this.setState({
-        voteList: union(this.state.voteList, this._getVoteList(store))
+      this.setState({ offset: this.state.offset + LIST_STEP_SIZE }, async () => {
+        const voteList = await this._getVoteListFromStore()
+        this.setState({
+          voteList: union(this.state.voteList, voteList)
+        })
       })
     } catch (e) {
       e.name = 'Load More Candidates Error'
@@ -134,25 +167,25 @@ class VoteScene extends PureComponent {
     }
   }
 
-  _loadFreeze = () => {
+  _loadUserData = async () => {
     try {
-      if (this.props.context.freeze.value) {
-        const { total } = this.props.context.freeze.value
-        this.setState({ totalRemaining: total || 0 })
-      } else {
-        throw new Error(this.props.context.freeze.err)
-      }
-    } catch (e) {
-      e.name = 'Freeze Error'
-      this._throwError(e, 'votesError')
-    }
-  }
+      const [userVotes, userFrozen] = await Promise.all([WalletClient.getUserVotes(), WalletClient.getFreeze()])
+      const { total: totalFrozen } = userFrozen
 
-  _loadUserVotes = async () => {
-    try {
-      const userVotes = await Client.getUserVotes()
-      this.setState({ userVotes })
-      return userVotes
+      if (userVotes) {
+        const currentUserVoteCount = this._getVoteCountFromList(userVotes)
+        const newFullVoteList = await this._getUserFullVotedList(userVotes)
+        this.setState({
+          currentVotes: userVotes,
+          totalUserVotes: currentUserVoteCount,
+          totalRemaining: totalFrozen - currentUserVoteCount,
+          currentFullVotes: newFullVoteList
+        })
+      } else {
+        this.setState({
+          totalRemaining: totalFrozen
+        })
+      }
     } catch (e) {
       e.name = 'Load User Votes Error'
       this._throwError(e, 'votesError')
@@ -164,20 +197,18 @@ class VoteScene extends PureComponent {
     const { navigation } = this.props
 
     if (totalRemaining >= 0) {
-      this.setState({ loading: true })
+      this.setState({ loadingList: true })
       navigation.setParams({ disabled: true })
 
       forIn(currentVotes, function (value, key) {
         currentVotes[key] = Number(value)
       })
       try {
-        // Transaction String
-        const data = await Client.getVoteWitnessTransaction(currentVotes)
+        const data = await WalletClient.getVoteWitnessTransaction(currentVotes)
         this._openTransactionDetails(data)
       } catch (error) {
-        console.warn(error.message)
         Alert.alert('Error while building transaction, try again.')
-        this.setState({ loading: false })
+        this.setState({ loadingList: false })
         navigation.setParams({ disabled: false })
       }
     }
@@ -187,12 +218,12 @@ class VoteScene extends PureComponent {
     try {
       const transactionSigned = await signTransaction(transactionUnsigned)
       this.setState({ loadingSign: false }, () => {
-        this.props.navigation.navigate('TransactionDetail', {
+        this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
       })
     } catch (error) {
-      this.setState({ error: 'Error getting transaction', loadingSign: false })
+      this.setState({ error: 'Error getting transaction', loadingList: false })
     }
   }
 
@@ -210,49 +241,126 @@ class VoteScene extends PureComponent {
     }
   }
 
-  _onChangeVotes = (value, address) => {
-    const { navigation } = this.props
-    const { currentVotes } = this.state
+  _onChangeVotes = async (value) => {
+    const { currentVotes, currentVoteItem } = this.state
     const totalFrozen = this.props.context.freeze.value.total
-    const newVotes = { ...currentVotes, [address]: value }
-    const totalUserVotes = reduce(
-      newVotes,
-      function (result, value) {
-        return Number(result) + Number(value)
-      },
-      0
-    )
+    const newVotes = { ...currentVotes, [currentVoteItem.address]: value }
+
+    const totalUserVotes = this._getVoteCountFromList(newVotes)
     const totalVotesRemaining = totalFrozen - totalUserVotes
-    navigation.setParams({
-      disabled: totalVotesRemaining < 0 && totalUserVotes > 0
-    })
+
+    const currentFullVotes = await this._getUserFullVotedList(newVotes)
+
     this.setState({
       currentVotes: newVotes,
+      currentFullVotes,
       totalRemaining: totalVotesRemaining,
-      ...this._resetModalState()
+      totalUserVotes,
+      ...this.resetAddModal
     })
   }
 
   _onSearch = async value => {
     const { voteList } = this.state
+    this.setState({ loadingList: true })
     if (value) {
-      this.setState({ loadingList: true })
       const regex = new RegExp(value, 'i')
       const votesFilter = voteList.filter(vote => vote.url.match(regex))
       this.setState({ voteList: votesFilter, loadingList: false })
     } else {
-      this.setState({ loadingList: true })
-      const { candidates } = await Client.getTotalVotes()
-      this.setState({ voteList: candidates, loadingList: false })
+      const store = await getCandidateStore()
+      const voteList = store.objects('Candidate').map(item => Object.assign({}, item))
+      this.setState({offset: 0}, () => {
+        this.setState({ voteList, loadingList: false })
+      })
     }
   }
 
   _setupVoteModal = item => {
     this.setState({
       modalVisible: true,
-      currentItemUrl: formatUrl(item.url),
-      currentItemAddress: item.address
+      currentVoteItem: item,
+      startedVoting: true
     })
+  }
+
+  _openConfirmModal = () => this.setState({confirmModalVisible: true})
+
+  _closeModal = () => this.setState({ ...this.resetAddModal })
+
+  _closeConfirmModal = () => this.setState({ confirmModalVisible: false })
+
+  _getUserFullVotedList = async (currentVotes) => {
+    // Full Votes means users selected candidates with details, not the complete vote list
+    const store = await getCandidateStore()
+    const fullList = store.objects('Candidate').map(item => Object.assign({}, item))
+
+    const userVotedList = []
+    for (const voteAddress in currentVotes) {
+      const voteCounted = fullList.find(v => v.address === voteAddress)
+      voteCounted.voteCount = currentVotes[voteAddress]
+      userVotedList.push(voteCounted)
+    }
+    return userVotedList
+  }
+
+  _getVoteCountFromList = (list) => list ? reduce(list, (result, value) => (Number(result) + Number(value)), 0) : 0
+
+  _addToVote = num => {
+    const { amountToVote } = this.state
+    this.setState({ amountToVote: amountToVote + num })
+  }
+
+  _acceptCurrentVote = (amountToVote) => {
+    amountToVote <= 0
+      ? this._removeVoteFromList()
+      : this._onChangeVotes(amountToVote)
+  }
+
+  _removeVoteFromList = async (address = null) => {
+    const { currentVotes, currentVoteItem } = this.state
+    const totalFrozen = this.props.context.freeze.value.total
+
+    const voteToRemove = address || currentVoteItem.address
+    delete currentVotes[voteToRemove]
+
+    const newTotalVoteCount = this._getVoteCountFromList(currentVotes)
+    const newCurrentFullVotes = await this._getUserFullVotedList(currentVotes)
+
+    const newRemaining = totalFrozen - newTotalVoteCount
+
+    this.setState({
+      currentVotes,
+      currentFullVotes: newCurrentFullVotes,
+      totalRemaining: newRemaining,
+      totalUserVotes: newTotalVoteCount,
+      ...this.resetAddModal
+    })
+  }
+
+  _clearVotesFromList = () => {
+    const totalFrozen = this.props.context.freeze.value.total
+    this.setState({
+      currentVotes: [],
+      currentFullVotes: [],
+      totalRemaining: totalFrozen,
+      totalUserVotes: 0,
+      ...this.resetAddModal
+    })
+  }
+
+  _renderRow = ({ item, index }) => {
+    const { currentVotes, userVotes, refreshing, loadingList } = this.state
+    return (
+      <VoteItem
+        disabled={refreshing || loadingList}
+        item={item}
+        index={index}
+        openModal={() => this._setupVoteModal(item)}
+        voteCount={currentVotes[item.address]}
+        userVote={userVotes[item.address]}
+      />
+    )
   }
 
   _throwError = (e, type) => {
@@ -260,7 +368,7 @@ class VoteScene extends PureComponent {
     console.log(`${e.name}. ${e.message}`)
     this.setState(
       {
-        [errorType]: "Oops, something didn't load correctly. Try to sync again",
+        [errorType]: "Oops, something didn't load correctly. Try to reload",
         loading: false
       },
       function setErrorParams () {
@@ -272,117 +380,69 @@ class VoteScene extends PureComponent {
     )
   }
 
-  _closeModal = () => {
-    this.setState({
-      ...this._resetModalState()
-    })
-  }
-
-  _resetModalState = () => {
-    return {
-      modalVisible: false,
-      currentItemUrl: null,
-      currentItemAddress: null,
-      currentAmountToVote: ''
-    }
-  }
-
-  _addNumToVote = key => {
-    this.setState(state => {
-      return {
-        currentAmountToVote: `${state.currentAmountToVote}${key}`
-      }
-    })
-  }
-
-  _removeNumFromVote = () => {
-    if (this.state.currentAmountToVote.length > 0) {
-      this.setState(state => {
-        return {
-          currentAmountToVote: state.currentAmountToVote.slice(0, -1)
-        }
-      })
-    }
-  }
-
-  _acceptCurrentVote = () => {
-    this._onChangeVotes(
-      this.state.currentAmountToVote,
-      this.state.currentItemAddress
-    )
-  }
-
-  _renderRow = ({ item, index }) => {
-    const { currentVotes, userVotes } = this.state
-
-    return (
-      <VoteItem
-        item={item}
-        index={index}
-        format={formatNumber}
-        openModal={() => this._setupVoteModal(item)}
-        onChangeVotes={this._onChangeVotes}
-        votes={currentVotes[item.address]}
-        userVote={userVotes[item.address]}
-      />
-    )
-  }
-
   render () {
-    const { totalVotes, totalRemaining, votesError, refreshing, loadingList } = this.state
+    const {
+      totalVotes,
+      totalRemaining,
+      refreshing,
+      loadingList,
+      currentVotes,
+      totalUserVotes,
+      confirmModalVisible,
+      currentFullVotes,
+      voteList,
+      currentVoteItem,
+      startedVoting } = this.state
+
     return (
       <Utils.Container>
-        {totalVotes !== null &&
-          totalRemaining !== null && (
-            <GrowIn name='vote-header' height={63}>
-              <Header>
-                <Utils.View align='center'>
-                  <Utils.Text size='tiny' weight='500' secondary>
+        <GrowIn name='vote-header' height={63}>
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='tiny' weight='500' secondary>
                     TOTAL VOTES
-                  </Utils.Text>
-                  <Utils.VerticalSpacer />
-                  <Utils.Text size='small'>
-                    {formatNumber(totalVotes)}
-                  </Utils.Text>
-                </Utils.View>
-                <Utils.View align='center'>
-                  <Utils.Text size='tiny' weight='500' secondary>
+              </Utils.Text>
+              <Utils.VerticalSpacer />
+              <Utils.Text size='small'>
+                {formatNumber(totalVotes)}
+              </Utils.Text>
+            </Utils.View>
+            <Utils.View align='center'>
+              <Utils.Text size='tiny' weight='500' secondary>
                     VOTES AVAILABLE
-                  </Utils.Text>
-                  <Utils.VerticalSpacer />
-                  <Utils.Text
-                    size='small'
-                    style={{
-                      color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}`
-                    }}
-                  >
-                    {formatNumber(totalRemaining)}
-                  </Utils.Text>
-                </Utils.View>
-              </Header>
-            </GrowIn>
-          )}
-        {votesError.length > 0 && (
-          <FadeIn name='error'>
-            <Utils.Text align='center' marginY={20}>
-              {votesError}
-            </Utils.Text>
-          </FadeIn>
-        )}
+              </Utils.Text>
+              <Utils.VerticalSpacer />
+              <Utils.Text
+                size='small'
+                style={{color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}`}}
+              >
+                {formatNumber(totalRemaining)}
+              </Utils.Text>
+            </Utils.View>
+          </Header>
+        </GrowIn>
         {this.state.modalVisible && (
-          <VoteModal
-            addNumToVote={this._addNumToVote}
-            removeNumFromVote={this._removeNumFromVote}
+          <AddVotesModal
             acceptCurrentVote={this._acceptCurrentVote}
             closeModal={this._closeModal}
-            candidateUrl={this.state.currentItemUrl}
-            currVoteAmount={this.state.currentAmountToVote}
+            currentVoteItem={currentVoteItem}
+            amountToVote={this.state.amountToVote}
             modalVisible={this.state.modalVisible}
-            totalRemaining={this.state.totalRemaining}
-            navigation={this.props.navigation}
+            totalRemaining={this.state.totalRemaining || 0}
+            currentVoteCount={currentVotes[currentVoteItem.address] || 0}
           />
         )}
-        <Utils.View paddingX={'small'} paddingY={'small'}>
+        {this.state.confirmModalVisible && (
+          <ConfirmModal
+            closeModal={this._closeConfirmModal}
+            modalVisible={confirmModalVisible}
+            currentFullVotes={currentFullVotes}
+            submitVotes={this._submit}
+            removeVote={this._removeVoteFromList}
+            clearVotes={this._clearVotesFromList}
+          />
+        )}
+        <Utils.View paddingX={'large'} paddingY={'small'}>
           <Utils.FormInput
             autoCapitalize='none'
             autoCorrect={false}
@@ -394,20 +454,24 @@ class VoteScene extends PureComponent {
             marginTop={0}
           />
         </Utils.View>
-        <Utils.View>
-          <FadeIn name='candidates'>
-            <FlatList
-              keyExtractor={item => item.address}
-              data={this.state.voteList}
-              renderItem={this._renderRow}
-              onEndReachedThreshold={0.5}
-              onEndReached={this._loadMoreCandidates}
-              onRefresh={this._refreshCandidates}
-              refreshing={refreshing || loadingList}
-              removeClippedSubviews
-            />
-          </FadeIn>
-        </Utils.View>
+        {(loadingList || refreshing) &&
+        <GrowIn name='loading'>
+          <ActivityIndicator size='small' color={Colors.primaryText} />
+        </GrowIn>
+        }
+        <FadeIn name='candidates'>
+          <FlatList
+            keyExtractor={item => item.address + item.url}
+            extraData={[totalUserVotes, currentFullVotes]}
+            data={voteList}
+            renderItem={this._renderRow}
+            onEndReachedThreshold={0.5}
+            onEndReached={this._loadMoreCandidates}
+            refreshing={refreshing || loadingList}
+            removeClippedSubviews
+          />
+        </FadeIn>
+        {(totalUserVotes > 0 && startedVoting) && <ConfirmVotes onPress={this._openConfirmModal} voteCount={currentFullVotes.length} />}
       </Utils.Container>
     )
   }

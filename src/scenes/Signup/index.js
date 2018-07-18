@@ -8,7 +8,6 @@ import { Auth } from 'aws-amplify'
 import * as Utils from '../../components/Utils'
 import Input from '../../components/Input'
 import ButtonGradient from '../../components/ButtonGradient'
-import Logo from '../../components/Logo'
 import KeyboardScreen from '../../components/KeyboardScreen'
 
 class SignupScene extends Component {
@@ -101,17 +100,11 @@ class SignupScene extends Component {
           keyboardShouldPersistTaps={'always'}
           keyboardDismissMode='interactive'
         >
-          <Utils.Content justify='center' align='center'>
-            <Utils.VerticalSpacer size='medium' />
-            <Logo />
-            <Utils.VerticalSpacer size='small' />
-          </Utils.Content>
           <Utils.FormGroup>
             <Input
               innerRef={(input) => { this.username = input }}
               label='USERNAME'
               keyboardType='email-address'
-              placeholder='John Doe'
               value={username}
               onChangeText={text => this.changeInput(text, 'username')}
               onSubmitEditing={() => this._nextInput('username')}
@@ -122,7 +115,6 @@ class SignupScene extends Component {
               innerRef={(input) => { this.email = input }}
               label='EMAIL'
               keyboardType='email-address'
-              placeholder='johndoe@yourdomain.com'
               value={email}
               onChangeText={text => this.changeInput(text, 'email')}
               onSubmitEditing={() => this._nextInput('email')}
@@ -133,7 +125,6 @@ class SignupScene extends Component {
               innerRef={(input) => { this.password = input }}
               label='PASSWORD'
               secureTextEntry
-              placeholder='.........'
               letterSpacing={4}
               value={password}
               onChangeText={text => this.changeInput(text, 'password')}

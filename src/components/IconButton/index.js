@@ -6,7 +6,7 @@ const Wrapper = styled.TouchableOpacity`
   height: 36px;
   width: 36px;
   border-radius: 4px;
-  background-color: #2E2F47;
+  background-color: ${props => props.bg};
   align-items: center;
   justify-content: center;
   elevation: 2;
@@ -16,14 +16,19 @@ const Wrapper = styled.TouchableOpacity`
   shadow-opacity: 0.5;
 `
 
-const IconButton = ({ icon, ...props }) => (
+const IconButton = ({ icon, iconColor, ...props }) => (
   <Wrapper {...props}>
     <Ionicons
       name={icon}
       size={16}
-      color='#9C9EB9'
+      color={iconColor}
     />
   </Wrapper>
 )
+
+IconButton.defaultProps = {
+  bg: '#2E2F47',
+  iconColor: '#9C9EB9'
+}
 
 export default IconButton

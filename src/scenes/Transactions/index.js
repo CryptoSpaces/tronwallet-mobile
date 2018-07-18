@@ -11,8 +11,10 @@ import { Spacing, Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
 import TransferCard from './Transfer'
 import ParticipateCard from './Participate'
+import CreateCard from './Create'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
+import UnfreezeCard from './Unfreeze'
 import Default from './Default'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -67,6 +69,7 @@ class TransactionsScene extends Component {
           const transaction = {
             id: item.hash,
             type: item.type,
+            block: item.block,
             contractData: item.contractData,
             ownerAddress: item.ownerAddress,
             timestamp: item.timestamp,
@@ -79,6 +82,19 @@ class TransactionsScene extends Component {
               transferToAddress: item.transferToAddress,
               amount: item.amount,
               tokenName: item.tokenName
+            }
+          }
+          if (item.type === 'Create') {
+            transaction.contractData = {
+              ...transaction.contractData,
+              tokenName: item.contractData.name,
+              unityValue: item.contractData.trxNum
+            }
+          }
+          if (item.type === 'Participate') {
+            transaction.contractData = {
+              ...transaction.contractData,
+              transferFromAddress: item.contractData.toAddress
             }
           }
           store.create('Transaction', transaction, true)
@@ -94,18 +110,26 @@ class TransactionsScene extends Component {
     }
   }
 
+  _navigateToDetails = (item) => {
+    this.props.navigation.navigate('TransactionDetails', { item })
+  }
+
   renderCard = item => {
     switch (item.type) {
       case 'Transfer':
-        return <TransferCard item={item} />
+        return <TransferCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Freeze':
-        return <FreezeCard item={item} />
+        return <FreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
+      case 'Unfreeze':
+        return <UnfreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Vote':
-        return <VoteCard item={item} />
+        return <VoteCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Participate':
-        return <ParticipateCard item={item} />
+        return <ParticipateCard item={item} onPress={() => this._navigateToDetails(item)} />
+      case 'Create':
+        return <CreateCard item={item} onPress={() => this._navigateToDetails(item)} />
       default:
-        return <Default item={item} />
+        return <Default item={item} onPress={() => this._navigateToDetails(item)} />
     }
   }
 
