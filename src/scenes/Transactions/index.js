@@ -11,6 +11,7 @@ import { Spacing, Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
 import TransferCard from './Transfer'
 import ParticipateCard from './Participate'
+import CreateCard from './Create'
 import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import Default from './Default'
@@ -116,6 +117,8 @@ class TransactionsScene extends Component {
         return <VoteCard item={item} onPress={() => this._navigateToDetails(item)} />
       case 'Participate':
         return <ParticipateCard item={item} onPress={() => this._navigateToDetails(item)} />
+      case 'Create':
+        return <CreateCard item={item} onPress={() => this._navigateToDetails(item)} />
       default:
         return <Default item={item} onPress={() => this._navigateToDetails(item)} />
     }
