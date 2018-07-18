@@ -91,6 +91,12 @@ class TransactionsScene extends Component {
               unityValue: item.contractData.trxNum
             }
           }
+          if (item.type === 'Participate') {
+            transaction.contractData = {
+              ...transaction.contractData,
+              transferFromAddress: item.contractData.toAddress
+            }
+          }
           store.create('Transaction', transaction, true)
         })
       )
