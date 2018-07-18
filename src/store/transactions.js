@@ -16,7 +16,12 @@ const ContractDataSchema = {
     transferFromAddress: 'string?',
     transferToAddress: 'string?',
     tokenName: 'string?',
-    votes: 'Vote[]'
+    votes: 'Vote[]',
+    description: 'string?',
+    startTime: 'int?',
+    endTime: 'int?',
+    totalSupply: 'int?',
+    unityValue: 'int?'
   }
 }
 
@@ -27,6 +32,7 @@ const TransactionSchema = {
     id: 'string',
     timestamp: 'int',
     type: 'string',
+    block: 'int?',
     ownerAddress: 'string',
     contractData: 'ContractData',
     confirmed: 'bool?'
@@ -37,5 +43,5 @@ export default async () =>
   Realm.open({
     path: 'Realm.transactions',
     schema: [TransactionSchema, ContractDataSchema, VoteSchema],
-    schemaVersion: 10
+    schemaVersion: 13
   })
