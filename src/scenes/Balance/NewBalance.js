@@ -4,10 +4,11 @@ import axios from 'axios'
 import Config from 'react-native-config'
 import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
-import { Context } from '../../store/context'
+import withContext from '../../utils/hocs/withContext'
 
 import WalletBalances from './WalletBalances'
 import BalanceNavigation from './BalanceNavigation'
+import NavigationHeader from '../../components/Navigation/Header'
 import TrxValue from './TrxValue'
 import TrxInfo from './TrxInfo'
 import LineChart from './TrxLineChart'
@@ -17,6 +18,12 @@ const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
 const POOLING_TIME = 30000
 
 class BalanceScene extends Component {
+  static navigationOptions = () => {
+    return {
+      header: <NavigationHeader title='BALANCE' />
+    }
+  }
+
   state = {
     loading: false,
     error: null,
@@ -104,14 +111,14 @@ class BalanceScene extends Component {
             />
           }
         >
-          <TrxValue trxBalance={trxBalance} />
+          <TrxValue trxBalance={trxBalance} currency='USD' />
           <Utils.VerticalSpacer size='medium' />
           {!!trxHistory.length && (
             <LineChart chartHistory={trxHistory} />
           )}
           <Utils.VerticalSpacer size='medium' />
           <TrxInfo />
-          <BalanceNavigation />
+          <BalanceNavigation navigation={this.props.navigation} />
           <WalletBalances balances={balances} />
         </ScrollView>
       </Utils.Container>
@@ -119,8 +126,4 @@ class BalanceScene extends Component {
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <BalanceScene context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(BalanceScene)
