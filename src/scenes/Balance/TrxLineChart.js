@@ -7,7 +7,7 @@ import * as Utils from '../../components/Utils'
 import GrowIn from '../../components/Animations/GrowIn'
 
 const TrxLineChart = ({height, chartHistory}) => (
-  <Utils.View paddingX='medium'>
+  <Utils.View paddingX='big'>
     <GrowIn name='linechart' height={height}>
       <LineChart
         style={{ height }}
