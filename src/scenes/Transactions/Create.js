@@ -1,14 +1,11 @@
 import React from 'react'
 import moment from 'moment'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Feather from 'react-native-vector-icons/Feather'
 import { tint } from 'polished'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
-import { ONE_TRX } from '../../services/client'
 
-// const formatAmount = value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-
-export default ({ item, onPress }) => {
+const TransferItem = ({ item, onPress }) => {
   const statusColor = item.confirmed ? 'green' : Colors.orange
   const statusText = item.confirmed ? 'Confirmed' : 'Unconfirmed'
 
@@ -16,7 +13,7 @@ export default ({ item, onPress }) => {
     <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
         <Utils.Row>
-          <Utils.Tag marginRight={10} color={tint(0.9, '#38b8f3')}>
+          <Utils.Tag marginRight={10} color={tint(0.9, '#94C047')}>
             <Utils.Text size='xsmall'>{item.type}</Utils.Text>
           </Utils.Tag>
           <Utils.Tag color={tint(0.9, statusColor)}>
@@ -25,14 +22,18 @@ export default ({ item, onPress }) => {
         </Utils.Row>
         <Utils.View>
           <Utils.Text size='small'>
-            {item.contractData.frozenBalance / ONE_TRX} TRX{' '}
-            <Ionicons name='ios-lock' size={20} color='#ffffff' />
+            <Feather name='trending-up' size={20} color='#ffffff' />
           </Utils.Text>
+          <Utils.VerticalSpacer size='xsmall' />
         </Utils.View>
       </Utils.Row>
-      <Utils.VerticalSpacer size='xsmall' />
       <Utils.Row>
         <Utils.View>
+          <Utils.VerticalSpacer size='small' />
+          <Utils.Text size='xsmall'>
+            Token: {item.contractData.tokenName}
+          </Utils.Text>
+          <Utils.VerticalSpacer size='xsmall' />
           <Utils.Text size='xsmall' secondary>
             {moment(item.timestamp).fromNow()}
           </Utils.Text>
@@ -41,3 +42,5 @@ export default ({ item, onPress }) => {
     </Utils.TransactionCard>
   )
 }
+
+export default TransferItem

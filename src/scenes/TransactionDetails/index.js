@@ -1,10 +1,11 @@
 import React from 'react'
 import moment from 'moment'
 import { ScrollView, TouchableOpacity, Clipboard } from 'react-native'
-import { string, number, bool, shape } from 'prop-types'
+import { string, number, bool, shape, array } from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Toast from 'react-native-easy-toast'
+import LinearGradient from 'react-native-linear-gradient'
 
 import IconButton from '../../components/IconButton'
 import Badge from '../../components/Badge'
@@ -46,7 +47,13 @@ class TransactionDetails extends React.Component {
             transferFromAddress: string,
             transferToAddress: string,
             amount: number,
-            frozenBalance: number
+            frozenBalance: number,
+            description: string,
+            startTime: number,
+            endTime: number,
+            totalSupply: number,
+            unityValue: number,
+            votes: array
           })
         })
       })
@@ -68,48 +75,51 @@ class TransactionDetails extends React.Component {
 
     return (
       <Utils.View
-        background={Colors.secondaryText}
         borderRadius={10}
         marginRight={25}
         marginLeft={25}
         borderTopWidth={10}
         borderTopColor={confirmed ? Colors.green : Colors.orange}
       >
-        <Utils.Content>
-          <Elements.CardLabel>HASH</Elements.CardLabel>
-          <Utils.VerticalSpacer />
-          <Utils.Row align='center'>
+        <LinearGradient
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          colors={[Colors.secondaryText, Colors.lighterBackground]}
+        >
+          <Utils.Content>
+            <Utils.Row align='center' justify='space-between'>
+              <Elements.CardLabel>HASH</Elements.CardLabel>
+              <Utils.View>
+                <IconButton icon='md-clipboard' bg={Colors.summaryText} iconColor='#FFFFFF' onPress={() => this._copy()} />
+              </Utils.View>
+            </Utils.Row>
             <Utils.View flex={1}>
               <Elements.CardText>{id}</Elements.CardText>
             </Utils.View>
-            <Utils.HorizontalSpacer size='big' />
-            <Utils.View>
-              <IconButton icon='md-clipboard' bg={Colors.summaryText} iconColor='#FFFFFF' onPress={() => this._copy()} />
-            </Utils.View>
-          </Utils.Row>
-        </Utils.Content>
-        <Utils.View height={1} marginLeftPercent={5} width='90%' background='black' />
-        <Utils.Content>
-          <Utils.Row>
-            <Utils.View>
-              <Elements.CardLabel>STATUS</Elements.CardLabel>
-              <Utils.VerticalSpacer />
-              <Elements.CardText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.CardText>
-            </Utils.View>
-            <Utils.View flex={1} />
-            <Utils.View>
-              <Elements.CardLabel>BLOCK</Elements.CardLabel>
-              <Utils.VerticalSpacer />
-              <Elements.CardText>{block}</Elements.CardText>
-            </Utils.View>
-            <Utils.View flex={1} />
-            <Utils.View>
-              <Elements.CardLabel>TIME</Elements.CardLabel>
-              <Utils.VerticalSpacer />
-              <Elements.CardText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.CardText>
-            </Utils.View>
-          </Utils.Row>
-        </Utils.Content>
+          </Utils.Content>
+          <Utils.View height={1} marginLeftPercent={5} width='90%' background='black' />
+          <Utils.Content>
+            <Utils.Row>
+              <Utils.View>
+                <Elements.CardLabel>STATUS</Elements.CardLabel>
+                <Utils.VerticalSpacer />
+                <Elements.CardText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.CardText>
+              </Utils.View>
+              <Utils.View flex={1} />
+              <Utils.View>
+                <Elements.CardLabel>BLOCK</Elements.CardLabel>
+                <Utils.VerticalSpacer />
+                <Elements.CardText>{block}</Elements.CardText>
+              </Utils.View>
+              <Utils.View flex={1} />
+              <Utils.View>
+                <Elements.CardLabel>TIME</Elements.CardLabel>
+                <Utils.VerticalSpacer />
+                <Elements.CardText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.CardText>
+              </Utils.View>
+            </Utils.Row>
+          </Utils.Content>
+        </LinearGradient>
       </Utils.View>
     )
   }
@@ -134,7 +144,25 @@ class TransactionDetails extends React.Component {
   _getHeaderArrowIcon = (type) => {
     const lowerType = type.toLowerCase()
 
-    if (lowerType === 'freeze' || lowerType === 'participate') {
+    if (lowerType === 'unfreeze') {
+      return (
+        <Ionicons
+          name='ios-unlock'
+          size={45}
+          color='#ffffff'
+        />
+      )
+    }
+    if (lowerType === 'freeze') {
+      return (
+        <Ionicons
+          name='ios-lock'
+          size={45}
+          color='#ffffff'
+        />
+      )
+    }
+    if (lowerType === 'participate') {
       return (
         <Ionicons
           name='ios-arrow-round-up'
@@ -155,14 +183,46 @@ class TransactionDetails extends React.Component {
     return null
   }
 
+  _getHeaderToken = (type, tokenName) => {
+    if (type.toLowerCase() === 'vote') return 'TP'
+    if (tokenName) return tokenName
+    return 'TRX'
+  }
+
+  _getHeaderAmountText = (type) => {
+    switch (type.toLowerCase()) {
+      case 'freeze':
+        return 'FROZEN BALANCE'
+      case 'unfreeze':
+        return 'UNFROZEN BALANCE'
+      case 'vote':
+        return 'TOTAL VOTES'
+      default:
+        return 'AMOUNT'
+    }
+  }
+
+  _getHeaderAmount = () => {
+    const { type, contractData: { amount, frozenBalance, votes } } = this.props.navigation.state.params.item
+
+    switch (type.toLowerCase()) {
+      case 'freeze':
+        return frozenBalance
+      case 'unfreeze':
+        return frozenBalance
+      case 'vote':
+        return votes.length
+      default:
+        return amount
+    }
+  }
+
   _renderHeader = () => {
-    const { type, contractData: { amount, frozenBalance, tokenName } } = this.props.navigation.state.params.item
+    const { type, contractData: { tokenName } } = this.props.navigation.state.params.item
 
-    const tokenToDisplay = tokenName || 'TRX'
-
-    const lowerType = type.toLowerCase()
-    const amountText = lowerType === 'freeze' || lowerType === 'unfreeze' ? 'FROZEN BALANCE' : 'AMOUNT'
-    const amountValue = amountText === 'FROZEN BALANCE' ? frozenBalance : amount
+    const tokenToDisplay = this._getHeaderToken(type, tokenName)
+    const amountText = this._getHeaderAmountText(type)
+    const amountValue = this._getHeaderAmount()
     const convertedAmount = tokenToDisplay === 'TRX' ? amountValue / ONE_TRX : amountValue
 
     return (
@@ -171,7 +231,7 @@ class TransactionDetails extends React.Component {
           <Elements.BadgeText>{type.toUpperCase()}</Elements.BadgeText>
         </Badge>
         <Utils.VerticalSpacer size='medium' />
-        {type !== 'create' &&
+        {type.toLowerCase() !== 'create' &&
           <React.Fragment>
             <Elements.CardLabel>{amountText}</Elements.CardLabel>
             <Utils.VerticalSpacer />
@@ -224,37 +284,41 @@ class TransactionDetails extends React.Component {
   }
 
   _renderCreateBody = () => {
+    const {
+      tokenName, unityValue, totalSupply, startTime, endTime, description
+    } = this.props.navigation.state.params.item.contractData
+
     return (
       <Utils.Content>
         <Utils.Row>
           <Utils.Column>
             <Elements.Label>TOKEN NAME</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.TokenText>HTX</Elements.TokenText>
+            <Elements.TokenText>{tokenName}</Elements.TokenText>
           </Utils.Column>
           <Utils.Column position='absolute' left='50%'>
             <Elements.Label>UNITY VALUE</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.TokenText>0.02 TRX</Elements.TokenText>
+            <Elements.TokenText>{(unityValue / ONE_TRX).toFixed(2)} TRX</Elements.TokenText>
           </Utils.Column>
         </Utils.Row>
         <Utils.VerticalSpacer size='big' />
         <Utils.Column>
           <Elements.Label>TOTAL SUPPLY</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
-          <Elements.AmountText>3,000,000</Elements.AmountText>
+          <Elements.AmountText>{totalSupply}</Elements.AmountText>
         </Utils.Column>
         <Utils.VerticalSpacer size='big' />
         <Utils.Row>
           <Utils.Column>
             <Elements.Label>START TIME</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+            <Elements.DescriptionText>{moment(startTime).format('DD/MM/YYYY hh:mm A')}</Elements.DescriptionText>
           </Utils.Column>
           <Utils.Column position='absolute' left='50%'>
             <Elements.Label>END TIME</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+            <Elements.DescriptionText>{moment(endTime).format('DD/MM/YYYY hh:mm A')}</Elements.DescriptionText>
           </Utils.Column>
         </Utils.Row>
         <Utils.VerticalSpacer size='big' />
@@ -262,9 +326,7 @@ class TransactionDetails extends React.Component {
           <Elements.Label>DESCRIPTION</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
           <Elements.DescriptionText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consequat scelerisque arcu,
-            vel lobortis sapien vestibulum et. Mauris sagittis lobortis tempus. Ut fermentum sem erat,
-            at ultrices tellus pharetra in.
+            {description}
           </Elements.DescriptionText>
         </Utils.Column>
       </Utils.Content>

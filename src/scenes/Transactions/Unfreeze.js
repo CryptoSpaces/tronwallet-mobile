@@ -16,7 +16,7 @@ export default ({ item, onPress }) => {
     <Utils.TransactionCard onPress={onPress}>
       <Utils.Row align='center' justify='space-between'>
         <Utils.Row>
-          <Utils.Tag marginRight={10} color={tint(0.9, '#38b8f3')}>
+          <Utils.Tag marginRight={10} color={tint(0.9, 'teal')}>
             <Utils.Text size='xsmall'>{item.type}</Utils.Text>
           </Utils.Tag>
           <Utils.Tag color={tint(0.9, statusColor)}>
@@ -26,7 +26,7 @@ export default ({ item, onPress }) => {
         <Utils.View>
           <Utils.Text size='small'>
             {item.contractData.frozenBalance / ONE_TRX} TRX{' '}
-            <Ionicons name='ios-lock' size={20} color='#ffffff' />
+            <Ionicons name='ios-unlock' size={20} color='#ffffff' />
           </Utils.Text>
         </Utils.View>
       </Utils.Row>
