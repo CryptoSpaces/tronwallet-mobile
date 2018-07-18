@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import { ScrollView, TouchableOpacity, Clipboard } from 'react-native'
-import { string, number, bool, shape } from 'prop-types'
+import { string, number, bool, shape, array } from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Toast from 'react-native-easy-toast'
@@ -51,7 +51,8 @@ class TransactionDetails extends React.Component {
             startTime: number,
             endTime: number,
             totalSupply: number,
-            unityValue: number
+            unityValue: number,
+            votes: array
           })
         })
       })
@@ -159,14 +160,46 @@ class TransactionDetails extends React.Component {
     return null
   }
 
+  _getHeaderToken = (type, tokenName) => {
+    if (type.toLowerCase() === 'vote') return 'TP'
+    if (tokenName) return tokenName
+    return 'TRX'
+  }
+
+  _getHeaderAmountText = (type) => {
+    switch (type.toLowerCase()) {
+      case 'freeze':
+        return 'FROZEN BALANCE'
+      case 'unfreeze':
+        return 'UNFROZEN BALANCE'
+      case 'vote':
+        return 'TOTAL VOTES'
+      default:
+        return 'AMOUNT'
+    }
+  }
+
+  _getHeaderAmount = () => {
+    const { type, contractData: { amount, frozenBalance, votes } } = this.props.navigation.state.params.item
+
+    switch (type.toLowerCase()) {
+      case 'freeze':
+        return frozenBalance
+      case 'unfreeze':
+        return frozenBalance
+      case 'vote':
+        return votes.length
+      default:
+        return amount
+    }
+  }
+
   _renderHeader = () => {
-    const { type, contractData: { amount, frozenBalance, tokenName } } = this.props.navigation.state.params.item
+    const { type, contractData: { tokenName } } = this.props.navigation.state.params.item
 
-    const tokenToDisplay = tokenName || 'TRX'
-
-    const lowerType = type.toLowerCase()
-    const amountText = lowerType === 'freeze' || lowerType === 'unfreeze' ? 'FROZEN BALANCE' : 'AMOUNT'
-    const amountValue = amountText === 'FROZEN BALANCE' ? frozenBalance : amount
+    const tokenToDisplay = this._getHeaderToken(type, tokenName)
+    const amountText = this._getHeaderAmountText(type)
+    const amountValue = this._getHeaderAmount()
     const convertedAmount = tokenToDisplay === 'TRX' ? amountValue / ONE_TRX : amountValue
 
     return (
@@ -175,7 +208,7 @@ class TransactionDetails extends React.Component {
           <Elements.BadgeText>{type.toUpperCase()}</Elements.BadgeText>
         </Badge>
         <Utils.VerticalSpacer size='medium' />
-        {lowerType !== 'create' &&
+        {type.toLowerCase() !== 'create' &&
           <React.Fragment>
             <Elements.CardLabel>{amountText}</Elements.CardLabel>
             <Utils.VerticalSpacer />
