@@ -105,13 +105,12 @@ const VoteStack = createStackNavigator(
 
 const BalanceStack = createStackNavigator(
   {
-    BalanceScene
+    BalanceScene,
+    ReceiveScene,
+    TransferScene
   },
   {
-    initialRouteName: 'BalanceScene',
-    navigationOptions: ({ navigation }) => ({
-      header: <NavigationHeader title='BALANCE' />
-    })
+    initialRouteName: 'BalanceScene'
   }
 )
 
