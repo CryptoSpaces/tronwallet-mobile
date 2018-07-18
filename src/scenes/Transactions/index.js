@@ -6,7 +6,6 @@ import {
   ActivityIndicator
 } from 'react-native'
 
-import getAssetsStore from '../../store/assets'
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import Client from '../../services/client'
@@ -68,6 +67,7 @@ class TransactionsScene extends Component {
           const transaction = {
             id: item.hash,
             type: item.type,
+            block: item.block,
             contractData: item.contractData,
             ownerAddress: item.ownerAddress,
             timestamp: item.timestamp,
@@ -80,6 +80,13 @@ class TransactionsScene extends Component {
               transferToAddress: item.transferToAddress,
               amount: item.amount,
               tokenName: item.tokenName
+            }
+          }
+          if (item.type === 'Create') {
+            transaction.contractData = {
+              ...transaction.contractData,
+              tokenName: item.contractData.name,
+              unityValue: item.contractData.trxNum
             }
           }
           store.create('Transaction', transaction, true)
@@ -95,17 +102,7 @@ class TransactionsScene extends Component {
     }
   }
 
-  _navigateToDetails = async (pressedItem) => {
-    const store = await getAssetsStore()
-    const filteredItem = await store
-      .objects('Asset')
-      .filtered(`name == "${pressedItem.contractData.tokenName}"`)
-
-    const item = {
-      ...pressedItem,
-      block: filteredItem.length ? filteredItem[0].block : 'NONE'
-    }
-
+  _navigateToDetails = (item) => {
     this.props.navigation.navigate('TransactionDetails', { item })
   }
 

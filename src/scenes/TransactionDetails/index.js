@@ -46,7 +46,12 @@ class TransactionDetails extends React.Component {
             transferFromAddress: string,
             transferToAddress: string,
             amount: number,
-            frozenBalance: number
+            frozenBalance: number,
+            description: string,
+            startTime: number,
+            endTime: number,
+            totalSupply: number,
+            unityValue: number
           })
         })
       })
@@ -171,7 +176,7 @@ class TransactionDetails extends React.Component {
           <Elements.BadgeText>{type.toUpperCase()}</Elements.BadgeText>
         </Badge>
         <Utils.VerticalSpacer size='medium' />
-        {type !== 'create' &&
+        {lowerType !== 'create' &&
           <React.Fragment>
             <Elements.CardLabel>{amountText}</Elements.CardLabel>
             <Utils.VerticalSpacer />
@@ -224,37 +229,41 @@ class TransactionDetails extends React.Component {
   }
 
   _renderCreateBody = () => {
+    const {
+      tokenName, unityValue, totalSupply, startTime, endTime, description
+    } = this.props.navigation.state.params.item.contractData
+
     return (
       <Utils.Content>
         <Utils.Row>
           <Utils.Column>
             <Elements.Label>TOKEN NAME</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.TokenText>HTX</Elements.TokenText>
+            <Elements.TokenText>{tokenName}</Elements.TokenText>
           </Utils.Column>
           <Utils.Column position='absolute' left='50%'>
             <Elements.Label>UNITY VALUE</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.TokenText>0.02 TRX</Elements.TokenText>
+            <Elements.TokenText>{(unityValue / ONE_TRX).toFixed(2)} TRX</Elements.TokenText>
           </Utils.Column>
         </Utils.Row>
         <Utils.VerticalSpacer size='big' />
         <Utils.Column>
           <Elements.Label>TOTAL SUPPLY</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
-          <Elements.AmountText>3,000,000</Elements.AmountText>
+          <Elements.AmountText>{totalSupply}</Elements.AmountText>
         </Utils.Column>
         <Utils.VerticalSpacer size='big' />
         <Utils.Row>
           <Utils.Column>
             <Elements.Label>START TIME</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+            <Elements.DescriptionText>{moment(startTime).format('DD/MM/YYYY hh:mm A')}</Elements.DescriptionText>
           </Utils.Column>
           <Utils.Column position='absolute' left='50%'>
             <Elements.Label>END TIME</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
-            <Elements.DescriptionText>07/06/2018 2:00PM</Elements.DescriptionText>
+            <Elements.DescriptionText>{moment(endTime).format('DD/MM/YYYY hh:mm A')}</Elements.DescriptionText>
           </Utils.Column>
         </Utils.Row>
         <Utils.VerticalSpacer size='big' />
@@ -262,9 +271,7 @@ class TransactionDetails extends React.Component {
           <Elements.Label>DESCRIPTION</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
           <Elements.DescriptionText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consequat scelerisque arcu,
-            vel lobortis sapien vestibulum et. Mauris sagittis lobortis tempus. Ut fermentum sem erat,
-            at ultrices tellus pharetra in.
+            {description}
           </Elements.DescriptionText>
         </Utils.Column>
       </Utils.Content>
