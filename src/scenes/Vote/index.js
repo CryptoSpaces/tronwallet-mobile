@@ -301,7 +301,7 @@ class VoteScene extends PureComponent {
     })
   }
 
-  _openConfirmModal = () => this.setState({confirmModalVisible: true})
+  _openConfirmModal = () => this.setState({ confirmModalVisible: true })
 
   _closeModal = () => this.setState({ ...this.resetAddModal })
 
