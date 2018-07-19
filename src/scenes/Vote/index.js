@@ -172,7 +172,10 @@ class VoteScene extends PureComponent {
 
   _loadUserData = async () => {
     try {
-      const [userVotes, userFrozen] = await Promise.all([WalletClient.getUserVotes(), WalletClient.getFreeze()])
+      const [userVotes, userFrozen] = await Promise.all([
+        WalletClient.getUserVotes(this.props.context.pin),
+        WalletClient.getFreeze(this.props.context.pin)
+      ])
       const { total: totalFrozen } = userFrozen
 
       if (userVotes) {
@@ -230,7 +233,7 @@ class VoteScene extends PureComponent {
 
   _openTransactionDetails = async transactionUnsigned => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned)
+      const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
       this.setState({ loadingSign: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
