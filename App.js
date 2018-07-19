@@ -81,8 +81,8 @@ const AppTabs = createBottomTabNavigator({
     screen: VoteScene,
     path: 'vote'
   },
-  Transactions: TransactionList,
   Balance: BalanceStack,
+  Transactions: TransactionList,
   Settings: SettingsStack
 }, {
   navigationOptions: ({ navigation }) => ({
