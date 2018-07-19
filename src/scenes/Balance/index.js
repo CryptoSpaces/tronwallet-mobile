@@ -17,7 +17,6 @@ import LineChart from './TrxLineChart'
 import * as Utils from '../../components/Utils'
 
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
-const POOLING_TIME = 30000
 
 class BalanceScene extends Component {
   static navigationOptions = () => {
@@ -27,7 +26,7 @@ class BalanceScene extends Component {
   }
 
   state = {
-    loading: false,
+    refreshing: false,
     error: null,
     seedConfirmed: true,
     seed: [],
@@ -46,7 +45,6 @@ class BalanceScene extends Component {
       'didFocus',
       this._loadData
     )
-    this._dataListener = setInterval(this._loadData, POOLING_TIME)
   }
 
   componentWillUnmount () {
@@ -61,7 +59,6 @@ class BalanceScene extends Component {
   }
 
   _loadData = async () => {
-    this.setState({loading: true})
     try {
       const { updateWalletData } = this.props.context
 
@@ -87,8 +84,6 @@ class BalanceScene extends Component {
       })
     } catch (e) {
       this.setState({ error: e.message })
-    } finally {
-      this.setState({ loading: false })
     }
   }
 
@@ -116,7 +111,7 @@ class BalanceScene extends Component {
         <ScrollView
           refreshControl={
             <RefreshControl
-              refreshing={this.state.loading}
+              refreshing={this.state.refreshing}
               onRefresh={this._onRefresh}
             />
           }
