@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { ImageBackground } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { StackActions, NavigationActions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
@@ -11,11 +11,7 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 class RewardsScreen extends PureComponent {
   _navigateHome = () => {
     const { navigation } = this.props
-    const navigateToHome = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'App' })],
-      key: null
-    })
+    const navigateToHome = NavigationActions.navigate({ routeName: 'App' })
     navigation.dispatch(navigateToHome)
   }
 

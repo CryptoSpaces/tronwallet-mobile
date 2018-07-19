@@ -5,6 +5,7 @@ import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 import NavigationHeader from '../../components/Navigation/Header'
 
+import { withContext } from '../../store/context'
 import { createUserKeyPair } from '../../utils/secretsUtils'
 
 class RestoreOrCreateSeed extends React.Component {
@@ -24,7 +25,7 @@ class RestoreOrCreateSeed extends React.Component {
 
   _newWallet = async () => {
     this.setState({ loading: true })
-    await createUserKeyPair()
+    await createUserKeyPair(this.props.context.pin)
     this.setState({ loading: false })
     this.props.navigation.navigate('SeedCreate')
   }
@@ -64,4 +65,4 @@ class RestoreOrCreateSeed extends React.Component {
   }
 }
 
-export default RestoreOrCreateSeed
+export default withContext(RestoreOrCreateSeed)

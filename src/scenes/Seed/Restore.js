@@ -1,13 +1,13 @@
 import React from 'react'
 import { Alert, Keyboard } from 'react-native'
-import { StackActions, NavigationActions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import { recoverUserKeypair } from '../../utils/secretsUtils'
-import { Context } from '../../store/context'
-import NavigationHeader from '../../components/Navigation/Header'
+import { withContext } from '../../store/context'
 
 class Restore extends React.Component {
   state = {
@@ -16,11 +16,7 @@ class Restore extends React.Component {
   }
 
   _navigateToSettings = () => {
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'App' })],
-      key: null
-    })
+    const resetAction = NavigationActions.navigate({ routeName: 'App' })
     this.props.navigation.dispatch(resetAction)
   }
 
@@ -30,7 +26,7 @@ class Restore extends React.Component {
       'Restore seed will erase all data on this device and pull information from the network for the restored account.',
       [
         { text: 'Cancel' },
-        { text: 'OK', onPress: () => this._restoreWallet() }
+        { text: 'OK', onPress: this._restoreWallet }
       ],
       { cancelable: false }
     )
@@ -43,12 +39,10 @@ class Restore extends React.Component {
     Keyboard.dismiss()
     this.setState({ loading: true })
     try {
-      await recoverUserKeypair(seed)
+      await recoverUserKeypair(this.props.context.pin, seed)
       await updateWalletData()
       Alert.alert('Wallet recovered with success!')
-      this.setState({ loading: false }, () => {
-        this._navigateToSettings()
-      })
+      this.setState({ loading: false }, this._navigateToSettings)
     } catch (err) {
       console.warn(err)
       Alert.alert(
@@ -59,7 +53,7 @@ class Restore extends React.Component {
   }
 
   _rightContent = () => (
-    <Utils.ButtonWrapper onPress={() => this.props.navigation.goBack()} absolute side='right'>
+    <Utils.ButtonWrapper onPress={() => this.props.navigation.navigate('Settings')} absolute side='right'>
       <Utils.Text>Back</Utils.Text>
     </Utils.ButtonWrapper>
   )
@@ -74,7 +68,7 @@ class Restore extends React.Component {
     const { loading } = this.state
     return (
       <Utils.Container>
-        <NavigationHeader title='RESTORE WALLET' onBack={() => this.props.navigation.goBack()} noBorder />
+        <NavigationHeader title='RESTORE WALLET' onBack={() => this.props.navigation.navigate('Settings')} noBorder />
         <Utils.Content paddingBottom='2'>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'
@@ -111,8 +105,4 @@ class Restore extends React.Component {
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <Restore context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(Restore)

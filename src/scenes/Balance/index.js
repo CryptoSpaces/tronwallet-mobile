@@ -1,20 +1,21 @@
 import React, { Component } from 'react'
-import { RefreshControl, ScrollView } from 'react-native'
+import { RefreshControl, ScrollView, AppState } from 'react-native'
 import axios from 'axios'
 import Config from 'react-native-config'
+
+import NavigationHeader from '../../components/Navigation/Header'
+import * as Utils from '../../components/Utils'
+import WalletBalances from './WalletBalances'
+import BalanceWarning from './BalanceWarning'
+import BalanceNavigation from './BalanceNavigation'
+import TrxValue from './TrxValue'
+import TrxInfo from './TrxInfo'
+import LineChart from './TrxLineChart'
+
 import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
 import { getUserSecrets } from '../../utils/secretsUtils'
 import withContext from '../../utils/hocs/withContext'
-
-import WalletBalances from './WalletBalances'
-import BalanceWarning from './BalanceWarning'
-import BalanceNavigation from './BalanceNavigation'
-import NavigationHeader from '../../components/Navigation/Header'
-import TrxValue from './TrxValue'
-import TrxInfo from './TrxInfo'
-import LineChart from './TrxLineChart'
-import * as Utils from '../../components/Utils'
 
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
 
@@ -32,7 +33,8 @@ class BalanceScene extends Component {
     seed: [],
     balances: [],
     trxHistory: [],
-    trxBalance: 0
+    trxBalance: 0,
+    appState: AppState.currentState
   }
 
   async componentDidMount () {
@@ -41,15 +43,22 @@ class BalanceScene extends Component {
     } catch (e) {
       this.setState({error: 'An error occured while loading the data.'})
     }
-    this._navListener = this.props.navigation.addListener(
-      'didFocus',
-      this._loadData
-    )
+    this._navListener =
+      this.props.navigation.addListener('didFocus', this._loadData)
+    AppState.addEventListener('change', this._handleAppStateChange)
   }
 
   componentWillUnmount () {
     this._navListener.remove()
     clearInterval(this._dataListener)
+    AppState.removeEventListener('change', this._handleAppStateChange)
+  }
+
+  _handleAppStateChange = nextAppState => {
+    if (nextAppState.match(/inactive|background/) && this.state.appState === 'active') {
+      this.props.navigation.navigate('Pin', { testInput: pin => pin === this.props.context.pin })
+    }
+    this.setState({ appState: nextAppState })
   }
 
   _onRefresh = async () => {
@@ -63,8 +72,8 @@ class BalanceScene extends Component {
       const { updateWalletData } = this.props.context
 
       const data = await Promise.all([
-        Client.getBalances(),
-        getUserSecrets(),
+        Client.getBalances(this.props.context.pin),
+        getUserSecrets(this.props.context.pin),
         axios.get(
           `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
         )
@@ -118,14 +127,14 @@ class BalanceScene extends Component {
         >
           <TrxValue trxBalance={trxBalance} currency='USD' />
           <Utils.VerticalSpacer size='medium' />
-          {!!trxHistory.length && (
-            <LineChart chartHistory={trxHistory} />
-          )}
+          {!!trxHistory.length && <LineChart chartHistory={trxHistory} />}
           <Utils.VerticalSpacer size='medium' />
           <TrxInfo />
           <BalanceNavigation navigation={this.props.navigation} />
           {!seedConfirmed && (
-            <BalanceWarning seed={seed} navigation={this.props.navigation}>Please tap to confirm your 12 seed words</BalanceWarning>
+            <BalanceWarning seed={seed} navigation={this.props.navigation}>
+              Please tap to confirm your 12 seed words
+            </BalanceWarning>
           )}
           <WalletBalances balances={balances} />
         </ScrollView>

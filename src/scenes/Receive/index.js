@@ -8,8 +8,9 @@ import NavigationHeader from '../../components/Navigation/Header'
 import QRCode from '../../components/QRCode'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
-import { getUserPublicKey } from '../../utils/userAccountUtils'
 import KeyboardScreen from '../../components/KeyboardScreen'
+
+import { withContext } from '../../store/context'
 
 class ReceiveScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -24,15 +25,7 @@ class ReceiveScreen extends PureComponent {
 
   state = {
     accountSelected: null,
-    publicKey: null,
     loading: true
-  }
-
-  componentDidMount () {
-    this._navListener = this.props.navigation.addListener(
-      'didFocus',
-      this._loadPublicKey
-    )
   }
 
   componentWillUnmount () {
@@ -40,24 +33,17 @@ class ReceiveScreen extends PureComponent {
   }
 
   _copy = async () => {
-    const { publicKey } = this.state
     try {
-      await Clipboard.setString(publicKey)
+      await Clipboard.setString(this.props.context.publicKey.value)
       this.refs.toast.show('Public Key copied to the clipboard')
     } catch (error) {
       this.refs.toast.show('Something wrong while copying')
     }
   }
 
-  _loadPublicKey = async () => {
-    this.setState({ loading: true })
-    const publicKey = await getUserPublicKey()
-    this.setState({ publicKey, loading: false })
-  }
-
   render () {
     const { width } = Dimensions.get('window')
-    const { publicKey } = this.state
+    const publicKey = this.props.context.publicKey.value
 
     return (
       <Utils.Container>
@@ -97,4 +83,4 @@ class ReceiveScreen extends PureComponent {
   }
 }
 
-export default ReceiveScreen
+export default withContext(ReceiveScreen)

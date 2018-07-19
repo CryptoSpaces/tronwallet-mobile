@@ -8,7 +8,7 @@ import {
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
-import Client from '../../services/client'
+import NavigationHeader from '../../components/Navigation/Header'
 import TransferCard from './Transfer'
 import ParticipateCard from './Participate'
 import CreateCard from './Create'
@@ -16,18 +16,17 @@ import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import UnfreezeCard from './Unfreeze'
 import Default from './Default'
-import NavigationHeader from '../../components/Navigation/Header'
 
+import Client from '../../services/client'
 import getTransactionStore from '../../store/transactions'
+import { withContext } from '../../store/context'
 
 const POOLING_TIME = 30000
 
 class TransactionsScene extends Component {
-  static navigationOptions = () => {
-    return {
-      header: <NavigationHeader title='MY TRANSACTIONS' />
-    }
-  }
+  static navigationOptions = () => ({
+    header: <NavigationHeader title='MY TRANSACTIONS' />
+  })
 
   state = {
     refreshing: true,
@@ -62,7 +61,7 @@ class TransactionsScene extends Component {
   updateData = async () => {
     try {
       this.setState({ refreshing: true })
-      const response = await Client.getTransactionList()
+      const response = await Client.getTransactionList(this.props.context.pin)
       const store = await getTransactionStore()
       store.write(() =>
         response.map(item => {
@@ -184,4 +183,4 @@ class TransactionsScene extends Component {
   }
 }
 
-export default TransactionsScene
+export default withContext(TransactionsScene)
