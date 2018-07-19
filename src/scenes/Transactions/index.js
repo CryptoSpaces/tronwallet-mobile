@@ -30,15 +30,14 @@ class TransactionsScene extends Component {
   }
 
   state = {
-    refreshing: true,
+    refreshing: false,
     transactions: []
   }
 
   async componentDidMount () {
     const store = await getTransactionStore()
     this.setState({
-      transactions: this.getSortedTransactionList(store),
-      refreshing: false
+      transactions: this.getSortedTransactionList(store)
     })
     this.updateData()
     this.didFocusSubscription = this.props.navigation.addListener(
@@ -59,9 +58,14 @@ class TransactionsScene extends Component {
       .sorted([['timestamp', true]])
       .map(item => Object.assign({}, item))
 
+  _onRefresh = async () => {
+    this.setState({ refreshing: true })
+    await this.updateData()
+    this.setState({ refreshing: false })
+  }
+
   updateData = async () => {
     try {
-      this.setState({ refreshing: true })
       const response = await Client.getTransactionList()
       const store = await getTransactionStore()
       store.write(() =>
@@ -102,7 +106,6 @@ class TransactionsScene extends Component {
       )
       const transactions = this.getSortedTransactionList(store)
       this.setState({
-        refreshing: false,
         transactions
       })
     } catch (err) {
@@ -169,7 +172,7 @@ class TransactionsScene extends Component {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={this.updateData}
+              onRefresh={this._onRefresh}
             />
           }
           contentContainerStyle={{ padding: Spacing.medium }}
