@@ -2,13 +2,13 @@ import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import ProgressBar from 'react-native-progress/Bar'
 
 import NavigationHeader from '../../components/Navigation/Header'
 
 import {
   Container,
   Content,
-  View,
   Row,
   VerticalSpacer,
   Text
@@ -46,7 +46,7 @@ class ParticipateHome extends React.Component {
           <CardHeader>0.10 TRX</CardHeader>
         </Row>
         <VerticalSpacer size='medium' />
-        <View borderRadius={10} height={3} background={Colors.green} />
+        <ProgressBar progress={0.7} borderWidth={0} width={null} color={Colors.confirmed} unfilledColor={Colors.background} />
         <VerticalSpacer />
         <Row justify='space-between'>
           <Text>End in 165 days</Text>
