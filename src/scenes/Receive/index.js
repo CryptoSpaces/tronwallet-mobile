@@ -28,10 +28,6 @@ class ReceiveScreen extends PureComponent {
     loading: true
   }
 
-  componentWillUnmount () {
-    this._navListener.remove()
-  }
-
   _copy = async () => {
     try {
       await Clipboard.setString(this.props.context.publicKey.value)

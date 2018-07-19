@@ -68,15 +68,11 @@ const BalanceStack = createStackNavigator({
   BalanceScene,
   ReceiveScene,
   TransferScene
-}, {
-  initialRouteName: 'BalanceScene'
 })
 
 const TransactionList = createStackNavigator({
   TransactionListScene,
   TransactionDetails
-}, {
-  initialRouteName: 'TransactionListScene'
 })
 
 const AppTabs = createBottomTabNavigator({
@@ -87,8 +83,6 @@ const AppTabs = createBottomTabNavigator({
   },
   Transactions: TransactionList,
   Balance: BalanceStack,
-  Transfer: TransferScene,
-  Receive: ReceiveScene,
   Settings: SettingsStack
 }, {
   navigationOptions: ({ navigation }) => ({
