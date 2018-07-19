@@ -12,9 +12,13 @@ import { getUserPublicKey } from '../../utils/userAccountUtils'
 import KeyboardScreen from '../../components/KeyboardScreen'
 
 class ReceiveScreen extends PureComponent {
-  static navigationOptions = () => {
+  static navigationOptions = ({ navigation }) => {
     return {
-      header: <NavigationHeader title='RECEIVE' />
+      header: (
+        <NavigationHeader title='RECEIVE'
+          onBack={() => { navigation.goBack() }}
+        />
+      )
     }
   }
 
