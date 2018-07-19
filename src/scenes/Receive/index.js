@@ -12,6 +12,16 @@ import { getUserPublicKey } from '../../utils/userAccountUtils'
 import KeyboardScreen from '../../components/KeyboardScreen'
 
 class ReceiveScreen extends PureComponent {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: (
+        <NavigationHeader title='RECEIVE'
+          onBack={() => { navigation.goBack() }}
+        />
+      )
+    }
+  }
+
   state = {
     accountSelected: null,
     publicKey: null,
@@ -51,7 +61,6 @@ class ReceiveScreen extends PureComponent {
 
     return (
       <Utils.Container>
-        <NavigationHeader title='RECEIVE' />
         <KeyboardScreen>
           <Utils.StatusBar />
           <Utils.Content marginY='20' align='center'>

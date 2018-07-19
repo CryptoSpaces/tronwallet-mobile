@@ -104,12 +104,15 @@ const VoteStack = createStackNavigator(
     })
   }
 )
-const TransferStack = createStackNavigator(
+
+const BalanceStack = createStackNavigator(
   {
+    BalanceScene,
+    ReceiveScene,
     TransferScene
   },
   {
-    initialRouteName: 'TransferScene'
+    initialRouteName: 'BalanceScene'
   }
 )
 
@@ -138,10 +141,8 @@ const AppTabs = createBottomTabNavigator(
       path: 'vote'
     },
     Transactions: TransactionList,
-    Balance: BalanceScene,
+    Balance: BalanceStack,    
     Participate: ParticipateStack,
-    Transfer: TransferStack,
-    Receive: ReceiveScene,
     Settings: SettingsStack
   },
   {

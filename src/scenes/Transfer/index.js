@@ -16,9 +16,15 @@ const TAB_WIDTH = SCREENSIZE.width / 2
 const INDICATOR_WIDTH = 100
 
 export default class TransferScene extends React.Component {
-  static navigationOptions = () => {
+  static navigationOptions = ({ navigation }) => {
     return {
-      header: <NavigationHeader title='TRANSFERS' noBorder />
+      header: (
+        <NavigationHeader
+          title='TRANSFERS'
+          onBack={() => { navigation.goBack() }}
+          noBorder
+        />
+      )
     }
   }
 
