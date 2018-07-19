@@ -18,6 +18,7 @@ import GrowIn from '../../components/Animations/GrowIn'
 import ConfirmVotes from '../../components/Vote/ConfirmButton'
 import NavigationHeader from '../../components/Navigation/Header'
 import NavigationButton from '../../components/Navigation/ButtonHeader'
+import ClearVotes from '../../components/ClearButton'
 
 // Service
 import WalletClient from '../../services/client'
@@ -415,18 +416,14 @@ class VoteScene extends PureComponent {
       <Utils.Container>
         <NavigationHeader
           title='VOTES'
-          rightButton={
-            (this.props.navigation.getParam('votesError') || this.props.navigation.getParam('listError'))
-              ? <NavigationButton
-                title='SYNC'
-                onPress={this.props.navigation.getParam('loadData')}
-              />
-              : <NavigationButton
-                title='SUBMIT'
-                onPress={this.props.navigation.getParam('onSubmit')}
-                disabled={this.props.navigation.getParam('disabled')}
-              />
-          }
+          rightButton={(this.props.navigation.getParam('votesError') || this.props.navigation.getParam('listError'))
+            ? <NavigationButton
+              title='RELOAD'
+              onPress={this.props.navigation.getParam('loadData')}
+            />
+            : <ClearVotes
+              onPress={this.props.navigation.getParam('clearVotes')}
+            />}
         />
         <GrowIn name='vote-header' height={63}>
           <Header>
