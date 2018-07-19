@@ -41,6 +41,7 @@ import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
 import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
 import TransactionDetails from './src/scenes/TransactionDetails'
+import ParticipateHome from './src/scenes/Participate'
 
 import fontelloConfig from './src/assets/icons/config.json'
 import NavigationHeader from './src/components/Navigation/Header'
@@ -121,6 +122,14 @@ const TransactionList = createStackNavigator(
   }
 )
 
+const ParticipateStack = createStackNavigator(
+  {
+    ParticipateHome
+  }, {
+    initialRouteName: 'ParticipateHome'
+  }
+)
+
 const AppTabs = createBottomTabNavigator(
   {
     Home: HomeScene,
@@ -130,6 +139,7 @@ const AppTabs = createBottomTabNavigator(
     },
     Transactions: TransactionList,
     Balance: BalanceScene,
+    Participate: ParticipateStack,
     Transfer: TransferStack,
     Receive: ReceiveScene,
     Settings: SettingsStack
@@ -153,6 +163,8 @@ const AppTabs = createBottomTabNavigator(
           iconName = `scan,-bar-code,-qr-code,-barcode,-scanner`
         } else if (routeName === 'Settings') {
           iconName = `gear,-settings,-update,-setup,-config`
+        } else if (routeName === 'Participate') {
+          iconName = `dollar,-currency,-money,-cash,-coin`
         }
 
         return <Icon name={iconName} size={26} color={tintColor} />
