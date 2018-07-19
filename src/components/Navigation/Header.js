@@ -43,7 +43,7 @@ const NavigationHeader = ({ title, onClose, noBorder, rightButton, onBack, leftB
   return <Utils.Header padding={16} justify='center' noBorder={noBorder}>
     {leftElement(onBack, leftButton)}
     <Utils.View justify='center' align='center'>
-      <Utils.Text lineHeight={36} size='small' font='bold'>{title.toUpperCase()}</Utils.Text>
+      <Utils.Text lineHeight={36} size='average' font='medium'>{title.toUpperCase()}</Utils.Text>
     </Utils.View>
     {rightElement(onClose, rightButton)}
   </Utils.Header>
