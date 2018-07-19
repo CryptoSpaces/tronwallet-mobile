@@ -1,6 +1,6 @@
 import React from 'react'
 import { Alert, Keyboard } from 'react-native'
-import { NavigationActions } from 'react-navigation'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -16,7 +16,11 @@ class Restore extends React.Component {
   }
 
   _navigateToSettings = () => {
-    const resetAction = NavigationActions.navigate({ routeName: 'App' })
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'App' })],
+      key: null
+    })
     this.props.navigation.dispatch(resetAction)
   }
 
@@ -53,7 +57,7 @@ class Restore extends React.Component {
   }
 
   _rightContent = () => (
-    <Utils.ButtonWrapper onPress={() => this.props.navigation.navigate('Settings')} absolute side='right'>
+    <Utils.ButtonWrapper onPress={() => this.props.navigation.goBack()} absolute side='right'>
       <Utils.Text>Back</Utils.Text>
     </Utils.ButtonWrapper>
   )
@@ -68,7 +72,11 @@ class Restore extends React.Component {
     const { loading } = this.state
     return (
       <Utils.Container>
-        <NavigationHeader title='RESTORE WALLET' onBack={() => this.props.navigation.navigate('Settings')} noBorder />
+        <NavigationHeader
+          title='RESTORE WALLET'
+          onBack={() => this.props.navigation.navigate('Settings')}
+          noBorder
+        />
         <Utils.Content paddingBottom='2'>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'

@@ -32,23 +32,19 @@ class LoadingScene extends Component {
   }
 
   _handleSuccess = key => {
-    this.props.context.setPin(key, async () => {
-      const isFirstTime = await this._isFirstTime()
-      if (isFirstTime) {
-        this.props.navigation.navigate('RestoreOrCreateSeed')
-      } else {
-        this.props.navigation.navigate('App')
-      }
-    })
+    this.props.context.setPin(key, () => this.props.navigation.navigate('App'))
   }
 
   _askPin = async () => {
-    const shouldDoubleCheck = await this._isFirstTime()
-    this.props.navigation.navigate('Pin', {
-      shouldDoubleCheck,
-      testInput: this._tryToOpenStore,
-      onSuccess: this._handleSuccess
-    })
+    const isFirstTime = await this._isFirstTime()
+    if (isFirstTime) {
+      this.props.navigation.navigate('FirstTime')
+    } else {
+      this.props.navigation.navigate('Pin', {
+        testInput: this._tryToOpenStore,
+        onSuccess: this._handleSuccess
+      })
+    }
   }
 
   render () {

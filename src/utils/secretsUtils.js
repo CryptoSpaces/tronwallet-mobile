@@ -1,6 +1,6 @@
 import RNTron from 'react-native-tron'
 import DeviceInfo from 'react-native-device-info'
-import { Alert, AsyncStorage } from 'react-native'
+import { AsyncStorage } from 'react-native'
 
 import getSecretsStore from '../store/secrets'
 import { resetWalletData } from './userAccountUtils'
@@ -9,19 +9,19 @@ export const createUserKeyPair = async pin => {
   try {
     const mnemonic = await RNTron.generateMnemonic()
     await generateKeypair(pin, mnemonic, true)
-    createUserKeyPairAlert()
+    // createUserKeyPairAlert()
     AsyncStorage.setItem('@TronWallet:isFirstTime', 'false') // anything that's not null works
   } catch (error) {
     throw error
   }
 }
 
-const createUserKeyPairAlert = () => {
-  Alert.alert(
-    'We created a secret list of words for you.',
-    'We highly recommend that you write it down on paper to be able to recover it later.'
-  )
-}
+// const createUserKeyPairAlert = () => {
+//   Alert.alert(
+//     'We created a secret list of words for you.',
+//     'We highly recommend that you write it down on paper to be able to recover it later.'
+//   )
+// }
 
 export const recoverUserKeypair = async (pin, mnemonic, randomlyGenerated = false) => {
   try {
@@ -67,6 +67,7 @@ const emptySecret = {
 
 export const getUserSecrets = async pin => {
   try {
+    console.log('OPEN WITH', pin)
     const secretsStore = await getSecretsStore(pin)
     const secretsObject = secretsStore
       .objects('UserSecret')

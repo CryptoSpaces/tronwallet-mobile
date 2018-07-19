@@ -11,7 +11,6 @@ import Config from 'react-native-config'
 import { Colors } from './src/components/DesignSystem'
 
 import LoadingScene from './src/scenes/Loading'
-import WelcomeScene from './src/scenes/Welcome'
 import SendScreen from './src/scenes/Send'
 import HomeScene from './src/scenes/Home'
 import BalanceScene from './src/scenes/Balance'
@@ -29,9 +28,9 @@ import NetworkConnection from './src/scenes/Settings/NetworkModal'
 import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
-import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
 import TransactionDetails from './src/scenes/TransactionDetails'
 import Pin from './src/scenes/Pin'
+import FirstTime from './src/scenes/FirstTime'
 
 import Client from './src/services/client'
 import NodesIp from './src/utils/nodeIp'
@@ -128,9 +127,8 @@ const AppTabs = createBottomTabNavigator({
 
 const RootNavigator = createStackNavigator({
   Loading: LoadingScene,
-  Welcome: WelcomeScene,
+  FirstTime,
   Pin,
-  RestoreOrCreateSeed,
   SeedRestore,
   App: AppTabs,
   Send: SendScreen,
@@ -206,8 +204,10 @@ class App extends Component {
   }
 
   _setPin = (pin, callback) => {
-    this.setState({ pin }, callback)
-    this._loadUserData(pin)
+    this.setState({ pin }, () => {
+      callback()
+      this._loadUserData()
+    })
   }
 
   render () {
