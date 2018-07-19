@@ -140,28 +140,11 @@ class ClientWallet {
 
   async giftUser () {
     try {
-      const {
-        signInUserSession,
-        username
-      } = await Auth.currentAuthenticatedUser()
-      const authToken = signInUserSession.idToken.jwtToken
       const address = await getUserPublicKey()
-
-      const config = {
-        headers: {
-          Authorization: authToken
-        }
-      }
       const body = {
-        address,
-        username
+        address
       }
-
-      const { data: { result } } = await axios.post(
-        `${this.tronwalletApi}/gift`,
-        body,
-        config
-      )
+      const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body)
       return result
     } catch (error) {
       throw error

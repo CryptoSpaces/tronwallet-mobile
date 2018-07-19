@@ -10,6 +10,8 @@ import { confirmSecret } from '../../utils/secretsUtils'
 import NavigationHeader from '../../components/Navigation/Header'
 import ButtonGradient from '../../components/ButtonGradient'
 
+import WalletClient from '../../services/client'
+
 const WordWrapper = styled.TouchableOpacity`
   padding-vertical: ${Spacing.small};
   padding-horizontal: ${Spacing.medium};
@@ -30,31 +32,59 @@ class Confirm extends React.Component {
       .getParam('seed', [])
       .map(item => ({ word: item, used: false }))
       .sort(() => 0.5 - Math.random()),
-    selected: []
+    selected: [],
+    loading: false
   }
 
   _handleSubmit = async () => {
+    const { navigation } = this.props
+    this.setState({loading: true})
     try {
-      const seed = this.props.navigation.getParam('seed', []).join(' ')
+      const seed = navigation.getParam('seed', []).join(' ')
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
       await confirmSecret()
-      Alert.alert('Success', 'Wallet successfully confirmed.')
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'App' })],
-        key: null
-      })
-      this.props.navigation.dispatch(resetAction)
+      await this._handleSuccess()
     } catch (error) {
       console.warn(error)
       Alert.alert(
         'Wrong Combination',
         'Selected words dont match. Make sure you wrote the words in the correct order.'
       )
+      this.setState({loading: false})
     }
   }
 
+  _handleSuccess = async () => {
+    const { navigation } = this.props
+    try {
+      const result = await WalletClient.giftUser()
+      if (result) {
+        const rewardsParams = {
+          label: 'Wallet Successfully confirmed',
+          amount: 1,
+          token: 'TWX'
+        }
+        navigation.navigate('Rewards', rewardsParams)
+      } else {
+        throw new Error('User gifted or Not registered')
+      }
+    } catch (error) {
+      Alert.alert('Success', 'Wallet successfully confirmed.')
+      this.setState({loading: false})
+      this._navigateHome()
+    }
+  }
+
+  _navigateHome = () => {
+    const { navigation } = this.props
+    const navigateToHome = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'App' })],
+      key: null
+    })
+    navigation.dispatch(navigateToHome)
+  }
   _selectWord = item => {
     if (!this.state.selected.find(word => word === item.word)) {
       const seed = this.state.seed
@@ -76,6 +106,7 @@ class Confirm extends React.Component {
   }
 
   render () {
+    const { loading } = this.state
     return (
       <Utils.Container>
         <ScrollView>
@@ -117,6 +148,7 @@ class Confirm extends React.Component {
           <Utils.View align='center' paddingY='medium'>
             <ButtonGradient
               text='CONFIRM SEED'
+              disabled={loading}
               onPress={this._handleSubmit}
             />
           </Utils.View>
