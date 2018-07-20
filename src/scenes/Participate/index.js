@@ -1,9 +1,10 @@
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { ScrollView, TouchableOpacity } from 'react-native'
+import { ScrollView, TouchableOpacity, Image } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 
+import banner from '../../assets/images/banner.jpg'
 import NavigationHeader from '../../components/Navigation/Header'
 
 import {
@@ -24,7 +25,7 @@ class ParticipateHome extends React.Component {
         <NavigationHeader
           title='PARTICIPATE'
           rightButton={
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => { }}>
               <Ionicons name='ios-search' color='white' size={21} />
             </TouchableOpacity>
           }
@@ -32,6 +33,10 @@ class ParticipateHome extends React.Component {
       )
     }
   }
+
+  _renderSlide = () => (
+    <Image source={banner} style={{ height: 200 }} />
+  )
 
   _renderCardContent = isFeatured => (
     <React.Fragment>
@@ -59,7 +64,7 @@ class ParticipateHome extends React.Component {
   _renderCard = isFeatured => {
     return (
       <React.Fragment>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => { }}>
           <Card>
             {isFeatured ? (
               <LinearGradient
@@ -83,6 +88,8 @@ class ParticipateHome extends React.Component {
     return (
       <Container>
         <ScrollView>
+          {this._renderSlide()}
+          <VerticalSpacer size='medium' />
           {this._renderCard(true)}
           {this._renderCard()}
         </ScrollView>
