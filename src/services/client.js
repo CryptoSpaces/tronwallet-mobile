@@ -133,10 +133,8 @@ class ClientWallet {
 
   async giftUser (pin) {
     try {
-      const address = await getUserSecrets(pin)
-      const body = {
-        address
-      }
+      const { address } = await getUserSecrets(pin)
+      const body = { address }
       const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body)
       return result
     } catch (error) {

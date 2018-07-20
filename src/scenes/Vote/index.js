@@ -26,6 +26,7 @@ import { signTransaction } from '../../utils/transactionUtils'
 
 import getCandidateStore from '../../store/candidates'
 import { withContext } from '../../store/context'
+import getTransactionStore from '../../store/transactions'
 
 const LIST_STEP_SIZE = 20
 
@@ -124,6 +125,24 @@ class VoteScene extends PureComponent {
       .map(item => Object.assign({}, item))
   }
 
+  _getLastUserVotesFromStore = async () => {
+    const transactionStore = await getTransactionStore()
+    const lastVoteTransaction = transactionStore
+      .objects('Transaction')
+      .sorted([['timestamp', true]])
+      .filtered('type == "Vote"')[0]
+
+    if (lastVoteTransaction) {
+      let lastVote = lastVoteTransaction.contractData.votes
+      let renormalize = {}
+      for (let vote of lastVote) {
+        renormalize[vote.voteAddress] = vote.voteCount
+      }
+      return renormalize
+    }
+    return {}
+  }
+
   _loadCandidates = async () => {
     try {
       const voteList = await this._getVoteListFromStore()
@@ -172,11 +191,14 @@ class VoteScene extends PureComponent {
 
   _loadUserData = async () => {
     try {
-      const [userVotes, userFrozen] = await Promise.all([
-        WalletClient.getUserVotes(this.props.context.pin),
-        WalletClient.getFreeze(this.props.context.pin)
-      ])
-      const { total: totalFrozen } = userFrozen
+      let userVotes = await this._getLastUserVotesFromStore()
+      let totalFrozen = this.props.context.freeze.value.total
+      console.warn('HAHAHAH', totalFrozen)
+
+      if (typeof userFrozen === 'undefined') {
+        const apiFrozen = await WalletClient.getFreeze(this.props.context.pin)
+        totalFrozen = apiFrozen.total
+      }
 
       if (userVotes) {
         const currentUserVoteCount = this._getVoteCountFromList(userVotes)
@@ -194,17 +216,6 @@ class VoteScene extends PureComponent {
       }
     } catch (e) {
       e.name = 'Freeze Error'
-      this._throwError(e, 'votesError')
-    }
-  }
-
-  _loadUserVotes = async () => {
-    try {
-      const userVotes = await WalletClient.getUserVotes(this.props.context.pin)
-      this.setState({ userVotes })
-      return userVotes
-    } catch (e) {
-      e.name = 'Load User Votes Error'
       this._throwError(e, 'votesError')
     }
   }
