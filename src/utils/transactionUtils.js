@@ -3,9 +3,9 @@ import { Linking } from 'react-native'
 import { getUserSecrets } from '../utils/secretsUtils'
 import { TronVaultURL } from './deeplinkUtils'
 
-export const signTransaction = async transactionUnsigned => {
+export const signTransaction = async (pin, transactionUnsigned) => {
   try {
-    const { privateKey } = await getUserSecrets()
+    const { privateKey } = await getUserSecrets(pin)
     const transactionSigned = await RNTron.signTransaction(
       privateKey,
       transactionUnsigned

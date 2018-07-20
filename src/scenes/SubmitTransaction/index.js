@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
-import { StackActions, NavigationActions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 
 // Design
 import * as Utils from '../../components/Utils'
@@ -20,18 +20,6 @@ import getTransactionStore from '../../store/transactions'
 const CLOSE_SCREEN_TIME = 5000
 
 class TransactionDetail extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      header: (
-        <NavigationHeader
-          title='TRANSACTION DETAILS'
-          onClose={navigation.getParam('onClose')}
-          onBack={() => navigation.goBack()}
-        />
-      )
-    }
-  }
-
   state = {
     loadingData: true,
     loadingSubmit: false,
@@ -78,9 +66,7 @@ class TransactionDetail extends Component {
     const signedTransaction = navigation.state.params.tx
 
     try {
-      const transactionData = await Client.getTransactionDetails(
-        signedTransaction
-      )
+      const transactionData = await Client.getTransactionDetails(signedTransaction)
       this.setState({ transactionData, signedTransaction })
     } catch (error) {
       this.setState({ submitError: error.message })
@@ -100,11 +86,7 @@ class TransactionDetail extends Component {
   _navigateNext = () => {
     // Reset navigation as transaction submition is the last step of a user interaction
     const { navigation } = this.props
-    const navigateToHome = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'App' })],
-      key: null
-    })
+    const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
     navigation.dispatch(navigateToHome)
   }
 
@@ -223,18 +205,25 @@ class TransactionDetail extends Component {
     if (loadingData) return <LoadingScene />
 
     return (
-      <Utils.Container>
-        <ScrollView>
-          {!isConnected && this.renderRetryConnection()}
-          {isConnected && this.renderContracts()}
-          {isConnected && this.renderSubmitButton()}
-          <Utils.Content align='center' justify='center'>
-            {submitError && (
-              <Utils.Error>{submitError}</Utils.Error>
-            )}
-          </Utils.Content>
-        </ScrollView>
-      </Utils.Container>
+      <React.Fragment>
+        <NavigationHeader
+          title='TRANSACTION DETAILS'
+          onClose={this.props.navigation.getParam('onClose')}
+          onBack={() => this.props.navigation.goBack()}
+        />
+        <Utils.Container>
+          <ScrollView>
+            {!isConnected && this.renderRetryConnection()}
+            {isConnected && this.renderContracts()}
+            {isConnected && this.renderSubmitButton()}
+            <Utils.Content align='center' justify='center'>
+              {submitError && (
+                <Utils.Error>{submitError}</Utils.Error>
+              )}
+            </Utils.Content>
+          </ScrollView>
+        </Utils.Container>
+      </React.Fragment>
     )
   }
 }
