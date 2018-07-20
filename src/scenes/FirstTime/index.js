@@ -25,7 +25,10 @@ class FirstTime extends React.Component {
                 shouldDoubleCheck: true,
                 onSuccess: async pin => {
                   await createUserKeyPair(pin)
-                  this.props.context.setPin(pin, () => this.props.navigation.navigate('SeedCreate'))
+                  this.props.context.setPin(
+                    pin,
+                    () => this.props.navigation.navigate('SeedCreate', { shouldReset: true })
+                  )
                 }
               })
             }}
