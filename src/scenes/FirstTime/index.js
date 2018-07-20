@@ -1,12 +1,11 @@
 import React from 'react'
+import { createUserKeyPair } from '../../utils/secretsUtils'
+import { withContext } from '../../store/context'
 
 import * as Utils from '../../components/Utils'
 import Logo from '../../components/Logo'
 import ButtonGradient from '../../components/ButtonGradient'
-
-import { createUserKeyPair } from '../../utils/secretsUtils'
-
-import { withContext } from '../../store/context'
+import PrivacyPolicy from './PrivacyPolicy'
 
 class FirstTime extends React.Component {
   render () {
@@ -30,7 +29,7 @@ class FirstTime extends React.Component {
               })
             }}
           />
-          <Utils.VerticalSpacer />
+          <Utils.VSpacer size='medium' />
           <ButtonGradient
             text='RESTORE WALLET'
             onPress={() => {
@@ -41,6 +40,7 @@ class FirstTime extends React.Component {
             }}
           />
         </Utils.Content>
+        <PrivacyPolicy navigation={this.props.navigation} />
         <Utils.View flex={1} />
       </Utils.Container>
     )
