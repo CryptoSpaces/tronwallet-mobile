@@ -129,7 +129,7 @@ PODS:
     - React
     - TrezorCrypto
   - RNTron/Services (1.0.0):
-    - gRPC-ProtoRPC
+    - gRPC-ProtoRPC (= 1.12.0)
     - "NSData+FastHex"
     - React
     - RNTron/Messages
@@ -236,7 +236,7 @@ SPEC CHECKSUMS:
   react-native-onesignal: 4f425b36d3edf595c93c1a8d3618a93b71a85a51
   ReactNativeFabric: 3912bf9c714d7cc98110eadf06ca6dedef219322
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
-  RNTron: f8896a86924422ed73d694ebbfd3b5a522a3d9f1
+  RNTron: e5cc70419d4fc1021255c7bffb764bbf3e8cc560
   Sentry: 7d3ea7176e5184e9c35c12a5825905345807e8c1
   SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
   TrezorCrypto: ecef681446bf02af6248d3b5e394026d7e766e56
