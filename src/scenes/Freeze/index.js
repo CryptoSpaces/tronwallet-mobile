@@ -193,7 +193,7 @@ class FreezeScene extends Component {
               </Utils.Text>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Row align='center'>
-                <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
+                <Utils.Text size='large'>{trxBalance.toFixed(2)}</Utils.Text>
                 <Utils.HorizontalSpacer />
                 <Badge>TRX</Badge>
               </Utils.Row>
