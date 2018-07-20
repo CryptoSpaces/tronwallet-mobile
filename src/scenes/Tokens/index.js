@@ -42,7 +42,6 @@ class TokensScene extends Component {
       const response = await axios.get(
         'https://testapi.tronscan.org/api/token?sort=-name&start=0&status=ico'
       )
-      console.log(response.data.data)
       this.setState({
         loading: false,
         data: response.data.data,
