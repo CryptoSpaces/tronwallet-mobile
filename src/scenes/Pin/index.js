@@ -83,7 +83,7 @@ class PinScene extends React.Component {
       <Utils.Container>
         <Utils.Content>
           {this.state.isDoubleChecking && <Elements.GoBackButton onPress={this._resetState} />}
-          {shouldGoBack && <Elements.GoBackButton onPress={this.props.navigation.goBack} />}
+          {shouldGoBack && <Elements.GoBackButton onPress={() => this.props.navigation.goBack()} />}
           <Utils.View align='center'>
             <Elements.Label>SECURITY CHECK</Elements.Label>
             <Utils.VerticalSpacer />
