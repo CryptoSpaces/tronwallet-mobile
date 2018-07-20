@@ -9,19 +9,11 @@ export const createUserKeyPair = async pin => {
   try {
     const mnemonic = await RNTron.generateMnemonic()
     await generateKeypair(pin, mnemonic, true)
-    // createUserKeyPairAlert()
     AsyncStorage.setItem('@TronWallet:isFirstTime', 'false') // anything that's not null works
   } catch (error) {
     throw error
   }
 }
-
-// const createUserKeyPairAlert = () => {
-//   Alert.alert(
-//     'We created a secret list of words for you.',
-//     'We highly recommend that you write it down on paper to be able to recover it later.'
-//   )
-// }
 
 export const recoverUserKeypair = async (pin, mnemonic, randomlyGenerated = false) => {
   try {
@@ -67,12 +59,10 @@ const emptySecret = {
 
 export const getUserSecrets = async pin => {
   try {
-    console.log('OPEN WITH', pin)
     const secretsStore = await getSecretsStore(pin)
     const secretsObject = secretsStore
       .objects('UserSecret')
       .map(item => Object.assign(item, {}))
-    console.log('secrets', secretsObject)
     if (secretsObject.length) return secretsObject[0]
     return emptySecret
   } catch (error) {
