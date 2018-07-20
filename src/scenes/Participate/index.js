@@ -15,18 +15,28 @@ import moment from 'moment'
 import Client, { ONE_TRX } from '../../services/client'
 import getAssetsStore from '../../store/assets'
 import banner from '../../assets/images/banner.jpg'
+import guarantee from '../../assets/guarantee.png'
 import NavigationHeader from '../../components/Navigation/Header'
 
 import {
   Container,
-  Content,
-  Row,
-  VerticalSpacer,
-  Text
+  Row
 } from '../../components/Utils'
 
-import { Card, CardHeader, Featured } from './Elements'
-import { Colors } from '../../components/DesignSystem'
+import {
+  Card,
+  CardContent,
+  TokenPrice,
+  Featured,
+  Text,
+  TokenName,
+  VerticalSpacer,
+  FeaturedText,
+  FeaturedTokenName,
+  FeaturedTokenPrice,
+  HorizontalSpacer
+} from './Elements'
+import { rgb } from '../../../node_modules/polished'
 
 class ParticipateHome extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -83,29 +93,43 @@ class ParticipateHome extends React.Component {
   }
 
   _renderSlide = () => (
-    <Image source={banner} style={{ height: 200 }} />
+    <Image source={banner} style={{ height: 232 }} />
   )
 
   _renderCardContent = ({ name, price, percentage, endTime, isFeatured }) => (
     <React.Fragment>
       {isFeatured && (
         <Featured>
-          <Text align='center'>FEATURED</Text>
+          <FeaturedText align='center'>FEATURED</FeaturedText>
         </Featured>
       )}
-      <Content>
+      <CardContent>
         <Row justify='space-between'>
-          <CardHeader>{name}</CardHeader>
-          <CardHeader>{price / ONE_TRX} TRX</CardHeader>
+          {isFeatured ? (
+            <Row>
+              <FeaturedTokenName>{name}</FeaturedTokenName>
+              <HorizontalSpacer size={4} />
+              <Image alignSelf='flex-start' source={guarantee} style={{ height: 14, width: 14 }} />
+            </Row>
+          ) : (
+            <TokenName>{name}</TokenName>
+          )}
+          {isFeatured ? <FeaturedTokenPrice>{price / ONE_TRX} TRX</FeaturedTokenPrice> : <TokenPrice>{price / ONE_TRX} TRX</TokenPrice>}
         </Row>
-        <VerticalSpacer size='medium' />
-        <ProgressBar progress={Math.trunc(percentage) / 100} borderWidth={0} width={null} color={Colors.confirmed} unfilledColor={Colors.background} />
-        <VerticalSpacer />
+        <VerticalSpacer size={15} />
+        <ProgressBar
+          progress={Math.trunc(percentage) / 100}
+          borderWidth={0}
+          width={null} height={4}
+          color={rgb(6, 231, 123)}
+          unfilledColor={rgb(25, 26, 42)}
+        />
+        <VerticalSpacer size={6} />
         <Row justify='space-between'>
           <Text>Ends {moment(endTime).fromNow()}</Text>
           <Text>{Math.trunc(percentage)}%</Text>
         </Row>
-      </Content>
+      </CardContent>
     </React.Fragment>
   )
 
@@ -124,7 +148,7 @@ class ParticipateHome extends React.Component {
               <LinearGradient
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 0 }}
-                colors={[Colors.buttonGradient[0], Colors.buttonGradient[1]]}
+                colors={[rgb(255, 68, 101), rgb(246, 202, 29)]}
               >
                 {this._renderCardContent(item)}
               </LinearGradient>
@@ -132,7 +156,7 @@ class ParticipateHome extends React.Component {
               this._renderCardContent(item)
             )}
           </Card>
-          <VerticalSpacer size='medium' />
+          <VerticalSpacer size={11} />
         </TouchableOpacity>
       </React.Fragment>
     )
@@ -145,7 +169,7 @@ class ParticipateHome extends React.Component {
       <Container>
         <ScrollView>
           {this._renderSlide()}
-          <VerticalSpacer size='medium' />
+          <VerticalSpacer size={20} />
           <FlatList
             data={assetList}
             renderItem={({ item }) => this._renderCard(item)}
