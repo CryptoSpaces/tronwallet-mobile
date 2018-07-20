@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import PropTypes from 'prop-types'
-import { Colors, Spacing, ButtonSize } from './DesignSystem'
+import { Colors, ZeplinColors, Spacing, ButtonSize } from './DesignSystem'
 import * as Utils from './Utils'
 
 const ButtonGradient = ({
@@ -11,9 +11,7 @@ const ButtonGradient = ({
   disabled,
   size,
   width,
-  weight,
   marginVertical,
-  font,
   full,
   rightRadius,
   leftRadius,
@@ -39,7 +37,7 @@ const ButtonGradient = ({
         end={{ x: 1, y: 0 }}
         colors={multiColumnButton
           ? [Colors.buttonGradient[multiColumnButton.x], Colors.buttonGradient[multiColumnButton.y]]
-          : [Colors.buttonGradient[0], Colors.buttonGradient[1]]}
+          : [ZeplinColors.gradients.primary[0], ZeplinColors.gradients.primary[1]]}
 
         style={[
           styles.btnGradient,
@@ -56,7 +54,7 @@ const ButtonGradient = ({
           }
         ]}
       >
-        <Utils.Text weight={weight} size={'button'} font={font}>{text}</Utils.Text>
+        <Utils.StandardButtonLabel>{text}</Utils.StandardButtonLabel>
       </LinearGradient>
     </TouchableOpacity>
   )
@@ -65,7 +63,6 @@ const ButtonGradient = ({
 ButtonGradient.defaultProps = {
   disabled: false,
   size: 'large',
-  font: 'medium',
   rightRadius: 4,
   leftRadius: 4
 }

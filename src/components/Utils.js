@@ -6,7 +6,7 @@ import _ from 'lodash'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 
-import { Colors, Spacing, FontSize } from './DesignSystem'
+import { Colors, ZeplinColors, ZeplinSpacing, Spacing, FontSize } from './DesignSystem'
 
 /* Tron Wallet's border settings. Use it anywhere you need the default Tron Wallet
 border. */
@@ -120,7 +120,7 @@ export const Content = styled(View)`
 `
 
 Content.defaultProps = {
-  paddingSize: 'big'
+  paddingSize: 'large'
 }
 
 export const StatusBar = styled.View`
@@ -499,4 +499,57 @@ export const LightButton = styled.TouchableOpacity`
   border-radius: 4px;
   border-width: 2px;
   border-color:  ${Colors.lightestBackground};
+`
+/* THIS IS FOLLOWING ZEPLIN VALUES */
+
+/* Logo */
+export const Logo = styled(Image)`
+  margin-bottom: ${ZeplinSpacing.relative.baseFive.medium}px;
+`
+
+export const LogoText = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 24px;
+  letter-spacing: 0;
+  color: ${ZeplinColors.text.primary};
+`
+
+/* Containers */
+
+export const FloatingBottomContent = styled.View`
+  position: absolute;
+  align-self: center;
+  bottom: ${props => ZeplinSpacing.absolute[props.space]}px;
+`
+
+FloatingBottomContent.defaultProps = {
+  space: 'large'
+}
+
+/* Spacers */
+
+export const VSpacer = styled.View`
+  margin-top: ${props => ZeplinSpacing.relative.baseFive[props.size]}px;
+`
+
+/* Text components: */
+const ButtonLabel = styled.Text`
+  font-family: Rubik-Bold;
+  line-height: 12px;
+  color: ${ZeplinColors.text.primary};
+`
+export const WarningText = styled.Text`
+  font-size: 11px;
+  line-height: 11px;
+  letter-spacing: 0.6px;
+  color: ${ZeplinColors.text.secondary};
+`
+
+export const StandardButtonLabel = ButtonLabel.extend`
+  font-size: 12px;
+  letter-spacing: 0.8px;
+`
+export const CondensedButtonLabel = ButtonLabel.extend`
+  font-size: 11px;
+  letter-spacing: 0.7px;
 `

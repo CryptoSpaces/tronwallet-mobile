@@ -47,6 +47,32 @@ export const Colors = {
   }
 }
 
+export const ZeplinColors = {
+  text: {
+    primary: '#FFFFFF',
+    secondary: '#66688F'
+  },
+  background: {
+    standard: '#191A2A'
+  },
+  gradients: {
+    primary: ['#FF4465', '#F6CA1D'],
+    multiColumn: ['#FF4465', '#f8a92f', '#fc734b', '#f7b329']
+  }
+}
+
+export const ZeplinSpacing = {
+  relative: {
+    baseTwo: {},
+    baseFive: {
+      medium: 20
+    }
+  },
+  absolute: {
+    large: 37
+  }
+}
+
 const { width, height } = Dimensions.get('window')
 
 export const ScreenSize = {
