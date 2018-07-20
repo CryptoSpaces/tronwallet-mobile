@@ -65,7 +65,8 @@ export const ZeplinSpacing = {
   relative: {
     baseTwo: {},
     baseFive: {
-      medium: 20
+      medium: 20,
+      huge: 55
     }
   },
   absolute: {

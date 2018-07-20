@@ -516,6 +516,11 @@ export const LogoText = styled.Text`
 
 /* Containers */
 
+export const CenteredSection = styled.View`
+  align-self: center;
+  align-items: center;
+`
+
 export const FloatingBottomContent = styled.View`
   position: absolute;
   align-self: center;

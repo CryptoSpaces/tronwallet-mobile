@@ -10,13 +10,10 @@ import PrivacyPolicy from './PrivacyPolicy'
 class FirstTime extends React.Component {
   render () {
     return (
-      <Utils.Container>
-        <Utils.View flex={1} />
+      <Utils.Container justify='center'>
         <Utils.Content>
-          <Utils.Row justify='center'>
-            <Logo />
-          </Utils.Row>
-          <Utils.VerticalSpacer size='big' />
+          <Logo />
+          <Utils.VSpacer size='huge' />
           <ButtonGradient
             text='CREATE WALLET'
             onPress={() => {
@@ -41,7 +38,6 @@ class FirstTime extends React.Component {
           />
         </Utils.Content>
         <PrivacyPolicy navigation={this.props.navigation} />
-        <Utils.View flex={1} />
       </Utils.Container>
     )
   }

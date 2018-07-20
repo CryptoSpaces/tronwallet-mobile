@@ -3,10 +3,10 @@ import React from 'react'
 import * as Utils from './Utils'
 
 const Logo = () => (
-  <Utils.Content justify='center' align='center'>
+  <Utils.CenteredSection>
     <Utils.Logo source={require('../assets/login-circle.png')} />
     <Utils.LogoText>TRONWALLET</Utils.LogoText>
-  </Utils.Content>
+  </Utils.CenteredSection>
 )
 
 export default Logo
