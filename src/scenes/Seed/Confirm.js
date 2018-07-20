@@ -37,13 +37,13 @@ class Confirm extends React.Component {
   }
 
   _handleSubmit = async () => {
-    const { navigation } = this.props
+    const { navigation, context } = this.props
     this.setState({loading: true})
     try {
       const seed = navigation.getParam('seed', []).join(' ')
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
-      await confirmSecret(this.props.context.pin)
+      await confirmSecret(context.pin)
       await this._handleSuccess()
     } catch (error) {
       console.warn(error)

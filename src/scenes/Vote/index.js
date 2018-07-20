@@ -1,7 +1,7 @@
 // Dependencies
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp, debounce } from 'lodash'
-import { Linking, FlatList, Alert, ActivityIndicator } from 'react-native'
+import { Linking, FlatList, Alert } from 'react-native'
 
 // Utils
 import { TronVaultURL } from '../../utils/deeplinkUtils'
@@ -17,15 +17,14 @@ import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
 import ConfirmVotes from '../../components/Vote/ConfirmButton'
 import NavigationHeader from '../../components/Navigation/Header'
-import NavigationButton from '../../components/Navigation/ButtonHeader'
 import ClearVotes from '../../components/ClearButton'
+import SyncButton from '../../components/SyncButton'
 
 // Service
 import WalletClient from '../../services/client'
 import { signTransaction } from '../../utils/transactionUtils'
 
 import getCandidateStore from '../../store/candidates'
-import { Colors } from '../../components/DesignSystem'
 import { withContext } from '../../store/context'
 
 const LIST_STEP_SIZE = 20
@@ -280,16 +279,15 @@ class VoteScene extends PureComponent {
 
   _onSearch = async value => {
     const { voteList } = this.state
-    this.setState({ loadingList: true })
     if (value) {
       const regex = new RegExp(value, 'i')
       const votesFilter = voteList.filter(vote => vote.url.match(regex))
-      this.setState({ voteList: votesFilter, loadingList: false })
+      this.setState({ voteList: votesFilter })
     } else {
       const store = await getCandidateStore()
       const voteList = store.objects('Candidate').map(item => Object.assign({}, item))
       this.setState({offset: 0}, () => {
-        this.setState({ voteList, loadingList: false })
+        this.setState({ voteList })
       })
     }
   }
@@ -381,6 +379,49 @@ class VoteScene extends PureComponent {
     )
   }
 
+  _renderListHedear = () => {
+    const { totalVotes, totalRemaining } = this.state
+    return <React.Fragment>
+      <GrowIn name='vote-header' height={63}>
+        <Header>
+          <Utils.View align='center'>
+            <Utils.Text size='tiny' weight='500' secondary>
+          TOTAL VOTES
+            </Utils.Text>
+            <Utils.VerticalSpacer />
+            <Utils.Text size='small'>
+              {formatNumber(totalVotes)}
+            </Utils.Text>
+          </Utils.View>
+          <Utils.View align='center'>
+            <Utils.Text size='tiny' weight='500' secondary>
+              VOTES AVAILABLE
+            </Utils.Text>
+            <Utils.VerticalSpacer />
+            <Utils.Text
+              size='small'
+              style={{color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}`}}
+            >
+              {formatNumber(totalRemaining)}
+            </Utils.Text>
+          </Utils.View>
+        </Header>
+      </GrowIn>
+      <Utils.View paddingX={'large'} paddingY={'small'}>
+        <Utils.FormInput
+          autoCapitalize='none'
+          autoCorrect={false}
+          underlineColorAndroid='transparent'
+          onChangeText={text => this._onSearch(text, 'search')}
+          placeholder='Search'
+          placeholderTextColor='#fff'
+          marginBottom={0}
+          marginTop={0}
+        />
+      </Utils.View>
+    </React.Fragment>
+  }
+
   _throwError = (e, type) => {
     const errorType = type || 'listError'
     console.log(`${e.name}. ${e.message}`)
@@ -400,8 +441,7 @@ class VoteScene extends PureComponent {
 
   render () {
     const {
-      totalVotes,
-      totalRemaining,
+
       refreshing,
       loadingList,
       currentVotes,
@@ -416,40 +456,28 @@ class VoteScene extends PureComponent {
       <Utils.Container>
         <NavigationHeader
           title='VOTES'
-          rightButton={(this.props.navigation.getParam('votesError') || this.props.navigation.getParam('listError'))
-            ? <NavigationButton
-              title='RELOAD'
-              onPress={this.props.navigation.getParam('loadData')}
-            />
-            : <ClearVotes
-              onPress={this.props.navigation.getParam('clearVotes')}
-            />}
+          leftButton={<SyncButton
+            loading={refreshing || loadingList}
+            onPress={this._loadData}
+          />}
+          rightButton={<ClearVotes
+            onPress={this.props.navigation.getParam('clearVotes')}
+          />}
         />
-        <GrowIn name='vote-header' height={63}>
-          <Header>
-            <Utils.View align='center'>
-              <Utils.Text size='tiny' weight='500' secondary>
-                TOTAL VOTES
-              </Utils.Text>
-              <Utils.VerticalSpacer />
-              <Utils.Text size='small'>
-                {formatNumber(totalVotes)}
-              </Utils.Text>
-            </Utils.View>
-            <Utils.View align='center'>
-              <Utils.Text size='tiny' weight='500' secondary>
-                    VOTES AVAILABLE
-              </Utils.Text>
-              <Utils.VerticalSpacer />
-              <Utils.Text
-                size='small'
-                style={{color: `${totalRemaining < 0 ? '#dc3545' : '#fff'}`}}
-              >
-                {formatNumber(totalRemaining)}
-              </Utils.Text>
-            </Utils.View>
-          </Header>
-        </GrowIn>
+        <FadeIn name='candidates'>
+          <FlatList
+            ListHeaderComponent={this._renderListHedear}
+            keyExtractor={item => item.address + item.url}
+            extraData={[totalUserVotes, currentFullVotes]}
+            data={voteList}
+            renderItem={this._renderRow}
+            onEndReachedThreshold={0.5}
+            onEndReached={this._loadMoreCandidates}
+            refreshing={refreshing || loadingList}
+            removeClippedSubviews
+          />
+        </FadeIn>
+        {(totalUserVotes > 0 && startedVoting) && <ConfirmVotes onPress={this._openConfirmModal} voteCount={currentFullVotes.length} />}
         {this.state.modalVisible && (
           <AddVotesModal
             acceptCurrentVote={this._acceptCurrentVote}
@@ -471,36 +499,6 @@ class VoteScene extends PureComponent {
             clearVotes={this._clearVotesFromList}
           />
         )}
-        <Utils.View paddingX={'large'} paddingY={'small'}>
-          <Utils.FormInput
-            autoCapitalize='none'
-            autoCorrect={false}
-            underlineColorAndroid='transparent'
-            onChangeText={text => this._onSearch(text, 'search')}
-            placeholder='Search'
-            placeholderTextColor='#fff'
-            marginBottom={0}
-            marginTop={0}
-          />
-        </Utils.View>
-        {(loadingList || refreshing) &&
-        <GrowIn name='loading'>
-          <ActivityIndicator size='small' color={Colors.primaryText} />
-        </GrowIn>
-        }
-        <FadeIn name='candidates'>
-          <FlatList
-            keyExtractor={item => item.address + item.url}
-            extraData={[totalUserVotes, currentFullVotes]}
-            data={voteList}
-            renderItem={this._renderRow}
-            onEndReachedThreshold={0.5}
-            onEndReached={this._loadMoreCandidates}
-            refreshing={refreshing || loadingList}
-            removeClippedSubviews
-          />
-        </FadeIn>
-        {(totalUserVotes > 0 && startedVoting) && <ConfirmVotes onPress={this._openConfirmModal} voteCount={currentFullVotes.length} />}
       </Utils.Container>
     )
   }

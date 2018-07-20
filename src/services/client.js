@@ -131,8 +131,9 @@ class ClientWallet {
 
   //* ============TronWalletServerless Api============*//
 
+  async giftUser (pin) {
     try {
-      const address = await getUserPublicKey()
+      const address = await getUserSecrets(pin)
       const body = {
         address
       }
@@ -143,6 +144,37 @@ class ClientWallet {
     }
   }
 
+  async getAssetList () {
+    try {
+      const { nodeIp } = await NodesIp.getAllNodesIp()
+      const { data } = await axios.get(
+        `${this.tronwalletApi}/vote/list?node=${nodeIp}`
+      )
+      return data
+    } catch (error) {
+      throw new Error(error.message || error)
+    }
+  }
+
+  async broadcastTransaction (transactionSigned) {
+    const { nodeIp } = await NodesIp.getAllNodesIp()
+    const reqBody = {
+      transactionSigned,
+      node: nodeIp
+    }
+    try {
+      const { data: { result } } = await axios.post(
+        `${this.tronwalletApi}/transaction/broadcast`,
+        reqBody
+      )
+      return result
+    } catch (err) {
+      const { data: { error } } = err.response
+      throw new Error(error)
+    }
+  }
+
+  async getTransferTransaction ({ to, from, token, amount }) {
     try {
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
