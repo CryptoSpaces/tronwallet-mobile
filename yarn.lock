@@ -6167,6 +6167,12 @@ react-native-motion@^0.2.0:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-onesignal@^3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-3.2.5.tgz#8b20a63877ee8fe3a77c76db40b0d8d9e192ec42"
+  dependencies:
+    invariant "^2.2.2"
+
 react-native-permissions@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
