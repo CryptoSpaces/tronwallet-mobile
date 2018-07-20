@@ -58,6 +58,7 @@ class PinScene extends React.Component {
         }
       }
       this.pinView.shake(200)
+      this._handleClear()
     }
   }
 
