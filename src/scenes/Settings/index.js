@@ -56,6 +56,7 @@ class Settings extends Component {
         description: 'Choose a node of your preference',
         icon: 'share,-network,-connect,-community,-media',
         onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
           testInput: pin => pin === this.props.context.pin,
           onSuccess: () => this.props.navigation.navigate('NetworkConnection')
         })
@@ -65,6 +66,7 @@ class Settings extends Component {
         description: 'Confirm the seed password for your account',
         icon: 'key,-password,-lock,-privacy,-login',
         onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
           testInput: pin => pin === this.props.context.pin,
           onSuccess: () => this.props.navigation.navigate('SeedCreate', { seed })
         })
@@ -74,6 +76,7 @@ class Settings extends Component {
         description: 'Restore previously used seed words',
         icon: 'folder-sync,-data,-folder,-recovery,-sync',
         onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
           testInput: pin => pin === this.props.context.pin,
           onSuccess: () => this.props.navigation.navigate('SeedRestore')
         })

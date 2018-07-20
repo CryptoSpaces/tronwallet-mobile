@@ -7,6 +7,7 @@ import {
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import axios from 'axios'
 import Config from 'react-native-config'
+import OneSignal from 'react-native-onesignal'
 
 import { Colors } from './src/components/DesignSystem'
 
@@ -154,8 +155,35 @@ class App extends Component {
   }
 
   componentDidMount () {
+    OneSignal.init('ce0b0f27-0ae7-4a8c-8fff-2a110da3a163', { kOSSettingsKeyAutoPrompt: true })
+
+    OneSignal.addEventListener('received', this._onReceived)
+    OneSignal.addEventListener('opened', this._onOpened)
+    OneSignal.addEventListener('ids', this._onIds)
+
     this._getPrice()
     this._setNodes()
+  }
+
+  componentWillUnmount () {
+    OneSignal.removeEventListener('received', this._onReceived)
+    OneSignal.removeEventListener('opened', this._onOpened)
+    OneSignal.removeEventListener('ids', this._onIds)
+  }
+
+  _onReceived (notification) {
+    console.log('Notification received: ', notification)
+  }
+
+  _onOpened (openResult) {
+    console.log('Message: ', openResult.notification.payload.body)
+    console.log('Data: ', openResult.notification.payload.additionalData)
+    console.log('isActive: ', openResult.notification.isAppInFocus)
+    console.log('openResult: ', openResult)
+  }
+
+  _onIds (device) {
+    console.log('Device info: ', device)
   }
 
   _loadUserData = () => {
