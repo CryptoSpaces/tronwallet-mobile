@@ -70,9 +70,9 @@ class VoteScene extends PureComponent {
     }
     this.resetVoteData = {
       amountToVote: 0,
-      loadingList: true,
       currentVoteItem: {},
       startedVoting: false,
+      refreshing: true,
       userVotes: {},
       search: ''
     }
@@ -97,7 +97,6 @@ class VoteScene extends PureComponent {
     this.setState(this.resetVoteData, async () => {
       await this._refreshCandidates()
       await this._loadUserData()
-      this.setState({ loadingList: false })
     })
 
     navigation.setParams({
@@ -128,8 +127,7 @@ class VoteScene extends PureComponent {
   _loadCandidates = async () => {
     try {
       const voteList = await this._getVoteListFromStore()
-
-      this.setState({ voteList })
+      this.setState({ voteList, loadingList: false })
     } catch (e) {
       e.name = 'Load Candidates Error'
       this._throwError(e)
@@ -137,7 +135,7 @@ class VoteScene extends PureComponent {
   }
 
   _refreshCandidates = async () => {
-    this.setState({ offset: 0, refreshing: true })
+    this.setState({ offset: 0 })
     try {
       const { candidates, totalVotes } = await WalletClient.getTotalVotes()
       const store = await getCandidateStore()
@@ -152,8 +150,6 @@ class VoteScene extends PureComponent {
     } catch (e) {
       e.name = 'Refresh Candidates Error'
       this._throwError(e)
-    } finally {
-      this.setState({ refreshing: false })
     }
   }
 
@@ -196,6 +192,8 @@ class VoteScene extends PureComponent {
     } catch (e) {
       e.name = 'Freeze Error'
       this._throwError(e, 'votesError')
+    } finally {
+      this.setState({refreshing: false})
     }
   }
 
@@ -235,7 +233,7 @@ class VoteScene extends PureComponent {
   _openTransactionDetails = async transactionUnsigned => {
     try {
       const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
-      this.setState({ loadingSign: false }, () => {
+      this.setState({ refreshing: false, loadingList: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
@@ -282,8 +280,8 @@ class VoteScene extends PureComponent {
     const { voteList } = this.state
     this.setState({ loadingList: true })
     if (value) {
-      const regex = new RegExp(value, 'i')
-      const votesFilter = voteList.filter(vote => vote.url.match(regex))
+      const regex = new RegExp(value.toLowerCase(), 'i')
+      const votesFilter = voteList.filter(vote => vote.url.toLowerCase().match(regex))
       this.setState({ voteList: votesFilter, loadingList: false })
     } else {
       const store = await getCandidateStore()
@@ -387,7 +385,8 @@ class VoteScene extends PureComponent {
     this.setState(
       {
         [errorType]: "Oops, something didn't load correctly. Try to reload",
-        loading: false
+        refreshing: false,
+        loadingList: false
       },
       function setErrorParams () {
         this.props.navigation.setParams({
@@ -411,7 +410,6 @@ class VoteScene extends PureComponent {
       voteList,
       currentVoteItem,
       startedVoting } = this.state
-
     return (
       <Utils.Container>
         <NavigationHeader
@@ -479,6 +477,7 @@ class VoteScene extends PureComponent {
             onChangeText={text => this._onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
+            editable={!refreshing && !loadingList}
             marginBottom={0}
             marginTop={0}
           />
