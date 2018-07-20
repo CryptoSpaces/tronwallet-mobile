@@ -502,18 +502,6 @@ export const LightButton = styled.TouchableOpacity`
 `
 /* THIS IS FOLLOWING ZEPLIN VALUES */
 
-/* Logo */
-export const Logo = styled(Image)`
-  margin-bottom: ${ZeplinSpacing.relative.baseFive.medium}px;
-`
-
-export const LogoText = styled.Text`
-  font-family: Rubik-Medium;
-  font-size: 24px;
-  letter-spacing: 0;
-  color: ${ZeplinColors.text.primary};
-`
-
 /* Containers */
 
 export const CenteredSection = styled.View`
