@@ -106,9 +106,11 @@ class TransactionsScene extends Component {
       )
       const transactions = this.getSortedTransactionList(store)
       this.setState({
-        transactions
+        transactions,
+        refreshing: false
       })
     } catch (err) {
+      this.setState({ refreshing: false })
       console.error(err)
     }
   }

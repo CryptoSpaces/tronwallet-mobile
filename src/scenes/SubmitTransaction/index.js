@@ -3,7 +3,6 @@ import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
 import { NavigationActions } from 'react-navigation'
-
 // Design
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
@@ -90,28 +89,47 @@ class TransactionDetail extends Component {
     navigation.dispatch(navigateToHome)
   }
 
-  submitTransaction = async () => {
+  _getTransactionObject = () => {
     const {
-      signedTransaction,
       transactionData: { hash, contracts }
     } = this.state
-    this.setState({ loadingSubmit: true, submitError: null })
-    const store = await getTransactionStore()
+
+    const type = Client.getContractType(contracts[0].contractTypeId)
 
     const transaction = {
       id: hash,
-      type: Client.getContractType(contracts[0].contractTypeId),
+      type,
       contractData: {
         transferFromAddress: contracts[0].from,
         transferToAddress: contracts[0].to,
-        amount: contracts[0].amount,
         tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
       },
       ownerAddress: contracts[0].from || contracts[0].ownerAddress,
       timestamp: Date.now(),
       confirmed: false
     }
+    switch (type) {
+      case 'Freeze':
+        transaction.contractData.frozenBalance = contracts[0].frozenBalance
+        break
+      case 'Vote':
+        transaction.contractData.votes = contracts[0].votes
+        break
+      default:
+        transaction.contractData.amount = contracts[0].amount
+        break
+    }
+    return transaction
+  }
+  submitTransaction = async () => {
+    const {
+      signedTransaction,
+      transactionData: { hash }
+    } = this.state
+    this.setState({ loadingSubmit: true, submitError: null })
+    const store = await getTransactionStore()
 
+    const transaction = this._getTransactionObject()
     try {
       let success = false
       store.write(() => { store.create('Transaction', transaction, true) })
