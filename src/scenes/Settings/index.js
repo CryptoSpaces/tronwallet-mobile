@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  Alert,
   View,
   TouchableWithoutFeedback
 } from 'react-native'
-import { Auth } from 'aws-amplify'
-import { StackActions, NavigationActions } from 'react-navigation'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
+import NavigationHeader from '../../components/Navigation/Header'
 
+import { withContext } from '../../store/context'
 import { getUserSecrets } from '../../utils/secretsUtils'
 import fontelloConfig from '../../assets/icons/config.json'
-import NavigationHeader from '../../components/Navigation/Header'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
@@ -26,89 +24,23 @@ class Settings extends Component {
   }
 
   state = {
-    nodeModalVisible: false,
     address: null,
     seed: null,
     loading: true
   }
 
   componentDidMount () {
-    this.onLoadData()
+    this._onLoadData()
   }
 
-  onLoadData = async () => {
-    const data = await getUserSecrets()
+  _onLoadData = async () => {
+    const data = await getUserSecrets(this.props.context.pin)
     const address = data.address
     const seed = data.mnemonic
     this.setState({ address, seed, loading: false })
   }
 
-  showAlert = () => {
-    Alert.alert(
-      'Logout',
-      'Do you want to log out of your wallet?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        {
-          text: 'Yes',
-          onPress: async () => {
-            await Auth.signOut()
-            const resetAction = StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({ routeName: 'Auth' })],
-              key: null
-            })
-            this.props.navigation.dispatch(resetAction)
-          },
-          style: 'default'
-        }
-      ],
-      { cancelable: true }
-    )
-  }
-
-  renderLogout = () => {
-    const arrowIcon = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
-    const logout = {
-      title: 'Logout',
-      description: 'Exit application',
-      icon: 'log-out,-exit,-out,-arrow,-sign-out',
-      onPress: this.showAlert
-    }
-    return (
-      <TouchableWithoutFeedback onPress={logout.onPress}>
-        <Utils.Item padding={16} top={0.2}>
-          <Utils.Row justify='space-between' align='center'>
-            <Utils.Row justify='space-between' align='center'>
-              <View style={styles.rank}>
-                <Icon
-                  name={logout.icon}
-                  size={22}
-                  color={Colors.secondaryText}
-                />
-              </View>
-              <Utils.View>
-                <Utils.Text lineHeight={20} size='small'>
-                  {logout.title}
-                </Utils.Text>
-                <Utils.Text lineHeight={20} size='xsmall' secondary>
-                  {logout.description}
-                </Utils.Text>
-              </Utils.View>
-            </Utils.Row>
-            <Utils.Row align='center' justify='space-between'>
-              <Icon name={arrowIcon} size={15} color={Colors.secondaryText} />
-            </Utils.Row>
-          </Utils.Row>
-        </Utils.Item>
-      </TouchableWithoutFeedback>
-    )
-  }
-
-  renderList = () => {
+  _renderList = () => {
     const { address, seed } = this.state
     const shortAddress = address
       ? `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
@@ -123,19 +55,31 @@ class Settings extends Component {
         title: 'Edit Node Network',
         description: 'Choose a node of your preference',
         icon: 'share,-network,-connect,-community,-media',
-        onPress: () => this.props.navigation.navigate('NetworkConnection')
+        onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
+          testInput: pin => pin === this.props.context.pin,
+          onSuccess: () => this.props.navigation.navigate('NetworkConnection')
+        })
       },
       {
         title: 'Confirm Seed',
         description: 'Confirm the seed password for your account',
         icon: 'key,-password,-lock,-privacy,-login',
-        onPress: () => this.props.navigation.navigate('SeedCreate', { seed })
+        onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
+          testInput: pin => pin === this.props.context.pin,
+          onSuccess: () => this.props.navigation.navigate('SeedCreate', { seed })
+        })
       },
       {
         title: 'Restore Seed',
         description: 'Restore previously used seed words',
         icon: 'folder-sync,-data,-folder,-recovery,-sync',
-        onPress: () => this.props.navigation.navigate('SeedRestore')
+        onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
+          testInput: pin => pin === this.props.context.pin,
+          onSuccess: () => this.props.navigation.navigate('SeedRestore')
+        })
       }
     ]
 
@@ -184,9 +128,7 @@ class Settings extends Component {
         keyboardShouldPersistTaps={'always'}
         keyboardDismissMode='interactive'
       >
-        {this.renderList()}
-        <Utils.VerticalSpacer size='big' />
-        {this.renderLogout()}
+        {this._renderList()}
       </Utils.Container>
     )
   }
@@ -209,4 +151,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Settings
+export default withContext(Settings)

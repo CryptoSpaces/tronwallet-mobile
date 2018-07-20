@@ -16,13 +16,17 @@ import ConfirmModal from '../../components/Vote/ConfirmModal'
 import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
 import ConfirmVotes from '../../components/Vote/ConfirmButton'
+import NavigationHeader from '../../components/Navigation/Header'
+import NavigationButton from '../../components/Navigation/ButtonHeader'
+import ClearVotes from '../../components/ClearButton'
+
 // Service
 import WalletClient from '../../services/client'
 import { signTransaction } from '../../utils/transactionUtils'
 
 import getCandidateStore from '../../store/candidates'
-import { Context } from '../../store/context'
 import { Colors } from '../../components/DesignSystem'
+import { withContext } from '../../store/context'
 
 const LIST_STEP_SIZE = 20
 
@@ -66,9 +70,9 @@ class VoteScene extends PureComponent {
     }
     this.resetVoteData = {
       amountToVote: 0,
-      loadingList: true,
       currentVoteItem: {},
       startedVoting: false,
+      refreshing: true,
       userVotes: {},
       search: ''
     }
@@ -93,7 +97,6 @@ class VoteScene extends PureComponent {
     this.setState(this.resetVoteData, async () => {
       await this._refreshCandidates()
       await this._loadUserData()
-      this.setState({ loadingList: false })
     })
 
     navigation.setParams({
@@ -124,8 +127,7 @@ class VoteScene extends PureComponent {
   _loadCandidates = async () => {
     try {
       const voteList = await this._getVoteListFromStore()
-
-      this.setState({ voteList })
+      this.setState({ voteList, loadingList: false })
     } catch (e) {
       e.name = 'Load Candidates Error'
       this._throwError(e)
@@ -133,7 +135,7 @@ class VoteScene extends PureComponent {
   }
 
   _refreshCandidates = async () => {
-    this.setState({ offset: 0, refreshing: true })
+    this.setState({ offset: 0 })
     try {
       const { candidates, totalVotes } = await WalletClient.getTotalVotes()
       const store = await getCandidateStore()
@@ -148,8 +150,6 @@ class VoteScene extends PureComponent {
     } catch (e) {
       e.name = 'Refresh Candidates Error'
       this._throwError(e)
-    } finally {
-      this.setState({ refreshing: false })
     }
   }
 
@@ -169,7 +169,10 @@ class VoteScene extends PureComponent {
 
   _loadUserData = async () => {
     try {
-      const [userVotes, userFrozen] = await Promise.all([WalletClient.getUserVotes(), WalletClient.getFreeze()])
+      const [userVotes, userFrozen] = await Promise.all([
+        WalletClient.getUserVotes(this.props.context.pin),
+        WalletClient.getFreeze(this.props.context.pin)
+      ])
       const { total: totalFrozen } = userFrozen
 
       if (userVotes) {
@@ -186,6 +189,19 @@ class VoteScene extends PureComponent {
           totalRemaining: totalFrozen
         })
       }
+    } catch (e) {
+      e.name = 'Freeze Error'
+      this._throwError(e, 'votesError')
+    } finally {
+      this.setState({refreshing: false})
+    }
+  }
+
+  _loadUserVotes = async () => {
+    try {
+      const userVotes = await WalletClient.getUserVotes(this.props.context.pin)
+      this.setState({ userVotes })
+      return userVotes
     } catch (e) {
       e.name = 'Load User Votes Error'
       this._throwError(e, 'votesError')
@@ -204,7 +220,7 @@ class VoteScene extends PureComponent {
         currentVotes[key] = Number(value)
       })
       try {
-        const data = await WalletClient.getVoteWitnessTransaction(currentVotes)
+        const data = await WalletClient.getVoteWitnessTransaction(this.props.context.pin, currentVotes)
         this._openTransactionDetails(data)
       } catch (error) {
         Alert.alert('Error while building transaction, try again.')
@@ -216,8 +232,8 @@ class VoteScene extends PureComponent {
 
   _openTransactionDetails = async transactionUnsigned => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned)
-      this.setState({ loadingSign: false }, () => {
+      const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
+      this.setState({ refreshing: false, loadingList: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
@@ -264,8 +280,8 @@ class VoteScene extends PureComponent {
     const { voteList } = this.state
     this.setState({ loadingList: true })
     if (value) {
-      const regex = new RegExp(value, 'i')
-      const votesFilter = voteList.filter(vote => vote.url.match(regex))
+      const regex = new RegExp(value.toLowerCase(), 'i')
+      const votesFilter = voteList.filter(vote => vote.url.toLowerCase().match(regex))
       this.setState({ voteList: votesFilter, loadingList: false })
     } else {
       const store = await getCandidateStore()
@@ -284,7 +300,7 @@ class VoteScene extends PureComponent {
     })
   }
 
-  _openConfirmModal = () => this.setState({confirmModalVisible: true})
+  _openConfirmModal = () => this.setState({ confirmModalVisible: true })
 
   _closeModal = () => this.setState({ ...this.resetAddModal })
 
@@ -369,7 +385,8 @@ class VoteScene extends PureComponent {
     this.setState(
       {
         [errorType]: "Oops, something didn't load correctly. Try to reload",
-        loading: false
+        refreshing: false,
+        loadingList: false
       },
       function setErrorParams () {
         this.props.navigation.setParams({
@@ -393,14 +410,24 @@ class VoteScene extends PureComponent {
       voteList,
       currentVoteItem,
       startedVoting } = this.state
-
     return (
       <Utils.Container>
+        <NavigationHeader
+          title='VOTES'
+          rightButton={(this.props.navigation.getParam('votesError') || this.props.navigation.getParam('listError'))
+            ? <NavigationButton
+              title='RELOAD'
+              onPress={this.props.navigation.getParam('loadData')}
+            />
+            : <ClearVotes
+              onPress={this.props.navigation.getParam('clearVotes')}
+            />}
+        />
         <GrowIn name='vote-header' height={63}>
           <Header>
             <Utils.View align='center'>
               <Utils.Text size='tiny' weight='500' secondary>
-                    TOTAL VOTES
+                TOTAL VOTES
               </Utils.Text>
               <Utils.VerticalSpacer />
               <Utils.Text size='small'>
@@ -450,6 +477,7 @@ class VoteScene extends PureComponent {
             onChangeText={text => this._onSearch(text, 'search')}
             placeholder='Search'
             placeholderTextColor='#fff'
+            editable={!refreshing && !loadingList}
             marginBottom={0}
             marginTop={0}
           />
@@ -477,8 +505,4 @@ class VoteScene extends PureComponent {
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <VoteScene context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(VoteScene)

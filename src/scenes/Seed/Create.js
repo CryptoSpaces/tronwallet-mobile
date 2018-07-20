@@ -7,6 +7,7 @@ import ButtonGradient from '../../components/ButtonGradient'
 import NavigationHeader from '../../components/Navigation/Header'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
+import { withContext } from '../../store/context'
 
 class Create extends React.Component {
   static navigationOptions = () => ({
@@ -19,7 +20,7 @@ class Create extends React.Component {
 
   async componentDidMount () {
     try {
-      const { mnemonic } = await getUserSecrets()
+      const { mnemonic } = await getUserSecrets(this.props.context.pin)
       this.setState({ seed: mnemonic })
     } catch (err) {
       console.warn(err)
@@ -61,4 +62,4 @@ class Create extends React.Component {
   }
 }
 
-export default Create
+export default withContext(Create)

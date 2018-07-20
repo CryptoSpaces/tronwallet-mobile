@@ -21,7 +21,14 @@ const FloatingConfirm = ({onPress, disabled, voteCount}) => (
       >
         <Utils.Row justify='center' align='center'>
           <Utils.Text weight={'bold'} size={'xsmall'}>CONFIRM VOTES</Utils.Text>
-          <Utils.View align='center' justify='center' marginLeft={5} width={Spacing.big} height={Spacing.big} background={Colors.background}>
+          <Utils.View
+            align='center'
+            justify='center'
+            marginLeft={5}
+            width={Spacing.big}
+            height={Spacing.big}
+            background={Colors.background}
+          >
             <Utils.Text weight={'bold'} size={'xsmall'}>{voteCount}</Utils.Text>
           </Utils.View>
         </Utils.Row>

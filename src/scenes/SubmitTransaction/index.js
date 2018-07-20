@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
-import { StackActions, NavigationActions } from 'react-navigation'
-
+import { NavigationActions } from 'react-navigation'
 // Design
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
@@ -20,18 +19,6 @@ import getTransactionStore from '../../store/transactions'
 const CLOSE_SCREEN_TIME = 5000
 
 class TransactionDetail extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      header: (
-        <NavigationHeader
-          title='TRANSACTION DETAILS'
-          onClose={navigation.getParam('onClose')}
-          onBack={() => navigation.goBack()}
-        />
-      )
-    }
-  }
-
   state = {
     loadingData: true,
     loadingSubmit: false,
@@ -78,9 +65,7 @@ class TransactionDetail extends Component {
     const signedTransaction = navigation.state.params.tx
 
     try {
-      const transactionData = await Client.getTransactionDetails(
-        signedTransaction
-      )
+      const transactionData = await Client.getTransactionDetails(signedTransaction)
       this.setState({ transactionData, signedTransaction })
     } catch (error) {
       this.setState({ submitError: error.message })
@@ -100,36 +85,51 @@ class TransactionDetail extends Component {
   _navigateNext = () => {
     // Reset navigation as transaction submition is the last step of a user interaction
     const { navigation } = this.props
-    const navigateToHome = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'App' })],
-      key: null
-    })
+    const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
     navigation.dispatch(navigateToHome)
   }
 
-  submitTransaction = async () => {
+  _getTransactionObject = () => {
     const {
-      signedTransaction,
       transactionData: { hash, contracts }
     } = this.state
-    this.setState({ loadingSubmit: true, submitError: null })
-    const store = await getTransactionStore()
+
+    const type = Client.getContractType(contracts[0].contractTypeId)
 
     const transaction = {
       id: hash,
-      type: Client.getContractType(contracts[0].contractTypeId),
+      type,
       contractData: {
         transferFromAddress: contracts[0].from,
         transferToAddress: contracts[0].to,
-        amount: contracts[0].amount,
         tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
       },
       ownerAddress: contracts[0].from || contracts[0].ownerAddress,
       timestamp: Date.now(),
       confirmed: false
     }
+    switch (type) {
+      case 'Freeze':
+        transaction.contractData.frozenBalance = contracts[0].frozenBalance
+        break
+      case 'Vote':
+        transaction.contractData.votes = contracts[0].votes
+        break
+      default:
+        transaction.contractData.amount = contracts[0].amount
+        break
+    }
+    return transaction
+  }
+  submitTransaction = async () => {
+    const {
+      signedTransaction,
+      transactionData: { hash }
+    } = this.state
+    this.setState({ loadingSubmit: true, submitError: null })
+    const store = await getTransactionStore()
 
+    const transaction = this._getTransactionObject()
     try {
       let success = false
       store.write(() => { store.create('Transaction', transaction, true) })
@@ -223,18 +223,25 @@ class TransactionDetail extends Component {
     if (loadingData) return <LoadingScene />
 
     return (
-      <Utils.Container>
-        <ScrollView>
-          {!isConnected && this.renderRetryConnection()}
-          {isConnected && this.renderContracts()}
-          {isConnected && this.renderSubmitButton()}
-          <Utils.Content align='center' justify='center'>
-            {submitError && (
-              <Utils.Error>{submitError}</Utils.Error>
-            )}
-          </Utils.Content>
-        </ScrollView>
-      </Utils.Container>
+      <React.Fragment>
+        <NavigationHeader
+          title='TRANSACTION DETAILS'
+          onClose={this.props.navigation.getParam('onClose')}
+          onBack={() => this.props.navigation.goBack()}
+        />
+        <Utils.Container>
+          <ScrollView>
+            {!isConnected && this.renderRetryConnection()}
+            {isConnected && this.renderContracts()}
+            {isConnected && this.renderSubmitButton()}
+            <Utils.Content align='center' justify='center'>
+              {submitError && (
+                <Utils.Error>{submitError}</Utils.Error>
+              )}
+            </Utils.Content>
+          </ScrollView>
+        </Utils.Container>
+      </React.Fragment>
     )
   }
 }

@@ -1,40 +1,50 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Linking } from 'react-native'
-import { Auth } from 'aws-amplify'
+import { ActivityIndicator, AsyncStorage } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 
-import { checkPublicKeyReusability } from '../../utils/userAccountUtils'
+import SecretStore from '../../store/secrets'
+import { withContext } from '../../store/context'
 
 class LoadingScene extends Component {
-  async componentDidMount () {
-    // React Navigation open this route cuncurrently with the deeplink route.
-    const deepLinkUrl = await Linking.getInitialURL()
-    if (!deepLinkUrl) {
-      this._checkSession()
+  componentDidMount () {
+    SplashScreen.hide()
+    this._askPin()
+  }
+
+  _isFirstTime = async () => {
+    const isFirstTime = await AsyncStorage.getItem('@TronWallet:isFirstTime')
+    if (isFirstTime !== null) {
+      return false
+    }
+    return true
+  }
+
+  _tryToOpenStore = async pin => {
+    try {
+      await SecretStore(pin)
+      return true
+    } catch (err) {
+      return false
     }
   }
 
-  _checkSession = async () => {
-    try {
-      await Promise.race([
-        Auth.currentSession(),
-        new Promise((resolve, reject) =>
-          setTimeout(() => reject(new Error('Session expired.')), 5000)
-        )
-      ])
-      const isAddressReusable = await checkPublicKeyReusability()
-      if (!isAddressReusable) {
-        this.props.navigation.navigate('RestoreOrCreateSeed')
-      } else {
-        this.props.navigation.navigate('App')
-      }
-    } catch (error) {
-      this.props.navigation.navigate('Login')
+  _handleSuccess = key => {
+    this.props.context.setPin(key, () => this.props.navigation.navigate('App'))
+  }
+
+  _askPin = async () => {
+    const isFirstTime = await this._isFirstTime()
+    if (isFirstTime) {
+      this.props.navigation.navigate('FirstTime')
+    } else {
+      this.props.navigation.navigate('Pin', {
+        testInput: this._tryToOpenStore,
+        onSuccess: this._handleSuccess
+      })
     }
-    SplashScreen.hide()
   }
 
   render () {
@@ -51,4 +61,4 @@ class LoadingScene extends Component {
   }
 }
 
-export default LoadingScene
+export default withContext(LoadingScene)

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   ActivityIndicator,
   Clipboard,
-  Linking,
   Alert,
   Modal
 } from 'react-native'
@@ -11,21 +10,18 @@ import ModalSelector from 'react-native-modal-selector'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
-import Header from '../../components/Header'
 import Input from '../../components/Input'
 import QRScanner from '../../components/QRScanner'
 import IconButton from '../../components/IconButton'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
+import KeyboardScreen from '../../components/KeyboardScreen'
 
-import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { isAddressValid } from '../../services/address'
 import { signTransaction } from '../../utils/transactionUtils'
-import getBalanceStore from '../../store/balance'
-import { Context } from '../../store/context'
-import { getUserPublicKey } from '../../utils/userAccountUtils'
-import KeyboardScreen from '../../components/KeyboardScreen'
 import { formatNumber } from '../../utils/numberUtils'
+import getBalanceStore from '../../store/balance'
+import { withContext } from '../../store/context'
 
 class SendScene extends Component {
   state = {
@@ -46,7 +42,7 @@ class SendScene extends Component {
   componentDidMount () {
     this._navListener = this.props.navigation.addListener(
       'didFocus',
-      this.loadData
+      this._loadData
     )
   }
 
@@ -54,7 +50,7 @@ class SendScene extends Component {
     this._navListener.remove()
   }
 
-  _orderBalances = (balances) => {
+  _orderBalances = balances => {
     let orderedBalances = []
     balances.forEach((balance) => {
       if (balance.name === 'TRX') {
@@ -66,16 +62,16 @@ class SendScene extends Component {
     return [...orderedBalances, ...balances.filter((balance) => balance.name !== 'TRX' && balance.name !== 'TWX')]
   }
 
-  getBalancesFromStore = async () => {
+  _getBalancesFromStore = async () => {
     const store = await getBalanceStore()
     return store.objects('Balance').map(item => Object.assign({}, item))
   }
 
-  loadData = async () => {
+  _loadData = async () => {
     this.setState({ loading: true })
     try {
-      const balances = await this.getBalancesFromStore()
-      const userPublicKey = await getUserPublicKey()
+      const balances = await this._getBalancesFromStore()
+      const userPublicKey = this.props.context.publicKey.value
       let orderedBalances = []
       let balance = 0
 
@@ -101,14 +97,14 @@ class SendScene extends Component {
     }
   }
 
-  changeInput = (text, field) => {
+  _changeInput = (text, field) => {
     this.setState({
       [field]: text,
       error: null
     })
   }
 
-  submit = () => {
+  _submit = () => {
     const { amount, to, balances, token, from } = this.state
     const balanceSelected = balances.find(b => b.name === token)
 
@@ -126,7 +122,7 @@ class SendScene extends Component {
       return
     }
 
-    this.transferAsset()
+    this._transferAsset()
   }
 
   clearInput = () => {
@@ -137,7 +133,7 @@ class SendScene extends Component {
     })
   }
 
-  transferAsset = async () => {
+  _transferAsset = async () => {
     const { from, to, amount, token } = this.state
     this.setState({ loadingSign: true, error: null })
     try {
@@ -148,7 +144,7 @@ class SendScene extends Component {
         amount,
         token
       })
-      this.openTransactionDetails(data)
+      this._openTransactionDetails(data)
       this.clearInput()
     } catch (error) {
       this.setState({
@@ -158,9 +154,9 @@ class SendScene extends Component {
     }
   }
 
-  openTransactionDetails = async transactionUnsigned => {
+  _openTransactionDetails = async transactionUnsigned => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned)
+      const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
       this.setState({ loadingSign: false, error: null }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
@@ -171,19 +167,7 @@ class SendScene extends Component {
     }
   }
 
-  openDeepLink = async dataToSend => {
-    try {
-      const url = `${TronVaultURL}auth/${dataToSend}`
-      await Linking.openURL(url)
-      this.setState({ loadingSign: false })
-    } catch (error) {
-      this.setState({ loadingSign: false }, () => {
-        this.props.navigation.navigate('GetVault')
-      })
-    }
-  }
-
-  readPublicKey = e => this.setState({ to: e.data }, () => {
+  _readPublicKey = e => this.setState({ to: e.data }, () => {
     this.closeModal()
     this._nextInput('to')
   })
@@ -193,52 +177,14 @@ class SendScene extends Component {
   _onPaste = async () => {
     const content = await Clipboard.getString()
     if (content) {
-      this.changeInput(content, 'to')
+      this._changeInput(content, 'to')
       this._nextInput('to')
     }
   }
 
-  closeModal = () => {
+  _closeModal = () => {
     if (this.state.QRModalVisible) {
       this.setState({ QRModalVisible: false })
-    }
-  }
-
-  renderHeader = () => {
-    const { trxBalance } = this.state
-    const { noNavigation } = this.props
-
-    if (noNavigation) {
-      return (
-        <Utils.View>
-          <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>
-              Send Transaction
-            </Utils.Text>
-            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-          </Utils.View>
-        </Utils.View>
-      )
-    } else {
-      return (
-        <Header
-          leftIcon={
-            <Ionicons name='md-menu' color={Colors.primaryText} size={24} />
-          }
-          onLeftPress={() => { }}
-          rightIcon={
-            <Ionicons name='ios-close' color={Colors.primaryText} size={40} />
-          }
-          onRightPress={() => this.props.navigation.goBack()}
-        >
-          <Utils.View align='center'>
-            <Utils.Text size='xsmall' secondary>
-              Send Transaction
-            </Utils.Text>
-            <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-          </Utils.View>
-        </Header>
-      )
     }
   }
 
@@ -270,7 +216,7 @@ class SendScene extends Component {
     }
 
     if (currentInput === 'amount' && this.state.trxBalance !== 0) {
-      this.submit()
+      this._submit()
     }
   }
 
@@ -278,7 +224,7 @@ class SendScene extends Component {
     const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
     return (
       <KeyboardScreen>
-        <Utils.Container style={{borderColor: Colors.secondaryText, borderTopWidth: 0.5}}>
+        <Utils.Container style={{ borderColor: Colors.secondaryText, borderTopWidth: 0.5 }}>
           <Utils.Content>
             <ModalSelector
               data={balances.map(item => ({
@@ -304,7 +250,7 @@ class SendScene extends Component {
               label='TO'
               rightContent={this._rightContentTo}
               value={to}
-              onChangeText={text => this.changeInput(text, 'to')}
+              onChangeText={text => this._changeInput(text, 'to')}
               onSubmitEditing={() => this._nextInput('to')}
             />
             <Modal
@@ -313,7 +259,7 @@ class SendScene extends Component {
               animationType='slide'
             >
               <QRScanner
-                onRead={this.readPublicKey}
+                onRead={this._readPublicKey}
                 onClose={this.closeModal}
                 checkAndroid6Permissions
               />
@@ -325,7 +271,7 @@ class SendScene extends Component {
               keyboardType='numeric'
               placeholder='0'
               value={amount}
-              onChangeText={text => this.changeInput(text, 'amount')}
+              onChangeText={text => this._changeInput(text, 'amount')}
               onSubmitEditing={() => this._nextInput('amount')}
               align='right'
             />
@@ -345,8 +291,8 @@ class SendScene extends Component {
               <ButtonGradient
                 font='bold'
                 text='SEND'
-                onPress={this.submit}
-                disabled={trxBalance === 0}
+                onPress={this._submit}
+                disabled={Number(amount) < 1 || trxBalance < Number(amount)}
               />
             )}
           </Utils.Content>
@@ -356,8 +302,4 @@ class SendScene extends Component {
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <SendScene context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(SendScene)

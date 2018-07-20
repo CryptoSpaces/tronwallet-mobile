@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import { Modal, ScrollView } from 'react-native'
+import React, { Component } from 'react'
+import { Modal, ScrollView, SafeAreaView } from 'react-native'
 import { withNavigation } from 'react-navigation'
 // Design
 import * as Utils from '../Utils'
@@ -80,95 +80,97 @@ class VoteModal extends Component {
         transparent={false}
         visible={modalVisible}
         onRequestClose={closeModal}
-        style={{ backgroundColor: 'red' }}
+        style={{ backgroundColor: Colors.background }}
       >
-        <Utils.Container>
-          <ScrollView>
-            <NavigationHeader
-              onBack={closeModal}
-              title={formatUrl(candidateUrl)}
-              noBorder
-            />
-            <Utils.View paddingX={'medium'}>
-              <Utils.Row justify='center' align='center'>
-                <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller' secondary>
-                TOTAL VOTES
-                </Utils.Text>
-                <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller'>
-                  {totalVotes}
-                </Utils.Text>
-              </Utils.Row>
-              <Utils.VerticalSpacer size='large' />
-              <Utils.Text margin={Spacing.small} weight={400} size='average' align='right'>
-            ENTER THE VOTE VALUE
-              </Utils.Text>
-              <Utils.VerticalSpacer />
-              <Utils.Text margin={Spacing.small} size='large' align='right'>
-                {formatNumber(amountToVote)}
-              </Utils.Text>
-              <Utils.VerticalSpacer size='large' />
-              <Utils.NumPadWrapper>
-                {padKeys.map((voteKey, index) => {
-                  return (
-                    <Utils.NumKeyWrapper key={voteKey} flexBasis={25}>
-                      <Utils.NumKey onPress={() => this._incrementVoteCount(voteKey)}>
-                        <Utils.Text primary>+{voteKey}</Utils.Text>
-                      </Utils.NumKey>
-                    </Utils.NumKeyWrapper>
-                  )
-                })}
-              </Utils.NumPadWrapper>
-              <Utils.NumPadWrapper>
-                <OptionVote
-                  title='Clear'
-                  disabled={amountToVote === 0}
-                  onPress={this._clearVoteCount}
-                  background={Colors.background}
-                />
-                <OptionVote
-                  title='All in'
-                  disabled={totalRemaining <= 0}
-                  onPress={this._allinVoteCount}
-                  background={Colors.backgroundColor}
-                />
-              </Utils.NumPadWrapper>
-              <Utils.VerticalSpacer size='small' />
-              <Utils.Row justify='center' align='center'>
-                <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller' secondary>
-                TOTAL REMAINING
-                </Utils.Text>
-                <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller'>
-                  {totalRemaining}
-                </Utils.Text>
-              </Utils.Row>
-              <Utils.VerticalSpacer size='medium' />
-              <Utils.NumPadWrapper>
-                <OptionVote
-                  title='ADD VOTE'
-                  background={Colors.lightPurple}
-                  onPress={() => acceptCurrentVote(amountToVote)}
-                />
-              </Utils.NumPadWrapper>
-              {notEnoughTrx && (
-                <Utils.View paddingY='medium' align='center'>
-                  <Utils.Text secondary light size='small'>
-                    If you need more votes you can Freeze more TRX.
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
+          <Utils.Container>
+            <ScrollView>
+              <NavigationHeader
+                onBack={closeModal}
+                title={formatUrl(candidateUrl)}
+                noBorder
+              />
+              <Utils.View paddingX={'medium'}>
+                <Utils.Row justify='center' align='center'>
+                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller' secondary>
+                  TOTAL VOTES
                   </Utils.Text>
-                  <Utils.VerticalSpacer size='medium' />
-                  <ButtonGradient
-                    onPress={() => {
-                      closeModal()
-                      navigation.navigate('Freeze')
-                    }}
-                    text='FREEZE'
-                    size='medium'
-                    width={100}
+                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller'>
+                    {totalVotes}
+                  </Utils.Text>
+                </Utils.Row>
+                <Utils.VerticalSpacer size='large' />
+                <Utils.Text margin={Spacing.small} weight={400} size='average' align='right'>
+              ENTER THE VOTE VALUE
+                </Utils.Text>
+                <Utils.VerticalSpacer />
+                <Utils.Text margin={Spacing.small} size='large' align='right'>
+                  {formatNumber(amountToVote)}
+                </Utils.Text>
+                <Utils.VerticalSpacer size='large' />
+                <Utils.NumPadWrapper>
+                  {padKeys.map((voteKey, index) => {
+                    return (
+                      <Utils.NumKeyWrapper key={voteKey} flexBasis={25}>
+                        <Utils.NumKey onPress={() => this._incrementVoteCount(voteKey)}>
+                          <Utils.Text primary>+{voteKey}</Utils.Text>
+                        </Utils.NumKey>
+                      </Utils.NumKeyWrapper>
+                    )
+                  })}
+                </Utils.NumPadWrapper>
+                <Utils.NumPadWrapper>
+                  <OptionVote
+                    title='Clear'
+                    disabled={amountToVote === 0}
+                    onPress={this._clearVoteCount}
+                    background={Colors.background}
                   />
-                </Utils.View>
-              )}
-            </Utils.View>
-          </ScrollView>
-        </Utils.Container>
+                  <OptionVote
+                    title='All in'
+                    disabled={totalRemaining <= 0}
+                    onPress={this._allinVoteCount}
+                    background={Colors.backgroundColor}
+                  />
+                </Utils.NumPadWrapper>
+                <Utils.VerticalSpacer size='small' />
+                <Utils.Row justify='center' align='center'>
+                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller' secondary>
+                  TOTAL REMAINING
+                  </Utils.Text>
+                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller'>
+                    {totalRemaining}
+                  </Utils.Text>
+                </Utils.Row>
+                <Utils.VerticalSpacer size='medium' />
+                <Utils.NumPadWrapper>
+                  <OptionVote
+                    title='ADD VOTE'
+                    background={Colors.lightPurple}
+                    onPress={() => acceptCurrentVote(amountToVote)}
+                  />
+                </Utils.NumPadWrapper>
+                {notEnoughTrx && (
+                  <Utils.View paddingY='medium' align='center'>
+                    <Utils.Text secondary light size='small'>
+                      If you need more votes you can Freeze more TRX.
+                    </Utils.Text>
+                    <Utils.VerticalSpacer size='medium' />
+                    <ButtonGradient
+                      onPress={() => {
+                        closeModal()
+                        navigation.navigate('Freeze')
+                      }}
+                      text='FREEZE'
+                      size='medium'
+                      width={100}
+                    />
+                  </Utils.View>
+                )}
+              </Utils.View>
+            </ScrollView>
+          </Utils.Container>
+        </SafeAreaView>
       </Modal>
     )
   }
