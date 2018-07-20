@@ -134,7 +134,6 @@ class SendScene extends Component {
   }
 
   _transferAsset = async () => {
-    console.log('this.state', this.state)
     const { from, to, amount, token } = this.state
     this.setState({ loadingSign: true, error: null })
     try {

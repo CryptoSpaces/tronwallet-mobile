@@ -69,7 +69,7 @@ class VoteScene extends PureComponent {
     }
     this.resetVoteData = {
       amountToVote: 0,
-      loadingList: true,
+      refreshing: true,
       currentVoteItem: {},
       startedVoting: false,
       userVotes: {},
@@ -96,7 +96,7 @@ class VoteScene extends PureComponent {
     this.setState(this.resetVoteData, async () => {
       await this._refreshCandidates()
       await this._loadUserData()
-      this.setState({ loadingList: false })
+      this.setState({ loadingList: false, refreshing: false })
     })
 
     navigation.setParams({
@@ -136,7 +136,7 @@ class VoteScene extends PureComponent {
   }
 
   _refreshCandidates = async () => {
-    this.setState({ offset: 0, refreshing: true })
+    this.setState({ offset: 0 })
     try {
       const { candidates, totalVotes } = await WalletClient.getTotalVotes()
       const store = await getCandidateStore()
@@ -234,7 +234,7 @@ class VoteScene extends PureComponent {
   _openTransactionDetails = async transactionUnsigned => {
     try {
       const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
-      this.setState({ loadingSign: false }, () => {
+      this.setState({ loadingList: false, refreshing: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
@@ -280,8 +280,8 @@ class VoteScene extends PureComponent {
   _onSearch = async value => {
     const { voteList } = this.state
     if (value) {
-      const regex = new RegExp(value, 'i')
-      const votesFilter = voteList.filter(vote => vote.url.match(regex))
+      const regex = new RegExp(value.toLowerCase(), 'i')
+      const votesFilter = voteList.filter(vote => vote.url.toLowerCase().match(regex))
       this.setState({ voteList: votesFilter })
     } else {
       const store = await getCandidateStore()

@@ -84,15 +84,6 @@ class FreezeScene extends Component {
       const { balance } = freeze.value.balances.find(b => b.name === 'TRX')
       const total = freeze.value.total || 0
       const unfreezeStatus = await this._checkUnfreeze()
-      console.log('LOOK HERE', {
-        from: publicKey.value,
-        balances: freeze,
-        trxBalance: balance,
-        bandwidth: freeze.value.bandwidth.netReimaining,
-        loading: false,
-        unfreezeStatus,
-        total
-      })
       this.setState({
         from: publicKey.value,
         balances: freeze,
@@ -193,7 +184,7 @@ class FreezeScene extends Component {
               </Utils.Text>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Row align='center'>
-                <Utils.Text size='huge'>{trxBalance.toFixed(2)}</Utils.Text>
+                <Utils.Text size='large'>{trxBalance.toFixed(2)}</Utils.Text>
                 <Utils.HorizontalSpacer />
                 <Badge>TRX</Badge>
               </Utils.Row>

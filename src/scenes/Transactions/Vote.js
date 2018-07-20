@@ -6,10 +6,7 @@ import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 
 export default ({ item, onPress }) => {
-  const voteCount = item.contractData.votes.reduce(
-    (prev, curr) => prev + curr.voteCount,
-    0
-  )
+  const voteCount = item.contractData.votes.length
 
   return (
     <Utils.TransactionCard onPress={onPress}>

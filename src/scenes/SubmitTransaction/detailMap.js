@@ -73,9 +73,7 @@ export default (contracts) => {
         />
       )
     } else if (ctr === 'votes') {
-      const totalVotes = contracts[0][ctr].reduce((prev, curr) => {
-        return prev + curr.voteCount
-      }, 0)
+      const totalVotes = contracts[0][ctr].length
       contractsRows.push(
         <DetailRow key={ctr} title={toReadableField('Total Votes')} text={totalVotes} />
       )

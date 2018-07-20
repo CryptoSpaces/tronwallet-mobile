@@ -17,6 +17,12 @@ const WordWrapper = styled.TouchableOpacity`
   padding-horizontal: ${Spacing.medium};
 `
 
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'App' })],
+  key: null
+})
+
 class Confirm extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
@@ -72,19 +78,10 @@ class Confirm extends React.Component {
     } catch (error) {
       Alert.alert('Success', 'Wallet successfully confirmed.')
       this.setState({loading: false})
-      this._navigateHome()
+      navigation.dispatch(resetAction)
     }
   }
 
-  _navigateHome = () => {
-    const { navigation } = this.props
-    const navigateToHome = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'App' })],
-      key: null
-    })
-    navigation.dispatch(navigateToHome)
-  }
   _selectWord = item => {
     if (!this.state.selected.find(word => word === item.word)) {
       const seed = this.state.seed
