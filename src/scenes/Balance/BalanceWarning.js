@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize, Spacing } from '../../components/DesignSystem'
+import { withContext } from '../../store/context'
 
 const Warning = styled.Text`
   align-self: center;
@@ -17,11 +18,15 @@ const Warning = styled.Text`
   border-radius: 4px;
 `
 
-const BalanceWarning = ({children, navigation, seed}) => (
+const BalanceWarning = ({ children, navigation, seed, context }) => (
   <React.Fragment>
     <Utils.VerticalSpacer size='medium' />
     <TouchableOpacity onPress={() => {
-      navigation.navigate('SeedConfirm', { seed })
+      navigation.navigate('Pin', {
+        shouldGoBack: true,
+        testInput: pin => pin === context.pin,
+        onSuccess: () => navigation.navigate('SeedCreate', { seed, shouldReset: true })
+      })
     }}>
       <Warning>
         {children}
@@ -34,4 +39,4 @@ BalanceWarning.propTypes = {
   children: PropTypes.string.isRequired
 }
 
-export default BalanceWarning
+export default withContext(BalanceWarning)
