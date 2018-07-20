@@ -8,7 +8,7 @@ import {
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
-import Client from '../../services/client'
+import NavigationHeader from '../../components/Navigation/Header'
 import TransferCard from './Transfer'
 import ParticipateCard from './Participate'
 import CreateCard from './Create'
@@ -16,29 +16,27 @@ import VoteCard from './Vote'
 import FreezeCard from './Freeze'
 import UnfreezeCard from './Unfreeze'
 import Default from './Default'
-import NavigationHeader from '../../components/Navigation/Header'
 
+import Client from '../../services/client'
 import getTransactionStore from '../../store/transactions'
+import { withContext } from '../../store/context'
 
 const POOLING_TIME = 30000
 
 class TransactionsScene extends Component {
-  static navigationOptions = () => {
-    return {
-      header: <NavigationHeader title='MY TRANSACTIONS' />
-    }
-  }
+  static navigationOptions = () => ({
+    header: <NavigationHeader title='MY TRANSACTIONS' />
+  })
 
   state = {
-    refreshing: true,
+    refreshing: false,
     transactions: []
   }
 
   async componentDidMount () {
     const store = await getTransactionStore()
     this.setState({
-      transactions: this.getSortedTransactionList(store),
-      refreshing: false
+      transactions: this.getSortedTransactionList(store)
     })
     this.updateData()
     this.didFocusSubscription = this.props.navigation.addListener(
@@ -59,10 +57,16 @@ class TransactionsScene extends Component {
       .sorted([['timestamp', true]])
       .map(item => Object.assign({}, item))
 
+  _onRefresh = async () => {
+    this.setState({ refreshing: true })
+    await this.updateData()
+    this.setState({ refreshing: false })
+  }
+
   updateData = async () => {
     try {
       this.setState({ refreshing: true })
-      const response = await Client.getTransactionList()
+      const response = await Client.getTransactionList(this.props.context.pin)
       const store = await getTransactionStore()
       store.write(() =>
         response.map(item => {
@@ -102,7 +106,6 @@ class TransactionsScene extends Component {
       )
       const transactions = this.getSortedTransactionList(store)
       this.setState({
-        refreshing: false,
         transactions
       })
     } catch (err) {
@@ -169,7 +172,7 @@ class TransactionsScene extends Component {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={this.updateData}
+              onRefresh={this._onRefresh}
             />
           }
           contentContainerStyle={{ padding: Spacing.medium }}
@@ -184,4 +187,4 @@ class TransactionsScene extends Component {
   }
 }
 
-export default TransactionsScene
+export default withContext(TransactionsScene)

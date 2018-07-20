@@ -1,8 +1,8 @@
 import axios from 'axios'
 import Config from 'react-native-config'
-import { Auth } from 'aws-amplify'
-import { getUserPublicKey } from '../utils/userAccountUtils'
 import NodesIp from '../utils/nodeIp'
+
+import { getUserSecrets } from '../utils/secretsUtils'
 export const ONE_TRX = 1000000
 
 class ClientWallet {
@@ -11,14 +11,6 @@ class ClientWallet {
     this.apiTest = Config.API_URL
     this.notifier = Config.NOTIFIER_API_URL
     this.tronwalletApi = Config.TRON_WALLET_API_URL
-  }
-
-  //* ============AWS Functions============*//
-  setUserPk = async publickey => {
-    const user = await Auth.currentAuthenticatedUser()
-    return Auth.updateUserAttributes(user, {
-      'custom:publickey': publickey
-    })
   }
 
   //* ============TronScan Api============*//
@@ -56,10 +48,11 @@ class ClientWallet {
       throw new Error(error.message || error)
     }
   }
-  async getBalances () {
+
+  async getBalances (pin) {
     try {
       const apiUrl = await this.getTronscanUrl()
-      const address = await getUserPublicKey()
+      const { address } = await getUserSecrets(pin)
       const { data: { balances } } = await axios.get(
         `${apiUrl}/account/${address}`
       )
@@ -72,10 +65,10 @@ class ClientWallet {
     }
   }
 
-  async getFreeze () {
+  async getFreeze (pin) {
     try {
       const apiUrl = await this.getTronscanUrl()
-      const address = await getUserPublicKey()
+      const { address } = await getUserSecrets(pin)
       const { data: { frozen, bandwidth, balances } } = await axios.get(
         `${apiUrl}/account/${address}`
       )
@@ -85,10 +78,10 @@ class ClientWallet {
     }
   }
 
-  async getUserVotes () {
+  async getUserVotes (pin) {
     try {
       const apiUrl = await this.getTronscanUrl()
-      const address = await getUserPublicKey()
+      const { address } = await getUserSecrets(pin)
       const { data: { votes } } = await axios.get(
         `${apiUrl}/account/${address}/votes`
       )
@@ -110,9 +103,9 @@ class ClientWallet {
     }
   }
 
-  async getTransactionList () {
+  async getTransactionList (pin) {
     const apiUrl = await this.getTronscanUrl()
-    const address = await getUserPublicKey()
+    const { address } = await getUserSecrets(pin)
     const tx = () =>
       axios.get(
         `${apiUrl}/transaction?sort=-timestamp&limit=50&address=${address}`
@@ -138,7 +131,6 @@ class ClientWallet {
 
   //* ============TronWalletServerless Api============*//
 
-  async giftUser () {
     try {
       const address = await getUserPublicKey()
       const body = {
@@ -151,37 +143,6 @@ class ClientWallet {
     }
   }
 
-  async getAssetList () {
-    try {
-      const { nodeIp } = await NodesIp.getAllNodesIp()
-      const { data } = await axios.get(
-        `${this.tronwalletApi}/vote/list?node=${nodeIp}`
-      )
-      return data
-    } catch (error) {
-      throw new Error(error.message || error)
-    }
-  }
-
-  async broadcastTransaction (transactionSigned) {
-    const { nodeIp } = await NodesIp.getAllNodesIp()
-    const reqBody = {
-      transactionSigned,
-      node: nodeIp
-    }
-    try {
-      const { data: { result } } = await axios.post(
-        `${this.tronwalletApi}/transaction/broadcast`,
-        reqBody
-      )
-      return result
-    } catch (err) {
-      const { data: { error } } = err.response
-      throw new Error(error)
-    }
-  }
-
-  async getTransferTransaction ({ to, from, token, amount }) {
     try {
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
@@ -202,9 +163,9 @@ class ClientWallet {
     }
   }
 
-  async getFreezeTransaction (freezeAmount) {
+  async getFreezeTransaction (pin, freezeAmount) {
     try {
-      const address = await getUserPublicKey()
+      const { address } = await getUserSecrets(pin)
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
         address,
@@ -223,9 +184,9 @@ class ClientWallet {
     }
   }
 
-  async getUnfreezeTransaction () {
+  async getUnfreezeTransaction (pin) {
     try {
-      const address = await getUserPublicKey()
+      const { address } = await getUserSecrets(pin)
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
         address,
@@ -241,13 +202,13 @@ class ClientWallet {
     }
   }
 
-  async getParticipateTransaction ({
+  async getParticipateTransaction (pin, {
     participateAmount,
     participateToken,
     participateAddress
   }) {
     try {
-      const address = await getUserPublicKey()
+      const { address } = await getUserSecrets(pin)
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
         address,
@@ -268,9 +229,9 @@ class ClientWallet {
     }
   }
 
-  async getVoteWitnessTransaction (votes) {
+  async getVoteWitnessTransaction (pin, votes) {
     try {
-      const address = await getUserPublicKey()
+      const { address } = await getUserSecrets(pin)
       const { nodeIp } = await NodesIp.getAllNodesIp()
       const reqBody = {
         address,

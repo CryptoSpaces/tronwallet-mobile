@@ -5,12 +5,12 @@ import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
-
-import { confirmSecret } from '../../utils/secretsUtils'
 import NavigationHeader from '../../components/Navigation/Header'
 import ButtonGradient from '../../components/ButtonGradient'
 
 import WalletClient from '../../services/client'
+import { confirmSecret } from '../../utils/secretsUtils'
+import { withContext } from '../../store/context'
 
 const WordWrapper = styled.TouchableOpacity`
   padding-vertical: ${Spacing.small};
@@ -43,7 +43,7 @@ class Confirm extends React.Component {
       const seed = navigation.getParam('seed', []).join(' ')
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
-      await confirmSecret()
+      await confirmSecret(this.props.context.pin)
       await this._handleSuccess()
     } catch (error) {
       console.warn(error)
@@ -158,4 +158,4 @@ class Confirm extends React.Component {
   }
 }
 
-export default Confirm
+export default withContext(Confirm)

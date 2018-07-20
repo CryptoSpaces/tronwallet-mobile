@@ -6,11 +6,13 @@ import { ActivityIndicator, SafeAreaView, Linking, Alert } from 'react-native'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
+import KeyboardScreen from '../../components/KeyboardScreen'
+
 import Client, { ONE_TRX } from '../../services/client'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { signTransaction } from '../../utils/transactionUtils'
 import { formatNumber } from '../../utils/numberUtils'
-import KeyboardScreen from '../../components/KeyboardScreen'
+import { withContext } from '../../store/context'
 
 class ParticipateScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -48,7 +50,7 @@ class ParticipateScene extends Component {
         throw new Error('INSUFFICIENT_BALANCE')
       }
 
-      const data = await Client.getParticipateTransaction({
+      const data = await Client.getParticipateTransaction(this.props.context.pin, {
         participateAddress: navigation.state.params.token.ownerAddress,
         participateToken: navigation.state.params.token.name,
         participateAmount: trxToUse
@@ -265,4 +267,4 @@ class ParticipateScene extends Component {
   }
 }
 
-export default ParticipateScene
+export default withContext(ParticipateScene)

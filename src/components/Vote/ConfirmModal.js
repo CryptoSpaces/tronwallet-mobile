@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, FlatList, TouchableOpacity } from 'react-native'
+import { Modal, FlatList, TouchableOpacity, SafeAreaView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 
 // Design
@@ -74,33 +74,35 @@ class ConfirmModal extends Component {
         onRequestClose={closeModal}
         style={{ backgroundColor: Colors.background }}
       >
-        <Utils.Container>
-          <NavigationHeader
-            title={'MY VOTES'}
-            onBack={closeModal}
-            rightButton={<ClearVotes
-              onPress={clearVotes}
-            />}
-            noBorder
-          />
-          <Utils.VerticalSpacer />
-          <FlatList
-            keyExtractor={item => item.address}
-            data={currentFullVotes}
-            renderItem={({item, index}) => this._renderRow({item, index, removeVote})}
-            removeClippedSubviews
-          />
-          <Utils.VerticalSpacer size='small' />
-          <Utils.View paddingX={'large'} paddingY={'medium'}>
-            <ButtonGradient
-              size='large'
-              text='CONFIRM'
-              font='bold'
-              disabled={currentFullVotes.length <= 0 || loading}
-              onPress={this._onSubmit}
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
+          <Utils.Container>
+            <NavigationHeader
+              title={'MY VOTES'}
+              onBack={closeModal}
+              rightButton={<ClearVotes
+                onPress={clearVotes}
+              />}
+              noBorder
             />
-          </Utils.View>
-        </Utils.Container>
+            <Utils.VerticalSpacer />
+            <FlatList
+              keyExtractor={item => item.address}
+              data={currentFullVotes}
+              renderItem={({item, index}) => this._renderRow({item, index, removeVote})}
+              removeClippedSubviews
+            />
+            <Utils.VerticalSpacer size='small' />
+            <Utils.View paddingX={'large'} paddingY={'medium'}>
+              <ButtonGradient
+                size='large'
+                text='CONFIRM'
+                font='bold'
+                disabled={currentFullVotes.length <= 0 || loading}
+                onPress={this._onSubmit}
+              />
+            </Utils.View>
+          </Utils.Container>
+        </SafeAreaView>
       </Modal>
     )
   }

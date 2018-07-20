@@ -16,13 +16,17 @@ import ConfirmModal from '../../components/Vote/ConfirmModal'
 import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
 import ConfirmVotes from '../../components/Vote/ConfirmButton'
+import NavigationHeader from '../../components/Navigation/Header'
+import NavigationButton from '../../components/Navigation/ButtonHeader'
+import ClearVotes from '../../components/ClearButton'
+
 // Service
 import WalletClient from '../../services/client'
 import { signTransaction } from '../../utils/transactionUtils'
 
 import getCandidateStore from '../../store/candidates'
-import { Context } from '../../store/context'
 import { Colors } from '../../components/DesignSystem'
+import { withContext } from '../../store/context'
 
 const LIST_STEP_SIZE = 20
 
@@ -169,7 +173,10 @@ class VoteScene extends PureComponent {
 
   _loadUserData = async () => {
     try {
-      const [userVotes, userFrozen] = await Promise.all([WalletClient.getUserVotes(), WalletClient.getFreeze()])
+      const [userVotes, userFrozen] = await Promise.all([
+        WalletClient.getUserVotes(this.props.context.pin),
+        WalletClient.getFreeze(this.props.context.pin)
+      ])
       const { total: totalFrozen } = userFrozen
 
       if (userVotes) {
@@ -186,6 +193,17 @@ class VoteScene extends PureComponent {
           totalRemaining: totalFrozen
         })
       }
+    } catch (e) {
+      e.name = 'Freeze Error'
+      this._throwError(e, 'votesError')
+    }
+  }
+
+  _loadUserVotes = async () => {
+    try {
+      const userVotes = await WalletClient.getUserVotes(this.props.context.pin)
+      this.setState({ userVotes })
+      return userVotes
     } catch (e) {
       e.name = 'Load User Votes Error'
       this._throwError(e, 'votesError')
@@ -204,7 +222,7 @@ class VoteScene extends PureComponent {
         currentVotes[key] = Number(value)
       })
       try {
-        const data = await WalletClient.getVoteWitnessTransaction(currentVotes)
+        const data = await WalletClient.getVoteWitnessTransaction(this.props.context.pin, currentVotes)
         this._openTransactionDetails(data)
       } catch (error) {
         Alert.alert('Error while building transaction, try again.')
@@ -216,7 +234,7 @@ class VoteScene extends PureComponent {
 
   _openTransactionDetails = async transactionUnsigned => {
     try {
-      const transactionSigned = await signTransaction(transactionUnsigned)
+      const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
       this.setState({ loadingSign: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
@@ -284,7 +302,7 @@ class VoteScene extends PureComponent {
     })
   }
 
-  _openConfirmModal = () => this.setState({confirmModalVisible: true})
+  _openConfirmModal = () => this.setState({ confirmModalVisible: true })
 
   _closeModal = () => this.setState({ ...this.resetAddModal })
 
@@ -396,11 +414,22 @@ class VoteScene extends PureComponent {
 
     return (
       <Utils.Container>
+        <NavigationHeader
+          title='VOTES'
+          rightButton={(this.props.navigation.getParam('votesError') || this.props.navigation.getParam('listError'))
+            ? <NavigationButton
+              title='RELOAD'
+              onPress={this.props.navigation.getParam('loadData')}
+            />
+            : <ClearVotes
+              onPress={this.props.navigation.getParam('clearVotes')}
+            />}
+        />
         <GrowIn name='vote-header' height={63}>
           <Header>
             <Utils.View align='center'>
               <Utils.Text size='tiny' weight='500' secondary>
-                    TOTAL VOTES
+                TOTAL VOTES
               </Utils.Text>
               <Utils.VerticalSpacer />
               <Utils.Text size='small'>
@@ -477,8 +506,4 @@ class VoteScene extends PureComponent {
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <VoteScene context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(VoteScene)
