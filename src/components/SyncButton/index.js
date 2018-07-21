@@ -46,7 +46,7 @@ class SyncButton extends PureComponent {
     })
 
     return (
-      <TouchableOpacity style={{padding: Spacing.medium}} onPress={onPress}>
+      <TouchableOpacity disabled={loading} style={{padding: Spacing.medium}} onPress={onPress}>
         <Animated.Image
           style={{
             width: 17,

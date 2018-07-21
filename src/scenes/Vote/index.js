@@ -69,6 +69,7 @@ class VoteScene extends PureComponent {
       modalVisible: false
     }
     this.resetVoteData = {
+      offset: 0,
       amountToVote: 0,
       refreshing: true,
       currentVoteItem: {},
@@ -146,7 +147,6 @@ class VoteScene extends PureComponent {
   _loadCandidates = async () => {
     try {
       const voteList = await this._getVoteListFromStore()
-
       this.setState({ voteList })
     } catch (e) {
       e.name = 'Load Candidates Error'
@@ -193,7 +193,6 @@ class VoteScene extends PureComponent {
     try {
       let userVotes = await this._getLastUserVotesFromStore()
       let totalFrozen = this.props.context.freeze.value.total
-      console.warn('HAHAHAH', totalFrozen)
 
       if (typeof userFrozen === 'undefined') {
         const apiFrozen = await WalletClient.getFreeze(this.props.context.pin)
@@ -245,7 +244,7 @@ class VoteScene extends PureComponent {
   _openTransactionDetails = async transactionUnsigned => {
     try {
       const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
-      this.setState({ loadingList: false, refreshing: false }, () => {
+      this.setState({ ...this.resetAddModal, loadingList: false, refreshing: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
           tx: transactionSigned
         })
