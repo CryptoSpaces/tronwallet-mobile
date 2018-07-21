@@ -1,10 +1,10 @@
 import axios from 'axios'
 import Config from 'react-native-config'
 import NodesIp from '../utils/nodeIp'
+import { AUTH_ID } from '../../aws-exports'
 
 import { getUserSecrets } from '../utils/secretsUtils'
 export const ONE_TRX = 1000000
-
 class ClientWallet {
   constructor (opt = null) {
     this.api = Config.MAIN_API_URL
@@ -131,10 +131,10 @@ class ClientWallet {
 
   //* ============TronWalletServerless Api============*//
 
-  async giftUser (pin) {
+  async giftUser (pin, osId) {
     try {
       const { address } = await getUserSecrets(pin)
-      const body = { address }
+      const body = { address, authid: AUTH_ID }
       const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body)
       return result
     } catch (error) {

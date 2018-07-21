@@ -151,7 +151,8 @@ class App extends Component {
     price: {},
     freeze: {},
     publicKey: {},
-    pin: null
+    pin: null,
+    onesignalId: ''
   }
 
   componentDidMount () {
@@ -160,7 +161,7 @@ class App extends Component {
     OneSignal.addEventListener('received', this._onReceived)
     OneSignal.addEventListener('opened', this._onOpened)
     OneSignal.addEventListener('ids', this._onIds)
-
+    OneSignal.configure()
     this._getPrice()
     this._setNodes()
   }
@@ -182,8 +183,9 @@ class App extends Component {
     console.log('openResult: ', openResult)
   }
 
-  _onIds (device) {
+  _onIds = (device) => {
     console.log('Device info: ', device)
+    this.setState({ onesignalId: device.userId })
   }
 
   _loadUserData = () => {
