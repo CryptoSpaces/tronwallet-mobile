@@ -1,6 +1,8 @@
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
+import { Colors } from '../DesignSystem'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 
 import * as Utils from '../Utils'
@@ -10,7 +12,11 @@ const leftElement = (onBack, leftButton) => {
 
   if (onBack && !leftButton) {
     element = <TouchableOpacity onPress={onBack}>
-      <Feather name='arrow-left' color='white' size={28} />
+      <Ionicons
+        name='ios-arrow-round-back'
+        size={32}
+        color={Colors.primaryText}
+      />
     </TouchableOpacity>
   } else {
     element = leftButton
