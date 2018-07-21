@@ -142,7 +142,7 @@ class ParticipateHome extends React.Component {
 
     return (
       <React.Fragment>
-        <TouchableOpacity onPress={() => { }}>
+        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Buy', { item }) }}>
           <Card>
             {isFeatured ? (
               <LinearGradient

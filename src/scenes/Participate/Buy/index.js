@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
 import { withNavigation } from 'react-navigation'
+
 // Design
 import * as Utils from '../../../components/Utils'
 import { Colors } from '../../../components/DesignSystem'
@@ -19,7 +20,9 @@ import {
 } from '../Elements'
 
 // Utils
+import getBalanceStore from '../../../store/balance'
 import { formatNumber } from '../../../utils/numberUtils'
+import { ONE_TRX } from '../../../services/client'
 
 const padKeys = [1, 5, 10, 25, 50, 100, 500, 1000]
 
@@ -44,61 +47,88 @@ class BuyScene extends Component {
   }
 
   state = {
-    amountToVote: 10,
-    totalRemaining: 10,
+    totalRemaining: 0,
+    amountToBuy: 0,
+    trxBalance: 0,
     notEnoughTrx: false
   }
 
+  async componentDidMount () {
+    const balances = await this._getBalancesFromStore()
+    if (balances.length) {
+      this.setState({ trxBalance: balances[0].balance, totalRemaining: balances[0].balance })
+    }
+  }
+
+  _getBalancesFromStore = async () => {
+    const store = await getBalanceStore()
+    return store
+      .objects('Balance')
+      .filtered(
+        `name = 'TRX'`
+      )
+      .map(item => Object.assign({}, item))
+  }
+
   _incrementVoteCount = quant => {
-    const { totalRemaining, amountToVote } = this.state
-    if (totalRemaining - quant < 0) {
+    const { price } = this.props.navigation.state.params.item
+    const { amountToBuy, totalRemaining } = this.state
+
+    const amountToPay = (price / ONE_TRX) * quant
+
+    if (amountToPay > totalRemaining) {
       this.setState({ notEnoughTrx: true })
       return
     }
     this.setState({
-      amountToVote: amountToVote + quant,
-      totalRemaining: totalRemaining - quant,
+      amountToBuy: amountToBuy + quant,
+      totalRemaining: totalRemaining - amountToPay,
       notEnoughTrx: false
     })
   }
 
   _allinVoteCount = () => {
-    const { totalRemaining, amountToVote } = this.state
-    this.setState({
-      amountToVote: totalRemaining + amountToVote,
-      totalRemaining: 0,
-      notEnoughTrx: false
-    })
+    const { price } = this.props.navigation.state.params.item
+    const { trxBalance } = this.state
+
+    const amountToBuy = Math.floor(trxBalance / (price / ONE_TRX))
+
+    if (amountToBuy > 0) {
+      const amountToPay = amountToBuy * (price / ONE_TRX)
+      this.setState({
+        amountToBuy: amountToBuy,
+        totalRemaining: trxBalance - amountToPay,
+        notEnoughTrx: false
+      })
+    } else {
+      this.setState({ notEnoughTrx: true })
+    }
   }
 
   _clearVoteCount = () => {
     this.setState({
-      amountToVote: 0,
-      totalRemaining: this.state.totalRemaining + this.state.amountToVote,
+      amountToBuy: 0,
+      totalRemaining: this.state.trxBalance,
       notEnoughTrx: false
     })
   }
 
   render () {
-    const {
-      amountToVote,
-      totalRemaining
-    } = this.state
+    const { name, price, description } = this.props.navigation.state.params.item
+    const { totalRemaining, amountToBuy, notEnoughTrx } = this.state
 
-    // const { url: candidateUrl, votes: totalVotes } = currentVoteItem
     return (
-
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView>
           <BuyContainer>
             <WhiteBuyText>ENTER AMOUNT TO BUY</WhiteBuyText>
             <VerticalSpacer size={4} />
             <AmountText>
-              {formatNumber(amountToVote)}
+              {formatNumber(amountToBuy)}
             </AmountText>
-            <BuyText>BALANCE: 100,100,100 TRX</BuyText>
+            <BuyText>BALANCE: {formatNumber(totalRemaining)} TRX</BuyText>
             <VerticalSpacer size={7} />
-            <BuyText>PRICE PER TOKEN: 0.1 TRX</BuyText>
+            <BuyText>PRICE PER TOKEN: {price / ONE_TRX} TRX</BuyText>
             <VerticalSpacer size={13} />
           </BuyContainer>
           <MarginFixer>
@@ -119,7 +149,7 @@ class BuyScene extends Component {
             <Utils.Row>
               <OptionVote
                 title='Clear'
-                disabled={amountToVote === 0}
+                disabled={amountToBuy === 0}
                 onPress={this._clearVoteCount}
                 background={Colors.backgroundColor}
               />
@@ -140,31 +170,21 @@ class BuyScene extends Component {
             <VerticalSpacer size={23} />
             <BuyText>TOKEN DESCRIPTION</BuyText>
             <VerticalSpacer size={17} />
-            <BuyText>Lorem lorem lorem lorem lorem</BuyText>
+            <BuyText>{description}</BuyText>
             <VerticalSpacer size={17} />
             <MoreInfoButton>
-              <TouchableOpacity onPress={() => { }}>
+              <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo') }}>
                 <ButtonText>MORE INFO</ButtonText>
               </TouchableOpacity>
             </MoreInfoButton>
           </BuyContainer>
-          {/* {notEnoughTrx && (
-                <Utils.View paddingY='medium' align='center'>
-                  <Utils.Text secondary light size='small'>
-                    If you need more votes you can Freeze more TRX.
-                    </Utils.Text>
-                  <Utils.VerticalSpacer size='medium' />
-                  <ButtonGradient
-                    onPress={() => {
-                      closeModal()
-                      navigation.navigate('Freeze')
-                    }}
-                    text='FREEZE'
-                    size='medium'
-                    width={100}
-                  />
-                </Utils.View>
-              )} */}
+          {notEnoughTrx && (
+            <Utils.View paddingY='medium' align='center'>
+              <Utils.Text secondary light size='small'>
+                You don't have enough TRX to buy that many {name}.
+              </Utils.Text>
+            </Utils.View>
+          )}
         </ScrollView>
       </SafeAreaView>
     )
