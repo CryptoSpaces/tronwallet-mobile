@@ -114,7 +114,8 @@ class BuyScene extends Component {
   }
 
   render () {
-    const { name, price, description } = this.props.navigation.state.params.item
+    const { item } = this.props.navigation.state.params
+    const { name, price, description } = item
     const { totalRemaining, amountToBuy, notEnoughTrx } = this.state
 
     return (
@@ -173,7 +174,7 @@ class BuyScene extends Component {
             <BuyText>{description}</BuyText>
             <VerticalSpacer size={17} />
             <MoreInfoButton>
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo') }}>
+              <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo', { item }) }}>
                 <ButtonText>MORE INFO</ButtonText>
               </TouchableOpacity>
             </MoreInfoButton>
