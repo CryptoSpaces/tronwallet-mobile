@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
-import { ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
-import { withNavigation } from 'react-navigation'
+
+import {
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert
+} from 'react-native'
+
+import { withContext } from '../../../store/context'
 
 // Design
 import * as Utils from '../../../components/Utils'
@@ -22,7 +30,8 @@ import {
 // Utils
 import getBalanceStore from '../../../store/balance'
 import { formatNumber } from '../../../utils/numberUtils'
-import { ONE_TRX } from '../../../services/client'
+import Client, { ONE_TRX } from '../../../services/client'
+import { signTransaction } from '../../../utils/transactionUtils'
 
 const padKeys = [1, 5, 10, 25, 50, 100, 500, 1000]
 
@@ -50,7 +59,8 @@ class BuyScene extends Component {
     totalRemaining: 0,
     amountToBuy: 0,
     trxBalance: 0,
-    notEnoughTrx: false
+    notEnoughTrx: false,
+    loading: false
   }
 
   async componentDidMount () {
@@ -113,6 +123,62 @@ class BuyScene extends Component {
     })
   }
 
+  _renderConfirmButtom = () => {
+    const { loading, amountToBuy } = this.state
+
+    if (loading) {
+      return <ActivityIndicator color={'#ffffff'} />
+    }
+
+    return (
+      <ButtonGradient disabled={amountToBuy === 0} onPress={() => this._submit()} text='CONFIRM' />
+    )
+  }
+
+  _submit = async () => {
+    const { item } = this.props.navigation.state.params
+    const { trxBalance, amountToBuy } = this.state
+
+    try {
+      this.setState({ loading: true })
+      const amountToPay = amountToBuy * (item.price / ONE_TRX)
+      if (trxBalance < amountToPay) {
+        throw new Error('INSUFFICIENT_BALANCE')
+      }
+
+      const participatePayload = {
+        participateAddress: item.ownerAddress,
+        participateToken: item.name,
+        participateAmount: amountToBuy
+      }
+
+      const data = await Client.getParticipateTransaction(this.props.context.pin, participatePayload)
+
+      this._openTransactionDetails(data)
+    } catch (err) {
+      if (err.message === 'INSUFFICIENT_BALANCE') {
+        Alert.alert('Not enough funds (TRX) to participate.')
+      } else {
+        Alert.alert('Oops something wrong while building transaction, try again.')
+      }
+    } finally {
+      this.setState({ loading: false })
+    }
+  }
+
+  _openTransactionDetails = async transactionUnsigned => {
+    try {
+      const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
+      this.setState({ loading: false }, () => {
+        this.props.navigation.navigate('SubmitTransaction', {
+          tx: transactionSigned
+        })
+      })
+    } catch (error) {
+      Alert.alert('Error getting transaction.')
+    }
+  }
+
   render () {
     const { item } = this.props.navigation.state.params
     const { name, price, description } = item
@@ -164,10 +230,7 @@ class BuyScene extends Component {
           </MarginFixer>
           <VerticalSpacer size={1} />
           <BuyContainer>
-            <ButtonGradient
-              onPress={() => { }}
-              text='CONFIRM'
-            />
+            {this._renderConfirmButtom()}
             <VerticalSpacer size={23} />
             <BuyText>TOKEN DESCRIPTION</BuyText>
             <VerticalSpacer size={17} />
@@ -191,4 +254,4 @@ class BuyScene extends Component {
     )
   }
 }
-export default withNavigation(BuyScene)
+export default withContext(BuyScene)
