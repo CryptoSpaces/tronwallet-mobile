@@ -3,6 +3,7 @@ import { TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import Feather from 'react-native-vector-icons/Feather'
 
+import { Header, Title } from './elements'
 import * as Utils from '../Utils'
 
 const leftElement = (onBack, leftButton) => {
@@ -34,27 +35,24 @@ const rightElement = (onClose, rightButton) => {
   </Utils.View>
 }
 
-const NavigationHeader = ({ title, onClose, noBorder, rightButton, onBack, leftButton }) => {
+const NavigationHeader = ({ title, onClose, rightButton, onBack, leftButton }) => {
   /*
     onClose = Right Button with X
     onBack = Left Button with <
   */
 
   return (
-    <Utils.Header padding={16} justify='center' noBorder={noBorder}>
+    <Header>
       {leftElement(onBack, leftButton)}
-      <Utils.View justify='center' align='center'>
-        <Utils.Text lineHeight={36} size='average' font='medium'>{title.toUpperCase()}</Utils.Text>
-      </Utils.View>
+      <Title>{title.toUpperCase()}</Title>
       {rightElement(onClose, rightButton)}
-    </Utils.Header>
+    </Header>
   )
 }
 
 NavigationHeader.propTypes = {
   title: PropTypes.string.isRequired,
   onClose: PropTypes.func,
-  noBorder: PropTypes.bool,
   rightButton: PropTypes.element,
   onBack: PropTypes.func,
   leftButton: PropTypes.element

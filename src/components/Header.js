@@ -11,7 +11,7 @@ const Header = ({
   leftIcon = <Text style={{ color: Colors.primaryText }}>BACK</Text>,
   rightIcon = <Text style={{ color: Colors.primaryText }}>RIGHT</Text>,
   children,
-  top = 20,
+  top = 18,
   bottom = 10
 }) => {
   const placeholder = <View />

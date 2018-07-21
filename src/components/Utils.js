@@ -537,7 +537,6 @@ export const WarningText = styled.Text`
   letter-spacing: 0.6px;
   color: ${ZeplinColors.text.secondary};
 `
-
 export const StandardButtonLabel = ButtonLabel.extend`
   font-size: 12px;
   letter-spacing: 0.8px;
@@ -545,4 +544,11 @@ export const StandardButtonLabel = ButtonLabel.extend`
 export const CondensedButtonLabel = ButtonLabel.extend`
   font-size: 11px;
   letter-spacing: 0.7px;
+`
+
+export const LargeContentText = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 36px;
+  line-height: 20px;
+  color: ${ZeplinColors.text.primary};
 `

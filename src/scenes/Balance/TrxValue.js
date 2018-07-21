@@ -29,9 +29,9 @@ class TrxValue extends PureComponent {
                       }}
                     >
                       {value => (
-                        <Utils.Text size='large' marginX={8}>
+                        <Utils.LargeContentText>
                           {value.price.toFixed(2)}
-                        </Utils.Text>
+                        </Utils.LargeContentText>
                       )}
                     </Motion>
                   </FadeIn>

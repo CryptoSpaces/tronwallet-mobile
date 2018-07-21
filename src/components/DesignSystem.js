@@ -58,6 +58,9 @@ export const ZeplinColors = {
   gradients: {
     primary: ['#FF4465', '#F6CA1D'],
     multiColumn: ['#FF4465', '#f8a92f', '#fc734b', '#f7b329']
+  },
+  badges: {
+    standard: '#2e2f47'
   }
 }
 
