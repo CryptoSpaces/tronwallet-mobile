@@ -22,6 +22,7 @@ import TransferScene from './src/scenes/Transfer'
 import Settings from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
 import TokenInfoScene from './src/scenes/Participate/TokenInfo'
+import BuyScene from './src/scenes/Participate/Buy'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeVoteScene from './src/components/Vote/Freeze'
 import RewardsScene from './src/scenes/Rewards'
@@ -80,7 +81,8 @@ const TransactionList = createStackNavigator({
 const ParticipateStack = createStackNavigator(
   {
     ParticipateHome,
-    TokenInfo: TokenInfoScene
+    TokenInfo: TokenInfoScene,
+    Buy: BuyScene
   }, {
     initialRouteName: 'ParticipateHome'
   }

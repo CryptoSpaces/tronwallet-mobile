@@ -64,3 +64,47 @@ export const VerticalSpacer = styled.View`
 export const HorizontalSpacer = styled.View`
   width: ${props => props.size};
 `
+
+export const BuyContainer = styled.View`
+  padding: 11.9px 33px 0px 31px;
+`
+
+export const MarginFixer = styled.View`
+  margin-left: 27;
+  margin-right: 29;
+`
+
+export const BuyText = styled.Text`
+  text-align: left;
+  font-size: 11;
+  font-family: 'rubik-medium';
+  letter-spacing: 0.6;
+  color: rgb(116, 118, 162);
+`
+
+export const WhiteBuyText = BuyText.extend`
+  text-align: right;
+  color: rgb(221, 222, 231);
+`
+
+export const AmountText = WhiteBuyText.extend`
+  color: rgb(225, 225, 225);
+  font-size: 40;
+`
+
+export const MoreInfoButton = styled.View`
+  align-self: center;
+  background: rgb(116, 118, 162);
+  height: 50;
+  width: 151;
+  border-radius: 4;
+  justify-content: center;
+`
+
+export const ButtonText = styled.Text`
+  color: white;
+  font-family: 'rubik-bold';
+  font-size: 12;
+  text-align: center;
+  letter-spacing: 0.8;
+`
