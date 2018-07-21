@@ -16,6 +16,12 @@ const WordWrapper = styled.TouchableOpacity`
   padding-horizontal: ${Spacing.medium};
 `
 
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'App' })],
+  key: null
+})
+
 class Confirm extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
@@ -41,11 +47,6 @@ class Confirm extends React.Component {
       if (seed !== selectedWords) throw new Error('Words dont match!')
       await confirmSecret(this.props.context.pin)
       Alert.alert('Success', 'Wallet successfully confirmed.')
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'App' })],
-        key: null
-      })
       this.props.navigation.dispatch(resetAction)
     } catch (error) {
       console.warn(error)

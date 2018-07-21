@@ -1,5 +1,6 @@
 import React from 'react'
 import { ActivityIndicator, Alert } from 'react-native'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
@@ -9,9 +10,24 @@ import NavigationHeader from '../../components/Navigation/Header'
 import { getUserSecrets } from '../../utils/secretsUtils'
 import { withContext } from '../../store/context'
 
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'App' })],
+  key: null
+})
+
 class Create extends React.Component {
-  static navigationOptions = () => ({
-    header: <NavigationHeader title='CONFIRM WALLET SEED' />
+  static navigationOptions = ({ navigation }) => ({
+    header: (
+      <NavigationHeader
+        title='CONFIRM WALLET SEED'
+        onBack={() => {
+          navigation.getParam('shouldReset', false)
+            ? navigation.dispatch(resetAction)
+            : navigation.goBack()
+        }}
+      />
+    )
   })
 
   state = {
@@ -30,6 +46,7 @@ class Create extends React.Component {
 
   render () {
     const { seed } = this.state
+    const { navigation } = this.props
     return (
       <Utils.Container>
         <Utils.View flex={1} />
@@ -45,15 +62,19 @@ class Create extends React.Component {
         <Utils.Row justify='center'>
           <ButtonGradient
             onPress={() =>
-              this.props.navigation.navigate('SeedConfirm', {
-                seed: seed.split(' ')
-              })
+              navigation.navigate('SeedConfirm', { seed: seed.split(' ') })
             }
             text="I'VE WRITTEN IT DOWN"
           />
         </Utils.Row>
         <Utils.VerticalSpacer size='medium' />
-        <Utils.Button onPress={() => this.props.navigation.goBack()}>
+        <Utils.Button
+          onPress={() => {
+            navigation.getParam('shouldReset', false)
+              ? navigation.dispatch(resetAction)
+              : navigation.goBack()
+          }}
+        >
           Confirm later
         </Utils.Button>
         <Utils.View flex={1} />
