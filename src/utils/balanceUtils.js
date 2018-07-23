@@ -7,5 +7,8 @@ export const orderBalances = (balances) => {
       orderedBalances[1] = balance
     }
   })
-  return [...orderedBalances, ...balances.filter((balance) => balance.name !== 'TRX' && balance.name !== 'TWX')]
+  return [
+    ...orderedBalances.filter((balance) => !!balance),
+    ...balances.filter((balance) => balance.name !== 'TRX' && balance.name !== 'TWX')
+  ]
 }
