@@ -149,7 +149,7 @@ class BuyScene extends Component {
       const participatePayload = {
         participateAddress: item.ownerAddress,
         participateToken: item.name,
-        participateAmount: amountToBuy
+        participateAmount: amountToPay
       }
 
       const data = await Client.getParticipateTransaction(this.props.context.pin, participatePayload)
@@ -183,6 +183,7 @@ class BuyScene extends Component {
     const { item } = this.props.navigation.state.params
     const { name, price, description } = item
     const { totalRemaining, amountToBuy, notEnoughTrx } = this.state
+    const amountToPay = (price / ONE_TRX) * amountToBuy
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -191,8 +192,9 @@ class BuyScene extends Component {
             <WhiteBuyText>AMOUNT TO BUY</WhiteBuyText>
             <VerticalSpacer size={4} />
             <AmountText>
-              {formatNumber(amountToBuy)}
+              {formatNumber(amountToBuy)} {name}
             </AmountText>
+            <WhiteBuyText>({amountToPay} TRX)</WhiteBuyText>
             <BuyText>BALANCE: {formatNumber(totalRemaining)} TRX</BuyText>
             <VerticalSpacer size={7} />
             <BuyText>PRICE PER TOKEN: {price / ONE_TRX} TRX</BuyText>
