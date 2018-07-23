@@ -135,7 +135,7 @@ class ClientWallet {
     try {
       const { address } = await getUserSecrets(pin)
       const body = { address, deviceId, authid: AUTH_ID }
-      const { data: result } = await axios.post(`${this.tronwalletApi}/gift`, body)
+      const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body)
       return result
     } catch (error) {
       throw error
