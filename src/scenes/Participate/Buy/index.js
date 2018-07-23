@@ -236,11 +236,11 @@ class BuyScene extends Component {
             <VerticalSpacer size={17} />
             <BuyText>{description}</BuyText>
             <VerticalSpacer size={17} />
-            <MoreInfoButton>
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo', { item }) }}>
+            <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo', { item }) }}>
+              <MoreInfoButton>
                 <ButtonText>MORE INFO</ButtonText>
-              </TouchableOpacity>
-            </MoreInfoButton>
+              </MoreInfoButton>
+            </TouchableOpacity>
           </BuyContainer>
           {notEnoughTrx && (
             <Utils.View paddingY='medium' align='center'>
