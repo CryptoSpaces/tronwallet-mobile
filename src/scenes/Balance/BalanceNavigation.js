@@ -19,7 +19,8 @@ const BalanceNavigation = ({ navigation, context }) => {
   }
 
   return (
-    <Utils.Content paddingVertical='xsmall'>
+    <React.Fragment>
+      <Utils.VerticalSpacer size='xsmall' />
       <Utils.Row>
         <ButtonGradient
           text='RECEIVE'
@@ -39,7 +40,7 @@ const BalanceNavigation = ({ navigation, context }) => {
           onPress={goToSend}
         />
       </Utils.Row>
-    </Utils.Content>
+    </React.Fragment>
   )
 }
 

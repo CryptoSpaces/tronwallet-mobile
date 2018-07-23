@@ -112,18 +112,20 @@ class BalanceScene extends Component {
             />
           }
         >
-          <TrxValue trxBalance={trxBalance} currency='USD' />
-          <Utils.VerticalSpacer size='medium' />
-          {!!trxHistory.length && <LineChart chartHistory={trxHistory} />}
-          <Utils.VerticalSpacer size='medium' />
-          <TrxInfo />
-          <BalanceNavigation navigation={this.props.navigation} />
-          {!seedConfirmed && (
-            <BalanceWarning seed={seed} navigation={this.props.navigation}>
-              Please tap to confirm your 12 seed words
-            </BalanceWarning>
-          )}
-          <WalletBalances balances={balances} />
+          <Utils.Content paddingTop={2}>
+            <TrxValue trxBalance={trxBalance} currency='USD' />
+            <Utils.VerticalSpacer size='medium' />
+            {!!trxHistory.length && <LineChart chartHistory={trxHistory} />}
+            <Utils.VerticalSpacer size='medium' />
+            <TrxInfo />
+            <BalanceNavigation navigation={this.props.navigation} />
+            {!seedConfirmed && (
+              <BalanceWarning seed={seed} navigation={this.props.navigation}>
+                Please tap to confirm your 12 seed words
+              </BalanceWarning>
+            )}
+            <WalletBalances balances={balances} />
+          </Utils.Content>
         </ScrollView>
       </Utils.Container>
     )
