@@ -6177,6 +6177,12 @@ react-native-permissions@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
 
+react-native-progress@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-3.5.0.tgz#d1ccc7f96dc17c609aedb43b2e6695d67deae0ec"
+  dependencies:
+    prop-types "^15.5.8"
+
 react-native-qrcode-scanner@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-qrcode-scanner/-/react-native-qrcode-scanner-1.0.1.tgz#96b18d8058f4b472bda4b34f8a08fddbc33d50eb"
