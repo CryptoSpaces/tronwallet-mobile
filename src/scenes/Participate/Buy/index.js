@@ -203,6 +203,15 @@ class BuyScene extends Component {
               {formatNumber(amountToBuy)} {name}
             </AmountText>
             <TrxValueText>({this._formatTrxValue(amountToPay)} TRX)</TrxValueText>
+            {notEnoughTrxBalance && (
+              <React.Fragment>
+                <VerticalSpacer size={4} />
+                <WhiteBuyText>
+                  You don't have enough TRX to buy that many {name}.
+                </WhiteBuyText>
+                <VerticalSpacer size={4} />
+              </React.Fragment>
+            )}
             <BuyText>BALANCE: {formatNumber(totalRemaining)} TRX</BuyText>
             <VerticalSpacer size={7} />
             <BuyText>PRICE PER TOKEN: {price / ONE_TRX} TRX</BuyText>
@@ -252,13 +261,6 @@ class BuyScene extends Component {
               </MoreInfoButton>
             </TouchableOpacity>
           </BuyContainer>
-          {notEnoughTrxBalance && (
-            <Utils.View paddingY='medium' align='center'>
-              <Utils.Text secondary light size='small'>
-                You don't have enough TRX to buy that many {name}.
-              </Utils.Text>
-            </Utils.View>
-          )}
         </ScrollView>
       </SafeAreaView>
     )
