@@ -3,16 +3,20 @@ import PropTypes from 'prop-types'
 import { ImageBackground } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { NavigationActions } from 'react-navigation'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
-import { Colors, Spacing } from '../../components/DesignSystem'
+import { Colors, FontSize } from '../../components/DesignSystem'
 
 class RewardsScreen extends PureComponent {
   _navigateHome = () => {
     const { navigation } = this.props
-    const navigateToHome = NavigationActions.navigate({ routeName: 'App' })
-    navigation.dispatch(navigateToHome)
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'App' })],
+      key: null
+    })
+    navigation.dispatch(resetAction)
   }
 
   render () {
@@ -95,25 +99,13 @@ class RewardsScreen extends PureComponent {
               </Utils.View>
             </ImageBackground>
           </Utils.View>
-          <Utils.ContentWithBackground
-            source={require('../../assets/back-arrow-bg.png')}
-            resizeMode='contain'
-            justify='center'
-            align='center'
-            position='absolute'
-            bottom={25}
-            right={25}
-            width={120}
-            height={120}
-          >
-            <Utils.ButtonWrapper onPress={this._navigateHome}>
-              <Ionicons
-                name='ios-arrow-round-forward'
-                size={Spacing.large}
-                color={Colors.primaryText}
-              />
-            </Utils.ButtonWrapper>
-          </Utils.ContentWithBackground>
+          <Utils.ButtonWrapper onPress={this._navigateHome}>
+            <Ionicons
+              name='ios-arrow-round-back'
+              size={FontSize.huge}
+              color={Colors.primaryText}
+            />
+          </Utils.ButtonWrapper>
         </LinearGradient>
       </Utils.Container>
     )
