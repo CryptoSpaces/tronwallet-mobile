@@ -92,6 +92,10 @@ export const AmountText = WhiteBuyText.extend`
   font-size: 40;
 `
 
+export const TrxValueText = AmountText.extend`
+  font-size: 16;
+`
+
 export const MoreInfoButton = styled.View`
   align-self: center;
   background: rgb(116, 118, 162);

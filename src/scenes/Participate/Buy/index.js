@@ -24,7 +24,8 @@ import {
   AmountText,
   MarginFixer,
   MoreInfoButton,
-  ButtonText
+  ButtonText,
+  TrxValueText
 } from '../Elements'
 
 // Utils
@@ -184,6 +185,8 @@ class BuyScene extends Component {
     }
   }
 
+  _formatTrxValue = (value) => Number.isInteger(value) ? value : value.toFixed(2)
+
   render () {
     const { item } = this.props.navigation.state.params
     const { name, price, description } = item
@@ -199,7 +202,7 @@ class BuyScene extends Component {
             <AmountText>
               {formatNumber(amountToBuy)} {name}
             </AmountText>
-            <WhiteBuyText>({amountToPay} TRX)</WhiteBuyText>
+            <TrxValueText>({this._formatTrxValue(amountToPay)} TRX)</TrxValueText>
             <BuyText>BALANCE: {formatNumber(totalRemaining)} TRX</BuyText>
             <VerticalSpacer size={7} />
             <BuyText>PRICE PER TOKEN: {price / ONE_TRX} TRX</BuyText>
