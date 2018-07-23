@@ -205,7 +205,7 @@ class VoteScene extends PureComponent {
       if (userVotes) {
         const currentUserVoteCount = this._getVoteCountFromList(userVotes)
         const newFullVoteList = await this._getUserFullVotedList(userVotes)
-        let newTotalRemaining = totalFrozen - currentUserVoteCount >= 0
+        const newTotalRemaining = totalFrozen - currentUserVoteCount >= 0
           ? totalFrozen - currentUserVoteCount : 0
 
         this.setState({
@@ -445,7 +445,8 @@ class VoteScene extends PureComponent {
     this.setState(
       {
         [errorType]: "Oops, something didn't load correctly. Try to reload",
-        loading: false
+        loadingList: false,
+        refreshing: false
       },
       function setErrorParams () {
         this.props.navigation.setParams({
