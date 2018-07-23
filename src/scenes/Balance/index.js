@@ -69,8 +69,7 @@ class BalanceScene extends Component {
 
   _loadData = async () => {
     try {
-      const { updateWalletData, onesignalId } = this.props.context
-      console.log('LUL', onesignalId)
+      const { updateWalletData } = this.props.context
       const data = await Promise.all([
         Client.getBalances(this.props.context.pin),
         getUserSecrets(this.props.context.pin),

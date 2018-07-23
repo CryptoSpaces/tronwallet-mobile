@@ -134,11 +134,12 @@ class VoteScene extends PureComponent {
       .filtered('type == "Vote"')[0]
 
     if (lastVoteTransaction) {
-      let lastVote = lastVoteTransaction.contractData.votes
+      let lastVote = [...lastVoteTransaction.contractData.votes]
       let renormalize = {}
       for (let vote of lastVote) {
         renormalize[vote.voteAddress] = vote.voteCount
       }
+
       return renormalize
     }
     return {}
@@ -190,22 +191,27 @@ class VoteScene extends PureComponent {
   }
 
   _loadUserData = async () => {
+    const { context } = this.props
     try {
-      let userVotes = await this._getLastUserVotesFromStore()
-      let totalFrozen = this.props.context.freeze.value.total
-
-      if (typeof userFrozen === 'undefined') {
+      let totalFrozen = 0
+      if (context.freeze && context.freeze.value) {
+        totalFrozen = context.freeze.value.total
+      } else {
         const apiFrozen = await WalletClient.getFreeze(this.props.context.pin)
         totalFrozen = apiFrozen.total
       }
 
+      let userVotes = await this._getLastUserVotesFromStore()
       if (userVotes) {
         const currentUserVoteCount = this._getVoteCountFromList(userVotes)
         const newFullVoteList = await this._getUserFullVotedList(userVotes)
+        let newTotalRemaining = totalFrozen - currentUserVoteCount >= 0
+          ? totalFrozen - currentUserVoteCount : 0
+
         this.setState({
           currentVotes: userVotes,
           totalUserVotes: currentUserVoteCount,
-          totalRemaining: totalFrozen - currentUserVoteCount,
+          totalRemaining: newTotalRemaining,
           currentFullVotes: newFullVoteList
         })
       } else {
@@ -327,7 +333,8 @@ class VoteScene extends PureComponent {
       voteCounted.voteCount = currentVotes[voteAddress]
       userVotedList.push(voteCounted)
     }
-    return userVotedList
+
+    return userVotedList.sort((a, b) => a.voteCount > b.voteCount ? -1 : a.voteCount < b.voteCount ? 1 : 0)
   }
 
   _getVoteCountFromList = (list) => list ? reduce(list, (result, value) => (Number(result) + Number(value)), 0) : 0

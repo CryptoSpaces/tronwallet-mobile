@@ -131,11 +131,11 @@ class ClientWallet {
 
   //* ============TronWalletServerless Api============*//
 
-  async giftUser (pin, osId) {
+  async giftUser (pin, deviceId) {
     try {
       const { address } = await getUserSecrets(pin)
-      const body = { address, authid: AUTH_ID }
-      const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body)
+      const body = { address, deviceId, authid: AUTH_ID }
+      const { data: result } = await axios.post(`${this.tronwalletApi}/gift`, body)
       return result
     } catch (error) {
       throw error
