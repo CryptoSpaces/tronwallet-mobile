@@ -55,11 +55,7 @@ class Settings extends Component {
         title: 'Edit Node Network',
         description: 'Choose a node of your preference',
         icon: 'share,-network,-connect,-community,-media',
-        onPress: () => this.props.navigation.navigate('Pin', {
-          shouldGoBack: true,
-          testInput: pin => pin === this.props.context.pin,
-          onSuccess: () => this.props.navigation.navigate('NetworkConnection')
-        })
+        onPress: () => this.props.navigation.navigate('NetworkConnection')
       },
       {
         title: 'Confirm Seed',

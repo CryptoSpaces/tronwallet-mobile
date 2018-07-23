@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { RefreshControl, ScrollView, AppState } from 'react-native'
+import { RefreshControl, ScrollView } from 'react-native'
 import axios from 'axios'
 import Config from 'react-native-config'
 
@@ -20,11 +20,9 @@ import withContext from '../../utils/hocs/withContext'
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
 
 class BalanceScene extends Component {
-  static navigationOptions = () => {
-    return {
-      header: <NavigationHeader title='BALANCE' />
-    }
-  }
+  static navigationOptions = () => ({
+    header: <NavigationHeader title='BALANCE' />
+  })
 
   state = {
     refreshing: false,
@@ -33,8 +31,7 @@ class BalanceScene extends Component {
     seed: [],
     balances: [],
     trxHistory: [],
-    trxBalance: 0,
-    appState: AppState.currentState
+    trxBalance: 0
   }
 
   async componentDidMount () {
@@ -45,20 +42,11 @@ class BalanceScene extends Component {
     }
     this._navListener =
       this.props.navigation.addListener('didFocus', this._loadData)
-    AppState.addEventListener('change', this._handleAppStateChange)
   }
 
   componentWillUnmount () {
     this._navListener.remove()
     clearInterval(this._dataListener)
-    AppState.removeEventListener('change', this._handleAppStateChange)
-  }
-
-  _handleAppStateChange = nextAppState => {
-    if (nextAppState.match(/inactive|background/) && this.state.appState === 'active') {
-      this.props.navigation.navigate('Pin', { testInput: pin => pin === this.props.context.pin })
-    }
-    this.setState({ appState: nextAppState })
   }
 
   _onRefresh = async () => {
