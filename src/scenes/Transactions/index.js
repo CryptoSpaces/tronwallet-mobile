@@ -65,7 +65,6 @@ class TransactionsScene extends Component {
 
   updateData = async () => {
     try {
-      this.setState({ refreshing: true })
       const response = await Client.getTransactionList(this.props.context.pin)
       const store = await getTransactionStore()
       store.write(() =>
@@ -106,11 +105,9 @@ class TransactionsScene extends Component {
       )
       const transactions = this.getSortedTransactionList(store)
       this.setState({
-        transactions,
-        refreshing: false
+        transactions
       })
     } catch (err) {
-      this.setState({ refreshing: false })
       console.error(err)
     }
   }

@@ -120,7 +120,7 @@ export const Content = styled(View)`
 `
 
 Content.defaultProps = {
-  paddingSize: 'big'
+  paddingSize: 'large'
 }
 
 export const StatusBar = styled.View`
@@ -499,4 +499,30 @@ export const LightButton = styled.TouchableOpacity`
   border-radius: 4px;
   border-width: 2px;
   border-color:  ${Colors.lightestBackground};
+`
+/* Text components used throughout the app: */
+
+export const BoldText = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 18px;
+  line-height: 36px;
+  color: ${Colors.primaryText};
+`
+export const SectionTitle = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 11px;
+  line-height: 11px;
+  letter-spacing: 0.6px;
+  color: ${Colors.titleLabel};
+`
+export const RegularText = styled.Text`
+  padding-top: 10px;
+  font-family: Rubik-Regular;
+  font-weight: 100;
+  font-size: 13px;
+  line-height: 20px;
+  color: ${Colors.primaryText};
+`
+export const SmallRegText = RegularText.extend`
+  font-size: 12px;
 `

@@ -24,8 +24,13 @@ class ReceiveScreen extends PureComponent {
   }
 
   state = {
-    accountSelected: null,
     loading: true
+  }
+
+  _onLoad = () => {
+    this.setState({
+      loading: false
+    })
   }
 
   _copy = async () => {
@@ -46,7 +51,7 @@ class ReceiveScreen extends PureComponent {
         <KeyboardScreen>
           <Utils.StatusBar />
           <Utils.Content marginY='20' align='center'>
-            {!!publicKey && <QRCode value={publicKey} size={width * 0.6} />}
+            {!!publicKey && <QRCode value={publicKey} onLoad={this._onLoad} loading={this.state.loading} size={width * 0.6} />}
             <Utils.VerticalSpacer size='large' />
 
             <Utils.Label color={tint(0.9, Colors.background)}>

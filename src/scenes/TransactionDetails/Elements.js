@@ -26,13 +26,16 @@ export const CardText = styled.Text`
 `
 
 export const BadgeText = Text.extend`
-  font-size: ${FontSize.small};
+  font-family: Rubik-Medium;
   color: #FFFFFF;
-  font-weight: 700;
+  font-size: 11px;
+  line-height: 11px;
+  letter-spacing: 0.6px;
+  top: 1;
 `
 
 export const AmountText = Text.extend`
-  font-size: ${FontSize.large};
+  font-size: 32px;
   line-height: 55px;
   color: white;
   font-weight: 700;

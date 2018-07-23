@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { BackHandler } from 'react-native'
 import * as Utils from '../../components/Utils'
 import Logo from '../../components/Logo'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -9,6 +10,18 @@ import { createUserKeyPair } from '../../utils/secretsUtils'
 import { withContext } from '../../store/context'
 
 class FirstTime extends React.Component {
+  componentDidMount () {
+    BackHandler.addEventListener('hardwareBackPress', this._handleBackPress)
+  }
+
+  componentWillUnmount () {
+    BackHandler.removeEventListener('hardwareBackPress', this._handleBackPress)
+  }
+
+  _handleBackPress = () => {
+    BackHandler.exitApp()
+  }
+
   render () {
     return (
       <Utils.Container>

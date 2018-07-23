@@ -22,6 +22,8 @@ import SubmitTransactionScene from './src/scenes/SubmitTransaction'
 import TransferScene from './src/scenes/Transfer'
 import Settings from './src/scenes/Settings'
 import ParticipateScene from './src/scenes/Tokens/Participate'
+import TokenInfoScene from './src/scenes/Participate/TokenInfo'
+import BuyScene from './src/scenes/Participate/Buy'
 import GetVaultScene from './src/scenes/GetVault'
 import FreezeVoteScene from './src/components/Vote/Freeze'
 import RewardsScene from './src/scenes/Rewards'
@@ -30,6 +32,7 @@ import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
 import TransactionDetails from './src/scenes/TransactionDetails'
+import ParticipateHome from './src/scenes/Participate'
 import Pin from './src/scenes/Pin'
 import FirstTime from './src/scenes/FirstTime'
 
@@ -76,6 +79,16 @@ const TransactionList = createStackNavigator({
   TransactionDetails
 })
 
+const ParticipateStack = createStackNavigator(
+  {
+    ParticipateHome,
+    TokenInfo: TokenInfoScene,
+    Buy: BuyScene
+  }, {
+    initialRouteName: 'ParticipateHome'
+  }
+)
+
 const AppTabs = createBottomTabNavigator({
   Home: HomeScene,
   Vote: {
@@ -84,6 +97,7 @@ const AppTabs = createBottomTabNavigator({
   },
   Balance: BalanceStack,
   Transactions: TransactionList,
+  Participate: ParticipateStack,
   Settings: SettingsStack
 }, {
   navigationOptions: ({ navigation }) => ({
@@ -104,6 +118,8 @@ const AppTabs = createBottomTabNavigator({
         iconName = `scan,-bar-code,-qr-code,-barcode,-scanner`
       } else if (routeName === 'Settings') {
         iconName = `gear,-settings,-update,-setup,-config`
+      } else if (routeName === 'Participate') {
+        iconName = `dollar,-currency,-money,-cash,-coin`
       }
 
       return <Icon name={iconName} size={26} color={tintColor} />

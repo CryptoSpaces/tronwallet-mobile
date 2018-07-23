@@ -128,7 +128,6 @@ android {
 dependencies {
     compile project(':react-native-onesignal')
     compile project(':react-native-fabric')
-    compile project(':amazon-cognito-identity-js')
     compile project(':react-native-sentry')
     compile project(':react-native-device-info')
     compile project(':react-native-tron')

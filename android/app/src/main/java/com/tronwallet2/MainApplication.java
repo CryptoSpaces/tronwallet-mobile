@@ -4,7 +4,6 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.smixx.fabric.FabricPackage;
-import com.amazonaws.RNAWSCognitoPackage;
 import io.sentry.RNSentryPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.getty.rntron.RNTronPackage;
