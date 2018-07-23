@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
 
+import { orderBalances } from '../../utils/balanceUtils'
 import Client, { ONE_TRX } from '../../services/client'
 import getAssetsStore from '../../store/assets'
 import banner from '../../assets/images/banner.jpg'
@@ -164,6 +165,7 @@ class ParticipateHome extends React.Component {
 
   render () {
     const { assetList } = this.state
+    const ordernedBalances = orderBalances(assetList)
 
     return (
       <Container>
@@ -171,7 +173,7 @@ class ParticipateHome extends React.Component {
           {this._renderSlide()}
           <VerticalSpacer size={20} />
           <FlatList
-            data={assetList}
+            data={ordernedBalances}
             renderItem={({ item }) => this._renderCard(item)}
             keyExtractor={asset => asset.name}
             scrollEnabled
