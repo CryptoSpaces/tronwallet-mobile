@@ -59,7 +59,7 @@ class BuyScene extends Component {
     totalRemaining: 0,
     amountToBuy: 0,
     trxBalance: 0,
-    notEnoughTrx: false,
+    notEnoughTrxBalance: false,
     loading: false
   }
 
@@ -87,13 +87,13 @@ class BuyScene extends Component {
     const amountToPay = (price / ONE_TRX) * quant
 
     if (amountToPay > totalRemaining) {
-      this.setState({ notEnoughTrx: true })
+      this.setState({ notEnoughTrxBalance: true })
       return
     }
     this.setState({
       amountToBuy: amountToBuy + quant,
       totalRemaining: totalRemaining - amountToPay,
-      notEnoughTrx: false
+      notEnoughTrxBalance: false
     })
   }
 
@@ -108,10 +108,10 @@ class BuyScene extends Component {
       this.setState({
         amountToBuy: amountToBuy,
         totalRemaining: trxBalance - amountToPay,
-        notEnoughTrx: false
+        notEnoughTrxBalance: false
       })
     } else {
-      this.setState({ notEnoughTrx: true })
+      this.setState({ notEnoughTrxBalance: true })
     }
   }
 
@@ -119,7 +119,7 @@ class BuyScene extends Component {
     this.setState({
       amountToBuy: 0,
       totalRemaining: this.state.trxBalance,
-      notEnoughTrx: false
+      notEnoughTrxBalance: false
     })
   }
 
@@ -138,12 +138,15 @@ class BuyScene extends Component {
   _submit = async () => {
     const { item } = this.props.navigation.state.params
     const { trxBalance, amountToBuy } = this.state
+    const amountToPay = amountToBuy * (item.price / ONE_TRX)
 
     try {
       this.setState({ loading: true })
-      const amountToPay = amountToBuy * (item.price / ONE_TRX)
       if (trxBalance < amountToPay) {
         throw new Error('INSUFFICIENT_BALANCE')
+      }
+      if (amountToPay < 1) {
+        throw new Error('INSUFFICIENT_TRX')
       }
 
       const participatePayload = {
@@ -158,6 +161,8 @@ class BuyScene extends Component {
     } catch (err) {
       if (err.message === 'INSUFFICIENT_BALANCE') {
         Alert.alert('Not enough funds (TRX) to participate.')
+      } else if (err.message === 'INSUFFICIENT_TRX') {
+        Alert.alert(`You need to buy at least one TRX worth of ${item.name}.`, `Currently you are buying only ${amountToPay}.`)
       } else {
         Alert.alert('Oops something wrong while building transaction, try again.')
       }
@@ -182,7 +187,7 @@ class BuyScene extends Component {
   render () {
     const { item } = this.props.navigation.state.params
     const { name, price, description } = item
-    const { totalRemaining, amountToBuy, notEnoughTrx } = this.state
+    const { totalRemaining, amountToBuy, notEnoughTrxBalance } = this.state
     const amountToPay = (price / ONE_TRX) * amountToBuy
 
     return (
@@ -244,7 +249,7 @@ class BuyScene extends Component {
               </MoreInfoButton>
             </TouchableOpacity>
           </BuyContainer>
-          {notEnoughTrx && (
+          {notEnoughTrxBalance && (
             <Utils.View paddingY='medium' align='center'>
               <Utils.Text secondary light size='small'>
                 You don't have enough TRX to buy that many {name}.
