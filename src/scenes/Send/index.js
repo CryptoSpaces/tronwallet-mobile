@@ -255,12 +255,12 @@ class SendScene extends Component {
             />
             <Modal
               visible={this.state.QRModalVisible}
-              onRequestClose={this.closeModal}
+              onRequestClose={this._closeModal}
               animationType='slide'
             >
               <QRScanner
                 onRead={this._readPublicKey}
-                onClose={this.closeModal}
+                onClose={this._closeModal}
                 checkAndroid6Permissions
               />
             </Modal>
