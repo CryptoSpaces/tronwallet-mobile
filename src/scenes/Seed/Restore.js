@@ -56,12 +56,6 @@ class Restore extends React.Component {
     }
   }
 
-  _rightContent = () => (
-    <Utils.ButtonWrapper onPress={() => this.props.navigation.goBack()} absolute side='right'>
-      <Utils.Text>Back</Utils.Text>
-    </Utils.ButtonWrapper>
-  )
-
   _onKeyPress = (event) => {
     if (event.nativeEvent.key === 'Enter') {
       this._handleRestore()
@@ -74,7 +68,7 @@ class Restore extends React.Component {
       <Utils.Container>
         <NavigationHeader
           title='RESTORE WALLET'
-          onBack={() => this.props.navigation.navigate('Settings')}
+          onBack={() => this.props.navigation.goBack()}
           noBorder
         />
         <Utils.Content paddingBottom='2'>

@@ -9,7 +9,7 @@ export const createUserKeyPair = async pin => {
   try {
     const mnemonic = await RNTron.generateMnemonic()
     await generateKeypair(pin, mnemonic, true)
-    AsyncStorage.setItem('@TronWallet:isFirstTime', 'false') // anything that's not null works
+    AsyncStorage.setItem('@TronWallet:useStatus', 'active')
   } catch (error) {
     throw error
   }
@@ -19,7 +19,7 @@ export const recoverUserKeypair = async (pin, mnemonic, randomlyGenerated = fals
   try {
     await RNTron.validateMnemonic(mnemonic)
     await generateKeypair(pin, mnemonic, randomlyGenerated)
-    AsyncStorage.setItem('@TronWallet:isFirstTime', 'false') // anything that's not null works
+    AsyncStorage.setItem('@TronWallet:useStatus', 'active')
   } catch (error) {
     throw error
   }

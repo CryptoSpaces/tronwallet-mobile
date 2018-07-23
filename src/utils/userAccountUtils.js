@@ -1,8 +1,11 @@
+import { AsyncStorage } from 'react-native'
+
 import getBalanceStore from '../store/balance'
 import getTransactionStore from '../store/transactions'
 import getAssetsStore from '../store/assets'
 import getCandidatesStore from '../store/candidates'
 
+import NodesIp from '../utils/nodeIp'
 // TODO
 // Put all Account Info related functions Here
 // e.g. getBalance, getFreezeAmount, getVotes ...
@@ -36,6 +39,19 @@ export const resetListsData = async () => {
 
     const candidateList = candidatesStore.objects('Candidate')
     await candidatesStore.write(() => candidatesStore.delete(candidateList))
+  } catch (error) {
+    throw error
+  }
+}
+
+export const restartAllWalletData = async () => {
+  try {
+    await Promise.all([
+      resetWalletData(),
+      resetListsData(),
+      NodesIp.switchTestnet(false),
+      AsyncStorage.setItem('@TronWallet:useStatus', 'reset')
+    ])
   } catch (error) {
     throw error
   }

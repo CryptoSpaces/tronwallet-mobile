@@ -2,19 +2,29 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   View,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert
 } from 'react-native'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
+import { StackActions, NavigationActions } from 'react-navigation'
 
+// Design
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
-
-import { withContext } from '../../store/context'
 import { getUserSecrets } from '../../utils/secretsUtils'
+
+// Utils
 import fontelloConfig from '../../assets/icons/config.json'
+import { withContext } from '../../store/context'
+import { restartAllWalletData } from '../../utils/userAccountUtils'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'Loading' })],
+  key: null
+})
 
 class Settings extends Component {
   static navigationOptions = () => {
@@ -38,6 +48,26 @@ class Settings extends Component {
     const address = data.address
     const seed = data.mnemonic
     this.setState({ address, seed, loading: false })
+  }
+
+  _resetWallet = async () => {
+    Alert.alert(
+      'Reset Wallet',
+      `Warning: This action will erase all saved data including your seed. If you didn't save your seed, please do it before continue.`,
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'OK, I understand it',
+          onPress: () => this.props.navigation.navigate('Pin', {
+            shouldGoBack: true,
+            testInput: pin => pin === this.props.context.pin,
+            onSuccess: async () => {
+              await restartAllWalletData()
+              this.props.navigation.dispatch(resetAction)
+            }
+          })}
+      ],
+      { cancelable: false }
+    )
   }
 
   _renderList = () => {
@@ -76,6 +106,12 @@ class Settings extends Component {
           testInput: pin => pin === this.props.context.pin,
           onSuccess: () => this.props.navigation.navigate('SeedRestore')
         })
+      },
+      {
+        title: 'Reset Wallet',
+        description: 'Restart all data from current wallet',
+        icon: 'delete,-trash,-dust-bin,-remove,-recycle-bin',
+        onPress: this._resetWallet
       }
     ]
 
