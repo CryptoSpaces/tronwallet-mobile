@@ -174,6 +174,7 @@ class ChangeNetworkModal extends Component {
                 defaultValue={mainNode}
                 keyboardType='numeric'
                 placeholder='Loading ip'
+                editable={!switchTestnet}
                 style={styles.buttonUpdate}
                 onChangeText={text => this.changeInput(text, 'mainNode')}
                 underlineColorAndroid='transparent'
@@ -182,6 +183,7 @@ class ChangeNetworkModal extends Component {
                 defaultValue={mainNodePort}
                 keyboardType='numeric'
                 placeholder='Loading port'
+                editable={!switchTestnet}
                 style={styles.buttonReset}
                 onChangeText={text => this.changeInput(text, 'mainNodePort')}
                 underlineColorAndroid='transparent'
@@ -216,6 +218,7 @@ class ChangeNetworkModal extends Component {
                 defaultValue={solidityNode}
                 keyboardType='numeric'
                 placeholder='Loading ip'
+                editable={!switchTestnet}
                 style={styles.buttonUpdate}
                 onChangeText={text => this.changeInput(text, 'solidityNode')}
                 underlineColorAndroid='transparent'
@@ -225,6 +228,7 @@ class ChangeNetworkModal extends Component {
                 keyboardType='numeric'
                 placeholder='Loading port'
                 style={styles.buttonReset}
+                editable={!switchTestnet}
                 onChangeText={text =>
                   this.changeInput(text, 'solidityNodePort')
                 }

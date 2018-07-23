@@ -23,6 +23,8 @@ class FirstTime extends React.Component {
   }
 
   render () {
+    const shouldDoubleCheck = this.props.navigation.getParam('shouldDoubleCheck')
+    const testInput = this.props.navigation.getParam('testInput')
     return (
       <Utils.Container>
         <Utils.View flex={1} />
@@ -35,7 +37,8 @@ class FirstTime extends React.Component {
             text='CREATE WALLET'
             onPress={() => {
               this.props.navigation.navigate('Pin', {
-                shouldDoubleCheck: true,
+                shouldDoubleCheck,
+                testInput,
                 onSuccess: async pin => {
                   await createUserKeyPair(pin)
                   this.props.context.setPin(
@@ -51,7 +54,8 @@ class FirstTime extends React.Component {
             text='RESTORE WALLET'
             onPress={() => {
               this.props.navigation.navigate('Pin', {
-                shouldDoubleCheck: true,
+                shouldDoubleCheck,
+                testInput,
                 onSuccess: pin => this.props.context.setPin(pin, () => this.props.navigation.navigate('SeedRestore'))
               })
             }}
