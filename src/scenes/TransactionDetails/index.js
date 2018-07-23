@@ -307,7 +307,7 @@ class TransactionDetails extends React.Component {
               color: '#7476a2'
             }}>{amountText}</Text>
             <Utils.Row align='center'>
-              <Elements.AmountText>{convertedAmount.toFixed(2)}</Elements.AmountText>
+              <Elements.AmountText>{convertedAmount < 1 ? convertedAmount : convertedAmount.toFixed(2)}</Elements.AmountText>
               <View style={{width: 11, height: 1}} />
               <View style={{backgroundColor: rgb(46, 47, 71),
                 borderRadius: 2,
