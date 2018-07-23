@@ -188,7 +188,7 @@ class BuyScene extends Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView>
           <BuyContainer>
-            <WhiteBuyText>ENTER AMOUNT TO BUY</WhiteBuyText>
+            <WhiteBuyText>AMOUNT TO BUY</WhiteBuyText>
             <VerticalSpacer size={4} />
             <AmountText>
               {formatNumber(amountToBuy)}
