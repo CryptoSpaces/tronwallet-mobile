@@ -25,7 +25,7 @@ class TokenInfo extends PureComponent {
       name,
       price,
       frozenPercentage,
-      percentage,
+      issuedPercentage,
       issued,
       totalSupply,
       startTime,
@@ -53,7 +53,7 @@ class TokenInfo extends PureComponent {
             <Utils.SectionTitle>PERCENTAGE</Utils.SectionTitle>
             <Utils.Row align='center'>
               <ProgressBar
-                progress={Math.trunc(percentage) / 100}
+                progress={Math.round(issuedPercentage) / 100}
                 borderWidth={0}
                 height={3}
                 color={Colors.confirmed}
@@ -61,7 +61,7 @@ class TokenInfo extends PureComponent {
                 style={{ flex: 1 }}
               />
               <Utils.HorizontalSpacer size='medium' />
-              <Utils.BoldText>{Math.trunc(percentage)}%</Utils.BoldText>
+              <Utils.BoldText>{Math.round(issuedPercentage)}%</Utils.BoldText>
             </Utils.Row>
           </Utils.Content>
           <BoldInfoRow pairs={[
