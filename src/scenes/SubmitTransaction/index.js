@@ -34,35 +34,28 @@ class TransactionDetail extends Component {
   componentDidMount () {
     this.props.navigation.setParams({ 'onClose': this._navigateNext })
     this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
-    NetInfo.isConnected.addEventListener(
-      'connectionChange',
-      this._connectionEventListenner
-    )
-    NetInfo.isConnected.fetch().then(isConnected => {
-      this.setState({ isConnected })
-    })
   }
 
   componentWillUnmount () {
     this._navListener.remove()
-    NetInfo.isConnected.removeEventListener(
-      'connectionChange',
-      this._handleConnectivityChange
-    )
     if (this.closeTransactionDetails) clearTimeout(this.closeTransactionDetails)
   }
 
   _loadData = async () => {
     const { navigation } = this.props
-    const { isConnected } = this.state
 
-    this.setState({ loadingData: true }, () => {
-      if (!isConnected) {
-        this.setState({ loadingData: false })
-      }
-    })
+    this.setState({ loadingData: true })
 
     const signedTransaction = navigation.state.params.tx
+    const connection = await NetInfo.getConnectionInfo()
+    const isConnected = !(connection.type === 'none')
+
+    this.setState({ isConnected })
+
+    if (!isConnected) {
+      this.setState({ loadingData: false })
+      return
+    }
 
     try {
       const transactionData = await Client.getTransactionDetails(signedTransaction)
@@ -72,14 +65,6 @@ class TransactionDetail extends Component {
     } finally {
       this.setState({ loadingData: false })
     }
-  }
-
-  _connectionEventListenner = isConnected => {
-    this.setState({ isConnected }, () => {
-      if (isConnected) {
-        this._loadData()
-      }
-    })
   }
 
   _navigateNext = () => {
@@ -209,8 +194,8 @@ class TransactionDetail extends Component {
   renderRetryConnection = () => (
     <Utils.Content align='center' justify='center'>
       <Utils.Text size='small'>
-        It seems that you are disconnected Reconnect to the internet before
-        proceduring with the transaction
+        It seems that you are disconnected. Reconnect to the internet before
+        proceeding with the transaction.
       </Utils.Text>
       <Utils.VerticalSpacer size='large' />
       <ButtonGradient text='Try again' onPress={this._loadData} size='small' />
