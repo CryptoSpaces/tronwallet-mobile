@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { RefreshControl, ScrollView } from 'react-native'
+import { Answers } from 'react-native-fabric'
 import axios from 'axios'
 import Config from 'react-native-config'
 
@@ -35,6 +36,7 @@ class BalanceScene extends Component {
   }
 
   async componentDidMount () {
+    Answers.logContentView('Tab', 'Balance')
     try {
       this._loadData()
     } catch (e) {

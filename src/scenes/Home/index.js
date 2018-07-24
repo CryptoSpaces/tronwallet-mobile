@@ -5,6 +5,7 @@ import { AreaChart, Grid } from 'react-native-svg-charts'
 import { Path } from 'react-native-svg'
 import { ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
+import { Answers } from 'react-native-fabric'
 import Config from 'react-native-config'
 
 import Gradient from '../../components/Gradient'
@@ -43,6 +44,7 @@ class HomeScene extends Component {
   }
 
   componentDidMount () {
+    Answers.logContentView('Tab', 'Market')
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       this._loadData()
       this._loadGraphData()

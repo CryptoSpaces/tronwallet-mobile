@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { forIn, reduce, union, clamp, debounce } from 'lodash'
 import { Linking, FlatList, Alert } from 'react-native'
+import { Answers } from 'react-native-fabric'
 
 // Utils
 import { TronVaultURL } from '../../utils/deeplinkUtils'
@@ -80,6 +81,7 @@ class VoteScene extends PureComponent {
   }
 
   async componentDidMount () {
+    Answers.logContentView('Tab', 'Votes')
     this._onSearch = debounce(this._onSearch, 500)
     this._loadCandidates()
     this.didFocusSubscription = this.props.navigation.addListener(

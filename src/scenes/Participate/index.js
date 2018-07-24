@@ -1,5 +1,6 @@
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { Answers } from 'react-native-fabric'
 
 import {
   ScrollView,
@@ -60,6 +61,7 @@ class ParticipateHome extends React.Component {
   }
 
   async componentDidMount () {
+    Answers.logContentView('Tab', 'Participate')
     const assetList = await this._getAssetsFromStore()
     this.setState({ assetList })
     this._loadData()

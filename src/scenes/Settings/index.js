@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+
 import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
   Alert
 } from 'react-native'
+
+import { Answers } from 'react-native-fabric'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import { StackActions, NavigationActions } from 'react-navigation'
 
@@ -40,6 +43,7 @@ class Settings extends Component {
   }
 
   componentDidMount () {
+    Answers.logContentView('Tab', 'Settings')
     this._onLoadData()
   }
 
