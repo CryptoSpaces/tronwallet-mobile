@@ -57,7 +57,7 @@ class Settings extends Component {
   _resetWallet = async () => {
     Alert.alert(
       'Reset Wallet',
-      `Warning: This action will erase all saved data including your seed. If you didn't save your seed, please do it before continue.`,
+      `Warning: This action will erase all saved data including your 12 secret words. If you didn't save your secret, please do it before continue.`,
       [
         {text: 'Cancel', style: 'cancel'},
         {text: 'OK, I understand it',
@@ -92,7 +92,7 @@ class Settings extends Component {
         onPress: () => this.props.navigation.navigate('NetworkConnection')
       },
       {
-        title: 'Backup',
+        title: 'Backup Wallet',
         description: 'Backup your secret words',
         icon: 'key,-password,-lock,-privacy,-login',
         onPress: () => this.props.navigation.navigate('Pin', {
@@ -102,8 +102,8 @@ class Settings extends Component {
         })
       },
       {
-        title: 'Restore Seed',
-        description: 'Restore previously used seed words',
+        title: 'Restore Wallet',
+        description: 'Restore previously used 12 secrets words',
         icon: 'folder-sync,-data,-folder,-recovery,-sync',
         onPress: () => this.props.navigation.navigate('Pin', {
           shouldGoBack: true,
