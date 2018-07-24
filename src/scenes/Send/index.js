@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+
 import {
   ActivityIndicator,
   Clipboard,
   Alert,
   Modal
 } from 'react-native'
+
+import { Answers } from 'react-native-fabric'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import ModalSelector from 'react-native-modal-selector'
 
@@ -40,6 +43,7 @@ class SendScene extends Component {
   }
 
   componentDidMount () {
+    Answers.logContentView('Page', 'Send')
     this._navListener = this.props.navigation.addListener(
       'didFocus',
       this._loadData

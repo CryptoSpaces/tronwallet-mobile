@@ -3,6 +3,7 @@ import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
 import { NavigationActions } from 'react-navigation'
+import { Answers } from 'react-native-fabric'
 // Design
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
@@ -17,6 +18,7 @@ import buildTransactionDetails, { translateError } from './detailMap'
 import getTransactionStore from '../../store/transactions'
 
 const CLOSE_SCREEN_TIME = 5000
+const ANSWERS_TRANSACTIONS = ['Transfer', 'Vote', 'Participate', 'Freeze']
 
 class TransactionDetail extends Component {
   state = {
@@ -106,6 +108,7 @@ class TransactionDetail extends Component {
     }
     return transaction
   }
+
   submitTransaction = async () => {
     const {
       signedTransaction,
@@ -121,6 +124,9 @@ class TransactionDetail extends Component {
       const { code } = await Client.broadcastTransaction(signedTransaction)
       if (code === 'SUCCESS') {
         success = true
+        if (ANSWERS_TRANSACTIONS.includes(transaction.type)) {
+          Answers.logCustom('Transaction Operation', { type: transaction.type })
+        }
         this.closeTransactionDetails = setTimeout(this._navigateNext, CLOSE_SCREEN_TIME)
       }
 

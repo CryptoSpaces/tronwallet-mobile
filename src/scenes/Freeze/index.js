@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Alert } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import moment from 'moment'
+import { Answers } from 'react-native-fabric'
 
 import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
@@ -32,6 +33,7 @@ class FreezeScene extends Component {
   }
 
   componentDidMount () {
+    Answers.logContentView('Page', 'Freeze')
     this._didFocusSubscription = this.props.navigation.addListener(
       'didFocus',
       this._loadData

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Alert, Keyboard } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
+import { Answers } from 'react-native-fabric'
 
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -47,6 +48,7 @@ class Restore extends React.Component {
       await updateWalletData()
       Alert.alert('Wallet recovered with success!')
       this.setState({ loading: false }, this._navigateToSettings)
+      Answers.logCustom('Wallet Operation', { type: 'Restore' })
     } catch (err) {
       console.warn(err)
       Alert.alert(

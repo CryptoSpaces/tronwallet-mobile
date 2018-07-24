@@ -3,6 +3,7 @@ import { Dimensions, Clipboard } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import { tint } from 'polished'
 import Feather from 'react-native-vector-icons/Feather'
+import { Answers } from 'react-native-fabric'
 
 import NavigationHeader from '../../components/Navigation/Header'
 import QRCode from '../../components/QRCode'
@@ -25,6 +26,10 @@ class ReceiveScreen extends PureComponent {
 
   state = {
     loading: true
+  }
+
+  componentDidMount () {
+    Answers.logContentView('Page', 'Receive')
   }
 
   _onLoad = () => {

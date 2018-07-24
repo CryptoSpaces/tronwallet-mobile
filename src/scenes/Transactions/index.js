@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import {
   FlatList,
   RefreshControl,
@@ -6,6 +7,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 
+import { Answers } from 'react-native-fabric'
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
@@ -34,6 +36,7 @@ class TransactionsScene extends Component {
   }
 
   async componentDidMount () {
+    Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
     this.setState({
       transactions: this.getSortedTransactionList(store)

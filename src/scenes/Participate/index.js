@@ -1,4 +1,5 @@
 import React from 'react'
+import { Answers } from 'react-native-fabric'
 
 import {
   TouchableOpacity,
@@ -63,6 +64,7 @@ class ParticipateHome extends React.Component {
   }
 
   async componentDidMount () {
+    Answers.logContentView('Tab', 'Participate')
     this._onSearch = debounce(this._onSearch, 350)
     this.props.navigation.setParams({
       _onSearch: this._onSearch,
