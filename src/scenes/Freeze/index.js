@@ -11,6 +11,7 @@ import Badge from '../../components/Badge'
 import ButtonGradient from '../../components/ButtonGradient'
 import { Colors } from '../../components/DesignSystem'
 import KeyboardScreen from '../../components/KeyboardScreen'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import Client from '../../services/client'
 import { signTransaction } from '../../utils/transactionUtils'
@@ -18,6 +19,17 @@ import getTransactionStore from '../../store/transactions'
 import { withContext } from '../../store/context'
 
 class FreezeScene extends Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: (
+        <NavigationHeader
+          title='FREEZE'
+          onBack={() => { navigation.goBack() }}
+          noBorder
+        />
+      )
+    }
+  }
   state = {
     from: '',
     balances: [],
@@ -51,11 +63,17 @@ class FreezeScene extends Component {
     }
     try {
       const transactionStore = await getTransactionStore()
+      const lastUnfreeze = transactionStore.objects('Transaction')
+        .sorted([['timestamp', true]])
+        .filtered('type == "Unfreeze"')[0]
+
       const lastFreeze = transactionStore.objects('Transaction')
         .sorted([['timestamp', true]])
         .filtered('type == "Freeze"')[0]
 
       if (lastFreeze.timestamp) {
+        if (lastUnfreeze.timestamp > lastFreeze.timestamp) return unfreezeStatus
+
         const lastFreezeTimePlusThree = moment(lastFreeze.timestamp).add(3, 'days')
         const differenceFromNow = lastFreezeTimePlusThree.diff(moment())
         const duration = moment.duration(differenceFromNow)
@@ -102,12 +120,15 @@ class FreezeScene extends Component {
   }
 
   _submitUnfreeze = async () => {
+    this.setState({loading: true})
     try {
       const data = await Client.getUnfreezeTransaction(this.props.context.pin)
       this._openTransactionDetails(data)
     } catch (error) {
       Alert.alert('Error while building transaction, try again.')
       this.setState({ error: 'Error getting transaction', loadingSign: false })
+    } finally {
+      this.setState({loading: false})
     }
   }
   _submit = async () => {
@@ -177,10 +198,9 @@ class FreezeScene extends Component {
 
     return (
       <KeyboardScreen>
-        <Utils.Container style={{borderColor: Colors.secondaryText, borderTopWidth: 0.5}}>
+        <Utils.Container>
           <Header>
             <Utils.View align='center'>
-              <Utils.VerticalSpacer size='xsmall' />
               <Utils.Text size='xsmall' secondary>
                 BALANCE
               </Utils.Text>
@@ -223,7 +243,7 @@ class FreezeScene extends Component {
               <Utils.LightButton
                 paddingY={'medium'}
                 paddingX={'large'}
-                disabled={unfreezeStatus.disabled}
+                disabled={unfreezeStatus.disabled || loading}
                 onPress={this._submitUnfreeze}>
                 <Utils.Text size='xsmall'>UNFREEZE</Utils.Text>
               </Utils.LightButton>

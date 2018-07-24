@@ -4,9 +4,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { tint } from 'polished'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
-import { ONE_TRX } from '../../services/client'
-
-// const formatAmount = value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export default ({ item, onPress }) => {
   return (
@@ -24,7 +21,7 @@ export default ({ item, onPress }) => {
         </Utils.Row>
         <Utils.View>
           <Utils.Text size='small'>
-            {item.contractData.frozenBalance / ONE_TRX} TRX{' '}
+            TRX{' '}
             <Ionicons name='ios-unlock' size={20} color='#ffffff' />
           </Utils.Text>
         </Utils.View>

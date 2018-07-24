@@ -12,16 +12,15 @@ import OneSignal from 'react-native-onesignal'
 import { Colors } from './src/components/DesignSystem'
 
 import LoadingScene from './src/scenes/Loading'
-import SendScreen from './src/scenes/Send'
+import SendScene from './src/scenes/Send'
 import HomeScene from './src/scenes/Home'
 import BalanceScene from './src/scenes/Balance'
 import VoteScene from './src/scenes/Vote'
 import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
 import SubmitTransactionScene from './src/scenes/SubmitTransaction'
-import TransferScene from './src/scenes/Transfer'
+import FreezeScene from './src/scenes/Freeze'
 import Settings from './src/scenes/Settings'
-import ParticipateScene from './src/scenes/Tokens/Participate'
 import TokenInfoScene from './src/scenes/Participate/TokenInfo'
 import BuyScene from './src/scenes/Participate/Buy'
 import GetVaultScene from './src/scenes/GetVault'
@@ -71,7 +70,8 @@ const SettingsStack = createStackNavigator({
 const BalanceStack = createStackNavigator({
   BalanceScene,
   ReceiveScene,
-  TransferScene
+  FreezeScene,
+  SendScene
 })
 
 const TransactionList = createStackNavigator({
@@ -142,9 +142,7 @@ const RootNavigator = createStackNavigator({
   Pin,
   SeedRestore,
   App: AppTabs,
-  Send: SendScreen,
   GetVault: GetVaultScene,
-  Participate: ParticipateScene,
   SubmitTransaction: {
     screen: SubmitTransactionScene,
     path: 'transaction/:tx'

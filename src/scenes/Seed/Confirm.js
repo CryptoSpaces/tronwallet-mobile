@@ -70,7 +70,7 @@ class Confirm extends React.Component {
       if (result) {
         const rewardsParams = {
           label: 'Wallet Successfully confirmed',
-          amount: 1,
+          amount: 100,
           token: 'TWX'
         }
         navigation.navigate('Rewards', rewardsParams)

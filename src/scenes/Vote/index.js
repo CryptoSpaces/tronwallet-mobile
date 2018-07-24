@@ -135,15 +135,25 @@ class VoteScene extends PureComponent {
       .sorted([['timestamp', true]])
       .filtered('type == "Vote"')[0]
 
+    const lastUnfreezeTransaction = transactionStore
+      .objects('Transaction')
+      .sorted([['timestamp', true]])
+      .filtered('type == "Unfreeze"')[0]
+
+    // If there was a Unfreeze, just refresh votes
+    if (lastUnfreezeTransaction.timestamp > lastVoteTransaction.timestamp) {
+      return {}
+    }
+
     if (lastVoteTransaction) {
       let lastVote = [...lastVoteTransaction.contractData.votes]
       let renormalize = {}
       for (let vote of lastVote) {
         renormalize[vote.voteAddress] = vote.voteCount
       }
-
       return renormalize
     }
+    // No votes for this account yet
     return {}
   }
 

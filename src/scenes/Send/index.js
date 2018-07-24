@@ -19,6 +19,7 @@ import IconButton from '../../components/IconButton'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import KeyboardScreen from '../../components/KeyboardScreen'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import { isAddressValid } from '../../services/address'
 import { signTransaction } from '../../utils/transactionUtils'
@@ -27,6 +28,17 @@ import getBalanceStore from '../../store/balance'
 import { withContext } from '../../store/context'
 
 class SendScene extends Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: (
+        <NavigationHeader
+          title='SEND'
+          onBack={() => { navigation.goBack() }}
+          noBorder
+        />
+      )
+    }
+  }
   state = {
     from: '',
     to: '',
@@ -228,79 +240,77 @@ class SendScene extends Component {
     const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
     return (
       <KeyboardScreen>
-        <Utils.Container style={{ borderColor: Colors.secondaryText, borderTopWidth: 0.5 }}>
-          <Utils.Content>
-            <ModalSelector
-              data={balances.map(item => ({
-                key: item.name,
-                label: this._formatBalance(item.name, item.balance)
-              }))}
-              onChange={option => this.setState({
-                token: option.key,
-                formattedToken: option.label
-              },
-              this._nextInput('token'))}
-              disabled={trxBalance === 0}
-            >
-              <Input
-                label='TOKEN'
-                value={this.state.formattedToken}
-                rightContent={this._rightContentToken}
-              />
-            </ModalSelector>
-            <Utils.VerticalSpacer size='medium' />
+        <Utils.Content>
+          <ModalSelector
+            data={balances.map(item => ({
+              key: item.name,
+              label: this._formatBalance(item.name, item.balance)
+            }))}
+            onChange={option => this.setState({
+              token: option.key,
+              formattedToken: option.label
+            },
+            this._nextInput('token'))}
+            disabled={trxBalance === 0}
+          >
             <Input
-              innerRef={(input) => { this.to = input }}
-              label='TO'
-              rightContent={this._rightContentTo}
-              value={to}
-              onChangeText={text => this._changeInput(text, 'to')}
-              onSubmitEditing={() => this._nextInput('to')}
+              label='TOKEN'
+              value={this.state.formattedToken}
+              rightContent={this._rightContentToken}
             />
-            <Modal
-              visible={this.state.QRModalVisible}
-              onRequestClose={this._closeModal}
-              animationType='slide'
-            >
-              <QRScanner
-                onRead={this._readPublicKey}
-                onClose={this._closeModal}
-                checkAndroid6Permissions
-              />
-            </Modal>
-            <Utils.VerticalSpacer size='medium' />
-            <Input
-              innerRef={(input) => { this.amount = input }}
-              label='AMOUNT'
-              keyboardType='numeric'
-              placeholder='0'
-              value={amount}
-              onChangeText={text => this._changeInput(text, 'amount')}
-              onSubmitEditing={() => this._nextInput('amount')}
-              align='right'
+          </ModalSelector>
+          <Utils.VerticalSpacer size='medium' />
+          <Input
+            innerRef={(input) => { this.to = input }}
+            label='TO'
+            rightContent={this._rightContentTo}
+            value={to}
+            onChangeText={text => this._changeInput(text, 'to')}
+            onSubmitEditing={() => this._nextInput('to')}
+          />
+          <Modal
+            visible={this.state.QRModalVisible}
+            onRequestClose={this._closeModal}
+            animationType='slide'
+          >
+            <QRScanner
+              onRead={this._readPublicKey}
+              onClose={this._closeModal}
+              checkAndroid6Permissions
             />
-            <Utils.Text size='xsmall' secondary>
+          </Modal>
+          <Utils.VerticalSpacer size='medium' />
+          <Input
+            innerRef={(input) => { this.amount = input }}
+            label='AMOUNT'
+            keyboardType='numeric'
+            placeholder='0'
+            value={amount}
+            onChangeText={text => this._changeInput(text, 'amount')}
+            onSubmitEditing={() => this._nextInput('amount')}
+            align='right'
+          />
+          <Utils.Text size='xsmall' secondary>
               The minimum amount for any send transaction is 1.
-            </Utils.Text>
-            <Utils.VerticalSpacer size='large' />
-            {error && (
-              <React.Fragment>
-                <Utils.Error>{error}</Utils.Error>
-                <Utils.VerticalSpacer size='large' />
-              </React.Fragment>
-            )}
-            {loadingSign || loadingData ? (
-              <ActivityIndicator size='small' color={Colors.primaryText} />
-            ) : (
-              <ButtonGradient
-                font='bold'
-                text='SEND'
-                onPress={this._submit}
-                disabled={Number(amount) < 1 || trxBalance < Number(amount)}
-              />
-            )}
-          </Utils.Content>
-        </Utils.Container>
+          </Utils.Text>
+          <Utils.VerticalSpacer size='large' />
+          {error && (
+            <React.Fragment>
+              <Utils.Error>{error}</Utils.Error>
+              <Utils.VerticalSpacer size='large' />
+            </React.Fragment>
+          )}
+          {loadingSign || loadingData ? (
+            <ActivityIndicator size='small' color={Colors.primaryText} />
+          ) : (
+            <ButtonGradient
+              font='bold'
+              text='SEND'
+              onPress={this._submit}
+              disabled={Number(amount) < 1 || trxBalance < Number(amount)}
+            />
+          )}
+        </Utils.Content>
       </KeyboardScreen>
     )
   }

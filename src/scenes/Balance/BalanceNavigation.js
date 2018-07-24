@@ -10,11 +10,11 @@ const BalanceNavigation = ({ navigation, context }) => {
     navigation.navigate('ReceiveScene')
   }
 
-  const goToSend = () => {
+  const navigateNext = (next) => {
     navigation.navigate('Pin', {
       shouldGoBack: true,
       testInput: pin => pin === context.pin,
-      onSuccess: () => navigation.navigate('TransferScene', {index: 0})
+      onSuccess: () => navigation.navigate(next, {index: 0})
     })
   }
 
@@ -32,12 +32,22 @@ const BalanceNavigation = ({ navigation, context }) => {
         />
         <Utils.HorizontalSpacer size='tiny' />
         <ButtonGradient
-          text='SEND'
+          text='FREEZE'
           size='medium'
           multiColumnButton={{x: 2, y: 3}}
           full
           leftRadius={0}
-          onPress={goToSend}
+          rightRadius={0}
+          onPress={() => navigateNext('FreezeScene')}
+        />
+        <Utils.HorizontalSpacer size='tiny' />
+        <ButtonGradient
+          text='SEND'
+          size='medium'
+          multiColumnButton={{x: 3, y: 4}}
+          full
+          leftRadius={0}
+          onPress={() => navigateNext('SendScene')}
         />
       </Utils.Row>
     </React.Fragment>
