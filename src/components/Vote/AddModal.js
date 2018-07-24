@@ -44,7 +44,7 @@ class VoteModal extends Component {
     return <Utils.NumKeyWrapper disabled={isDisabled} key={voteKey} flexBasis={25}>
       <Utils.NumKey
         onPress={() => this._incrementVoteCount(voteOptions[voteKey])}>
-        <Utils.Text light primary>+{voteKey}</Utils.Text>
+        <Utils.Text font='regular' primary>+{voteKey}</Utils.Text>
       </Utils.NumKey>
     </Utils.NumKeyWrapper>
   })
@@ -113,17 +113,18 @@ class VoteModal extends Component {
               />
               <Utils.View paddingX={'medium'}>
                 <Utils.VerticalSpacer size='medium' />
-                <Utils.Text margin={Spacing.small} size='smaller' align='right'>
+                <Utils.Text font='regular' margin={Spacing.small} size='smaller' align='right'>
               ENTER THE VOTE VALUE
                 </Utils.Text>
-                <Utils.Text letterSpacing={0.6} margin={Spacing.small} size='large' align='right'>
+                <Utils.Text font='regular' letterSpacing={0.6} margin={Spacing.small} size='large' align='right'>
                   {formatNumber(amountToVote)}
                 </Utils.Text>
                 <Utils.Row marginRight={Spacing.small} justify='flex-end' align='flex-end'>
-                  <Utils.Text lineHeight={14} margin={Spacing.xsmall} align='right' size='smaller' secondary>
+                  <Utils.Text font='regular' lineHeight={14} margin={Spacing.xsmall} align='right' size='smaller' secondary>
                   VOTES REMAINING
                   </Utils.Text>
                   <Utils.Text
+                    font='regular'
                     margin={Spacing.xsmall}
                     align='right'
                     size='smaller'
@@ -152,7 +153,7 @@ class VoteModal extends Component {
                 <Utils.NumPadWrapper>
                   <Utils.NumKeyWrapper flexBasis={100}>
                     <Utils.VoteOption background={Colors.lightPurple} onPress={() => acceptCurrentVote(amountToVote)}>
-                      <Utils.Text size='xsmall' color={Colors.primaryText} font={'bold'}>
+                      <Utils.Text font='bold' size='xsmall' color={Colors.primaryText}>
                       ADD VOTE
                       </Utils.Text>
                     </Utils.VoteOption>
@@ -160,7 +161,7 @@ class VoteModal extends Component {
                 </Utils.NumPadWrapper>
                 {notEnoughTrx && (
                   <Utils.View paddingY='medium' align='center'>
-                    <Utils.Text secondary light size='small'>
+                    <Utils.Text font='regular' secondary light size='small'>
                       If you need more votes you can Freeze more TRX.
                     </Utils.Text>
                     <Utils.VerticalSpacer size='medium' />

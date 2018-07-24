@@ -186,7 +186,7 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   color: ${props => props.color};
-  font-family: ${props => `rubik-${_.capitalize(props.font || 'medium')}`};
+  font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
   ${props => props.size && css` font-size: ${FontSize[props.size]}px`};
   ${props => props.light && css` font-family: rubik-light`};
   ${props => props.padding && css` padding: ${props.padding}px`};
@@ -225,7 +225,7 @@ Text.propTypes = {
   ]),
   marginTop: PropTypes.oneOf(['xsmall', 'small', 'medium', 'large']),
   lineHeight: PropTypes.number,
-  font: PropTypes.oneOf(['bold', 'light', 'black', 'medium'])
+  font: PropTypes.oneOf(['bold', 'light', 'black', 'medium', 'regular'])
 }
 
 export const Item = styled.View`
