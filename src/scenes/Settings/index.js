@@ -82,14 +82,14 @@ class Settings extends Component {
         icon: 'user,-person,-avtar,-profile-picture,-dp'
       },
       {
-        title: 'Edit Node Network',
+        title: 'Network',
         description: 'Choose a node of your preference',
         icon: 'share,-network,-connect,-community,-media',
         onPress: () => this.props.navigation.navigate('NetworkConnection')
       },
       {
-        title: 'Confirm Seed',
-        description: 'Confirm the seed password for your account',
+        title: 'Backup',
+        description: 'Backup your secret words',
         icon: 'key,-password,-lock,-privacy,-login',
         onPress: () => this.props.navigation.navigate('Pin', {
           shouldGoBack: true,
