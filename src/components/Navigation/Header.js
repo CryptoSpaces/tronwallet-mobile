@@ -81,7 +81,10 @@ class NavigationHeader extends React.Component {
   _renderSeachMode = () => {
     const { onSearch } = this.props
 
-    const onClose = () => { this.setState({ isSearching: false }) }
+    const onClose = () => {
+      this.setState({ isSearching: false })
+      onSearch('')
+    }
     const searchBar = (
       <Utils.View justify='center' align='center'>
         <Utils.FormInput

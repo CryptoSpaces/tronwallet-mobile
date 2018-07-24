@@ -1,17 +1,19 @@
 import React from 'react'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {
   ScrollView,
   TouchableOpacity,
   Image,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native'
 
 import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
+import { debounce } from 'lodash'
 
+import { Colors } from '../../components/DesignSystem'
 import Client, { ONE_TRX } from '../../services/client'
 import getAssetsStore from '../../store/assets'
 import banner from '../../assets/images/banner.jpg'
@@ -40,27 +42,31 @@ import { rgb } from '../../../node_modules/polished'
 
 class ParticipateHome extends React.Component {
   static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state
     return {
       header: (
         <NavigationHeader
           title='PARTICIPATE'
-          rightButton={
-            <TouchableOpacity onPress={() => { }}>
-              <Ionicons name='ios-search' color='white' size={21} />
-            </TouchableOpacity>
-          }
+          onSearch={name => params._onSearch(name)}
         />
       )
     }
   }
 
   state = {
-    assetList: []
+    assetList: [],
+    currentList: [],
+    loading: false,
+    hideSlide: false
   }
 
   async componentDidMount () {
+    this._onSearch = debounce(this._onSearch, 350)
+    this.props.navigation.setParams({
+      _onSearch: this._onSearch
+    })
     const assetList = await this._getAssetsFromStore()
-    this.setState({ assetList })
+    this.setState({ assetList, currentList: assetList })
     this._loadData()
   }
 
@@ -71,7 +77,7 @@ class ParticipateHome extends React.Component {
 
       const assetList = await this._getAssetsFromStore()
 
-      this.setState({ assetList })
+      this.setState({ assetList, currentList: assetList })
     } catch (error) {
       this.setState({ error: error.message })
     }
@@ -92,9 +98,30 @@ class ParticipateHome extends React.Component {
     store.write(() => assets.map(item => store.create('Asset', item, true)))
   }
 
-  _renderSlide = () => (
-    <Image source={banner} style={{ height: 232 }} />
-  )
+  _renderSlide = () => {
+    const { hideSlide } = this.state
+
+    if (hideSlide) {
+      return null
+    }
+
+    return (
+      <Image source={banner} style={{ height: 232 }} />
+    )
+  }
+
+  _onSearch = async (name) => {
+    const { assetList } = this.state
+    this.setState({ loading: true })
+    if (name) {
+      this.setState({ hideSlide: true })
+      const regex = new RegExp(name.toLowerCase(), 'i')
+      const filtered = assetList.filter(asset => asset.name.toLowerCase().match(regex))
+      this.setState({ currentList: filtered, loading: false })
+    } else {
+      this.setState({ currentList: assetList, loading: false, hideSlide: false })
+    }
+  }
 
   _renderCardContent = ({ name, price, percentage, endTime, isFeatured }) => (
     <React.Fragment>
@@ -162,16 +189,32 @@ class ParticipateHome extends React.Component {
     )
   }
 
+  _renderLoading = () => {
+    const { loading } = this.state
+
+    if (loading) {
+      return (
+        <React.Fragment>
+          <ActivityIndicator size='small' color={Colors.primaryText} />
+          <VerticalSpacer size={10} />
+        </React.Fragment>
+      )
+    }
+
+    return null
+  }
+
   render () {
-    const { assetList } = this.state
+    const { currentList } = this.state
 
     return (
       <Container>
         <ScrollView>
           {this._renderSlide()}
           <VerticalSpacer size={20} />
+          {this._renderLoading()}
           <FlatList
-            data={assetList}
+            data={currentList}
             renderItem={({ item }) => this._renderCard(item)}
             keyExtractor={asset => asset.name}
             scrollEnabled
