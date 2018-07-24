@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { RefreshControl, ScrollView } from 'react-native'
+import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native'
 import { Answers } from 'react-native-fabric'
 import axios from 'axios'
 import Config from 'react-native-config'
+import ActionSheet from 'react-native-actionsheet'
 
 import NavigationHeader from '../../components/Navigation/Header'
 import * as Utils from '../../components/Utils'
@@ -18,6 +19,7 @@ import getBalanceStore from '../../store/balance'
 import { getUserSecrets } from '../../utils/secretsUtils'
 import withContext from '../../utils/hocs/withContext'
 
+const CURRENCIES = ['USD', 'EUR', 'BTC', 'ETH', 'Cancel']
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
 
 class BalanceScene extends Component {
@@ -32,7 +34,8 @@ class BalanceScene extends Component {
     seed: [],
     balances: [],
     trxHistory: [],
-    trxBalance: 0
+    trxBalance: 0,
+    currency: 'USD'
   }
 
   async componentDidMount () {
@@ -95,13 +98,22 @@ class BalanceScene extends Component {
     store.write(() => balances.map(item => store.create('Balance', item, true)))
   }
 
+  _handleCurrencyChange = (index) => {
+    const currency = CURRENCIES[index]
+
+    if (currency && currency !== 'Cancel') {
+      this.setState({ currency })
+    }
+  }
+
   render () {
     const {
       trxBalance,
       balances,
       trxHistory,
       seed,
-      seedConfirmed
+      seedConfirmed,
+      currency
     } = this.state
 
     return (
@@ -115,7 +127,16 @@ class BalanceScene extends Component {
           }
         >
           <Utils.Content paddingTop={2}>
-            <TrxValue trxBalance={trxBalance} currency='USD' />
+            <ActionSheet
+              ref={ref => { this.ActionSheet = ref }}
+              title='Please, choose your preferred currency.'
+              options={CURRENCIES}
+              cancelButtonIndex={4}
+              onPress={index => this._handleCurrencyChange(index)}
+            />
+            <TouchableOpacity onPress={() => this.ActionSheet.show()}>
+              <TrxValue trxBalance={trxBalance} currency={currency} />
+            </TouchableOpacity>
             <Utils.VerticalSpacer size='medium' />
             {!!trxHistory.length && <LineChart chartHistory={trxHistory} />}
             <Utils.VerticalSpacer size='medium' />
