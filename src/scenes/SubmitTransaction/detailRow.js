@@ -20,11 +20,11 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ({ title, text }) => (
+export default ({ title, text, address }) => (
   <View style={styles.card}>
     <Utils.Text secondary size='smaller'>
       {title}
     </Utils.Text>
-    <Utils.Text size='smaller'>{text}</Utils.Text>
+    <Utils.Text size={address ? 'xsmall' : 'smaller'}>{text}</Utils.Text>
   </View>
 )
