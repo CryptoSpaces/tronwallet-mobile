@@ -18,6 +18,7 @@ class NavigationHeader extends React.Component {
     onClose: PropTypes.func,
     onBack: PropTypes.func,
     onSearch: PropTypes.func,
+    onSearchPressed: PropTypes.func,
     noBorder: PropTypes.bool,
     rightButton: PropTypes.element,
     leftButton: PropTypes.element
@@ -46,16 +47,20 @@ class NavigationHeader extends React.Component {
     </Utils.View>
   }
 
-  _renderRightElement = (onClose, onSearch, rightButton) => {
+  _renderRightElement = (onClose, onSearch, onSearchPressed, rightButton) => {
     let element = null
     if (onClose && !rightButton) {
       element = <TouchableOpacity onPress={onClose}>
         <Feather name='x' color='white' size={28} />
       </TouchableOpacity>
     } else if (onSearch && !rightButton) {
-      element = <TouchableOpacity onPress={() => { this.setState({ isSearching: true }) }}>
-        <Ionicons name='ios-search' color='white' size={21} />
-      </TouchableOpacity>
+      element =
+        <TouchableOpacity onPress={() => {
+          this.setState({ isSearching: true })
+          if (onSearchPressed) onSearchPressed()
+        }}>
+          <Ionicons name='ios-search' color='white' size={21} />
+        </TouchableOpacity>
     } else {
       element = rightButton
     }
@@ -65,7 +70,7 @@ class NavigationHeader extends React.Component {
   }
 
   _renderDefaultMode = () => {
-    const { title, onClose, rightButton, onBack, leftButton, onSearch } = this.props
+    const { title, onClose, rightButton, onBack, leftButton, onSearch, onSearchPressed } = this.props
 
     return (
       <React.Fragment>
@@ -73,17 +78,17 @@ class NavigationHeader extends React.Component {
         <Utils.View justify='center' align='center' >
           <Utils.Text lineHeight={36} size='average' font='medium'>{title.toUpperCase()}</Utils.Text>
         </Utils.View >
-        {this._renderRightElement(onClose, onSearch, rightButton)}
+        {this._renderRightElement(onClose, onSearch, onSearchPressed, rightButton)}
       </React.Fragment>
     )
   }
 
   _renderSeachMode = () => {
-    const { onSearch } = this.props
+    const { onSearch, onSearchPressed } = this.props
 
     const onClose = () => {
       this.setState({ isSearching: false })
-      onSearch('')
+      if (onSearchPressed) onSearchPressed()
     }
     const searchBar = (
       <Utils.View justify='center' align='center'>
