@@ -13,8 +13,9 @@ class TrxInfo extends PureComponent {
           price.value &&
           freeze.value && (
             <FadeIn name='tronprice'>
-              <Utils.Row justify='center'>
-                <Utils.Content align='center'>
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.Row justify='space-between'>
+                <Utils.View align='center'>
                   <Utils.Text size='xsmall' secondary>TRON POWER</Utils.Text>
                   <Motion
                     defaultStyle={{ power: 0 }}
@@ -26,8 +27,8 @@ class TrxInfo extends PureComponent {
                       <Utils.Text padding={4}>{`${value.power.toFixed(0)}`}</Utils.Text>
                     )}
                   </Motion>
-                </Utils.Content>
-                <Utils.Content align='center'>
+                </Utils.View>
+                <Utils.View align='center'>
                   <Utils.Text size='xsmall' secondary>TRX PRICE</Utils.Text>
                   <Motion
                     defaultStyle={{ price: 0 }}
@@ -39,8 +40,8 @@ class TrxInfo extends PureComponent {
                       </Utils.Text>
                     )}
                   </Motion>
-                </Utils.Content>
-                <Utils.Content align='center'>
+                </Utils.View>
+                <Utils.View align='center'>
                   <Utils.Text size='xsmall' secondary>BANDWIDTH</Utils.Text>
                   <Motion
                     defaultStyle={{ bandwidth: 0 }}
@@ -57,8 +58,9 @@ class TrxInfo extends PureComponent {
                       </Utils.Text>
                     )}
                   </Motion>
-                </Utils.Content>
+                </Utils.View>
               </Utils.Row>
+              <Utils.VerticalSpacer size='medium' />
             </FadeIn>
           )
         }
