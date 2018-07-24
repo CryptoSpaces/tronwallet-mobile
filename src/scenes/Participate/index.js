@@ -123,6 +123,7 @@ class ParticipateHome extends React.Component {
       <View>
         <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='contain' />
         <VerticalSpacer size={20} />
+        {this._renderLoading()}
       </View>
     )
   }
@@ -234,10 +235,8 @@ class ParticipateHome extends React.Component {
 
     return (
       <Container>
-        {this._renderSlide()}
-        <VerticalSpacer size={20} />
-        {this._renderLoading()}
         <FlatList
+          ListHeaderComponent={this._renderSlide()}
           data={orderedBalances}
           renderItem={({ item }) => this._renderCard(item)}
           keyExtractor={asset => asset.name}
