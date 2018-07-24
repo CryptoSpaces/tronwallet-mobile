@@ -82,7 +82,7 @@ class Settings extends Component {
         icon: 'user,-person,-avtar,-profile-picture,-dp'
       },
       {
-        title: 'Edit Node Network',
+        title: 'Network',
         description: 'Choose a node of your preference',
         icon: 'share,-network,-connect,-community,-media',
         onPress: () => this.props.navigation.navigate('NetworkConnection')
