@@ -156,7 +156,8 @@ const RootNavigator = createStackNavigator({
   navigationOptions: {
     gesturesEnabled: false,
     header: null
-  }
+  },
+  cardStyle: { shadowColor: 'transparent' }
 })
 
 const prefix =
@@ -173,7 +174,6 @@ class App extends Component {
 
   componentDidMount () {
     OneSignal.init('ce0b0f27-0ae7-4a8c-8fff-2a110da3a163', { kOSSettingsKeyAutoPrompt: true })
-
     OneSignal.addEventListener('received', this._onReceived)
     OneSignal.addEventListener('opened', this._onOpened)
     OneSignal.addEventListener('ids', this._onIds)
@@ -261,7 +261,7 @@ class App extends Component {
       setPin: this._setPin
     }
     return (
-      <SafeAreaView style={{ backgroundColor: Colors.background, flex: 1 }}>
+      <SafeAreaView style={{ backgroundColor: Colors.background, flex: 1 }} >
         <Context.Provider value={contextProps}>
           <StatusBar barStyle='light-content' />
           <RootNavigator uriPrefix={prefix} />
