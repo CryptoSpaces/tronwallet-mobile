@@ -94,7 +94,7 @@ class VoteModal extends Component {
       notEnoughTrx
     } = this.state
 
-    const { url: candidateUrl, votes: totalVotes } = currentVoteItem
+    const { url: candidateUrl } = currentVoteItem
     return (
       <Modal
         animationType='slide'
@@ -112,22 +112,7 @@ class VoteModal extends Component {
                 noBorder
               />
               <Utils.View paddingX={'medium'}>
-                <Utils.Row justify='center' align='center'>
-                  <Utils.Text padding={Spacing.xsmall} size='smaller' secondary>
-                  TOTAL VOTES
-                  </Utils.Text>
-                  <Utils.Text
-                    margin={Spacing.xsmall}
-                    size='smaller'
-                    lineHeight={14}
-                    style={{
-                      fontFamily: 'Helvetica'
-                    }}
-                  >
-                    {formatNumber(totalVotes)}
-                  </Utils.Text>
-                </Utils.Row>
-                <Utils.VerticalSpacer size='large' />
+                <Utils.VerticalSpacer size='medium' />
                 <Utils.Text margin={Spacing.small} size='smaller' align='right'>
               ENTER THE VOTE VALUE
                 </Utils.Text>
