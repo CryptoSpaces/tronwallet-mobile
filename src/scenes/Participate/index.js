@@ -14,6 +14,7 @@ import moment from 'moment'
 import { debounce } from 'lodash'
 
 import { Colors } from '../../components/DesignSystem'
+import { orderBalances } from '../../utils/balanceUtils'
 import Client, { ONE_TRX } from '../../services/client'
 import getAssetsStore from '../../store/assets'
 import banner from '../../assets/images/banner.jpg'
@@ -88,7 +89,7 @@ class ParticipateHome extends React.Component {
     return store
       .objects('Asset')
       .filtered(
-        `percentage < 100 AND startTime < ${Date.now()} AND endTime > ${Date.now()}`
+        `issuedPercentage < 100 AND name <> 'TRX' AND startTime < ${Date.now()} AND endTime > ${Date.now()}`
       )
       .map(item => Object.assign({}, item))
   }
@@ -123,7 +124,7 @@ class ParticipateHome extends React.Component {
     }
   }
 
-  _renderCardContent = ({ name, price, percentage, endTime, isFeatured }) => (
+  _renderCardContent = ({ name, price, issuedPercentage, endTime, isFeatured }) => (
     <React.Fragment>
       {isFeatured && (
         <Featured>
@@ -145,7 +146,7 @@ class ParticipateHome extends React.Component {
         </Row>
         <VerticalSpacer size={15} />
         <ProgressBar
-          progress={Math.trunc(percentage) / 100}
+          progress={Math.round(issuedPercentage) / 100}
           borderWidth={0}
           width={null} height={4}
           color={rgb(6, 231, 123)}
@@ -154,7 +155,7 @@ class ParticipateHome extends React.Component {
         <VerticalSpacer size={6} />
         <Row justify='space-between'>
           <Text>Ends {moment(endTime).fromNow()}</Text>
-          <Text>{Math.trunc(percentage)}%</Text>
+          <Text>{Math.round(issuedPercentage)}%</Text>
         </Row>
       </CardContent>
     </React.Fragment>
@@ -206,6 +207,7 @@ class ParticipateHome extends React.Component {
 
   render () {
     const { currentList } = this.state
+    const orderedBalances = orderBalances(currentList)
 
     return (
       <Container>
@@ -214,7 +216,7 @@ class ParticipateHome extends React.Component {
           <VerticalSpacer size={20} />
           {this._renderLoading()}
           <FlatList
-            data={currentList}
+            data={orderedBalances}
             renderItem={({ item }) => this._renderCard(item)}
             keyExtractor={asset => asset.name}
             scrollEnabled

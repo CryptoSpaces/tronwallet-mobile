@@ -14,12 +14,13 @@ class LoadingScene extends Component {
     this._askPin()
   }
 
-  _isFirstTime = async () => {
-    const isFirstTime = await AsyncStorage.getItem('@TronWallet:isFirstTime')
-    if (isFirstTime !== null) {
+  _getUseStatus = async () => {
+    const useStatus = await AsyncStorage.getItem('@TronWallet:useStatus')
+    if (useStatus === null || useStatus === 'reset') {
+      return useStatus || true
+    } else {
       return false
     }
-    return true
   }
 
   _tryToOpenStore = async pin => {
@@ -36,9 +37,13 @@ class LoadingScene extends Component {
   }
 
   _askPin = async () => {
-    const isFirstTime = await this._isFirstTime()
-    if (isFirstTime) {
-      this.props.navigation.navigate('FirstTime')
+    const useStatus = await this._getUseStatus()
+    if (useStatus) {
+      const shouldDoubleCheck = useStatus !== 'reset'
+      this.props.navigation.navigate('FirstTime', {
+        shouldDoubleCheck,
+        testInput: this._tryToOpenStore
+      })
     } else {
       this.props.navigation.navigate('Pin', {
         testInput: this._tryToOpenStore,

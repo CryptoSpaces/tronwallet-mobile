@@ -3,17 +3,24 @@ import React from 'react'
 import ButtonGradient from '../../components/ButtonGradient'
 import * as Utils from '../../components/Utils'
 
-const BalanceNavigation = ({navigation}) => {
+import { withContext } from '../../store/context'
+
+const BalanceNavigation = ({ navigation, context }) => {
   const goToReceive = () => {
     navigation.navigate('ReceiveScene')
   }
 
   const goToSend = () => {
-    navigation.navigate('TransferScene', {index: 0})
+    navigation.navigate('Pin', {
+      shouldGoBack: true,
+      testInput: pin => pin === context.pin,
+      onSuccess: () => navigation.navigate('TransferScene', {index: 0})
+    })
   }
 
   return (
-    <Utils.Content paddingVertical='xsmall'>
+    <React.Fragment>
+      <Utils.VerticalSpacer size='xsmall' />
       <Utils.Row>
         <ButtonGradient
           text='RECEIVE'
@@ -33,8 +40,8 @@ const BalanceNavigation = ({navigation}) => {
           onPress={goToSend}
         />
       </Utils.Row>
-    </Utils.Content>
+    </React.Fragment>
   )
 }
 
-export default BalanceNavigation
+export default withContext(BalanceNavigation)

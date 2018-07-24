@@ -24,7 +24,8 @@ import {
   AmountText,
   MarginFixer,
   MoreInfoButton,
-  ButtonText
+  ButtonText,
+  TrxValueText
 } from '../Elements'
 
 // Utils
@@ -59,7 +60,7 @@ class BuyScene extends Component {
     totalRemaining: 0,
     amountToBuy: 0,
     trxBalance: 0,
-    notEnoughTrx: false,
+    notEnoughTrxBalance: false,
     loading: false
   }
 
@@ -87,13 +88,13 @@ class BuyScene extends Component {
     const amountToPay = (price / ONE_TRX) * quant
 
     if (amountToPay > totalRemaining) {
-      this.setState({ notEnoughTrx: true })
+      this.setState({ notEnoughTrxBalance: true })
       return
     }
     this.setState({
       amountToBuy: amountToBuy + quant,
       totalRemaining: totalRemaining - amountToPay,
-      notEnoughTrx: false
+      notEnoughTrxBalance: false
     })
   }
 
@@ -108,10 +109,10 @@ class BuyScene extends Component {
       this.setState({
         amountToBuy: amountToBuy,
         totalRemaining: trxBalance - amountToPay,
-        notEnoughTrx: false
+        notEnoughTrxBalance: false
       })
     } else {
-      this.setState({ notEnoughTrx: true })
+      this.setState({ notEnoughTrxBalance: true })
     }
   }
 
@@ -119,7 +120,7 @@ class BuyScene extends Component {
     this.setState({
       amountToBuy: 0,
       totalRemaining: this.state.trxBalance,
-      notEnoughTrx: false
+      notEnoughTrxBalance: false
     })
   }
 
@@ -138,18 +139,21 @@ class BuyScene extends Component {
   _submit = async () => {
     const { item } = this.props.navigation.state.params
     const { trxBalance, amountToBuy } = this.state
+    const amountToPay = amountToBuy * (item.price / ONE_TRX)
 
     try {
       this.setState({ loading: true })
-      const amountToPay = amountToBuy * (item.price / ONE_TRX)
       if (trxBalance < amountToPay) {
         throw new Error('INSUFFICIENT_BALANCE')
+      }
+      if (amountToPay < 1) {
+        throw new Error('INSUFFICIENT_TRX')
       }
 
       const participatePayload = {
         participateAddress: item.ownerAddress,
         participateToken: item.name,
-        participateAmount: amountToBuy
+        participateAmount: amountToPay
       }
 
       const data = await Client.getParticipateTransaction(this.props.context.pin, participatePayload)
@@ -158,6 +162,8 @@ class BuyScene extends Component {
     } catch (err) {
       if (err.message === 'INSUFFICIENT_BALANCE') {
         Alert.alert('Not enough funds (TRX) to participate.')
+      } else if (err.message === 'INSUFFICIENT_TRX') {
+        Alert.alert(`You need to buy at least one TRX worth of ${item.name}.`, `Currently you are buying only ${amountToPay}.`)
       } else {
         Alert.alert('Oops something wrong while building transaction, try again.')
       }
@@ -179,20 +185,33 @@ class BuyScene extends Component {
     }
   }
 
+  _formatTrxValue = (value) => Number.isInteger(value) ? value : value.toFixed(2)
+
   render () {
     const { item } = this.props.navigation.state.params
     const { name, price, description } = item
-    const { totalRemaining, amountToBuy, notEnoughTrx } = this.state
+    const { totalRemaining, amountToBuy, notEnoughTrxBalance } = this.state
+    const amountToPay = (price / ONE_TRX) * amountToBuy
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView>
           <BuyContainer>
-            <WhiteBuyText>ENTER AMOUNT TO BUY</WhiteBuyText>
+            <WhiteBuyText>AMOUNT TO BUY</WhiteBuyText>
             <VerticalSpacer size={4} />
             <AmountText>
-              {formatNumber(amountToBuy)}
+              {formatNumber(amountToBuy)} {name}
             </AmountText>
+            <TrxValueText>({this._formatTrxValue(amountToPay)} TRX)</TrxValueText>
+            {notEnoughTrxBalance && (
+              <React.Fragment>
+                <VerticalSpacer size={4} />
+                <WhiteBuyText>
+                  You don't have enough TRX to buy that many {name}.
+                </WhiteBuyText>
+                <VerticalSpacer size={4} />
+              </React.Fragment>
+            )}
             <BuyText>BALANCE: {formatNumber(totalRemaining)} TRX</BuyText>
             <VerticalSpacer size={7} />
             <BuyText>PRICE PER TOKEN: {price / ONE_TRX} TRX</BuyText>
@@ -236,19 +255,12 @@ class BuyScene extends Component {
             <VerticalSpacer size={17} />
             <BuyText>{description}</BuyText>
             <VerticalSpacer size={17} />
-            <MoreInfoButton>
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo', { item }) }}>
+            <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo', { item }) }}>
+              <MoreInfoButton>
                 <ButtonText>MORE INFO</ButtonText>
-              </TouchableOpacity>
-            </MoreInfoButton>
+              </MoreInfoButton>
+            </TouchableOpacity>
           </BuyContainer>
-          {notEnoughTrx && (
-            <Utils.View paddingY='medium' align='center'>
-              <Utils.Text secondary light size='small'>
-                You don't have enough TRX to buy that many {name}.
-              </Utils.Text>
-            </Utils.View>
-          )}
         </ScrollView>
       </SafeAreaView>
     )

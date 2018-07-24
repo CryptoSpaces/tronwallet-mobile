@@ -12,7 +12,8 @@ class WalletBalances extends PureComponent {
     const { balances } = this.props
 
     return (
-      <Utils.Content paddingVertical='large'>
+      <React.Fragment>
+        <Utils.VerticalSpacer size='large' />
         <Utils.Row justify='space-between'>
           <Utils.Text size='xsmall' secondary>
             TOKENS
@@ -30,7 +31,7 @@ class WalletBalances extends PureComponent {
             </Utils.Row>
           </Utils.Content>
         ))}
-      </Utils.Content>
+      </React.Fragment>
     )
   }
 }

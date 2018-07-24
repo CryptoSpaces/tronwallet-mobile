@@ -8,6 +8,7 @@ import { Spacing, Colors } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
 import ButtonGradient from '../../components/ButtonGradient'
 
+import WalletClient from '../../services/client'
 import { confirmSecret } from '../../utils/secretsUtils'
 import { withContext } from '../../store/context'
 
@@ -37,23 +38,47 @@ class Confirm extends React.Component {
       .getParam('seed', [])
       .map(item => ({ word: item, used: false }))
       .sort(() => 0.5 - Math.random()),
-    selected: []
+    selected: [],
+    loading: false
   }
 
   _handleSubmit = async () => {
+    const { navigation, context } = this.props
+    this.setState({loading: true})
     try {
-      const seed = this.props.navigation.getParam('seed', []).join(' ')
+      const seed = navigation.getParam('seed', []).join(' ')
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
-      await confirmSecret(this.props.context.pin)
-      Alert.alert('Success', 'Wallet successfully confirmed.')
-      this.props.navigation.dispatch(resetAction)
+      await confirmSecret(context.pin)
+      await this._handleSuccess()
     } catch (error) {
       console.warn(error)
       Alert.alert(
         'Wrong Combination',
         'Selected words dont match. Make sure you wrote the words in the correct order.'
       )
+      this.setState({loading: false})
+    }
+  }
+
+  _handleSuccess = async () => {
+    const { navigation, context } = this.props
+    try {
+      const result = await WalletClient.giftUser(context.pin, context.onesignalId)
+      if (result) {
+        const rewardsParams = {
+          label: 'Wallet Successfully confirmed',
+          amount: 1,
+          token: 'TWX'
+        }
+        navigation.navigate('Rewards', rewardsParams)
+      } else {
+        throw new Error('User gifted or not registered')
+      }
+    } catch (error) {
+      Alert.alert('Success', 'Wallet successfully confirmed.')
+      this.setState({loading: false})
+      navigation.dispatch(resetAction)
     }
   }
 
@@ -78,6 +103,7 @@ class Confirm extends React.Component {
   }
 
   render () {
+    const { loading } = this.state
     return (
       <Utils.Container>
         <ScrollView>
@@ -119,6 +145,7 @@ class Confirm extends React.Component {
           <Utils.View align='center' paddingY='medium'>
             <ButtonGradient
               text='CONFIRM SEED'
+              disabled={loading}
               onPress={this._handleSubmit}
             />
           </Utils.View>

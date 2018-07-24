@@ -5,6 +5,7 @@ import { string, number, bool, shape, array } from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Toast from 'react-native-easy-toast'
 import LinearGradient from 'react-native-linear-gradient'
+import styled from 'styled-components'
 
 import IconButton from '../../components/IconButton'
 import * as Utils from '../../components/Utils'
@@ -13,6 +14,7 @@ import NavigationHeader from '../../components/Navigation/Header'
 import { Colors } from '../../components/DesignSystem'
 import { ONE_TRX } from '../../services/client'
 import { rgb } from '../../../node_modules/polished'
+import Copiable from './CopiableAddress'
 
 class TransactionDetails extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -305,7 +307,7 @@ class TransactionDetails extends React.Component {
               color: '#7476a2'
             }}>{amountText}</Text>
             <Utils.Row align='center'>
-              <Elements.AmountText>{convertedAmount.toFixed(2)}</Elements.AmountText>
+              <Elements.AmountText>{convertedAmount < 1 ? convertedAmount : convertedAmount.toFixed(2)}</Elements.AmountText>
               <View style={{width: 11, height: 1}} />
               <View style={{backgroundColor: rgb(46, 47, 71),
                 borderRadius: 2,
@@ -436,26 +438,45 @@ class TransactionDetails extends React.Component {
     )
   }
 
+  _copyAddress = async () => {
+    await Clipboard.getString()
+  }
+
+  _showToast = (text) => {
+    this.refs.addressToast.show(text)
+  }
+
   _renderVotes = () => {
     const { votes } = this.props.navigation.state.params.item.contractData
+    const TempText = styled.Text`
+      font-family: Rubik-Regular;
+      font-size: 11px;
+      line-height: 20;
+      color: white;
+    `
 
     const votesToRender = votes.map((vote, index) => (
       <React.Fragment
         key={`${vote.voteAddress}-${index}`}
       >
+        <Toast
+          ref='addressToast'
+          position='top'
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+          opacity={0.8}
+        />
         <Utils.Row justify='space-between' align='center'>
-          <Text style={{
-            fontFamily: 'Helvetica',
-            fontSize: 13,
-            lineHeight: 20,
-            color: 'white'
-          }}>{vote.voteAddress}</Text>
+          <Copiable
+            TextComponent={TempText}
+            showToast={this._showToast}>
+            {vote.voteAddress}
+          </Copiable>
           <View style={{height: 14}}>
             <Text style={{
-              fontFamily: 'Rubik-Medium',
-              fontSize: 14,
-              lineHeight: 14,
-              letterSpacing: 0.8,
+              fontFamily: 'Rubik-Regular',
+              fontSize: 11,
+              lineHeight: 20,
               color: 'white'
             }}>{vote.voteCount}</Text>
           </View>

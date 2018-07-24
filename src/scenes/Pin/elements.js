@@ -95,10 +95,8 @@ export const PinDigit = ({ digit, currentState }) => {
     )
   }
   return (
-    <Wrapper color='#F6CA1D'>
-      <Circle size={24} opacityAmount={0.1}>
-        <Circle opacityAmount={0.2} />
-      </Circle>
+    <Wrapper>
+      <Circle />
     </Wrapper>
   )
 }
