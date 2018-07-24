@@ -1,32 +1,53 @@
 import React, { Component } from 'react'
 import { Modal, ScrollView, SafeAreaView } from 'react-native'
 import { withNavigation } from 'react-navigation'
+
 // Design
 import * as Utils from '../Utils'
 import { Colors, Spacing } from '../DesignSystem'
 import ButtonGradient from '../ButtonGradient'
 import NavigationHeader from '../Navigation/Header'
+import OptionVote from './InOutOption'
 
 // Utils
 import formatUrl from '../../utils/formatUrl'
 import { formatNumber } from '../../utils/numberUtils'
 
-const padKeys = [1, 5, 10, 25, 50, 100, 500, 1000]
-
-const OptionVote = ({title, disabled, background, onPress}) => (
-  <Utils.NumKeyWrapper flexBasis={50}>
-    <Utils.VoteOption disabled={disabled} background={background} onPress={onPress}>
-      <Utils.Text primary>{title}</Utils.Text>
-    </Utils.VoteOption>
-  </Utils.NumKeyWrapper>
-)
+const voteOptions = {
+  1: 1,
+  5: 5,
+  10: 10,
+  25: 25,
+  50: 50,
+  100: 100,
+  500: 500,
+  1000: 1000,
+  '10k': 10000,
+  '100k': 100000,
+  '500k': 500000,
+  '1m': 1000000
+}
 
 class VoteModal extends Component {
   state={
     amountToVote: this.props.currentVoteCount,
     totalRemaining: this.props.totalRemaining,
+    totalFrozen: this.props.totalFrozen,
     notEnoughTrx: false
   }
+
+  _renderPadkeys = () => Object.keys(voteOptions).map((voteKey, index) => {
+    if (this.state.totalFrozen < 10000 && voteOptions[voteKey] >= 10000) return
+
+    const isDisabled = voteOptions[voteKey] > this.state.totalRemaining
+
+    return <Utils.NumKeyWrapper disabled={isDisabled} key={voteKey} flexBasis={25}>
+      <Utils.NumKey
+        onPress={() => this._incrementVoteCount(voteOptions[voteKey])}>
+        <Utils.Text light primary>+{voteKey}</Utils.Text>
+      </Utils.NumKey>
+    </Utils.NumKeyWrapper>
+  })
 
   _incrementVoteCount = quant => {
     const { totalRemaining, amountToVote } = this.state
@@ -92,63 +113,65 @@ class VoteModal extends Component {
               />
               <Utils.View paddingX={'medium'}>
                 <Utils.Row justify='center' align='center'>
-                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller' secondary>
+                  <Utils.Text padding={Spacing.xsmall} size='smaller' secondary>
                   TOTAL VOTES
                   </Utils.Text>
-                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller'>
-                    {totalVotes}
+                  <Utils.Text
+                    margin={Spacing.xsmall}
+                    size='smaller'
+                    lineHeight={14}
+                    style={{
+                      fontFamily: 'Helvetica'
+                    }}
+                  >
+                    {formatNumber(totalVotes)}
                   </Utils.Text>
                 </Utils.Row>
                 <Utils.VerticalSpacer size='large' />
-                <Utils.Text margin={Spacing.small} weight={400} size='average' align='right'>
+                <Utils.Text margin={Spacing.small} size='smaller' align='right'>
               ENTER THE VOTE VALUE
                 </Utils.Text>
-                <Utils.VerticalSpacer />
                 <Utils.Text margin={Spacing.small} size='large' align='right'>
                   {formatNumber(amountToVote)}
                 </Utils.Text>
-                <Utils.VerticalSpacer size='large' />
+                <Utils.Row marginRight={Spacing.small} justify='flex-end' align='flex-end'>
+                  <Utils.Text lineHeight={14} margin={Spacing.xsmall} align='right' size='smaller' secondary>
+                  VOTES REMAINING
+                  </Utils.Text>
+                  <Utils.Text
+                    margin={Spacing.xsmall}
+                    align='right'
+                    size='smaller'
+                    style={{
+                      fontFamily: 'Helvetica'
+                    }}>
+                    {formatNumber(totalRemaining)}
+                  </Utils.Text>
+                </Utils.Row>
                 <Utils.NumPadWrapper>
-                  {padKeys.map((voteKey, index) => {
-                    return (
-                      <Utils.NumKeyWrapper key={voteKey} flexBasis={25}>
-                        <Utils.NumKey onPress={() => this._incrementVoteCount(voteKey)}>
-                          <Utils.Text primary>+{voteKey}</Utils.Text>
-                        </Utils.NumKey>
-                      </Utils.NumKeyWrapper>
-                    )
-                  })}
+                  {this._renderPadkeys()}
                 </Utils.NumPadWrapper>
                 <Utils.NumPadWrapper>
                   <OptionVote
                     title='Clear'
                     disabled={amountToVote === 0}
                     onPress={this._clearVoteCount}
-                    background={Colors.background}
                   />
                   <OptionVote
                     title='All in'
                     disabled={totalRemaining <= 0}
                     onPress={this._allinVoteCount}
-                    background={Colors.backgroundColor}
                   />
                 </Utils.NumPadWrapper>
                 <Utils.VerticalSpacer size='small' />
-                <Utils.Row justify='center' align='center'>
-                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller' secondary>
-                  TOTAL REMAINING
-                  </Utils.Text>
-                  <Utils.Text weight={400} padding={Spacing.xsmall} size='smaller'>
-                    {totalRemaining}
-                  </Utils.Text>
-                </Utils.Row>
-                <Utils.VerticalSpacer size='medium' />
                 <Utils.NumPadWrapper>
-                  <OptionVote
-                    title='ADD VOTE'
-                    background={Colors.lightPurple}
-                    onPress={() => acceptCurrentVote(amountToVote)}
-                  />
+                  <Utils.NumKeyWrapper flexBasis={100}>
+                    <Utils.VoteOption background={Colors.lightPurple} onPress={() => acceptCurrentVote(amountToVote)}>
+                      <Utils.Text size='xsmall' color={Colors.primaryText} font={'bold'}>
+                      ADD VOTE
+                      </Utils.Text>
+                    </Utils.VoteOption>
+                  </Utils.NumKeyWrapper>
                 </Utils.NumPadWrapper>
                 {notEnoughTrx && (
                   <Utils.View paddingY='medium' align='center'>

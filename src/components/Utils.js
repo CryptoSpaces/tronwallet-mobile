@@ -386,10 +386,8 @@ export const NumKeyWrapper = styled.View`
   align-items: stretch;
   justify-content: center;
   ${props => props.flexBasis && css` flex-basis: ${props.flexBasis}%`};
-  ${props =>
-    props.double && css`
-      flex-basis: 66%; flex-grow: 2;
-    `};
+  ${props => props.double && css`flex-basis: 66%; flex-grow: 2;`};
+  ${props => props.disabled && css`opacity: 0.2`}
 `
 export const NumKey = styled.TouchableOpacity`
   ${props =>
@@ -406,14 +404,9 @@ export const NumKey = styled.TouchableOpacity`
 `
 
 export const VoteOption = styled.TouchableOpacity`
-  ${props =>
-    props.double && css`
-      flex-direction: row;
-      justify-content: center;
-    `}
   ${props => props.background && css`background-color: ${props.background}`};
   align-items: center;
-  padding-vertical: ${Spacing.medium}px;
+  padding-vertical: 12px;
   padding-horizontal: ${Spacing.small}px;
   border-radius: 4px;
   border-width: 3px;
