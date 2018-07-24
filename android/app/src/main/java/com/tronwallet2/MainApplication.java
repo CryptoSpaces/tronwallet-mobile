@@ -36,7 +36,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new ReactNativeOneSignalPackage(),
           new FabricPackage(),
-          new RNAWSCognitoPackage(),
           new RNSentryPackage(),
           new RNDeviceInfo(),
           new RNTronPackage(),
