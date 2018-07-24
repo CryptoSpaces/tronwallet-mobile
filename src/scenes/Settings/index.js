@@ -88,8 +88,8 @@ class Settings extends Component {
         onPress: () => this.props.navigation.navigate('NetworkConnection')
       },
       {
-        title: 'Confirm Seed',
-        description: 'Confirm the seed password for your account',
+        title: 'Backup',
+        description: 'Backup your secret words',
         icon: 'key,-password,-lock,-privacy,-login',
         onPress: () => this.props.navigation.navigate('Pin', {
           shouldGoBack: true,
