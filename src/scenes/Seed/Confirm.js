@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { ScrollView, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
+import { Answers } from 'react-native-fabric'
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
@@ -50,6 +51,7 @@ class Confirm extends React.Component {
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
       await confirmSecret(context.pin)
+      Answers.logCustom('Wallet Operation', { type: 'Create' })
       await this._handleSuccess()
     } catch (error) {
       console.warn(error)
