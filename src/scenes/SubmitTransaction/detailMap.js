@@ -31,7 +31,6 @@ export const errorDic = {
 }
 
 export const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
-// const truncateAddress = str => `${str.substring(0, 8)}...${str.substring(str.length - 8, str.length)}`
 const toReadableField = (field) => {
   const translated = dic.hasOwnProperty(field) ? dic[field] : field
   return isNaN(translated) ? translated.toUpperCase() : translated
