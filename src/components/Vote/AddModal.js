@@ -116,7 +116,7 @@ class VoteModal extends Component {
                 <Utils.Text margin={Spacing.small} size='smaller' align='right'>
               ENTER THE VOTE VALUE
                 </Utils.Text>
-                <Utils.Text margin={Spacing.small} size='large' align='right'>
+                <Utils.Text letterSpacing={0.6} margin={Spacing.small} size='large' align='right'>
                   {formatNumber(amountToVote)}
                 </Utils.Text>
                 <Utils.Row marginRight={Spacing.small} justify='flex-end' align='flex-end'>

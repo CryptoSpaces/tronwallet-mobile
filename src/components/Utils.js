@@ -186,7 +186,7 @@ VerticalSpacer.propTypes = {
 
 export const Text = styled.Text`
   color: ${props => props.color};
-  font-family: ${props => `Rubik-${_.capitalize(props.font || 'medium')}`};
+  font-family: ${props => `rubik-${_.capitalize(props.font || 'medium')}`};
   ${props => props.size && css` font-size: ${FontSize[props.size]}px`};
   ${props => props.light && css` font-family: rubik-light`};
   ${props => props.padding && css` padding: ${props.padding}px`};
