@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Motion, spring, presets } from 'react-motion'
 import { Context } from '../../store/context'
 
-import FadeIn from '../../components/Animations/FadeIn'
+import GrowIn from '../../components/Animations/GrowIn'
 import * as Utils from '../../components/Utils'
 
 class TrxInfo extends PureComponent {
@@ -12,9 +12,10 @@ class TrxInfo extends PureComponent {
         {({ price, freeze }) =>
           price.value &&
           freeze.value && (
-            <FadeIn name='tronprice'>
-              <Utils.Row justify='center'>
-                <Utils.Content align='center'>
+            <GrowIn name='tronprice'>
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.Row justify='space-between'>
+                <Utils.View align='center'>
                   <Utils.Text size='xsmall' secondary>TRON POWER</Utils.Text>
                   <Motion
                     defaultStyle={{ power: 0 }}
@@ -26,8 +27,8 @@ class TrxInfo extends PureComponent {
                       <Utils.Text padding={4}>{`${value.power.toFixed(0)}`}</Utils.Text>
                     )}
                   </Motion>
-                </Utils.Content>
-                <Utils.Content align='center'>
+                </Utils.View>
+                <Utils.View align='center'>
                   <Utils.Text size='xsmall' secondary>TRX PRICE</Utils.Text>
                   <Motion
                     defaultStyle={{ price: 0 }}
@@ -39,8 +40,8 @@ class TrxInfo extends PureComponent {
                       </Utils.Text>
                     )}
                   </Motion>
-                </Utils.Content>
-                <Utils.Content align='center'>
+                </Utils.View>
+                <Utils.View align='center'>
                   <Utils.Text size='xsmall' secondary>BANDWIDTH</Utils.Text>
                   <Motion
                     defaultStyle={{ bandwidth: 0 }}
@@ -57,9 +58,10 @@ class TrxInfo extends PureComponent {
                       </Utils.Text>
                     )}
                   </Motion>
-                </Utils.Content>
+                </Utils.View>
               </Utils.Row>
-            </FadeIn>
+              <Utils.VerticalSpacer size='medium' />
+            </GrowIn>
           )
         }
       </Context.Consumer>
