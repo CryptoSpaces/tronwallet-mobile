@@ -49,6 +49,7 @@ class ParticipateHome extends React.Component {
         <NavigationHeader
           title='PARTICIPATE'
           onSearch={name => params._onSearch(name)}
+          onSearchPressed={() => params._onSearchPressed()}
         />
       )
     }
@@ -64,7 +65,8 @@ class ParticipateHome extends React.Component {
   async componentDidMount () {
     this._onSearch = debounce(this._onSearch, 350)
     this.props.navigation.setParams({
-      _onSearch: this._onSearch
+      _onSearch: this._onSearch,
+      _onSearchPressed: this._onSearchPressed
     })
     const assetList = await this._getAssetsFromStore()
     this.setState({ assetList, currentList: assetList })
@@ -114,7 +116,14 @@ class ParticipateHome extends React.Component {
     )
   }
 
-  _onSearch = async (name) => {
+  _onSearchPressed = () => {
+    const { hideSlide } = this.state
+
+    this.setState({ hideSlide: !hideSlide })
+    if (hideSlide) this._onSearch('')
+  }
+
+  _onSearch = (name) => {
     const { assetList } = this.state
     this.setState({ loading: true })
     if (name) {
