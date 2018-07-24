@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Motion, spring, presets } from 'react-motion'
 import { Context } from '../../store/context'
 
-import GrowIn from '../../components/Animations/GrowIn'
+import FadeIn from '../../components/Animations/FadeIn'
 import * as Utils from '../../components/Utils'
 
 class TrxInfo extends PureComponent {
@@ -12,7 +12,7 @@ class TrxInfo extends PureComponent {
         {({ price, freeze }) =>
           price.value &&
           freeze.value && (
-            <GrowIn name='tronprice'>
+            <FadeIn name='tronprice'>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Row justify='space-between'>
                 <Utils.View align='center'>
@@ -61,7 +61,7 @@ class TrxInfo extends PureComponent {
                 </Utils.View>
               </Utils.Row>
               <Utils.VerticalSpacer size='medium' />
-            </GrowIn>
+            </FadeIn>
           )
         }
       </Context.Consumer>
