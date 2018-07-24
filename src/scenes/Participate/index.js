@@ -1,11 +1,12 @@
 import React from 'react'
 
 import {
-  ScrollView,
   TouchableOpacity,
   Image,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  View,
+  Dimensions
 } from 'react-native'
 
 import LinearGradient from 'react-native-linear-gradient'
@@ -17,7 +18,6 @@ import { Colors } from '../../components/DesignSystem'
 import { orderBalances } from '../../utils/balanceUtils'
 import Client, { ONE_TRX } from '../../services/client'
 import getAssetsStore from '../../store/assets'
-import banner from '../../assets/images/banner.jpg'
 import guarantee from '../../assets/guarantee.png'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -107,7 +107,10 @@ class ParticipateHome extends React.Component {
     }
 
     return (
-      <Image source={banner} style={{ height: 232 }} />
+      <View>
+        <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='contain' />
+        <VerticalSpacer size={20} />
+      </View>
     )
   }
 
@@ -211,17 +214,15 @@ class ParticipateHome extends React.Component {
 
     return (
       <Container>
-        <ScrollView>
-          {this._renderSlide()}
-          <VerticalSpacer size={20} />
-          {this._renderLoading()}
-          <FlatList
-            data={orderedBalances}
-            renderItem={({ item }) => this._renderCard(item)}
-            keyExtractor={asset => asset.name}
-            scrollEnabled
-          />
-        </ScrollView>
+        {this._renderSlide()}
+        <VerticalSpacer size={20} />
+        {this._renderLoading()}
+        <FlatList
+          data={orderedBalances}
+          renderItem={({ item }) => this._renderCard(item)}
+          keyExtractor={asset => asset.name}
+          scrollEnabled
+        />
       </Container>
     )
   }
