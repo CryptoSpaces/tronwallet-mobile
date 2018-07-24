@@ -1,21 +1,23 @@
 import React from 'react'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {
-  ScrollView,
   TouchableOpacity,
   Image,
-  FlatList
+  FlatList,
+  ActivityIndicator,
+  View,
+  Dimensions
 } from 'react-native'
 
 import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
+import { debounce } from 'lodash'
 
+import { Colors } from '../../components/DesignSystem'
 import { orderBalances } from '../../utils/balanceUtils'
 import Client, { ONE_TRX } from '../../services/client'
 import getAssetsStore from '../../store/assets'
-import banner from '../../assets/images/banner.jpg'
 import guarantee from '../../assets/guarantee.png'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -41,27 +43,33 @@ import { rgb } from '../../../node_modules/polished'
 
 class ParticipateHome extends React.Component {
   static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state
     return {
       header: (
         <NavigationHeader
           title='PARTICIPATE'
-          rightButton={
-            <TouchableOpacity onPress={() => { }}>
-              <Ionicons name='ios-search' color='white' size={21} />
-            </TouchableOpacity>
-          }
+          onSearch={name => params._onSearch(name)}
+          onSearchPressed={() => params._onSearchPressed()}
         />
       )
     }
   }
 
   state = {
-    assetList: []
+    assetList: [],
+    currentList: [],
+    loading: false,
+    hideSlide: false
   }
 
   async componentDidMount () {
+    this._onSearch = debounce(this._onSearch, 350)
+    this.props.navigation.setParams({
+      _onSearch: this._onSearch,
+      _onSearchPressed: this._onSearchPressed
+    })
     const assetList = await this._getAssetsFromStore()
-    this.setState({ assetList })
+    this.setState({ assetList, currentList: assetList })
     this._loadData()
   }
 
@@ -72,7 +80,7 @@ class ParticipateHome extends React.Component {
 
       const assetList = await this._getAssetsFromStore()
 
-      this.setState({ assetList })
+      this.setState({ assetList, currentList: assetList })
     } catch (error) {
       this.setState({ error: error.message })
     }
@@ -93,9 +101,40 @@ class ParticipateHome extends React.Component {
     store.write(() => assets.map(item => store.create('Asset', item, true)))
   }
 
-  _renderSlide = () => (
-    <Image source={banner} style={{ height: 232 }} />
-  )
+  _renderSlide = () => {
+    const { hideSlide } = this.state
+
+    if (hideSlide) {
+      return null
+    }
+
+    return (
+      <View>
+        <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='contain' />
+        <VerticalSpacer size={20} />
+      </View>
+    )
+  }
+
+  _onSearchPressed = () => {
+    const { hideSlide } = this.state
+
+    this.setState({ hideSlide: !hideSlide })
+    if (hideSlide) this._onSearch('')
+  }
+
+  _onSearch = (name) => {
+    const { assetList } = this.state
+    this.setState({ loading: true })
+    if (name) {
+      this.setState({ hideSlide: true })
+      const regex = new RegExp(name.toLowerCase(), 'i')
+      const filtered = assetList.filter(asset => asset.name.toLowerCase().match(regex))
+      this.setState({ currentList: filtered, loading: false })
+    } else {
+      this.setState({ currentList: assetList, loading: false, hideSlide: false })
+    }
+  }
 
   _renderCardContent = ({ name, price, issuedPercentage, endTime, isFeatured }) => (
     <React.Fragment>
@@ -163,22 +202,36 @@ class ParticipateHome extends React.Component {
     )
   }
 
+  _renderLoading = () => {
+    const { loading } = this.state
+
+    if (loading) {
+      return (
+        <React.Fragment>
+          <ActivityIndicator size='small' color={Colors.primaryText} />
+          <VerticalSpacer size={10} />
+        </React.Fragment>
+      )
+    }
+
+    return null
+  }
+
   render () {
-    const { assetList } = this.state
-    const ordernedBalances = orderBalances(assetList)
+    const { currentList } = this.state
+    const orderedBalances = orderBalances(currentList)
 
     return (
       <Container>
-        <ScrollView>
-          {this._renderSlide()}
-          <VerticalSpacer size={20} />
-          <FlatList
-            data={ordernedBalances}
-            renderItem={({ item }) => this._renderCard(item)}
-            keyExtractor={asset => asset.name}
-            scrollEnabled
-          />
-        </ScrollView>
+        {this._renderSlide()}
+        <VerticalSpacer size={20} />
+        {this._renderLoading()}
+        <FlatList
+          data={orderedBalances}
+          renderItem={({ item }) => this._renderCard(item)}
+          keyExtractor={asset => asset.name}
+          scrollEnabled
+        />
       </Container>
     )
   }
