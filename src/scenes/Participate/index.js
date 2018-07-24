@@ -70,21 +70,30 @@ class ParticipateHome extends React.Component {
       _onSearch: this._onSearch,
       _onSearchPressed: this._onSearchPressed
     })
-    const assetList = await this._getAssetsFromStore()
-    this.setState({ assetList, currentList: assetList })
+    this._loadAboveTheFold()
     this._loadData()
+  }
+
+  _loadAboveTheFold = async () => {
+    this.setState({loading: true})
+    try {
+      const assetList = await this._getAssetsFromStore()
+      this.setState({ assetList, currentList: assetList, loading: false })
+    } catch (error) {
+      this.setState({error: error.message})
+    }
   }
 
   _loadData = async () => {
     try {
       const tokenList = await Client.getTokenList()
       await this._updateAssetsStore(tokenList)
-
       const assetList = await this._getAssetsFromStore()
-
       this.setState({ assetList, currentList: assetList })
     } catch (error) {
       this.setState({ error: error.message })
+    } finally {
+      this.setState({loading: false})
     }
   }
 
