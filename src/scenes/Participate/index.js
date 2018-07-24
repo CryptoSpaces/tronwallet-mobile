@@ -2,10 +2,11 @@ import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {
-  ScrollView,
   TouchableOpacity,
   Image,
-  FlatList
+  FlatList,
+  View,
+  Dimensions
 } from 'react-native'
 
 import LinearGradient from 'react-native-linear-gradient'
@@ -15,7 +16,6 @@ import moment from 'moment'
 import { orderBalances } from '../../utils/balanceUtils'
 import Client, { ONE_TRX } from '../../services/client'
 import getAssetsStore from '../../store/assets'
-import banner from '../../assets/images/banner.jpg'
 import guarantee from '../../assets/guarantee.png'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -94,7 +94,10 @@ class ParticipateHome extends React.Component {
   }
 
   _renderSlide = () => (
-    <Image source={banner} style={{ height: 232 }} />
+    <View>
+      <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='contain' />
+      <VerticalSpacer size={20} />
+    </View>
   )
 
   _renderCardContent = ({ name, price, issuedPercentage, endTime, isFeatured }) => (
@@ -169,16 +172,13 @@ class ParticipateHome extends React.Component {
 
     return (
       <Container>
-        <ScrollView>
-          {this._renderSlide()}
-          <VerticalSpacer size={20} />
-          <FlatList
-            data={ordernedBalances}
-            renderItem={({ item }) => this._renderCard(item)}
-            keyExtractor={asset => asset.name}
-            scrollEnabled
-          />
-        </ScrollView>
+        <FlatList
+          ListHeaderComponent={this._renderSlide()}
+          data={ordernedBalances}
+          renderItem={({ item }) => this._renderCard(item)}
+          keyExtractor={asset => asset.name}
+          scrollEnabled
+        />
       </Container>
     )
   }
