@@ -44,7 +44,7 @@ const INITIAL_STATE = {
   currentFullVotes: [],
   userVotes: {},
   // Items
-  search: '',
+  searchInput: '',
   currentVoteItem: {},
   // Loading
   loadingList: true,
@@ -77,7 +77,7 @@ class VoteScene extends PureComponent {
       currentVoteItem: {},
       startedVoting: false,
       userVotes: {},
-      search: ''
+      searchInput: ''
     }
   }
 
@@ -298,7 +298,7 @@ class VoteScene extends PureComponent {
   }
 
   _onSearch = async value => {
-    this.setState({onSearching: true})
+    this.setState({onSearching: true, searchInput: value})
     const store = await getCandidateStore()
     const voteList = store.objects('Candidate').map(item => Object.assign({}, item))
     if (value) {
@@ -399,7 +399,7 @@ class VoteScene extends PureComponent {
   }
 
   _renderListHedear = () => {
-    const { totalVotes, totalRemaining, refreshing, loadingList } = this.state
+    const { totalVotes, searchInput, totalRemaining, refreshing, loadingList } = this.state
     return <React.Fragment>
       <GrowIn name='vote-header' height={63}>
         <Header>
@@ -430,6 +430,7 @@ class VoteScene extends PureComponent {
         <Utils.FormInput
           autoCapitalize='none'
           autoCorrect={false}
+          value={searchInput}
           underlineColorAndroid='transparent'
           onChangeText={text => this._onSearch(text, 'search')}
           editable={!refreshing && !loadingList}
