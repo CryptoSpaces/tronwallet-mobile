@@ -4,12 +4,13 @@ import {
   ActivityIndicator,
   Clipboard,
   Alert,
-  Modal
+  Modal,
+  TouchableOpacity
 } from 'react-native'
 
 import { Answers } from 'react-native-fabric'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import ModalSelector from 'react-native-modal-selector'
+import ActionSheet from 'react-native-actionsheet'
 
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
@@ -236,29 +237,38 @@ class SendScene extends Component {
     }
   }
 
+  _handleTokenChange = (index, formattedToken) => {
+    if (index !== 0) {
+      this.setState({
+        token: this.state.balances[index - 1].name,
+        formattedToken
+      }, this._nextInput('token'))
+    }
+  }
+
   render () {
     const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
+    const tokenOptions = balances.map(({ name, balance }) => this._formatBalance(name, balance))
+    tokenOptions.unshift('Cancel')
+
     return (
       <KeyboardScreen>
         <Utils.Content>
-          <ModalSelector
-            data={balances.map(item => ({
-              key: item.name,
-              label: this._formatBalance(item.name, item.balance)
-            }))}
-            onChange={option => this.setState({
-              token: option.key,
-              formattedToken: option.label
-            },
-            this._nextInput('token'))}
-            disabled={trxBalance === 0}
-          >
+          <ActionSheet
+            ref={ref => { this.ActionSheet = ref }}
+            title='Please, choose a token below.'
+            options={tokenOptions}
+            cancelButtonIndex={0}
+            onPress={index => this._handleTokenChange(index, tokenOptions[index])}
+          />
+          <TouchableOpacity disabled={trxBalance === 0} onPress={() => this.ActionSheet.show()}>
             <Input
               label='TOKEN'
               value={this.state.formattedToken}
               rightContent={this._rightContentToken}
+              editable={false}
             />
-          </ModalSelector>
+          </TouchableOpacity>
           <Utils.VerticalSpacer size='medium' />
           <Input
             innerRef={(input) => { this.to = input }}
