@@ -8,7 +8,7 @@ import * as Utils from '../components/Utils'
 
 const QRCodeComponent = ({ onRead, onClose }) => (
   <Utils.Container>
-    <SafeAreaView style={{ backgroundColor: 'black' }}>
+    <SafeAreaView style={{ backgroundColor: Colors.background }}>
       <Utils.Header>
         <Utils.TitleWrapper>
           <Utils.Title>Address Scanner</Utils.Title>
