@@ -49,6 +49,7 @@ const INITIAL_STATE = {
   // Loading
   loadingList: true,
   refreshing: false,
+  onSearching: false,
   // Flags
   offset: 0,
   modalVisible: false,
@@ -130,22 +131,15 @@ class VoteScene extends PureComponent {
 
   _getLastUserVotesFromStore = async () => {
     const transactionStore = await getTransactionStore()
-    const queryVote = transactionStore
+
+    const queryVoteUnfreeze = transactionStore
       .objects('Transaction')
       .sorted([['timestamp', true]])
-      .filtered('type == "Vote"')
-    const lastVoteTransaction = queryVote.length ? queryVote[0] : null
+      .filtered('type == "Vote" OR type == "Unfreeze"')
 
-    const queryUnfreeze = transactionStore
-      .objects('Transaction')
-      .sorted([['timestamp', true]])
-      .filtered('type == "Unfreeze"')
-    const lastUnfreezeTransaction = queryUnfreeze.length ? queryUnfreeze[0] : null
-
-    // If there was a Unfreeze, just refresh votes
-    if (lastUnfreezeTransaction && (lastUnfreezeTransaction.timestamp > lastVoteTransaction.timestamp)) {
-      return {}
-    }
+    // If there was an Unfreeze transaction after voting, delete previously votes
+    const lastVoteTransaction = queryVoteUnfreeze.length && queryVoteUnfreeze[0].type === 'Vote'
+      ? queryVoteUnfreeze[0] : null
 
     if (lastVoteTransaction) {
       let lastVote = [...lastVoteTransaction.contractData.votes]
@@ -184,6 +178,7 @@ class VoteScene extends PureComponent {
   }
 
   _loadMoreCandidates = async () => {
+    if (this.state.onSearching) return
     try {
       this.setState({ offset: this.state.offset + LIST_STEP_SIZE }, async () => {
         const voteList = await this._getVoteListFromStore()
@@ -303,6 +298,7 @@ class VoteScene extends PureComponent {
   }
 
   _onSearch = async value => {
+    this.setState({onSearching: true})
     const store = await getCandidateStore()
     const voteList = store.objects('Candidate').map(item => Object.assign({}, item))
     if (value) {
@@ -310,9 +306,7 @@ class VoteScene extends PureComponent {
       const votesFilter = voteList.filter(vote => vote.url.toLowerCase().match(regex))
       this.setState({ voteList: votesFilter })
     } else {
-      this.setState({offset: 0}, () => {
-        this.setState({ voteList: voteList.slice(0, LIST_STEP_SIZE) })
-      })
+      this.setState({offset: 0, onSearching: false, voteList: voteList.slice(0, LIST_STEP_SIZE)})
     }
   }
 
