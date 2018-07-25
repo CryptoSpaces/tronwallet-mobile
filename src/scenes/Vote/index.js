@@ -18,7 +18,7 @@ import FadeIn from '../../components/Animations/FadeIn'
 import GrowIn from '../../components/Animations/GrowIn'
 import ConfirmVotes from '../../components/Vote/ConfirmButton'
 import NavigationHeader from '../../components/Navigation/Header'
-import ClearVotes from '../../components/ClearButton'
+import ClearVotes from '../../components/Vote/ClearVotes'
 import SyncButton from '../../components/SyncButton'
 
 // Service
@@ -37,6 +37,7 @@ const INITIAL_STATE = {
   totalRemaining: 0,
   totalUserVotes: 0,
   amountToVote: 0,
+  totalFrozen: 0,
   // Vote Lists
   voteList: [],
   currentVotes: {},
@@ -56,7 +57,6 @@ const INITIAL_STATE = {
   // Errors
   votesError: '',
   listError: ''
-
 }
 
 class VoteScene extends PureComponent {
@@ -82,7 +82,7 @@ class VoteScene extends PureComponent {
 
   async componentDidMount () {
     Answers.logContentView('Tab', 'Votes')
-    this._onSearch = debounce(this._onSearch, 500)
+    this._onSearch = debounce(this._onSearch, 300)
     this._loadCandidates()
     this.didFocusSubscription = this.props.navigation.addListener(
       'didFocus',
@@ -117,7 +117,7 @@ class VoteScene extends PureComponent {
     else voteStore = await getCandidateStore()
     return voteStore
       .objects('Candidate')
-      .sorted([['votes', true], ['url', false]])
+      .sorted([['votes', true], ['rank', false]])
       .slice(
         this.state.offset,
         clamp(
@@ -168,23 +168,16 @@ class VoteScene extends PureComponent {
   }
 
   _refreshCandidates = async () => {
-    this.setState({ offset: 0 })
     try {
       const { candidates, totalVotes } = await WalletClient.getTotalVotes()
       const store = await getCandidateStore()
       store.write(() =>
         candidates.map(item => store.create('Candidate', item, true))
       )
-      const voteList = await this._getVoteListFromStore(store)
-      this.setState({
-        voteList,
-        totalVotes
-      })
+      this.setState({ totalVotes, voteList: candidates.slice(0, LIST_STEP_SIZE) })
     } catch (e) {
       e.name = 'Refresh Candidates Error'
       this._throwError(e)
-    } finally {
-      this.setState({ refreshing: false })
     }
   }
 
@@ -224,11 +217,13 @@ class VoteScene extends PureComponent {
           currentVotes: userVotes,
           totalUserVotes: currentUserVoteCount,
           totalRemaining: newTotalRemaining,
-          currentFullVotes: newFullVoteList
+          currentFullVotes: newFullVoteList,
+          totalFrozen
         })
       } else {
         this.setState({
-          totalRemaining: totalFrozen
+          totalRemaining: totalFrozen,
+          totalFrozen
         })
       }
     } catch (e) {
@@ -306,16 +301,15 @@ class VoteScene extends PureComponent {
   }
 
   _onSearch = async value => {
-    const { voteList } = this.state
+    const store = await getCandidateStore()
+    const voteList = store.objects('Candidate').map(item => Object.assign({}, item))
     if (value) {
       const regex = new RegExp(value.toLowerCase(), 'i')
       const votesFilter = voteList.filter(vote => vote.url.toLowerCase().match(regex))
       this.setState({ voteList: votesFilter })
     } else {
-      const store = await getCandidateStore()
-      const voteList = store.objects('Candidate').map(item => Object.assign({}, item))
       this.setState({offset: 0}, () => {
-        this.setState({ voteList })
+        this.setState({ voteList: voteList.slice(0, LIST_STEP_SIZE) })
       })
     }
   }
@@ -384,7 +378,7 @@ class VoteScene extends PureComponent {
   }
 
   _clearVotesFromList = () => {
-    const totalFrozen = this.props.context.freeze.value.total
+    const { totalFrozen } = this.state
     this.setState({
       currentVotes: [],
       currentFullVotes: [],
@@ -409,7 +403,7 @@ class VoteScene extends PureComponent {
   }
 
   _renderListHedear = () => {
-    const { totalVotes, totalRemaining } = this.state
+    const { totalVotes, totalRemaining, refreshing, loadingList } = this.state
     return <React.Fragment>
       <GrowIn name='vote-header' height={63}>
         <Header>
@@ -442,6 +436,7 @@ class VoteScene extends PureComponent {
           autoCorrect={false}
           underlineColorAndroid='transparent'
           onChangeText={text => this._onSearch(text, 'search')}
+          editable={!refreshing && !loadingList}
           placeholder='Search'
           placeholderTextColor='#fff'
           marginBottom={0}
@@ -471,7 +466,6 @@ class VoteScene extends PureComponent {
 
   render () {
     const {
-
       refreshing,
       loadingList,
       currentVotes,
@@ -480,7 +474,8 @@ class VoteScene extends PureComponent {
       currentFullVotes,
       voteList,
       currentVoteItem,
-      startedVoting } = this.state
+      startedVoting,
+      totalFrozen } = this.state
 
     return (
       <Utils.Container>
@@ -490,9 +485,12 @@ class VoteScene extends PureComponent {
             loading={refreshing || loadingList}
             onPress={this._loadData}
           />}
-          rightButton={<ClearVotes
-            onPress={this.props.navigation.getParam('clearVotes')}
-          />}
+          rightButton={
+            <ClearVotes
+              label={currentFullVotes.length}
+              disabled={refreshing || loadingList}
+              onPress={this._clearVotesFromList}
+            />}
         />
         <FadeIn name='candidates'>
           <FlatList
@@ -515,7 +513,8 @@ class VoteScene extends PureComponent {
             currentVoteItem={currentVoteItem}
             amountToVote={this.state.amountToVote}
             modalVisible={this.state.modalVisible}
-            totalRemaining={this.state.totalRemaining || 0}
+            totalRemaining={this.state.totalRemaining}
+            totalFrozen={totalFrozen}
             currentVoteCount={currentVotes[currentVoteItem.address] || 0}
           />
         )}

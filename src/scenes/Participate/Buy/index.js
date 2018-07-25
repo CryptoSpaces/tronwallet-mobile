@@ -28,6 +28,9 @@ import {
   TrxValueText
 } from '../Elements'
 
+// Design
+import OptionBuy from '../../../components/Vote/InOutOption'
+
 // Utils
 import getBalanceStore from '../../../store/balance'
 import { formatNumber } from '../../../utils/numberUtils'
@@ -35,14 +38,6 @@ import Client, { ONE_TRX } from '../../../services/client'
 import { signTransaction } from '../../../utils/transactionUtils'
 
 const padKeys = [1, 5, 10, 25, 50, 100, 500, 1000]
-
-const OptionVote = ({ title, disabled, background, onPress, width }) => (
-  <Utils.NumKeyWrapper width={width}>
-    <Utils.VoteOption disabled={disabled} background={background} onPress={onPress}>
-      <Utils.Text primary>{title}</Utils.Text>
-    </Utils.VoteOption>
-  </Utils.NumKeyWrapper>
-)
 
 class BuyScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -233,17 +228,15 @@ class BuyScene extends Component {
           <VerticalSpacer size={14} />
           <MarginFixer>
             <Utils.Row>
-              <OptionVote
+              <OptionBuy
                 title='Clear'
                 disabled={amountToBuy === 0}
                 onPress={this._clearVoteCount}
-                background={Colors.backgroundColor}
               />
-              <OptionVote
+              <OptionBuy
                 title='All in'
                 disabled={totalRemaining <= 0}
                 onPress={this._allinVoteCount}
-                background={Colors.background}
               />
             </Utils.Row>
           </MarginFixer>
