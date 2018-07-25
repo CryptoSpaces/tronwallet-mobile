@@ -70,21 +70,30 @@ class ParticipateHome extends React.Component {
       _onSearch: this._onSearch,
       _onSearchPressed: this._onSearchPressed
     })
-    const assetList = await this._getAssetsFromStore()
-    this.setState({ assetList, currentList: assetList })
+    this._loadAboveTheFold()
     this._loadData()
+  }
+
+  _loadAboveTheFold = async () => {
+    this.setState({loading: true})
+    try {
+      const assetList = await this._getAssetsFromStore()
+      this.setState({ assetList, currentList: assetList, loading: false })
+    } catch (error) {
+      this.setState({error: error.message})
+    }
   }
 
   _loadData = async () => {
     try {
       const tokenList = await Client.getTokenList()
       await this._updateAssetsStore(tokenList)
-
       const assetList = await this._getAssetsFromStore()
-
       this.setState({ assetList, currentList: assetList })
     } catch (error) {
       this.setState({ error: error.message })
+    } finally {
+      this.setState({loading: false})
     }
   }
 
@@ -114,6 +123,7 @@ class ParticipateHome extends React.Component {
       <View>
         <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='contain' />
         <VerticalSpacer size={20} />
+        {this._renderLoading()}
       </View>
     )
   }
@@ -225,10 +235,8 @@ class ParticipateHome extends React.Component {
 
     return (
       <Container>
-        {this._renderSlide()}
-        <VerticalSpacer size={20} />
-        {this._renderLoading()}
         <FlatList
+          ListHeaderComponent={this._renderSlide()}
           data={orderedBalances}
           renderItem={({ item }) => this._renderCard(item)}
           keyExtractor={asset => asset.name}

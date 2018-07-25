@@ -16,6 +16,7 @@ import NavigationHeader from '../../components/Navigation/Header'
 import Client from '../../services/client'
 import buildTransactionDetails, { translateError } from './detailMap'
 import getTransactionStore from '../../store/transactions'
+import { withContext } from '../../store/context'
 
 const CLOSE_SCREEN_TIME = 5000
 const ANSWERS_TRANSACTIONS = ['Transfer', 'Vote', 'Participate', 'Freeze']
@@ -109,7 +110,7 @@ class TransactionDetail extends Component {
     return transaction
   }
 
-  submitTransaction = async () => {
+  _submitTransaction = async () => {
     const {
       signedTransaction,
       transactionData: { hash }
@@ -189,7 +190,11 @@ class TransactionDetail extends Component {
         ) : (
           <ButtonGradient
             text='SUBMIT TRANSACTION'
-            onPress={this.submitTransaction}
+            onPress={() => this.props.navigation.navigate('Pin', {
+              shouldGoBack: true,
+              testInput: pin => pin === this.props.context.pin,
+              onSuccess: this._submitTransaction
+            })}
             font='bold'
           />
         )}
@@ -236,4 +241,4 @@ class TransactionDetail extends Component {
     )
   }
 }
-export default TransactionDetail
+export default withContext(TransactionDetail)

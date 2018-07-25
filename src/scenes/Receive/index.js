@@ -33,9 +33,7 @@ class ReceiveScreen extends PureComponent {
   }
 
   _onLoad = () => {
-    this.setState({
-      loading: false
-    })
+    setTimeout(() => this.setState({ loading: false }), 1000)
   }
 
   _copy = async () => {
