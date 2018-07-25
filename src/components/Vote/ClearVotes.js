@@ -15,9 +15,10 @@ const ClearVotes = ({onPress, disabled, label}) => (
       borderWidth: 1,
       borderRadius: 4,
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
+      padding: Spacing.tiny
     }}>
-    <Utils.Text size='tiny' marginX={Spacing.xsmall}>{label || 0}</Utils.Text>
+    <Utils.Text size='tiny' marginX={Spacing.small}>{label || 0}</Utils.Text>
     <Feather name='trash-2' color='white' size={17} />
   </TouchableOpacity>
 )
