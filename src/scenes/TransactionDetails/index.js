@@ -330,7 +330,13 @@ class TransactionDetails extends React.Component {
 
   _renderToFrom = () => {
     const { type, contractData: { transferFromAddress, transferToAddress } } = this.props.navigation.state.params.item
-
+    const TempText = styled.Text`
+      font-family: Helvetica;
+      font-size: 13;
+      line-height: 20;
+      color: white;
+      flex: 1;
+    `
     return (
       <View>
         {type.toLowerCase() === 'transfer' &&
@@ -350,13 +356,11 @@ class TransactionDetails extends React.Component {
               />
             </View>
             <View style={{flexDirection: 'row', width: '100%'}}>
-              <Text style={{
-                fontFamily: 'Helvetica',
-                fontSize: 13,
-                lineHeight: 20,
-                color: 'white',
-                flex: 1
-              }}>{transferToAddress}</Text>
+              <Copiable
+                TextComponent={TempText}
+                showToast={this._showToast}>
+                {transferToAddress}
+              </Copiable>
             </View>
             <View style={{height: 15}} />
             <Utils.View height={1} background='#51526B' />
@@ -377,13 +381,11 @@ class TransactionDetails extends React.Component {
             color={rgb(102, 104, 143)}
           />
         </View>
-        <Text style={{
-          fontFamily: 'Helvetica',
-          fontSize: 13,
-          lineHeight: 20,
-          color: 'white',
-          flex: 1
-        }}>{transferFromAddress}</Text>
+        <Copiable
+          TextComponent={TempText}
+          showToast={this._showToast}>
+          {transferFromAddress}
+        </Copiable>
       </View>
     )
   }
@@ -459,13 +461,6 @@ class TransactionDetails extends React.Component {
       <React.Fragment
         key={`${vote.voteAddress}-${index}`}
       >
-        <Toast
-          ref='addressToast'
-          position='top'
-          fadeInDuration={750}
-          fadeOutDuration={1000}
-          opacity={0.8}
-        />
         <Utils.Row justify='space-between' align='center'>
           <Copiable
             TextComponent={TempText}
@@ -549,6 +544,13 @@ class TransactionDetails extends React.Component {
               opacity={0.8}
             />
           </View>
+          <Toast
+            ref='addressToast'
+            position='center'
+            fadeInDuration={750}
+            fadeOutDuration={1000}
+            opacity={0.8}
+          />
         </ScrollView>
       </Utils.Container>
     )
