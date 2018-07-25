@@ -1,23 +1,16 @@
 import React, { Component } from 'react'
-
 import {
   FlatList,
   RefreshControl,
   Image,
   ActivityIndicator
 } from 'react-native'
-
 import { Answers } from 'react-native-fabric'
+
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
-import TransferCard from './Transfer'
-import ParticipateCard from './Participate'
-import CreateCard from './Create'
-import VoteCard from './Vote'
-import FreezeCard from './Freeze'
-import UnfreezeCard from './Unfreeze'
-import Default from './Default'
+import Transaction from './Transaction'
 
 import Client from '../../services/client'
 import getTransactionStore from '../../store/transactions'
@@ -119,25 +112,6 @@ class TransactionsScene extends Component {
     this.props.navigation.navigate('TransactionDetails', { item })
   }
 
-  renderCard = item => {
-    switch (item.type) {
-      case 'Transfer':
-        return <TransferCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Freeze':
-        return <FreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Unfreeze':
-        return <UnfreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Vote':
-        return <VoteCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Participate':
-        return <ParticipateCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Create':
-        return <CreateCard item={item} onPress={() => this._navigateToDetails(item)} />
-      default:
-        return <Default item={item} onPress={() => this._navigateToDetails(item)} />
-    }
-  }
-
   renderListEmptyComponent = () => <Utils.Container />
 
   render () {
@@ -180,7 +154,7 @@ class TransactionsScene extends Component {
           contentContainerStyle={{ padding: Spacing.medium }}
           data={transactions}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => this.renderCard(item)}
+          renderItem={({ item }) => <Transaction item={item} onPress={this._navigateToDetails} />}
           ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
           ListEmptyComponent={this.renderListEmptyComponent}
         />
