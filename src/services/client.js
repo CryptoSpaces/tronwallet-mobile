@@ -22,10 +22,12 @@ class ClientWallet {
 
   async getTotalVotes () {
     try {
+      const urlRegex = /^(?:https?:\/\/)/i
       const apiUrl = await this.getTronscanUrl()
       const { data } = await axios.get(`${apiUrl}/vote/current-cycle`)
       const totalVotes = data.total_votes
       const candidates = data.candidates
+        .filter(candidate => urlRegex.test(candidate.url)) // Cleanup invalid testnet candidates
         .sort((a, b) => a.votes > b.votes ? -1 : a.votes < b.votes ? 1 : 0)
         .map((candidate, index) => ({...candidate, rank: index + 1}))
       return { totalVotes, candidates }
