@@ -167,7 +167,9 @@ class App extends Component {
     freeze: {},
     publicKey: {},
     pin: null,
-    onesignalId: ''
+    onesignalId: '',
+    shareModal: false,
+
   }
 
   componentDidMount () {
@@ -249,6 +251,24 @@ class App extends Component {
     })
   }
 
+  _openShare = () => {
+    this.setState({
+      shareModal: true
+    })
+  }
+
+  _closeShare = () => {
+    this.setState({
+      shareModal: false
+    })
+  }
+
+  _toggleShare = () => {
+    this.setState((state) => ({
+      shareModal: !state.shareModal
+    }))
+  }
+
   render () {
     const contextProps = {
       ...this.state,
@@ -256,8 +276,12 @@ class App extends Component {
       getFreeze: this._getFreeze,
       getPrice: this._getPrice,
       getPublicKey: this._getPublicKey,
-      setPin: this._setPin
+      setPin: this._setPin,
+      openShare: this._openShare,
+      closeShare: this._closeShare,
+      toggleShare: this._toggleShare
     }
+
     return (
       <SafeAreaView style={{ backgroundColor: Colors.background, flex: 1 }} >
         <Context.Provider value={contextProps}>
