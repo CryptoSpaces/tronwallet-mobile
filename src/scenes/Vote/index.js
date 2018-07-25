@@ -130,18 +130,20 @@ class VoteScene extends PureComponent {
 
   _getLastUserVotesFromStore = async () => {
     const transactionStore = await getTransactionStore()
-    const lastVoteTransaction = transactionStore
+    const queryVote = transactionStore
       .objects('Transaction')
       .sorted([['timestamp', true]])
-      .filtered('type == "Vote"')[0]
+      .filtered('type == "Vote"')
+    const lastVoteTransaction = queryVote.length ? queryVote[0] : null
 
-    const lastUnfreezeTransaction = transactionStore
+    const queryUnfreeze = transactionStore
       .objects('Transaction')
       .sorted([['timestamp', true]])
-      .filtered('type == "Unfreeze"')[0]
+      .filtered('type == "Unfreeze"')
+    const lastUnfreezeTransaction = queryUnfreeze.length ? queryUnfreeze[0] : null
 
     // If there was a Unfreeze, just refresh votes
-    if (lastUnfreezeTransaction.timestamp > lastVoteTransaction.timestamp) {
+    if (lastUnfreezeTransaction && (lastUnfreezeTransaction.timestamp > lastVoteTransaction.timestamp)) {
       return {}
     }
 
