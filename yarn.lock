@@ -6056,6 +6056,10 @@ react-motion@^0.5.2:
     prop-types "^15.5.8"
     raf "^3.1.0"
 
+react-native-actionsheet@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.4.2.tgz#6a00dd51a75ef2c8974312130e405af73191500f"
+
 react-native-animatable@^1.2.4:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.0.tgz#b5c3940fc758cfd9b2fe54613a457c4b6962b46e"
@@ -6148,12 +6152,6 @@ react-native-maps@0.21.0:
     babel-plugin-module-resolver "^2.3.0"
     babel-preset-react-native "1.9.0"
 
-react-native-modal-selector@^0.0.27:
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/react-native-modal-selector/-/react-native-modal-selector-0.0.27.tgz#27f51168596f7ac6ed5edfbaa3e43c0ddfee6415"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-modal@^6.0.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.4.0.tgz#a6c2599b4c9d53ac99071bc658215367ee81e278"
@@ -6226,6 +6224,10 @@ react-native-sentry@^0.38.1:
   dependencies:
     "@sentry/wizard" "^0.9.5"
     raven-js "^3.24.2"
+
+react-native-share@^1.0.27:
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.0.27.tgz#1861afe0d1256bde95d19520ca5d5c3cd348ffad"
 
 react-native-splash-screen@^3.0.9:
   version "3.0.9"
