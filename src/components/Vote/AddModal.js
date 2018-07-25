@@ -152,11 +152,11 @@ class VoteModal extends Component {
                 <Utils.VerticalSpacer size='small' />
                 <Utils.NumPadWrapper>
                   <Utils.NumKeyWrapper flexBasis={100}>
-                    <Utils.VoteOption background={Colors.lightPurple} onPress={() => acceptCurrentVote(amountToVote)}>
+                    <Utils.BorderButton background={Colors.lightPurple} onPress={() => acceptCurrentVote(amountToVote)}>
                       <Utils.Text font='bold' size='xsmall' color={Colors.primaryText}>
                       ADD VOTE
                       </Utils.Text>
-                    </Utils.VoteOption>
+                    </Utils.BorderButton>
                   </Utils.NumKeyWrapper>
                 </Utils.NumPadWrapper>
                 {notEnoughTrx && (

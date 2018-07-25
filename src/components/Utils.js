@@ -403,7 +403,7 @@ export const NumKey = styled.TouchableOpacity`
   border-color:  ${Colors.lightestBackground};
 `
 
-export const VoteOption = styled.TouchableOpacity`
+export const BorderButton = styled.TouchableOpacity`
   ${props => props.background && css`background-color: ${props.background}`};
   align-items: center;
   padding-vertical: 12px;

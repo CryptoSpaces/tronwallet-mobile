@@ -6,9 +6,9 @@ import * as Utils from '../Utils'
 
 const InOutOption = ({ title, disabled, background, onPress, width }) => (
   <Utils.NumKeyWrapper flexBasis={50}>
-    <Utils.VoteOption disabled={disabled} background={background || Colors.background} onPress={onPress}>
+    <Utils.BorderButton disabled={disabled} background={background || Colors.background} onPress={onPress}>
       <Utils.Text font='regular' letterSpacing={0.9} size='xsmall' color={Colors.buttonText}>{title}</Utils.Text>
-    </Utils.VoteOption>
+    </Utils.BorderButton>
   </Utils.NumKeyWrapper>
 )
 
