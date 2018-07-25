@@ -218,7 +218,7 @@ class BuyScene extends Component {
                 return (
                   <Utils.NumKeyWrapper key={voteKey} flexBasis={25}>
                     <Utils.NumKey onPress={() => this._incrementVoteCount(voteKey)}>
-                      <Utils.Text primary>+{voteKey}</Utils.Text>
+                      <Utils.Text font='regular' primary>+{voteKey}</Utils.Text>
                     </Utils.NumKey>
                   </Utils.NumKeyWrapper>
                 )

@@ -63,16 +63,18 @@ class FreezeScene extends Component {
     }
     try {
       const transactionStore = await getTransactionStore()
-      const lastUnfreeze = transactionStore.objects('Transaction')
+      const queryUnfreeze = transactionStore.objects('Transaction')
         .sorted([['timestamp', true]])
-        .filtered('type == "Unfreeze"')[0]
+        .filtered('type == "Unfreeze"')
+      const lastUnfreeze = queryUnfreeze.length ? queryUnfreeze[0] : null
 
-      const lastFreeze = transactionStore.objects('Transaction')
+      const queryFreeze = transactionStore.objects('Transaction')
         .sorted([['timestamp', true]])
-        .filtered('type == "Freeze"')[0]
+        .filtered('type == "Freeze"')
+      const lastFreeze = queryFreeze.length ? queryFreeze[0] : null
 
-      if (lastFreeze.timestamp) {
-        if (lastUnfreeze.timestamp > lastFreeze.timestamp) return unfreezeStatus
+      if (lastFreeze) {
+        if (lastUnfreeze && (lastUnfreeze.timestamp > lastFreeze.timestamp)) return unfreezeStatus
 
         const lastFreezeTimePlusThree = moment(lastFreeze.timestamp).add(3, 'days')
         const differenceFromNow = lastFreezeTimePlusThree.diff(moment())
