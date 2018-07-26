@@ -133,7 +133,7 @@ class HomeScene extends Component {
     })
   }
 
-  _formatNumber = n => n.toFixed().replace(/(\d)(?=(\d{3})+(\s|$))/g, '$1 ')
+  _formatNumber = n => n.toFixed().replace(/(\d)(?=(\d{3})+(\s|$))/g, '$1,')
 
   _changeGraphTimeSpan = timeSpan => {
     this.setState(
