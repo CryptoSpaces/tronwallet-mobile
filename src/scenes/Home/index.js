@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import axios from 'axios'
 import * as shape from 'd3-shape'
 import { AreaChart, Grid } from 'react-native-svg-charts'
-import { Path } from 'react-native-svg'
+import { Path, Circle, G } from 'react-native-svg'
 import { ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import { Motion, spring, presets } from 'react-motion'
 import { Answers } from 'react-native-fabric'
@@ -30,6 +30,29 @@ const Line = ({ line }) => (
   />
 )
 
+const Cursor = ({ x, y, data, selectedIndex, onPress }) => {
+  return data.map((value, index) => (
+    <G key={index} onPress={() => onPress(index)}>
+      <Circle
+        key={`circle-1-${index}`}
+        cx={x(index)}
+        cy={y(value)}
+        r={16}
+        fill={'white'}
+        fillOpacity={index === selectedIndex ? 1 : 0}
+      />
+      <Circle
+        key={`circle-2-${index}`}
+        cx={x(index)}
+        cy={y(value)}
+        r={6}
+        fill={'rgb(179, 181, 212)'}
+        fillOpacity={index === selectedIndex ? 1 : 0}
+      />
+    </G>
+  ))
+}
+
 class HomeScene extends Component {
   state = {
     graph: {
@@ -40,7 +63,8 @@ class HomeScene extends Component {
     marketcap: null,
     volume: null,
     supply: null,
-    price: 0
+    price: 0,
+    selectedIndex: -1
   }
 
   componentDidMount () {
@@ -71,6 +95,7 @@ class HomeScene extends Component {
 
   _loadGraphData = async () => {
     this.setState({
+      selectedIndex: -1,
       graph: Object.assign({}, this.state.graph, {
         data: this.state.graph.data ? this.state.graph.data.map(() => 0) : null
       })
@@ -128,8 +153,13 @@ class HomeScene extends Component {
     )
   }
 
+  _handleGraphPress = (index) => {
+    this.setState({ selectedIndex: index })
+  }
+
   render () {
-    const { price, marketcap, volume, supply, graph } = this.state
+    const { price, marketcap, volume, supply, graph, selectedIndex } = this.state
+
     return (
       <Utils.Container>
         <Utils.ContentWithBackground
@@ -268,6 +298,7 @@ class HomeScene extends Component {
               <Grid svg={{ stroke: '#FFF', strokeOpacity: 0.1 }} />
               <Gradient />
               <Line />
+              <Cursor selectedIndex={selectedIndex} onPress={(index) => this._handleGraphPress(index)} />
             </AreaChart>
           </Fragment>
         )}
