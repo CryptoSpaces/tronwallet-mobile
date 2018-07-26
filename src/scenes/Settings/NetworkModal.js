@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, ScrollView, StyleSheet, Alert, Switch } from 'react-native'
+import { View, ScrollView, StyleSheet, Alert } from 'react-native'
+import Switch from 'react-native-switch-pro'
 
 // Design
 import * as Utils from '../../components/Utils'
@@ -259,11 +260,11 @@ class ChangeNetworkModal extends Component {
             <Utils.Row justify='space-between' align='center'>
               <Utils.Text size='smaller' color={Colors.secondaryText}>TestNet</Utils.Text>
               <Switch
-                thumbTintColor={Colors.orange}
-                onTintColor={Colors.yellow}
-                tintColor={Colors.secondaryText}
+                circleStyle={{ backgroundColor: Colors.orange }}
+                backgroundActive={Colors.yellow}
+                backgroundInactive={Colors.secondaryText}
                 value={switchTestnet}
-                onValueChange={this._switchTestnet} />
+                onSyncPress={this._switchTestnet} />
             </Utils.Row>
           </View>
           {error && <Utils.Error>{error}</Utils.Error>}
