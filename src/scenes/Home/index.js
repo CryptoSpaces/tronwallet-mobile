@@ -138,7 +138,7 @@ class HomeScene extends Component {
   _changeGraphTimeSpan = timeSpan => {
     this.setState(
       {
-        graph: Object.assign({}, this.state.graph, { timeSpan })
+        graph: Object.assign({}, this.state.graph, { timeSpan, loading: true })
       },
       this._loadGraphData
     )
@@ -149,78 +149,162 @@ class HomeScene extends Component {
     this.setState({ selectedIndex: index, high, low, average })
   }
 
+  _renderHeader = () => {
+    const { price } = this.state
+
+    return (
+      <Utils.ContentWithBackground
+        source={require('../../assets/home-header.png')}
+        resizeMode='contain'
+      >
+        <Utils.StatusBar transparent />
+        <Utils.VerticalSpacer size='large' />
+        <Utils.View align='center'>
+          <Image
+            source={require('../../assets/tron-logo-small.png')}
+            resizeMode='contain'
+            style={{ height: 60 }}
+          />
+          <Utils.VerticalSpacer size='medium' />
+          <Utils.Text secondary>TRX PRICE</Utils.Text>
+        </Utils.View>
+        <Utils.VerticalSpacer size='small' />
+        <Utils.Row justify='center'>
+          <Utils.View>
+            <Utils.Row>
+              <Utils.Text secondary />
+              <Utils.HorizontalSpacer />
+              <Motion
+                defaultStyle={{ data: 0 }}
+                style={{ data: spring(price, presets.gentle) }}
+              >
+                {value => (
+                  <Utils.Text size='medium'>
+                    $ {value.data.toFixed(PRICE_PRECISION)}
+                  </Utils.Text>
+                )}
+              </Motion>
+            </Utils.Row>
+          </Utils.View>
+        </Utils.Row>
+        <Utils.VerticalSpacer size='large' />
+      </Utils.ContentWithBackground>
+    )
+  }
+
+  _renderValues = () => {
+    const { selectedIndex, high, low, average, marketcap, volume, supply } = this.state
+    const decimalFormatter = (value) => `$ ${value.toFixed(5)}`
+    const integerFormatter = (value) => `$ ${this._formatNumber(value)}`
+    const supplyFormatter = (value) => this._formatNumber(value)
+
+    return (
+      <FadeIn name='home-info'>
+        <Utils.View>
+          {selectedIndex !== -1 && (
+            <Fragment>
+              {this._renderValue(high, decimalFormatter)}
+              {this._renderValue(low, decimalFormatter)}
+              {this._renderValue(average, decimalFormatter)}
+            </Fragment>
+          )}
+          {this._renderValue(marketcap, integerFormatter)}
+          {this._renderValue(volume, integerFormatter)}
+          {this._renderValue(supply, supplyFormatter, true)}
+        </Utils.View>
+      </FadeIn>
+    )
+  }
+
+  _renderValue = (value, formatter, isLast) => (
+    <Fragment>
+      <Motion
+        defaultStyle={{ data: 0 }}
+        style={{ data: spring(value, presets.gentle) }}
+      >
+        {value => (
+          <Utils.Text align='right' lineHeight={20}>
+            {formatter(value.data)}
+          </Utils.Text>
+        )}
+      </Motion>
+      {!isLast && <Utils.VerticalSpacer size='small' />}
+    </Fragment>
+  )
+
+  _renderLabels = () => (
+    <Utils.View>
+      {this.state.selectedIndex !== -1 && (
+        <Fragment>
+          {this._renderLabel('HIGHEST')}
+          {this._renderLabel('LOWEST')}
+          {this._renderLabel('AVERAGE')}
+        </Fragment>
+      )}
+      {this._renderLabel('MARKET CAP')}
+      {this._renderLabel('VOLUME 24H')}
+      {this._renderLabel('CIRCULATING SUPPLY', true)}
+    </Utils.View>
+  )
+
+  _renderLabel = (label, isLast) => (
+    <Fragment>
+      <Utils.Text secondary size='xsmall' lineHeight={20}>
+        {label}
+      </Utils.Text>
+      {!isLast && <Utils.VerticalSpacer size='small' />}
+    </Fragment>
+  )
+
+  _renderChart = () => {
+    const { selectedIndex, graph } = this.state
+
+    return (
+      <Fragment>
+        <Utils.VerticalSpacer />
+        <FadeIn name='graph'>
+          <Utils.Row justify='space-evenly'>
+            {this.timeSpans.map(timeSpan => (
+              <TouchableOpacity
+                key={timeSpan}
+                onPress={() => this._changeGraphTimeSpan(timeSpan)}
+              >
+                <Utils.Text secondary={graph.timeSpan !== timeSpan}>
+                  {timeSpan}
+                </Utils.Text>
+              </TouchableOpacity>
+            ))}
+          </Utils.Row>
+        </FadeIn>
+        <AreaChart
+          style={{ flex: 1 }}
+          data={graph.data || []}
+          xAccessor={({ index }) => index}
+          yAccessor={({ item }) => item.close}
+          contentInset={{ top: 30, bottom: 30 }}
+          curve={shape.curveLinear}
+          svg={{ fill: 'url(#gradient)', opacity: 0.2 }}
+          numberOfTicks={4}
+          animate
+        >
+          <Grid svg={{ stroke: '#FFF', strokeOpacity: 0.1 }} />
+          <Gradient />
+          <Line />
+          <Cursor selectedIndex={selectedIndex} onPress={(index) => this._handleGraphPress(index)} />
+        </AreaChart>
+      </Fragment >
+    )
+  }
+
   render () {
-    const { price, high, low, average, marketcap, volume, supply, graph, selectedIndex } = this.state
+    const { marketcap, volume, supply, graph } = this.state
 
     return (
       <Utils.Container>
-        <Utils.ContentWithBackground
-          source={require('../../assets/home-header.png')}
-          resizeMode='contain'
-        >
-          <Utils.StatusBar transparent />
-          <Utils.VerticalSpacer size='large' />
-          <Utils.View align='center'>
-            <Image
-              source={require('../../assets/tron-logo-small.png')}
-              resizeMode='contain'
-              style={{ height: 60 }}
-            />
-            <Utils.VerticalSpacer size='medium' />
-            <Utils.Text secondary>TRX PRICE</Utils.Text>
-          </Utils.View>
-          <Utils.VerticalSpacer size='small' />
-          <Utils.Row justify='center'>
-            <Utils.View>
-              <Utils.Row>
-                <Utils.Text secondary />
-                <Utils.HorizontalSpacer />
-                <Motion
-                  defaultStyle={{ data: 0 }}
-                  style={{ data: spring(price, presets.gentle) }}
-                >
-                  {value => (
-                    <Utils.Text size='medium'>
-                      $ {value.data.toFixed(PRICE_PRECISION)}
-                    </Utils.Text>
-                  )}
-                </Motion>
-              </Utils.Row>
-            </Utils.View>
-          </Utils.Row>
-          <Utils.VerticalSpacer size='large' />
-        </Utils.ContentWithBackground>
+        {this._renderHeader()}
         <Utils.Content background={Colors.background}>
           <Utils.Row justify='space-between' align='center'>
-            <Utils.View>
-              {selectedIndex !== -1 && (
-                <React.Fragment>
-                  <Utils.Text secondary size='xsmall' lineHeight={20}>
-                    HIGHEST
-                  </Utils.Text>
-                  <Utils.VerticalSpacer size='small' />
-                  <Utils.Text secondary size='xsmall' lineHeight={20}>
-                    LOWEST
-                  </Utils.Text>
-                  <Utils.VerticalSpacer size='small' />
-                  <Utils.Text secondary size='xsmall' lineHeight={20}>
-                    AVERAGE
-                  </Utils.Text>
-                  <Utils.VerticalSpacer size='small' />
-                </React.Fragment>
-              )}
-              <Utils.Text secondary size='xsmall' lineHeight={20}>
-                MARKET CAP
-              </Utils.Text>
-              <Utils.VerticalSpacer size='small' />
-              <Utils.Text secondary size='xsmall' lineHeight={20}>
-                VOLUME 24H
-              </Utils.Text>
-              <Utils.VerticalSpacer size='small' />
-              <Utils.Text secondary size='xsmall' lineHeight={20}>
-                CIRCULATING SUPPLY
-              </Utils.Text>
-            </Utils.View>
+            {this._renderLabels()}
             {(!marketcap || !volume || !supply) && (
               <FadeIn name='home-info-loading'>
                 <Utils.Content>
@@ -231,79 +315,7 @@ class HomeScene extends Component {
             {marketcap &&
               volume &&
               supply && (
-                <FadeIn name='home-info'>
-                  <Utils.View>
-                    {selectedIndex !== -1 && (
-                      <React.Fragment>
-                        <Motion
-                          defaultStyle={{ data: 0 }}
-                          style={{ data: spring(high, presets.gentle) }}
-                        >
-                          {value => (
-                            <Utils.Text align='right' lineHeight={20}>
-                              {`$ ${value.data.toFixed(5)}`}
-                            </Utils.Text>
-                          )}
-                        </Motion>
-                        <Utils.VerticalSpacer size='small' />
-                        <Motion
-                          defaultStyle={{ data: 0 }}
-                          style={{ data: spring(low, presets.gentle) }}
-                        >
-                          {value => (
-                            <Utils.Text align='right' lineHeight={20}>
-                              {`$ ${value.data.toFixed(5)}`}
-                            </Utils.Text>
-                          )}
-                        </Motion>
-                        <Utils.VerticalSpacer size='small' />
-                        <Motion
-                          defaultStyle={{ data: 0 }}
-                          style={{ data: spring(average, presets.gentle) }}
-                        >
-                          {value => (
-                            <Utils.Text align='right' lineHeight={20}>
-                              {`$ ${value.data.toFixed(5)}`}
-                            </Utils.Text>
-                          )}
-                        </Motion>
-                        <Utils.VerticalSpacer size='small' />
-                      </React.Fragment>
-                    )}
-                    <Motion
-                      defaultStyle={{ data: 0 }}
-                      style={{ data: spring(marketcap, presets.gentle) }}
-                    >
-                      {value => (
-                        <Utils.Text align='right' lineHeight={20}>
-                          {`$ ${this._formatNumber(value.data)}`}
-                        </Utils.Text>
-                      )}
-                    </Motion>
-                    <Utils.VerticalSpacer size='small' />
-                    <Motion
-                      defaultStyle={{ data: 0 }}
-                      style={{ data: spring(volume, presets.gentle) }}
-                    >
-                      {value => (
-                        <Utils.Text align='right' lineHeight={20}>
-                          {`$ ${this._formatNumber(value.data)}`}
-                        </Utils.Text>
-                      )}
-                    </Motion>
-                    <Utils.VerticalSpacer size='small' />
-                    <Motion
-                      defaultStyle={{ data: 0 }}
-                      style={{ data: spring(supply, presets.gentle) }}
-                    >
-                      {value => (
-                        <Utils.Text align='right' lineHeight={20}>
-                          {`${this._formatNumber(value.data)}`}
-                        </Utils.Text>
-                      )}
-                    </Motion>
-                  </Utils.View>
-                </FadeIn>
+                this._renderValues()
               )}
           </Utils.Row>
         </Utils.Content>
@@ -315,39 +327,7 @@ class HomeScene extends Component {
           </Utils.Content>
         )}
         {!graph.loading && (
-          <Fragment>
-            <Utils.VerticalSpacer />
-            <FadeIn name='graph'>
-              <Utils.Row justify='space-evenly'>
-                {this.timeSpans.map(timeSpan => (
-                  <TouchableOpacity
-                    key={timeSpan}
-                    onPress={() => this._changeGraphTimeSpan(timeSpan)}
-                  >
-                    <Utils.Text secondary={graph.timeSpan !== timeSpan}>
-                      {timeSpan}
-                    </Utils.Text>
-                  </TouchableOpacity>
-                ))}
-              </Utils.Row>
-            </FadeIn>
-            <AreaChart
-              style={{ flex: 1 }}
-              data={graph.data || []}
-              xAccessor={({ index }) => index}
-              yAccessor={({ item }) => item.close}
-              contentInset={{ top: 30, bottom: 30 }}
-              curve={shape.curveLinear}
-              svg={{ fill: 'url(#gradient)', opacity: 0.2 }}
-              numberOfTicks={4}
-              animate
-            >
-              <Grid svg={{ stroke: '#FFF', strokeOpacity: 0.1 }} />
-              <Gradient />
-              <Line />
-              <Cursor selectedIndex={selectedIndex} onPress={(index) => this._handleGraphPress(index)} />
-            </AreaChart>
-          </Fragment>
+          this._renderChart()
         )}
       </Utils.Container>
     )
