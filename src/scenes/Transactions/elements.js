@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { Colors } from '../../components/DesignSystem'
 
 const Row = css`
   flex-direction: row;
@@ -8,7 +9,7 @@ export const Card = styled.TouchableOpacity`
   border-color: ${props => props.confirmed ? '#3fe77b' : '#ff4465'}
   padding-horizontal: 24px;
   padding-vertical: 18px;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 `
 export const InfoRow = styled.View`
   ${Row}
@@ -20,6 +21,9 @@ export const VSpacer = styled.View`
 `
 export const HSpacer = styled.View`
   width: 10px;
+`
+export const Background = styled.View`
+  background-color: ${Colors.background}
 `
 
 /* Top Row */
@@ -84,4 +88,19 @@ export const AddressTitle = styled.Text`
 export const Address = styled.Text`
   font-family: Rubik-Regular;
   ${AdressFont}
+`
+
+/* Empty */
+export const EmptyScreenContainer = styled.View`
+  background-color: ${Colors.background};
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`
+export const EmptyScreenText = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: white;
 `
