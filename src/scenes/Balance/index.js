@@ -64,7 +64,7 @@ class BalanceScene extends Component {
         Client.getBalances(this.props.context.pin),
         getUserSecrets(this.props.context.pin),
         axios.get(
-          `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
+          `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
         )
       ])
 

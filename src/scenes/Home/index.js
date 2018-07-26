@@ -14,11 +14,6 @@ import { Colors } from '../../components/DesignSystem'
 import FadeIn from '../../components/Animations/FadeIn'
 
 const PRICE_PRECISION = 7
-const LAST_HOUR = Math.round(new Date().getTime() / 1000) - 3600
-const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
-const LAST_WEEK = Math.round(new Date().getTime() / 1000) - 7 * 24 * 3600
-const LAST_MONTH = Math.round(new Date().getTime() / 1000) - 31 * 24 * 3600
-const LAST_YEAR = Math.round(new Date().getTime() / 1000) - 365 * 24 * 3600
 
 const Line = ({ line }) => (
   <Path
@@ -106,22 +101,22 @@ class HomeScene extends Component {
     let url
     switch (this.state.graph.timeSpan) {
       case '1H':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_HOUR}&aggregate=3`
+        url = `${Config.TRX_HISTORY_API}histominute?fsym=TRX&tsym=USD&limit=59`
         break
       case '1D':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}&aggregate=2`
+        url = `${Config.TRX_HISTORY_API}histohour?fsym=TRX&tsym=USD&limit=23`
         break
       case '1W':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_WEEK}&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD&limit=6`
         break
       case '1M':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_MONTH}&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD`
         break
       case '1Y':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_YEAR}&limit=365&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD&limit=364`
         break
       case 'ALL':
-        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&aggregate=1&allData=true`
+        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD&allData=true`
         break
     }
     const response = await axios.get(url, { credentials: false })
