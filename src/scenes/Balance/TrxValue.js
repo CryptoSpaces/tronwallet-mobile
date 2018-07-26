@@ -9,6 +9,8 @@ import FadeIn from '../../components/Animations/FadeIn'
 import Badge from '../../components/Badge'
 import * as Utils from '../../components/Utils'
 
+import { formatNumber } from '../../utils/numberUtils'
+
 class TrxValue extends PureComponent {
   state = {
     currencyPrice: null
@@ -32,16 +34,6 @@ class TrxValue extends PureComponent {
     }
   }
 
-  _formatPrice = (price) => {
-    const formattedPrice = price.toFixed(2)
-
-    if (formattedPrice === '0.00') {
-      return price.toExponential(1)
-    }
-
-    return formattedPrice
-  }
-
   render () {
     const { trxBalance, currency } = this.props
     const { currencyPrice } = this.state
@@ -63,7 +55,7 @@ class TrxValue extends PureComponent {
                 >
                   {value => (
                     <Utils.Text size='large' marginX={8}>
-                      {this._formatPrice(value.price)}
+                      {formatNumber(value.price)}
                     </Utils.Text>
                   )}
                 </Motion>
