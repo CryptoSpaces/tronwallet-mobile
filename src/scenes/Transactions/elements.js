@@ -1,20 +1,31 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const Card = styled.View`
+const Row = css`
   flex-direction: row;
+`
+export const Card = styled.TouchableOpacity`
+  border-left-width: 4px;
+  border-color: ${props => props.confirmed ? '#3fe77b' : '#ff4465'}
+  padding: 24px;
+  margin-bottom: 2px;
+`
+export const InfoRow = styled.View`
+  ${Row}
   justify-content: space-between;
+  align-items: center;
 `
-export const Moment = styled.Text`
-  font-family: Rubik-Regular;
-  font-size: 10px;
-  letter-spacing: 0;
-  color: rgb(156, 158, 185);
+export const VSpacer = styled.View`
+  height: 10px;
 `
-export const Confirmation = styled.Text`
+export const HSpacer = styled.View`
+  width: 10px;
+`
+
+/* Top Row */
+const BadgeFont = css`
   font-family: Rubik-Medium;
   font-size: 11px;
   line-height: 11px;
-  letter-spacing: 0;
   color: white;
 `
 export const Badge = styled.View`
@@ -27,9 +38,49 @@ export const Badge = styled.View`
 `
 export const BadgeText = styled.Text`
   top: 1;
-  font-family: Rubik-Medium;
-  font-size: 11px;
-  line-height: 11px;
+  ${BadgeFont}
   letter-spacing: 0.6px;
+`
+export const TransactionValue = styled.View`
+  ${Row}
+  justify-content: flex-end;
+  align-items: center;
+`
+export const InfoAmount = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.8px;
   color: white;
+`
+
+/* Middle Row */
+export const Confirmation = styled.Text`
+  ${BadgeFont}
+  letter-spacing: 0;
+`
+export const Moment = styled.Text`
+  font-family: Rubik-Regular;
+  font-size: 10px;
+  letter-spacing: 0;
+  top: -4px;
+  color: rgb(156, 158, 185);
+`
+
+/* Address Row */
+const AdressFont = css`
+  font-size: 10px;
+  line-height: 16px;
+  color: white;
+`
+export const AddressRow = styled.View`
+  ${Row}
+`
+export const AddressTitle = styled.Text`
+  font-family: Rubik-Medium;
+  ${AdressFont}
+`
+export const Address = styled.Text`
+  font-family: Rubik-Regular;
+  ${AdressFont}
 `

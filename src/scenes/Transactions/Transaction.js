@@ -1,57 +1,79 @@
 import React from 'react'
 import moment from 'moment'
-import { View } from 'react-native'
 
-import { Card, Moment, Confirmation, Badge, BadgeText } from './elements'
-import { VerticalSpacer } from '../../components/Utils'
+import { configureTransaction } from './Utils'
+
+import * as Elements from './elements'
 
 const Transaction = ({ item, onPress }) => {
-  const config = {}
-  const _configureTransaction = (config) => {
-    switch (item.type) {
-      case 'Transfer':
-        config.BadgeColor = '#4a69e2'
-        break
-      case 'Freeze':
-        config.BadgeColor = '#25b9e3'
-        break
-      case 'Unfreeze':
-        config.BadgeColor = '#1f6986'
-        break
-      case 'Vote':
-        config.BadgeColor = '#bb2dc4'
-        break
-      case 'Participate':
-        config.BadgeColor = '#6442e4'
-        break
-      case 'Create':
-        config.BadgeColor = '#94c047'
-        break
-      default:break
-    }
-    return config
-  }
+  /* Renders the top row with the badge and the amount information pertaining
+  to the specific transaction. */
+  const _renderTopInfoRow = ({amount, icon, badgeColor}) => (
+    <Elements.InfoRow>
+      <Elements.Badge color={badgeColor}>
+        <Elements.BadgeText>
+          {item.type.toUpperCase()}
+        </Elements.BadgeText>
+      </Elements.Badge>
+      <Elements.TransactionValue>
+        {amount && (
+          <React.Fragment>
+            <Elements.InfoAmount>{amount}</Elements.InfoAmount>
+            <Elements.HSpacer />
+          </React.Fragment>
+        )}
+        <icon.Type name={icon.name} color='white' size={icon.size} />
+      </Elements.TransactionValue>
+    </Elements.InfoRow>
+  )
 
-  _configureTransaction(config)
+  const _renderMiddleInfoRow = () => (
+    <Elements.InfoRow>
+      <Elements.Confirmation>
+        {item.confirmed ? 'Confirmed' : 'Unconfirmed'}
+      </Elements.Confirmation>
+      <Elements.Moment>
+        {moment(item.timestamp).fromNow()}
+      </Elements.Moment>
+    </Elements.InfoRow>
+  )
+
+  /* Renders the bottom component where the address is displayed. */
+  const _renderAddress = ({from, to}) => (
+    <React.Fragment>
+      <Elements.AddressRow>
+        <Elements.AddressTitle>From: </Elements.AddressTitle>
+        <Elements.Address>{from}</Elements.Address>
+      </Elements.AddressRow>
+      {to && (
+        <Elements.AddressRow>
+          <Elements.AddressTitle>To: </Elements.AddressTitle>
+          <Elements.Address>{to}</Elements.Address>
+        </Elements.AddressRow>
+      )}
+    </React.Fragment>
+  )
+
+  /* Configures the object used to hidrate the render components with the proper
+  texts and icons. */
+  const config = {}
+  configureTransaction(item, {
+    topRow: _renderTopInfoRow,
+    addressRow: _renderAddress
+  }, config)
+
   return (
-    <Card onPress={onPress}>
-      <View>
-        <Badge color={config.BadgeColor}>
-          <BadgeText>
-            {item.type.toUpperCase()}
-          </BadgeText>
-        </Badge>
-        <VerticalSpacer size='medium' />
-        <Confirmation>
-          {item.confirmed ? 'Confirmed' : 'Unconfirmed'}
-        </Confirmation>
-      </View>
-      <View>
-        <Moment>
-          {moment(item.timestamp).fromNow()}
-        </Moment>
-      </View>
-    </Card>
+    <Elements.Card onPress={onPress} confirmed={item.confirmed}>
+      {config.topRow()}
+      <Elements.VSpacer />
+      {_renderMiddleInfoRow()}
+      {config.addressRow && (
+        <React.Fragment>
+          <Elements.VSpacer />
+          {config.addressRow()}
+        </React.Fragment>
+      )}
+    </Elements.Card>
   )
 }
 

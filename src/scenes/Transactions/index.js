@@ -8,7 +8,7 @@ import {
 import { Answers } from 'react-native-fabric'
 
 import * as Utils from '../../components/Utils'
-import { Spacing, Colors } from '../../components/DesignSystem'
+import { Colors } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
 import Transaction from './Transaction'
 
@@ -151,11 +151,9 @@ class TransactionsScene extends Component {
               onRefresh={this._onRefresh}
             />
           }
-          contentContainerStyle={{ padding: Spacing.medium }}
           data={transactions}
           keyExtractor={item => item.id}
           renderItem={({ item }) => <Transaction item={item} onPress={this._navigateToDetails} />}
-          ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
           ListEmptyComponent={this.renderListEmptyComponent}
         />
       </Utils.Container>
