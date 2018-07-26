@@ -37,7 +37,6 @@ class Settings extends Component {
   }
 
   state = {
-    address: null,
     seed: null,
     loading: true
   }
@@ -49,9 +48,8 @@ class Settings extends Component {
 
   _onLoadData = async () => {
     const data = await getUserSecrets(this.props.context.pin)
-    const address = data.address
     const seed = data.mnemonic
-    this.setState({ address, seed, loading: false })
+    this.setState({ seed, loading: false })
   }
 
   _resetWallet = async () => {
@@ -75,16 +73,8 @@ class Settings extends Component {
   }
 
   _renderList = () => {
-    const { address, seed } = this.state
-    const shortAddress = address
-      ? `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
-      : 'Loading Account ...'
+    const { seed } = this.state
     const list = [
-      {
-        title: shortAddress,
-        description: 'Current Account',
-        icon: 'user,-person,-avtar,-profile-picture,-dp'
-      },
       {
         title: 'Network',
         description: 'Choose a node of your preference',

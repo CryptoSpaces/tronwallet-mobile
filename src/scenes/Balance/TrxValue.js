@@ -32,15 +32,7 @@ class TrxValue extends PureComponent {
     }
   }
 
-  _formatPrice = (price) => {
-    const formattedPrice = price.toFixed(2)
-
-    if (formattedPrice === '0.00') {
-      return price.toExponential(1)
-    }
-
-    return formattedPrice
-  }
+  _formatPrice = price => price.toFixed(2) > 0 ? price.toFixed(2) : price.toFixed(5)
 
   render () {
     const { trxBalance, currency } = this.props
