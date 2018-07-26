@@ -31,12 +31,12 @@ const Line = ({ line }) => (
 )
 
 const Cursor = ({ x, y, data, selectedIndex, onPress }) => {
-  return data.map((value, index) => (
+  return data.map((item, index) => (
     <G key={index} onPress={() => onPress(index)}>
       <Circle
         key={`circle-1-${index}`}
         cx={x(index)}
-        cy={y(value)}
+        cy={y(item.close)}
         r={16}
         fill={'white'}
         fillOpacity={index === selectedIndex ? 1 : 0}
@@ -44,7 +44,7 @@ const Cursor = ({ x, y, data, selectedIndex, onPress }) => {
       <Circle
         key={`circle-2-${index}`}
         cx={x(index)}
-        cy={y(value)}
+        cy={y(item.close)}
         r={6}
         fill={'rgb(179, 181, 212)'}
         fillOpacity={index === selectedIndex ? 1 : 0}
@@ -60,6 +60,9 @@ class HomeScene extends Component {
       data: null,
       timeSpan: '1W'
     },
+    high: null,
+    low: null,
+    average: null,
     marketcap: null,
     volume: null,
     supply: null,
@@ -97,47 +100,35 @@ class HomeScene extends Component {
     this.setState({
       selectedIndex: -1,
       graph: Object.assign({}, this.state.graph, {
-        data: this.state.graph.data ? this.state.graph.data.map(() => 0) : null
+        data: this.state.graph.data ? this.state.graph.data.map(() => ({ close: 0 })) : null
       })
     })
     let url
     switch (this.state.graph.timeSpan) {
       case '1H':
-        url = `${
-          Config.TRX_HISTORY_API
-        }?fsym=TRX&tsym=USD&fromTs=${LAST_HOUR}&aggregate=3`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_HOUR}&aggregate=3`
         break
       case '1D':
-        url = `${
-          Config.TRX_HISTORY_API
-        }?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}&aggregate=2`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}&aggregate=2`
         break
       case '1W':
-        url = `${
-          Config.TRX_HISTORY_API
-        }?fsym=TRX&tsym=USD&fromTs=${LAST_WEEK}&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_WEEK}&aggregate=1`
         break
       case '1M':
-        url = `${
-          Config.TRX_HISTORY_API
-        }?fsym=TRX&tsym=USD&fromTs=${LAST_MONTH}&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_MONTH}&aggregate=1`
         break
       case '1Y':
-        url = `${
-          Config.TRX_HISTORY_API
-        }?fsym=TRX&tsym=USD&fromTs=${LAST_YEAR}&limit=365&aggregate=1`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_YEAR}&limit=365&aggregate=1`
         break
       case 'ALL':
-        url = `${
-          Config.TRX_HISTORY_API
-        }?fsym=TRX&tsym=USD&aggregate=1&allData=true`
+        url = `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&aggregate=1&allData=true`
         break
     }
     const response = await axios.get(url, { credentials: false })
     this.setState({
       graph: Object.assign({}, this.state.graph, {
         loading: false,
-        data: response.data.Data.map(item => item.close)
+        data: response.data.Data.map(({ close, high, low }) => ({ close, high, low, average: (high + low) / 2 }))
       })
     })
   }
@@ -154,11 +145,12 @@ class HomeScene extends Component {
   }
 
   _handleGraphPress = (index) => {
-    this.setState({ selectedIndex: index })
+    const { high, low, average } = this.state.graph.data[index]
+    this.setState({ selectedIndex: index, high, low, average })
   }
 
   render () {
-    const { price, marketcap, volume, supply, graph, selectedIndex } = this.state
+    const { price, high, low, average, marketcap, volume, supply, graph, selectedIndex } = this.state
 
     return (
       <Utils.Container>
@@ -201,14 +193,30 @@ class HomeScene extends Component {
         <Utils.Content background={Colors.background}>
           <Utils.Row justify='space-between' align='center'>
             <Utils.View>
+              {selectedIndex !== -1 && (
+                <React.Fragment>
+                  <Utils.Text secondary size='xsmall' lineHeight={20}>
+                    HIGHEST
+                  </Utils.Text>
+                  <Utils.VerticalSpacer size='small' />
+                  <Utils.Text secondary size='xsmall' lineHeight={20}>
+                    LOWEST
+                  </Utils.Text>
+                  <Utils.VerticalSpacer size='small' />
+                  <Utils.Text secondary size='xsmall' lineHeight={20}>
+                    AVERAGE
+                  </Utils.Text>
+                  <Utils.VerticalSpacer size='small' />
+                </React.Fragment>
+              )}
               <Utils.Text secondary size='xsmall' lineHeight={20}>
                 MARKET CAP
               </Utils.Text>
-              <Utils.VerticalSpacer size='medium' />
+              <Utils.VerticalSpacer size='small' />
               <Utils.Text secondary size='xsmall' lineHeight={20}>
                 VOLUME 24H
               </Utils.Text>
-              <Utils.VerticalSpacer size='medium' />
+              <Utils.VerticalSpacer size='small' />
               <Utils.Text secondary size='xsmall' lineHeight={20}>
                 CIRCULATING SUPPLY
               </Utils.Text>
@@ -225,36 +233,73 @@ class HomeScene extends Component {
               supply && (
                 <FadeIn name='home-info'>
                   <Utils.View>
+                    {selectedIndex !== -1 && (
+                      <React.Fragment>
+                        <Motion
+                          defaultStyle={{ data: 0 }}
+                          style={{ data: spring(high, presets.gentle) }}
+                        >
+                          {value => (
+                            <Utils.Text align='right' lineHeight={20}>
+                              {`$ ${value.data.toFixed(5)}`}
+                            </Utils.Text>
+                          )}
+                        </Motion>
+                        <Utils.VerticalSpacer size='small' />
+                        <Motion
+                          defaultStyle={{ data: 0 }}
+                          style={{ data: spring(low, presets.gentle) }}
+                        >
+                          {value => (
+                            <Utils.Text align='right' lineHeight={20}>
+                              {`$ ${value.data.toFixed(5)}`}
+                            </Utils.Text>
+                          )}
+                        </Motion>
+                        <Utils.VerticalSpacer size='small' />
+                        <Motion
+                          defaultStyle={{ data: 0 }}
+                          style={{ data: spring(average, presets.gentle) }}
+                        >
+                          {value => (
+                            <Utils.Text align='right' lineHeight={20}>
+                              {`$ ${value.data.toFixed(5)}`}
+                            </Utils.Text>
+                          )}
+                        </Motion>
+                        <Utils.VerticalSpacer size='small' />
+                      </React.Fragment>
+                    )}
                     <Motion
                       defaultStyle={{ data: 0 }}
                       style={{ data: spring(marketcap, presets.gentle) }}
                     >
                       {value => (
-                        <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(
-                          value.data
-                        )}`}</Utils.Text>
+                        <Utils.Text align='right' lineHeight={20}>
+                          {`$ ${this._formatNumber(value.data)}`}
+                        </Utils.Text>
                       )}
                     </Motion>
-                    <Utils.VerticalSpacer size='medium' />
+                    <Utils.VerticalSpacer size='small' />
                     <Motion
                       defaultStyle={{ data: 0 }}
                       style={{ data: spring(volume, presets.gentle) }}
                     >
                       {value => (
-                        <Utils.Text lineHeight={20}>{`$ ${this._formatNumber(
-                          value.data
-                        )}`}</Utils.Text>
+                        <Utils.Text align='right' lineHeight={20}>
+                          {`$ ${this._formatNumber(value.data)}`}
+                        </Utils.Text>
                       )}
                     </Motion>
-                    <Utils.VerticalSpacer size='medium' />
+                    <Utils.VerticalSpacer size='small' />
                     <Motion
                       defaultStyle={{ data: 0 }}
                       style={{ data: spring(supply, presets.gentle) }}
                     >
                       {value => (
-                        <Utils.Text lineHeight={20}>{`${this._formatNumber(
-                          value.data
-                        )}`}</Utils.Text>
+                        <Utils.Text align='right' lineHeight={20}>
+                          {`${this._formatNumber(value.data)}`}
+                        </Utils.Text>
                       )}
                     </Motion>
                   </Utils.View>
@@ -288,7 +333,9 @@ class HomeScene extends Component {
             </FadeIn>
             <AreaChart
               style={{ flex: 1 }}
-              data={graph.data}
+              data={graph.data || []}
+              xAccessor={({ index }) => index}
+              yAccessor={({ item }) => item.close}
               contentInset={{ top: 30, bottom: 30 }}
               curve={shape.curveLinear}
               svg={{ fill: 'url(#gradient)', opacity: 0.2 }}
