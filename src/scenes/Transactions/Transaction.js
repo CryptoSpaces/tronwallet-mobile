@@ -1,6 +1,5 @@
 import React from 'react'
 import moment from 'moment'
-
 import { configureTransaction } from './Utils'
 
 import * as Elements from './elements'
@@ -27,6 +26,7 @@ const Transaction = ({ item, onPress }) => {
     </Elements.InfoRow>
   )
 
+  /* Renders the row with the confirmation and time ago information */
   const _renderMiddleInfoRow = () => (
     <Elements.InfoRow>
       <Elements.Confirmation>

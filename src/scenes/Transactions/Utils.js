@@ -6,15 +6,15 @@ import { formatNumber } from '../../utils/numberUtils'
 import { ONE_TRX } from '../../services/client'
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
-export const transferAmount = (data) => {
+/* Functions that format the amount information to be displayed on screen. */
+const transferAmount = (data) => {
   const amount = data.tokenName === 'TRX'
     ? data.amount / ONE_TRX
     : data.amount
   return `${Number(amount) > 1 ? formatNumber(amount) : amount} ${data.tokenName}`
 }
-
-const freezeAmount = (item) => `${item.contractData.frozenBalance / ONE_TRX} TRX`
-const participateAmount = (item) => `${item.contractData.amount / ONE_TRX} ${item.tokenName}`
+const freezeAmount = ({frozenBalance}) => `${frozenBalance / ONE_TRX} TRX`
+const participateAmount = ({amount, tokenName}) => `${amount / ONE_TRX} ${tokenName}`
 
 /* Configures the object used to hidrate the render components with the proper
 texts and icons. */
@@ -39,7 +39,7 @@ export const configureTransaction = (item, { topRow, addressRow }, config) => {
       break
     case 'Freeze':
       config.topRow = () => topRow({
-        amount: freezeAmount(item),
+        amount: freezeAmount(contractData),
         icon: {
           Type: Ionicons,
           name: 'ios-snow',
@@ -60,7 +60,7 @@ export const configureTransaction = (item, { topRow, addressRow }, config) => {
       break
     case 'Vote':
       config.topRow = () => topRow({
-        amount: item.contractData.votes.length,
+        amount: contractData.votes.length,
         icon: {
           Type: Feather,
           name: 'thumbs-up',
@@ -71,7 +71,7 @@ export const configureTransaction = (item, { topRow, addressRow }, config) => {
       break
     case 'Participate':
       config.topRow = () => topRow({
-        amount: participateAmount(item),
+        amount: participateAmount(contractData),
         icon: {
           Type: Icon,
           name: 'dollar,-currency,-money,-cash,-coin',
@@ -85,7 +85,7 @@ export const configureTransaction = (item, { topRow, addressRow }, config) => {
       break
     case 'Create':
       config.topRow = () => topRow({
-        amount: '94.00 TRX',
+        amount: contractData.tokenName,
         icon: {
           Type: Icon,
           name: 'dollar,-currency,-money,-cash,-coin',
