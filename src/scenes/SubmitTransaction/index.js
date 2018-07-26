@@ -4,6 +4,8 @@ import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
 import { NavigationActions } from 'react-navigation'
 import { Answers } from 'react-native-fabric'
+import OneSignal from 'react-native-onesignal'
+
 // Design
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
@@ -14,12 +16,13 @@ import NavigationHeader from '../../components/Navigation/Header'
 
 // Service
 import Client from '../../services/client'
-import buildTransactionDetails, { translateError } from './detailMap'
 import getTransactionStore from '../../store/transactions'
 import { withContext } from '../../store/context'
+import buildTransactionDetails, { translateError } from './detailMap'
 
 const CLOSE_SCREEN_TIME = 5000
 const ANSWERS_TRANSACTIONS = ['Transfer', 'Vote', 'Participate', 'Freeze']
+const NOTIFICATION_TRANSACTIONS = ['Transfer', 'Transfer Asset']
 
 class TransactionDetail extends Component {
   state = {
@@ -117,35 +120,49 @@ class TransactionDetail extends Component {
     } = this.state
     this.setState({ loadingSubmit: true, submitError: null })
     const store = await getTransactionStore()
-
     const transaction = this._getTransactionObject()
+
     try {
       let success = false
       store.write(() => { store.create('Transaction', transaction, true) })
       const { code } = await Client.broadcastTransaction(signedTransaction)
+
       if (code === 'SUCCESS') {
         success = true
         if (ANSWERS_TRANSACTIONS.includes(transaction.type)) {
           Answers.logCustom('Transaction Operation', { type: transaction.type })
         }
+        if (NOTIFICATION_TRANSACTIONS.includes(transaction.type)) {
+          // if the receiver is a tronwallet user we'll find his devices here
+          const response = await Client.getDevicesFromPublicKey(transaction.contractData.transferToAddress)
+          if (response.data.users.length) {
+            const content = {
+              'en': 'You have received a transaction.'
+            }
+            response.data.users.map(device => {
+              OneSignal.postNotification(content, transaction, device.deviceid)
+            })
+          }
+        }
         this.closeTransactionDetails = setTimeout(this._navigateNext, CLOSE_SCREEN_TIME)
       }
 
       this.setState({
-        loadingSubmit: false,
         success,
-        submitted: true,
         submitError: null
       })
     } catch (error) {
       this.setState({
-        loadingSubmit: false,
-        submitted: true,
         submitError: translateError(error.message)
       })
       store.write(() => {
         const lastTransaction = store.objectForPrimaryKey('Transaction', hash)
         store.delete(lastTransaction)
+      })
+    } finally {
+      this.setState({
+        loadingSubmit: false,
+        submitted: true
       })
     }
   }

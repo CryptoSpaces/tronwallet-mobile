@@ -1,26 +1,28 @@
 import React, { Component } from 'react'
-
 import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native'
-
 import { Answers } from 'react-native-fabric'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import { StackActions, NavigationActions } from 'react-navigation'
+import OneSignal from 'react-native-onesignal'
+import Switch from 'react-native-switch-pro'
 
 // Design
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
-import { getUserSecrets } from '../../utils/secretsUtils'
 
 // Utils
 import fontelloConfig from '../../assets/icons/config.json'
 import { withContext } from '../../store/context'
 import { restartAllWalletData } from '../../utils/userAccountUtils'
+import { getUserSecrets } from '../../utils/secretsUtils'
+import Client from '../../services/client'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 const resetAction = StackActions.reset({
@@ -39,12 +41,17 @@ class Settings extends Component {
   state = {
     address: null,
     seed: null,
-    loading: true
+    loading: true,
+    subscriptionStatus: null,
+    changingSubscription: false
   }
 
   componentDidMount () {
     Answers.logContentView('Tab', 'Settings')
     this._onLoadData()
+    OneSignal.getPermissionSubscriptionState(
+      status => this.setState({ subscriptionStatus: status.userSubscriptionEnabled === 'true' })
+    )
   }
 
   _onLoadData = async () => {
@@ -74,6 +81,26 @@ class Settings extends Component {
     )
   }
 
+  _changeSubscription = () => {
+    this.setState(
+      ({ subscriptionStatus }) => ({ subscriptionStatus: !subscriptionStatus }),
+      () => {
+        OneSignal.setSubscription(this.state.subscriptionStatus)
+        OneSignal.getPermissionSubscriptionState(
+          status => console.log('subscriptions status', status)
+        )
+        if (this.state.subscriptionStatus) {
+          Client.registerDeviceForNotifications(
+            this.props.context.oneSignalId,
+            this.props.context.publicKey.value
+          )
+        } else {
+          // TODO: remove device from db
+        }
+      }
+    )
+  }
+
   _renderList = () => {
     const { address, seed } = this.state
     const shortAddress = address
@@ -84,6 +111,25 @@ class Settings extends Component {
         title: shortAddress,
         description: 'Current Account',
         icon: 'user,-person,-avtar,-profile-picture,-dp'
+      },
+      {
+        title: 'Notifications Subscription',
+        description: 'Enable or disable push notifications',
+        icon: 'user,-person,-avtar,-profile-picture,-dp',
+        right: () => {
+          if ((this.state.subscriptionStatus === null) || this.state.changingSubscription) {
+            return <ActivityIndicator size='small' color={Colors.primaryText} />
+          }
+          return (
+            <Switch
+              circleStyle={{ backgroundColor: Colors.orange }}
+              backgroundActive={Colors.yellow}
+              backgroundInactive={Colors.secondaryText}
+              value={this.state.subscriptionStatus}
+              onSyncPress={this._changeSubscription}
+            />
+          )
+        }
       },
       {
         title: 'Network',
@@ -120,7 +166,7 @@ class Settings extends Component {
     ]
 
     return list.map(item => {
-      const arrowIcon = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
+      const arrowIconName = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
       return (
         <TouchableWithoutFeedback onPress={item.onPress} key={item.title}>
           <Utils.Item padding={16}>
@@ -142,15 +188,14 @@ class Settings extends Component {
                   </Utils.Text>
                 </Utils.View>
               </Utils.Row>
-              {!!item.onPress && (
-                <Utils.Row align='center' justify='space-between'>
-                  <Icon
-                    name={arrowIcon}
-                    size={15}
-                    color={Colors.secondaryText}
-                  />
-                </Utils.Row>
+              {(!!item.onPress && !item.right) && (
+                <Icon
+                  name={arrowIconName}
+                  size={15}
+                  color={Colors.secondaryText}
+                />
               )}
+              {item.right && item.right()}
             </Utils.Row>
           </Utils.Item>
         </TouchableWithoutFeedback>
@@ -161,7 +206,7 @@ class Settings extends Component {
   render () {
     return (
       <Utils.Container
-        keyboardShouldPersistTaps={'always'}
+        keyboardShouldPersistTaps='always'
         keyboardDismissMode='interactive'
       >
         {this._renderList()}

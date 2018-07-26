@@ -66,7 +66,7 @@ class Confirm extends React.Component {
   _handleSuccess = async () => {
     const { navigation, context } = this.props
     try {
-      const result = await WalletClient.giftUser(context.pin, context.onesignalId)
+      const result = await WalletClient.giftUser(context.pin, context.oneSignalId)
       if (result) {
         const rewardsParams = {
           label: 'Wallet Successfully confirmed',

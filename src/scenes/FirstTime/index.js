@@ -1,6 +1,6 @@
 import React from 'react'
-
 import { BackHandler } from 'react-native'
+
 import * as Utils from '../../components/Utils'
 import Logo from '../../components/Logo'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -40,7 +40,7 @@ class FirstTime extends React.Component {
                 shouldDoubleCheck,
                 testInput,
                 onSuccess: async pin => {
-                  await createUserKeyPair(pin)
+                  await createUserKeyPair(pin, this.props.context.oneSignalId)
                   this.props.context.setPin(
                     pin,
                     () => this.props.navigation.navigate('SeedCreate', { shouldReset: true })
