@@ -6,7 +6,8 @@ const Row = css`
 export const Card = styled.TouchableOpacity`
   border-left-width: 3px;
   border-color: ${props => props.confirmed ? '#3fe77b' : '#ff4465'}
-  padding: 24px;
+  padding-horizontal: 24px;
+  padding-vertical: 18px;
   margin-bottom: 1px;
 `
 export const InfoRow = styled.View`
