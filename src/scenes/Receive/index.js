@@ -93,7 +93,7 @@ class ReceiveScreen extends PureComponent {
             />
           </Utils.Content>
         </KeyboardScreen>
-        <Share visible={context.shareModal} publicKey={publicKey} close={context.closeShare} />
+        <Share visible={context.shareModal} publicKey={publicKey} close={context.closeShare} navigation={this.props.navigation} />
       </Utils.Container>
     )
   }
