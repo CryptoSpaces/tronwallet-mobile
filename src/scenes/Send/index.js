@@ -182,8 +182,8 @@ class SendScene extends Component {
       this._openTransactionDetails(data)
       this.clearInput()
     } catch (error) {
+      Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
       this.setState({
-        error: 'Oops. Something wrong while building transaction. Please Try Again',
         loadingSign: false
       })
     }
@@ -198,7 +198,8 @@ class SendScene extends Component {
         })
       })
     } catch (error) {
-      this.setState({ error: 'Oops. Something wrong while building transaction. Please Try Again', loadingSign: false })
+      Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
+      this.setState({ loadingSign: false })
     }
   }
 

@@ -47,8 +47,6 @@ class TransactionDetail extends Component {
   _loadData = async () => {
     const { navigation } = this.props
 
-    this.setState({ loadingData: true })
-
     const signedTransaction = navigation.state.params.tx
     const connection = await NetInfo.getConnectionInfo()
     const isConnected = !(connection.type === 'none')
@@ -72,9 +70,14 @@ class TransactionDetail extends Component {
 
   _navigateNext = () => {
     // Reset navigation as transaction submition is the last step of a user interaction
+    const { submitted } = this.state
     const { navigation } = this.props
-    const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
-    navigation.dispatch(navigateToHome)
+    if (submitted) {
+      const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
+      navigation.dispatch(navigateToHome)
+    } else {
+      navigation.goBack()
+    }
   }
 
   _getTokenNameFromTx = (type, token) => {
@@ -234,7 +237,6 @@ class TransactionDetail extends Component {
         <NavigationHeader
           title='TRANSACTION DETAILS'
           onClose={this.props.navigation.getParam('onClose')}
-          onBack={() => this.props.navigation.goBack()}
         />
         <Utils.Container>
           <ScrollView>
