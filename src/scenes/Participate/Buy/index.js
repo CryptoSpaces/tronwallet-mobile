@@ -37,7 +37,20 @@ import { formatNumber } from '../../../utils/numberUtils'
 import Client, { ONE_TRX } from '../../../services/client'
 import { signTransaction } from '../../../utils/transactionUtils'
 
-const padKeys = [1, 5, 10, 25, 50, 100, 500, 1000]
+const buyOptions = {
+  1: 1,
+  5: 5,
+  10: 10,
+  25: 25,
+  50: 50,
+  100: 100,
+  500: 500,
+  1000: 1000,
+  '10k': 10000,
+  '100k': 100000,
+  '500k': 500000,
+  '1m': 1000000
+}
 
 class BuyScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -62,7 +75,7 @@ class BuyScene extends Component {
   async componentDidMount () {
     const balances = await this._getBalancesFromStore()
     if (balances.length) {
-      const currentBalance = formatNumber(balances[0].balance)
+      const currentBalance = this._fixNumber(balances[0].balance)
       this.setState({ trxBalance: currentBalance, totalRemaining: currentBalance })
     }
   }
@@ -77,11 +90,16 @@ class BuyScene extends Component {
       .map(item => Object.assign({}, item))
   }
 
+  _fixNumber = (value) => {
+    if (Number.isInteger(value)) return value
+    else return value.toFixed(5) > 0 ? value.toFixed(5) : value.toFixed(2)
+  }
+
   _incrementVoteCount = quant => {
     const { price } = this.props.navigation.state.params.item
     const { amountToBuy, totalRemaining } = this.state
 
-    const amountToPay = formatNumber((price / ONE_TRX) * quant)
+    const amountToPay = this._fixNumber((price / ONE_TRX) * quant)
 
     if (amountToPay > totalRemaining) {
       this.setState({ notEnoughTrxBalance: true })
@@ -100,7 +118,7 @@ class BuyScene extends Component {
 
     const amountToBuy = Math.floor(trxBalance / (price / ONE_TRX))
     if (amountToBuy > 0) {
-      const amountToPay = formatNumber(amountToBuy * (price / ONE_TRX))
+      const amountToPay = this._fixNumber(amountToBuy * (price / ONE_TRX))
       this.setState({
         amountToBuy: amountToBuy,
         totalRemaining: trxBalance - amountToPay,
@@ -130,6 +148,23 @@ class BuyScene extends Component {
       <ButtonGradient disabled={amountToBuy === 0} onPress={() => this._submit()} text='CONFIRM' />
     )
   }
+
+  _renderPadkeys = () => Object.keys(buyOptions).map((buyKey, index) => {
+    const { item } = this.props.navigation.state.params
+    const totalPossible = this.state.trxBalance * ONE_TRX / item.price
+    const totalRemainingToBuy = this.state.totalRemaining * ONE_TRX / item.price
+    const isDisabled = buyOptions[buyKey] > totalRemainingToBuy
+
+    if (totalPossible < 10000 && buyOptions[buyKey] >= 10000) return
+
+    return <Utils.NumKeyWrapper disabled={isDisabled} key={buyKey} flexBasis={25}>
+      <Utils.NumKey
+        disabled={isDisabled}
+        onPress={() => this._incrementVoteCount(buyOptions[buyKey])}>
+        <Utils.Text font='regular' primary>+{buyKey}</Utils.Text>
+      </Utils.NumKey>
+    </Utils.NumKeyWrapper>
+  })
 
   _submit = async () => {
     const { item } = this.props.navigation.state.params
@@ -211,15 +246,7 @@ class BuyScene extends Component {
           </BuyContainer>
           <MarginFixer>
             <Utils.Row wrap='wrap'>
-              {padKeys.map((voteKey) => {
-                return (
-                  <Utils.NumKeyWrapper key={voteKey} flexBasis={25}>
-                    <Utils.NumKey onPress={() => this._incrementVoteCount(voteKey)}>
-                      <Utils.Text font='regular' primary>+{voteKey}</Utils.Text>
-                    </Utils.NumKey>
-                  </Utils.NumKeyWrapper>
-                )
-              })}
+              {this._renderPadkeys()}
             </Utils.Row>
           </MarginFixer>
           <VerticalSpacer size={14} />
