@@ -127,7 +127,7 @@ class TransactionsScene extends Component {
               }
               data={transactions}
               keyExtractor={item => item.id}
-              renderItem={({ item }) => <Transaction item={item} onPress={this._navigateToDetails} />}
+              renderItem={({ item }) => <Transaction item={item} onPress={() => this._navigateToDetails(item)} />}
             />
           </Background>
         )
