@@ -62,7 +62,8 @@ class BuyScene extends Component {
   async componentDidMount () {
     const balances = await this._getBalancesFromStore()
     if (balances.length) {
-      this.setState({ trxBalance: balances[0].balance, totalRemaining: balances[0].balance })
+      const currentBalance = formatNumber(balances[0].balance)
+      this.setState({ trxBalance: currentBalance, totalRemaining: currentBalance })
     }
   }
 
@@ -80,7 +81,7 @@ class BuyScene extends Component {
     const { price } = this.props.navigation.state.params.item
     const { amountToBuy, totalRemaining } = this.state
 
-    const amountToPay = (price / ONE_TRX) * quant
+    const amountToPay = formatNumber((price / ONE_TRX) * quant)
 
     if (amountToPay > totalRemaining) {
       this.setState({ notEnoughTrxBalance: true })
@@ -98,9 +99,8 @@ class BuyScene extends Component {
     const { trxBalance } = this.state
 
     const amountToBuy = Math.floor(trxBalance / (price / ONE_TRX))
-
     if (amountToBuy > 0) {
-      const amountToPay = amountToBuy * (price / ONE_TRX)
+      const amountToPay = formatNumber(amountToBuy * (price / ONE_TRX))
       this.setState({
         amountToBuy: amountToBuy,
         totalRemaining: trxBalance - amountToPay,
@@ -134,7 +134,7 @@ class BuyScene extends Component {
   _submit = async () => {
     const { item } = this.props.navigation.state.params
     const { trxBalance, amountToBuy } = this.state
-    const amountToPay = amountToBuy * (item.price / ONE_TRX)
+    const amountToPay = formatNumber(amountToBuy * (item.price / ONE_TRX))
 
     try {
       this.setState({ loading: true })
@@ -185,7 +185,6 @@ class BuyScene extends Component {
     const { name, price, description } = item
     const { totalRemaining, amountToBuy, notEnoughTrxBalance } = this.state
     const amountToPay = (price / ONE_TRX) * amountToBuy
-
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView>
@@ -233,7 +232,7 @@ class BuyScene extends Component {
               />
               <OptionBuy
                 title='All in'
-                disabled={totalRemaining <= 0}
+                disabled={totalRemaining === 0}
                 onPress={this._allinVoteCount}
               />
             </Utils.Row>

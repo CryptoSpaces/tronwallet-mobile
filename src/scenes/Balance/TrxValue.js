@@ -25,6 +25,16 @@ class TrxValue extends PureComponent {
     }
   }
 
+  _formatPrice = (value) => {
+    const crypto = ['BTC', 'ETH']
+    const { currency } = this.props
+    // Im not using formatNumber directly because this is a custom formatter for balance screen
+    if (Number.isInteger(value) || crypto.indexOf(currency) >= 0) {
+      return formatNumber(value)
+    } else {
+      return value.toFixed(2)
+    }
+  }
   _getPrice = async (currency) => {
     try {
       const { data: { data } } = await axios.get(`${Config.TRX_PRICE_API}/?convert=${currency}`)
@@ -55,7 +65,7 @@ class TrxValue extends PureComponent {
                 >
                   {value => (
                     <Utils.Text size='large' marginX={8}>
-                      {formatNumber(value.price)}
+                      {this._formatPrice(value.price)}
                     </Utils.Text>
                   )}
                 </Motion>
