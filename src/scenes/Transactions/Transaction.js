@@ -4,7 +4,7 @@ import { configureTransaction } from './Utils'
 
 import * as Elements from './elements'
 
-const Transaction = ({ item, onPress }) => {
+const Transaction = ({ item, onPress, publicKey }) => {
   /* Renders the top row with the badge and the amount information pertaining
   to the specific transaction. */
   const _renderTopInfoRow = ({amount, icon, badgeColor}) => (
@@ -58,7 +58,8 @@ const Transaction = ({ item, onPress }) => {
   texts and icons. */
   const config = configureTransaction(item, {
     topRow: _renderTopInfoRow,
-    addressRow: _renderAddress
+    addressRow: _renderAddress,
+    publicKey
   })
 
   return (
