@@ -2,11 +2,20 @@ import React from 'react'
 
 import * as Elements from './elements'
 
+const formatText = (text, numbersOnly, onChangeText) => {
+  if (numbersOnly) {
+    return onChangeText(text.replace(/[^0-9]/g, ''))
+  }
+  return onChangeText(text)
+}
+
 const Input = ({
   innerRef,
   label,
   leftContent,
   rightContent,
+  onChangeText,
+  numbersOnly,
   ...props
 }) => (
   <Elements.Wrapper>
@@ -26,6 +35,7 @@ const Input = ({
         autoCapitalize='none'
         underlineColorAndroid='transparent'
         placeholderTextColor='#66688F'
+        onChangeText={text => formatText(text, numbersOnly, onChangeText)}
       />
       {rightContent && rightContent()}
     </Elements.InputWrapper>
@@ -33,7 +43,8 @@ const Input = ({
 )
 
 Input.defaultProps = {
-  returnKeyType: 'send'
+  returnKeyType: 'send',
+  numbersOnly: false
 }
 
 export default Input
