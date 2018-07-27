@@ -184,11 +184,14 @@ class SendScene extends Component {
     }
   }
 
-  _readPublicKey = e => this.setState({ to: e.data }, () => {
-    this.closeModal()
-    this._nextInput('to')
-  })
-
+  _readPublicKey = e => {
+    if (isAddressValid(e.data)) {
+      this.setState({ to: e.data }, () => {
+        this.closeModal()
+        this._nextInput('to')
+      })
+    }
+  }
   _openModal = () => this.setState({ QRModalVisible: true })
 
   _onPaste = async () => {
