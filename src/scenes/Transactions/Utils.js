@@ -18,16 +18,16 @@ const participateAmount = ({amount, tokenName}) => `${amount / ONE_TRX} ${tokenN
 
 /* Configures the object used to hidrate the render components with the proper
 texts and icons. */
-export const configureTransaction = (item, { topRow, addressRow }, config) => {
+export const configureTransaction = (item, { topRow, addressRow, publicKey }) => {
   const { contractData } = item
-
+  const config = {}
   switch (item.type) {
     case 'Transfer':
       config.topRow = () => topRow({
         amount: transferAmount(contractData),
         icon: {
           Type: Feather,
-          name: 'arrow-up-right',
+          name: publicKey === contractData.transferToAddress ? 'arrow-down-right' : 'arrow-up-right',
           size: 20
         },
         badgeColor: '#4a69e2'

@@ -114,6 +114,7 @@ class TransactionsScene extends Component {
 
   render () {
     const { transactions, refreshing } = this.state
+    const publicKey = this.props.context.publicKey
 
     return (
       !transactions.length ? <Empty refreshing={refreshing} />
@@ -128,7 +129,7 @@ class TransactionsScene extends Component {
               }
               data={transactions}
               keyExtractor={item => item.id}
-              renderItem={({ item }) => <Transaction item={item} onPress={() => this._navigateToDetails(item)} />}
+              renderItem={({ item }) => <Transaction item={item} onPress={() => this._navigateToDetails(item)} publicKey={publicKey.value} />}
             />
           </Background>
         )
