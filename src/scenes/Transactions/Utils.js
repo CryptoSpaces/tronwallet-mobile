@@ -60,7 +60,7 @@ export const configureTransaction = (item, { topRow, addressRow }, config) => {
       break
     case 'Vote':
       config.topRow = () => topRow({
-        amount: contractData.votes.length,
+        amount: contractData.votes.length.toString(),
         icon: {
           Type: Feather,
           name: 'thumbs-up',
