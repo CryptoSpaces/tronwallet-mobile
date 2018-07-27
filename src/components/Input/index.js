@@ -4,7 +4,7 @@ import * as Elements from './elements'
 
 const formatText = (text, numbersOnly, onChangeText) => {
   if (numbersOnly) {
-    return onChangeText(text.replace(/[^0-9]/g, ''))
+    return onChangeText(text.replace(/[^0-9]/g, '').replace(/(\d)(?=(\d{3})+(\s|$))/g, '$1,'))
   }
   return onChangeText(text)
 }
