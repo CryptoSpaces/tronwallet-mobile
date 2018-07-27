@@ -13,7 +13,7 @@ import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import FadeIn from '../../components/Animations/FadeIn'
 
-const PRICE_PRECISION = 7
+const PRICE_PRECISION = 4
 
 const Line = ({ line }) => (
   <Path
