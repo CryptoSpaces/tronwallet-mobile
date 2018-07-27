@@ -92,7 +92,8 @@ class TransactionsScene extends Component {
           if (item.type === 'Participate') {
             transaction.contractData = {
               ...transaction.contractData,
-              transferFromAddress: item.contractData.toAddress
+              transferFromAddress: item.contractData.toAddress,
+              tokenName: item.contractData.token
             }
           }
           store.create('Transaction', transaction, true)
