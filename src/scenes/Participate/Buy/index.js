@@ -169,7 +169,7 @@ class BuyScene extends Component {
   _submit = async () => {
     const { item } = this.props.navigation.state.params
     const { trxBalance, amountToBuy } = this.state
-    const amountToPay = formatNumber(amountToBuy * (item.price / ONE_TRX))
+    const amountToPay = this._fixNumber(amountToBuy * (item.price / ONE_TRX))
 
     try {
       this.setState({ loading: true })
