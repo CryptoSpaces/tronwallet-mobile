@@ -18,9 +18,9 @@ const participateAmount = ({amount, tokenName}) => `${amount / ONE_TRX} ${tokenN
 
 /* Configures the object used to hidrate the render components with the proper
 texts and icons. */
-export const configureTransaction = (item, { topRow, addressRow }, config) => {
+export const configureTransaction = (item, { topRow, addressRow }) => {
   const { contractData } = item
-
+  const config = {}
   switch (item.type) {
     case 'Transfer':
       config.topRow = () => topRow({

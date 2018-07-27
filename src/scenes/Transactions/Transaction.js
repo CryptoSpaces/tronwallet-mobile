@@ -56,11 +56,10 @@ const Transaction = ({ item, onPress }) => {
 
   /* Configures the object used to hidrate the render components with the proper
   texts and icons. */
-  const config = {}
-  configureTransaction(item, {
+  const config = configureTransaction(item, {
     topRow: _renderTopInfoRow,
     addressRow: _renderAddress
-  }, config)
+  })
 
   return (
     <Elements.Card onPress={onPress} confirmed={item.confirmed}>
