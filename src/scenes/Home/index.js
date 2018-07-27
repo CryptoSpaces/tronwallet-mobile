@@ -53,11 +53,10 @@ class HomeScene extends Component {
     graph: {
       loading: true,
       data: null,
-      timeSpan: '1W'
+      timeSpan: '1H'
     },
     high: null,
     low: null,
-    average: null,
     marketcap: null,
     volume: null,
     supply: null,
@@ -78,7 +77,7 @@ class HomeScene extends Component {
   }
 
   get timeSpans () {
-    return ['1H', '1D', '1W', '1M', '1Y', 'ALL']
+    return ['1H', '1D', '1W', '1M', 'ALL']
   }
 
   _loadData = async () => {
@@ -123,7 +122,7 @@ class HomeScene extends Component {
     this.setState({
       graph: Object.assign({}, this.state.graph, {
         loading: false,
-        data: response.data.Data.map(({ close, high, low }) => ({ close, high, low, average: (high + low) / 2 }))
+        data: response.data.Data.map(({ close, high, low }) => ({ close, high, low }))
       })
     })
   }
@@ -140,8 +139,8 @@ class HomeScene extends Component {
   }
 
   _handleGraphPress = (index) => {
-    const { high, low, average } = this.state.graph.data[index]
-    this.setState({ selectedIndex: index, high, low, average })
+    const { high, low } = this.state.graph.data[index]
+    this.setState({ selectedIndex: index, high, low })
   }
 
   _renderHeader = () => {
@@ -153,7 +152,6 @@ class HomeScene extends Component {
         resizeMode='contain'
       >
         <Utils.StatusBar transparent />
-        <Utils.VerticalSpacer size='large' />
         <Utils.View align='center'>
           <Image
             source={require('../../assets/tron-logo-small.png')}
@@ -188,8 +186,8 @@ class HomeScene extends Component {
   }
 
   _renderValues = () => {
-    const { selectedIndex, high, low, average, marketcap, volume, supply } = this.state
-    const decimalFormatter = (value) => `$ ${value.toFixed(5)}`
+    const { selectedIndex, high, low, marketcap, volume, supply } = this.state
+    const decimalFormatter = (value) => `$ ${value.toFixed(4)}`
     const integerFormatter = (value) => `$ ${this._formatNumber(value)}`
     const supplyFormatter = (value) => this._formatNumber(value)
 
@@ -200,7 +198,6 @@ class HomeScene extends Component {
             <Fragment>
               {this._renderValue(high, decimalFormatter)}
               {this._renderValue(low, decimalFormatter)}
-              {this._renderValue(average, decimalFormatter)}
             </Fragment>
           )}
           {this._renderValue(marketcap, integerFormatter)}
@@ -233,11 +230,10 @@ class HomeScene extends Component {
         <Fragment>
           {this._renderLabel('HIGHEST')}
           {this._renderLabel('LOWEST')}
-          {this._renderLabel('AVERAGE')}
         </Fragment>
       )}
-      {this._renderLabel('MARKET CAP')}
       {this._renderLabel('VOLUME 24H')}
+      {this._renderLabel('MARKET CAP')}
       {this._renderLabel('CIRCULATING SUPPLY', true)}
     </Utils.View>
   )
@@ -256,7 +252,6 @@ class HomeScene extends Component {
 
     return (
       <Fragment>
-        <Utils.VerticalSpacer />
         <FadeIn name='graph'>
           <Utils.Row justify='space-evenly'>
             {this.timeSpans.map(timeSpan => (
@@ -287,7 +282,7 @@ class HomeScene extends Component {
           <Line />
           <Cursor selectedIndex={selectedIndex} onPress={(index) => this._handleGraphPress(index)} />
         </AreaChart>
-      </Fragment >
+      </Fragment>
     )
   }
 

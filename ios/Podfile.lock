@@ -117,6 +117,8 @@ PODS:
     - React
   - RNDeviceInfo (0.21.5):
     - React
+  - RNShare (1.0.27):
+    - React
   - RNTron (1.0.0):
     - "NSData+FastHex"
     - React
@@ -168,6 +170,7 @@ DEPENDENCIES:
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - ReactNativeFabric (from `../node_modules/react-native-fabric`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNShare (from `../node_modules/react-native-share`)
   - RNTron (from `../node_modules/react-native-tron/ios/`)
   - SentryReactNative (from `../node_modules/react-native-sentry`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -207,6 +210,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fabric"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNTron:
     :path: "../node_modules/react-native-tron/ios/"
   SentryReactNative:
@@ -236,12 +241,13 @@ SPEC CHECKSUMS:
   react-native-onesignal: 4f425b36d3edf595c93c1a8d3618a93b71a85a51
   ReactNativeFabric: 3912bf9c714d7cc98110eadf06ca6dedef219322
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
+  RNShare: 80d4472ab25e77d9f824cb8d49d7e85af91c66e0
   RNTron: e5cc70419d4fc1021255c7bffb764bbf3e8cc560
   Sentry: 7d3ea7176e5184e9c35c12a5825905345807e8c1
   SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
   TrezorCrypto: ecef681446bf02af6248d3b5e394026d7e766e56
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: fb46b02469f5a681288c06881508c9c08cbbf5cb
+PODFILE CHECKSUM: a75365d4870e797a99d1a1592dc1d55ad8e6f861
 
 COCOAPODS: 1.5.2
