@@ -101,12 +101,7 @@ class TransactionDetails extends React.Component {
               marginVertical: 20
             }}>
               <Utils.Row align='center' justify='space-between'>
-                <Text style={{
-                  fontSize: 11,
-                  lineHeight: 11,
-                  letterSpacing: 0.6,
-                  color: rgb(156, 158, 185)
-                }}>HASH</Text>
+                <Elements.DetailLabel>HASH</Elements.DetailLabel>
               </Utils.Row>
               <View style={{height: 10}} />
               <Text style={{
@@ -123,58 +118,23 @@ class TransactionDetails extends React.Component {
                 marginBottom: 20
               }} />
               <View>
-                <Utils.Row>
-                  <Utils.View>
-                    <Text style={{
-                      fontSize: 11,
-                      lineHeight: 11,
-                      letterSpacing: 0.6,
-                      color: rgb(156, 158, 185)
-                    }}>STATUS</Text>
+                <Utils.Column>
+                  <Utils.Row align='center' justify='space-between'>
+                    <Elements.DetailLabel>STATUS</Elements.DetailLabel>
                     <Utils.VerticalSpacer />
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontWeight: 'bold',
-                      fontSize: 12,
-                      lineHeight: 20,
-                      color: 'white'
-                    }}>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Text>
-                  </Utils.View>
-                  <Utils.View flex={1} />
-                  <Utils.View>
-                    <Text style={{
-                      fontSize: 11,
-                      lineHeight: 11,
-                      letterSpacing: 0.6,
-                      color: rgb(156, 158, 185)
-                    }}>BLOCK</Text>
-                    <View style={{height: 9}} />
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontWeight: 'bold',
-                      fontSize: 12,
-                      lineHeight: 20,
-                      color: 'white'
-                    }}>{block}</Text>
-                  </Utils.View>
-                  <Utils.View flex={1} />
-                  <Utils.View>
-                    <Text style={{
-                      fontSize: 11,
-                      lineHeight: 11,
-                      letterSpacing: 0.6,
-                      color: rgb(156, 158, 185)
-                    }}>TIME</Text>
-                    <View style={{height: 9}} />
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontWeight: 'bold',
-                      fontSize: 12,
-                      lineHeight: 20,
-                      color: 'white'
-                    }}>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Text>
-                  </Utils.View>
-                </Utils.Row>
+                    <Elements.DetailText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.DetailText>
+                  </Utils.Row>
+                  <Utils.VerticalSpacer size='medium' />
+                  <Utils.Row align='center' justify='space-between'>
+                    <Elements.DetailLabel>BLOCK</Elements.DetailLabel>
+                    <Elements.DetailText>{block}</Elements.DetailText>
+                  </Utils.Row>
+                  <Utils.VerticalSpacer size='medium' />
+                  <Utils.Row align='center' justify='space-between'>
+                    <Elements.DetailLabel>TIME</Elements.DetailLabel>
+                    <Elements.DetailText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.DetailText>
+                  </Utils.Row>
+                </Utils.Column>
               </View>
             </View>
           </LinearGradient>

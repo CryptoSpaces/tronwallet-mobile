@@ -59,7 +59,7 @@ class ParticipateHome extends React.Component {
   state = {
     assetList: [],
     currentList: [],
-    loading: false,
+    loading: true,
     hideSlide: false
   }
 
@@ -70,21 +70,18 @@ class ParticipateHome extends React.Component {
       _onSearch: this._onSearch,
       _onSearchPressed: this._onSearchPressed
     })
-    this._loadAboveTheFold()
-    this._loadData()
+    await this._loadData()
+    this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
-  _loadAboveTheFold = async () => {
-    this.setState({loading: true})
-    try {
-      const assetList = await this._getAssetsFromStore()
-      this.setState({ assetList, currentList: assetList, loading: false })
-    } catch (error) {
-      this.setState({error: error.message})
-    }
+  componentWillUnmount () {
+    this._navListener.remove()
   }
 
   _loadData = async () => {
+    const { assetList } = this.state
+    if (!assetList.length) this.setState({loading: true})
+
     try {
       const tokenList = await Client.getTokenList()
       await this._updateAssetsStore(tokenList)
