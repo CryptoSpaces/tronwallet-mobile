@@ -77,25 +77,36 @@ class TransactionDetail extends Component {
     navigation.dispatch(navigateToHome)
   }
 
+  _getTokenNameFromTx = (type, token) => {
+    switch (type) {
+      case 1:
+        return 'TRX'
+      case 9:
+        return token
+      default:
+        return null
+    }
+  }
+
   _getTransactionObject = () => {
     const {
       transactionData: { hash, contracts }
     } = this.state
 
     const type = Client.getContractType(contracts[0].contractTypeId)
-
     const transaction = {
       id: hash,
       type,
       contractData: {
-        transferFromAddress: contracts[0].from,
+        transferFromAddress: contracts[0].from || contracts[0].ownerAddress,
         transferToAddress: contracts[0].to,
-        tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
+        tokenName: this._getTokenNameFromTx(contracts[0].contractTypeId, contracts[0].token)
       },
       ownerAddress: contracts[0].from || contracts[0].ownerAddress,
       timestamp: Date.now(),
       confirmed: false
     }
+
     switch (type) {
       case 'Freeze':
         transaction.contractData.frozenBalance = contracts[0].frozenBalance
