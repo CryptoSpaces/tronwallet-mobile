@@ -15,7 +15,7 @@ const Transaction = ({ item, onPress }) => {
         </Elements.BadgeText>
       </Elements.Badge>
       <Elements.TransactionValue>
-        {amount && (
+        {!!amount && (
           <React.Fragment>
             <Elements.InfoAmount>{amount}</Elements.InfoAmount>
             <Elements.HSpacer />

@@ -187,7 +187,7 @@ class SendScene extends Component {
   }
 
   _readPublicKey = e => this.setState({ to: e.data }, () => {
-    this.closeModal()
+    this._closeModal()
     this._nextInput('to')
   })
 

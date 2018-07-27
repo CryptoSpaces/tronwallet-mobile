@@ -5,7 +5,6 @@ import moment from 'moment'
 
 import NavigationHeader from '../../../components/Navigation/Header'
 import { BoldInfoRow, RegularInfoRow, SmallRegInfoRow } from '../../../components/KeyPairInfoRow'
-import Badge from '../../../components/Badge'
 import { Colors } from '../../../components/DesignSystem'
 import * as Utils from '../../../components/Utils'
 import { ONE_TRX } from '../../../services/client'
@@ -42,9 +41,10 @@ class TokenInfo extends PureComponent {
         <ScrollView>
           <Utils.Container justify='flex-start'>
             <Utils.VerticalSpacer />
-            <Utils.Row justify='center'>
-              <Badge bg={Colors.lightestBackground} large>{name}</Badge>
-            </Utils.Row>
+            <Utils.Column justify='center' align='center'>
+              <Utils.SectionTitle>TOKEN</Utils.SectionTitle>
+              <Utils.BoldText>{name}</Utils.BoldText>
+            </Utils.Column>
             <Utils.VerticalSpacer size='big' />
             <BoldInfoRow pairs={[
               { key: 'PRICE PER TOKEN', value: `${price / ONE_TRX} TRX` },

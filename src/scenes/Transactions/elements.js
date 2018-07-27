@@ -24,6 +24,7 @@ export const HSpacer = styled.View`
 `
 export const Background = styled.View`
   background-color: ${Colors.background}
+  flex: 1;
 `
 
 /* Top Row */
