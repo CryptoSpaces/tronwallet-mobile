@@ -180,8 +180,6 @@ class BuyScene extends Component {
     }
   }
 
-  _formatTrxValue = (value) => Number.isInteger(value) ? value : value.toFixed(2)
-
   render () {
     const { item } = this.props.navigation.state.params
     const { name, price, description } = item
@@ -197,7 +195,7 @@ class BuyScene extends Component {
             <AmountText>
               {formatNumber(amountToBuy)} {name}
             </AmountText>
-            <TrxValueText>({this._formatTrxValue(amountToPay)} TRX)</TrxValueText>
+            <TrxValueText>({formatNumber(amountToPay)} TRX)</TrxValueText>
             {notEnoughTrxBalance && (
               <React.Fragment>
                 <VerticalSpacer size={4} />
