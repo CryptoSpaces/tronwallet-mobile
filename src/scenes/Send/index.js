@@ -46,7 +46,10 @@ class SendScene extends Component {
     amount: '',
     token: 'TRX',
     formattedToken: ``,
-    balances: [],
+    balances: [{
+      balance: 0,
+      token: 'TRX'
+    }],
     error: null,
     warning: null,
     loadingSign: false,
@@ -66,7 +69,6 @@ class SendScene extends Component {
   componentWillUnmount () {
     this._navListener.remove()
   }
-
   _orderBalances = balances => {
     let orderedBalances = []
     balances.forEach((balance) => {
@@ -184,14 +186,11 @@ class SendScene extends Component {
     }
   }
 
-  _readPublicKey = e => {
-    if (isAddressValid(e.data)) {
-      this.setState({ to: e.data }, () => {
-        this.closeModal()
-        this._nextInput('to')
-      })
-    }
-  }
+  _readPublicKey = e => this.setState({ to: e.data }, () => {
+    this._closeModal()
+    this._nextInput('to')
+  })
+
   _openModal = () => this.setState({ QRModalVisible: true })
 
   _onPaste = async () => {
@@ -250,10 +249,10 @@ class SendScene extends Component {
   }
 
   render () {
-    const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
+    const { loadingSign, loadingData, token, error, to, amount, balances } = this.state
     const tokenOptions = balances.map(({ name, balance }) => this._formatBalance(name, balance))
+    const balanceSelected = balances.find(b => b.name === token)
     tokenOptions.unshift('Cancel')
-
     return (
       <KeyboardScreen>
         <Utils.Content>
@@ -264,7 +263,7 @@ class SendScene extends Component {
             cancelButtonIndex={0}
             onPress={index => this._handleTokenChange(index, tokenOptions[index])}
           />
-          <TouchableOpacity disabled={trxBalance === 0} onPress={() => this.ActionSheet.show()}>
+          <TouchableOpacity onPress={() => this.ActionSheet.show()}>
             <Input
               label='TOKEN'
               value={this.state.formattedToken}
@@ -297,9 +296,9 @@ class SendScene extends Component {
             innerRef={(input) => { this.amount = input }}
             label='AMOUNT'
             keyboardType='numeric'
-            placeholder='0'
             value={amount}
-            onChangeText={text => this._changeInput(text, 'amount')}
+            placeholder='0'
+            onChangeText={text => this._changeInput(text, 'amount', true)}
             onSubmitEditing={() => this._nextInput('amount')}
             align='right'
           />
@@ -320,7 +319,7 @@ class SendScene extends Component {
               font='bold'
               text='SEND'
               onPress={this._submit}
-              disabled={Number(amount) < 1 || trxBalance < Number(amount)}
+              disabled={Number(amount) < 1 || Number(balanceSelected.balance) < Number(amount) || !isAddressValid(to)}
             />
           )}
         </Utils.Content>

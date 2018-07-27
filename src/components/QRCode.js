@@ -19,9 +19,11 @@ class QRCode extends Component {
     const { size, value, bgColor, fgColor, loading } = this.props
     return (
       loading ? (
-        <GrowIn name='loading'>
-          <ActivityIndicator size='small' color={Colors.primaryText} />
-        </GrowIn>
+        <View height={size + 61} justifyContent='center'>
+          <GrowIn name='loading'>
+            <ActivityIndicator size='small' color={Colors.primaryText} />
+          </GrowIn>
+        </View>
       ) : (
         <View
           style={{

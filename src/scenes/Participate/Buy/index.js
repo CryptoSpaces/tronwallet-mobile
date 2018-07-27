@@ -160,7 +160,7 @@ class BuyScene extends Component {
       } else if (err.message === 'INSUFFICIENT_TRX') {
         Alert.alert(`You need to buy at least one TRX worth of ${item.name}.`, `Currently you are buying only ${amountToPay}.`)
       } else {
-        Alert.alert('Oops something wrong while building transaction, try again.')
+        Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
       }
     } finally {
       this.setState({ loading: false })
