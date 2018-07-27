@@ -299,6 +299,7 @@ class SendScene extends Component {
             onChangeText={text => this._changeInput(text, 'amount')}
             onSubmitEditing={() => this._nextInput('amount')}
             align='right'
+            numbersOnly
           />
           <Utils.Text size='xsmall' secondary>
               The minimum amount for any send transaction is 1.
