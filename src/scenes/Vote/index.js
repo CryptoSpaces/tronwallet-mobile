@@ -83,7 +83,8 @@ class VoteScene extends PureComponent {
 
   async componentDidMount () {
     Answers.logContentView('Tab', 'Votes')
-    this._onSearch = debounce(this._onSearch, 300)
+    this._queryList = debounce(this._queryList, 300)
+
     this._loadCandidates()
     this.didFocusSubscription = this.props.navigation.addListener(
       'didFocus',
@@ -298,15 +299,21 @@ class VoteScene extends PureComponent {
   }
 
   _onSearch = async value => {
-    this.setState({onSearching: true, searchInput: value})
+    // This is a fix for android flickering
+    this.setState({ searchInput: value, onSearching: true })
+    await this._queryList(value)
+  }
+  _queryList = async (value) => {
     const store = await getCandidateStore()
-    const voteList = store.objects('Candidate').map(item => Object.assign({}, item))
+    const voteList = store.objects('Candidate').sorted([['rank', false]]).map(item => Object.assign({}, item))
     if (value) {
       const regex = new RegExp(value.toLowerCase(), 'i')
       const votesFilter = voteList.filter(vote => vote.url.toLowerCase().match(regex))
       this.setState({ voteList: votesFilter })
     } else {
-      this.setState({offset: 0, onSearching: false, voteList: voteList.slice(0, LIST_STEP_SIZE)})
+      this.setState({offset: 0,
+        onSearching: false,
+        voteList: voteList.slice(0, LIST_STEP_SIZE)})
     }
   }
 
@@ -399,7 +406,7 @@ class VoteScene extends PureComponent {
   }
 
   _renderListHedear = () => {
-    const { totalVotes, searchInput, totalRemaining, refreshing, loadingList } = this.state
+    const { totalVotes, totalRemaining, searchInput, refreshing, loadingList } = this.state
     return <React.Fragment>
       <GrowIn name='vote-header' height={63}>
         <Header>
