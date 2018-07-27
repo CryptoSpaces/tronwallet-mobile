@@ -28,7 +28,6 @@ import { getUserSecrets } from '../../utils/secretsUtils'
 import withContext from '../../utils/hocs/withContext'
 
 const CURRENCIES = ['USD', 'EUR', 'BTC', 'ETH', 'Cancel']
-const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
 
 class BalanceScene extends Component {
   static navigationOptions = () => ({
@@ -75,7 +74,7 @@ class BalanceScene extends Component {
         Client.getBalances(this.props.context.pin),
         getUserSecrets(this.props.context.pin),
         axios.get(
-          `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
+          `${Config.TRX_HISTORY_API}histohour?fsym=TRX&tsym=USD&limit=23`
         ),
         AsyncStorage.getItem(USER_PREFERRED_CURRENCY)
       ])
