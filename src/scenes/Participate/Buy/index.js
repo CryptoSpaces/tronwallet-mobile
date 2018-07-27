@@ -195,7 +195,7 @@ class BuyScene extends Component {
             <WhiteBuyText>AMOUNT TO BUY</WhiteBuyText>
             <VerticalSpacer size={4} />
             <AmountText>
-              {formatNumber(amountToBuy)} {name}
+              {formatNumber(amountToBuy)}
             </AmountText>
             <TrxValueText>({this._formatTrxValue(amountToPay)} TRX)</TrxValueText>
             {notEnoughTrxBalance && (
@@ -244,10 +244,14 @@ class BuyScene extends Component {
           <BuyContainer>
             {this._renderConfirmButtom()}
             <VerticalSpacer size={23} />
-            <BuyText>TOKEN DESCRIPTION</BuyText>
-            <VerticalSpacer size={17} />
-            <BuyText>{description}</BuyText>
-            <VerticalSpacer size={17} />
+            {!!description.length && (
+              <React.Fragment>
+                <BuyText>TOKEN DESCRIPTION</BuyText>
+                <VerticalSpacer size={17} />
+                <BuyText>{description}</BuyText>
+                <VerticalSpacer size={17} />
+              </React.Fragment>
+            )}
             <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo', { item }) }}>
               <MoreInfoButton>
                 <ButtonText>MORE INFO</ButtonText>
