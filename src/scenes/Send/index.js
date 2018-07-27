@@ -45,6 +45,7 @@ class SendScene extends Component {
     to: '',
     amount: '',
     token: 'TRX',
+    addressError: null,
     formattedToken: ``,
     balances: [{
       balance: 0,
@@ -123,6 +124,21 @@ class SendScene extends Component {
     })
   }
 
+  _changeAddress = (to) => {
+    const trimmedTo = to.trim()
+    if (isAddressValid(trimmedTo)) {
+      this.setState({
+        to: trimmedTo,
+        addressError: null
+      })
+    } else {
+      this.setState({
+        to: trimmedTo,
+        addressError: 'Address is either incomplete or invalid.'
+      })
+    }
+  }
+
   _submit = () => {
     const { amount, to, balances, token, from } = this.state
     const balanceSelected = balances.find(b => b.name === token)
@@ -196,7 +212,7 @@ class SendScene extends Component {
   _onPaste = async () => {
     const content = await Clipboard.getString()
     if (content) {
-      this._changeInput(content, 'to')
+      this._changeAddress(content)
       this._nextInput('to')
     }
   }
@@ -249,7 +265,7 @@ class SendScene extends Component {
   }
 
   render () {
-    const { loadingSign, loadingData, token, error, to, amount, balances } = this.state
+    const { loadingSign, loadingData, token, error, to, amount, balances, addressError } = this.state
     const tokenOptions = balances.map(({ name, balance }) => this._formatBalance(name, balance))
     const balanceSelected = balances.find(b => b.name === token)
     tokenOptions.unshift('Cancel')
@@ -277,9 +293,16 @@ class SendScene extends Component {
             label='TO'
             rightContent={this._rightContentTo}
             value={to}
-            onChangeText={text => this._changeInput(text, 'to')}
+            onChangeText={to => this._changeAddress(to)}
             onSubmitEditing={() => this._nextInput('to')}
           />
+          {addressError && (
+            <React.Fragment>
+              <Utils.Text size='xsmall' color='#ff5454'>
+                {addressError}
+              </Utils.Text>
+            </React.Fragment>
+          )}
           <Modal
             visible={this.state.QRModalVisible}
             onRequestClose={this._closeModal}
