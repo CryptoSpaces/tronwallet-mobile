@@ -137,7 +137,7 @@ class FreezeScene extends Component {
     try {
       if (convertedAmount <= 0) { throw new Error('The minimum amount for any freeze transaction is 1.') }
       if (trxBalance < convertedAmount) { throw new Error('Insufficient TRX balance') }
-      if (!Number.isInteger(convertedAmount) || convertedAmount <= 0) { throw new Error('Can only freeze round numbers') }
+      if (!Number.isInteger(convertedAmount)) { throw new Error('Can only freeze round numbers') }
       await this._freezeToken()
     } catch (error) {
       this.setState({ loading: false })
