@@ -47,8 +47,6 @@ class TransactionDetail extends Component {
   _loadData = async () => {
     const { navigation } = this.props
 
-    this.setState({ loadingData: true })
-
     const signedTransaction = navigation.state.params.tx
     const connection = await NetInfo.getConnectionInfo()
     const isConnected = !(connection.type === 'none')
@@ -72,19 +70,13 @@ class TransactionDetail extends Component {
 
   _navigateNext = () => {
     // Reset navigation as transaction submition is the last step of a user interaction
+    const { submitted } = this.state
     const { navigation } = this.props
-    const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
-    navigation.dispatch(navigateToHome)
-  }
-
-  _getTokenNameFromTx = (type, token) => {
-    switch (type) {
-      case 1:
-        return 'TRX'
-      case 9:
-        return token
-      default:
-        return null
+    if (submitted) {
+      const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
+      navigation.dispatch(navigateToHome)
+    } else {
+      navigation.goBack()
     }
   }
 
@@ -100,7 +92,7 @@ class TransactionDetail extends Component {
       contractData: {
         transferFromAddress: contracts[0].from || contracts[0].ownerAddress,
         transferToAddress: contracts[0].to,
-        tokenName: this._getTokenNameFromTx(contracts[0].contractTypeId, contracts[0].token)
+        tokenName: contracts[0].token
       },
       ownerAddress: contracts[0].from || contracts[0].ownerAddress,
       timestamp: Date.now(),
@@ -234,7 +226,6 @@ class TransactionDetail extends Component {
         <NavigationHeader
           title='TRANSACTION DETAILS'
           onClose={this.props.navigation.getParam('onClose')}
-          onBack={() => this.props.navigation.goBack()}
         />
         <Utils.Container>
           <ScrollView>
