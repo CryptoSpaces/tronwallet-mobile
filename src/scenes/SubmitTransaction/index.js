@@ -92,7 +92,7 @@ class TransactionDetail extends Component {
       contractData: {
         transferFromAddress: contracts[0].from || contracts[0].ownerAddress,
         transferToAddress: contracts[0].to,
-        tokenName: contracts[0].token
+        tokenName: type === 'Transfer' ? 'TRX' : contracts[0].token
       },
       ownerAddress: contracts[0].from || contracts[0].ownerAddress,
       timestamp: Date.now(),
