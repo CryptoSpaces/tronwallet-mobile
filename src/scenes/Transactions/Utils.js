@@ -11,7 +11,7 @@ const transferAmount = (data) => {
   const amount = data.tokenName === 'TRX'
     ? data.amount / ONE_TRX
     : data.amount
-  return `${Number(amount) > 1 ? formatNumber(amount) : amount} ${data.tokenName}`
+  return `${Number(amount) > 1 ? formatNumber(amount) : amount} ${data.tokenName || 'UNCONFIRMED TOKEN'}`
 }
 const freezeAmount = ({frozenBalance}) => `${frozenBalance / ONE_TRX} TRX`
 const participateAmount = ({amount, tokenName}) => `${amount / ONE_TRX} ${tokenName}`
@@ -23,6 +23,7 @@ export const configureTransaction = (item, { topRow, addressRow, publicKey }) =>
   const config = {}
   switch (item.type) {
     case 'Transfer':
+    case 'Transfer Asset':
       config.topRow = () => topRow({
         amount: transferAmount(contractData),
         icon: {
