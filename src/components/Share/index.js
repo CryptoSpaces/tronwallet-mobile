@@ -17,7 +17,7 @@ const TestShare = ({visible, close, publicKey, navigation}) => {
   }
 
   return (
-    <ShareSheet visible={visible} onCancel={() => { navigation.goBack() }}>
+    <ShareSheet visible={visible} onCancel={() => { close() }}>
       <Button
         iconSrc={{ uri: TWITTER_ICON }}
         onPress={() => _share('twitter')}

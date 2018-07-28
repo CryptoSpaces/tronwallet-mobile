@@ -27,7 +27,7 @@ export const configureTransaction = (item, { topRow, addressRow, publicKey }) =>
         amount: transferAmount(contractData),
         icon: {
           Type: Feather,
-          name: publicKey === contractData.transferToAddress ? 'arrow-down-right' : 'arrow-up-right',
+          name: publicKey === contractData.transferToAddress ? 'arrow-down-left' : 'arrow-up-right',
           size: 20
         },
         badgeColor: '#4a69e2'
