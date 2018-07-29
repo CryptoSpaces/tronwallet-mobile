@@ -2,16 +2,15 @@ import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import fontelloConfig from '../../assets/icons/config.json'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
-import { formatNumber } from '../../utils/numberUtils'
 import { ONE_TRX } from '../../services/client'
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 /* Functions that format the amount information to be displayed on screen. */
-const transferAmount = (data) => {
-  const amount = data.tokenName === 'TRX'
-    ? data.amount / ONE_TRX
-    : data.amount
-  return `${Number(amount) > 1 ? formatNumber(amount) : amount} ${data.tokenName || 'UNCONFIRMED TOKEN'}`
+const transferAmount = ({ tokenName, amount }) => {
+  if (tokenName === 'TRX') {
+    return `${amount / ONE_TRX} ${tokenName}`
+  }
+  return `${amount} ${tokenName}`
 }
 const freezeAmount = ({frozenBalance}) => `${frozenBalance / ONE_TRX} TRX`
 const participateAmount = ({amount, tokenName}) => `${amount / ONE_TRX} ${tokenName}`
