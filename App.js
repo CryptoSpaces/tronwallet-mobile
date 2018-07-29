@@ -36,9 +36,9 @@ import Pin from './src/scenes/Pin'
 import FirstTime from './src/scenes/FirstTime'
 
 import Client from './src/services/client'
+import { Context } from './src/store/context'
 import NodesIp from './src/utils/nodeIp'
 import { getUserSecrets } from './src/utils/secretsUtils'
-import { Context } from './src/store/context'
 
 import fontelloConfig from './src/assets/icons/config.json'
 
@@ -167,14 +167,18 @@ class App extends Component {
     freeze: {},
     publicKey: {},
     pin: null,
-    oneSignalId: '',
-    shareModal: false
+    oneSignalId: null,
+    shareModal: false,
+    queue: null
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     OneSignal.init('ce0b0f27-0ae7-4a8c-8fff-2a110da3a163')
     OneSignal.configure()
+    OneSignal.inFocusDisplaying(2)
     OneSignal.addEventListener('ids', this._onIds)
+    OneSignal.addEventListener('received', this._onReceived)
+    OneSignal.addEventListener('opened', this._onOpened)
 
     this._getPrice()
     this._setNodes()
@@ -184,9 +188,20 @@ class App extends Component {
     OneSignal.removeEventListener('ids', this._onIds)
   }
 
-  _onIds = (device) => {
+  _onIds = device => {
     console.log('Device info: ', device)
     this.setState({ oneSignalId: device.userId })
+  }
+
+  _onReceived = notification => {
+    console.log('Notification received: ', notification)
+  }
+
+  _onOpened = openResult => {
+    console.log('Message: ', openResult.notification.payload.body)
+    console.log('Data: ', openResult.notification.payload.additionalData)
+    console.log('isActive: ', openResult.notification.isAppInFocus)
+    console.log('openResult: ', openResult)
   }
 
   _loadUserData = () => {
@@ -264,7 +279,8 @@ class App extends Component {
       setPin: this._setPin,
       openShare: this._openShare,
       closeShare: this._closeShare,
-      toggleShare: this._toggleShare
+      toggleShare: this._toggleShare,
+      createJobs: this._createJobs
     }
 
     return (

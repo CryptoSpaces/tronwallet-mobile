@@ -75,6 +75,8 @@
 		F015F36F4FF74621A0CE5022 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A78F85E742F74BBAA25DD73D /* Rubik-Light.ttf */; };
 		F2B3C943A5AF4056A8C801A7 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F3DC3734E824E88BCDED9A4 /* Rubik-Bold.ttf */; };
 		FBA91F12EB6A4A97A2943CB1 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE020D056F0F412A817394FD /* MaterialIcons.ttf */; };
+		D80CFE191AF5484DBCA5CFC0 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6495F2CA87B04980A49452EC /* TSBackgroundFetch.framework */; };
+		A69906EFF44241FABBA9454F /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 73F9E396A99F441F8760E980 /* RNBackgroundFetch+AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -531,6 +533,8 @@
 		F908E6638C324671A367054C /* tronwallet.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = tronwallet.ttf; path = ../src/assets/fonts/tronwallet.ttf; sourceTree = "<group>"; };
 		FA4F7D3A4701414A8A359C39 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../src/assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
 		FBA8F6CE85EE4A558FD86480 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		6495F2CA87B04980A49452EC /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; name = "TSBackgroundFetch.framework"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		73F9E396A99F441F8760E980 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -569,6 +573,7 @@
 				31D21EA1B0FB47C1891C29F8 /* libReactNativePermissions.a in Frameworks */,
 				5CC01FB143E44914B1DD0E64 /* libReactNativeConfig.a in Frameworks */,
 				E126B4B79F1A7C8DB8E9FD1D /* libPods-tronwallet2.a in Frameworks */,
+				D80CFE191AF5484DBCA5CFC0 /* TSBackgroundFetch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -728,6 +733,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				73F9E396A99F441F8760E980 /* RNBackgroundFetch+AppDelegate.m */,
 			);
 			name = tronwallet2;
 			sourceTree = "<group>";
@@ -765,6 +771,7 @@
 				7E3008F9A8FC46B788F79C01 /* libc++.tbd */,
 				B041CF6E2B0142638D1D8862 /* libz.tbd */,
 				8F8425BBD8EAA3FF492110B7 /* libPods-tronwallet2.a */,
+				6495F2CA87B04980A49452EC /* TSBackgroundFetch.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1096,11 +1103,11 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = SGP85Y6RSS;
 						SystemCapabilities = {
-							com.apple.BackgroundModes = {
-								enabled = 1;
-							};
 							com.apple.Push = {
 								enabled = 1;
+							};
+							com.apple.BackgroundModes = {
+								enabled = true;
 							};
 						};
 					};
@@ -1743,6 +1750,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				A69906EFF44241FABBA9454F /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1835,6 +1843,9 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tronwallet2.app/tronwallet2";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Debug;
 		};
@@ -1866,6 +1877,9 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tronwallet2.app/tronwallet2";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Release;
 		};
@@ -1906,6 +1920,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.tronwallet;
 				PRODUCT_NAME = tronwallet2;
 				VERSIONING_SYSTEM = "apple-generic";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Debug;
 		};
@@ -1945,6 +1962,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.tronwallet;
 				PRODUCT_NAME = tronwallet2;
 				VERSIONING_SYSTEM = "apple-generic";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Release;
 		};
@@ -1985,6 +2005,9 @@
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Debug;
 		};
@@ -2025,6 +2048,9 @@
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Release;
 		};
@@ -2064,6 +2090,9 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tronwallet2-tvOS.app/tronwallet2-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Debug;
 		};
@@ -2103,6 +2132,9 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tronwallet2-tvOS.app/tronwallet2-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+				);
 			};
 			name = Release;
 		};

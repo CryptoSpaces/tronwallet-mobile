@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-
 import {
   FlatList,
   RefreshControl,
   Image,
   ActivityIndicator
 } from 'react-native'
-
 import { Answers } from 'react-native-fabric'
+
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
@@ -19,9 +18,9 @@ import FreezeCard from './Freeze'
 import UnfreezeCard from './Unfreeze'
 import Default from './Default'
 
-import Client from '../../services/client'
 import getTransactionStore from '../../store/transactions'
 import { withContext } from '../../store/context'
+import { updateTransactions } from '../../utils/transactionUtils'
 
 const POOLING_TIME = 30000
 
@@ -39,14 +38,9 @@ class TransactionsScene extends Component {
     Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
     this.setState({
-      transactions: this.getSortedTransactionList(store)
+      transactions: this._getSortedTransactionList(store)
     })
-    this.updateData()
-    this.didFocusSubscription = this.props.navigation.addListener(
-      'didFocus',
-      this.updateData
-    )
-    this.dataSubscription = setInterval(this.updateData, POOLING_TIME)
+    this.dataSubscription = setInterval(this._updateData, POOLING_TIME)
   }
 
   componentWillUnmount () {
@@ -54,7 +48,7 @@ class TransactionsScene extends Component {
     clearInterval(this.dataSubscription)
   }
 
-  getSortedTransactionList = store =>
+  _getSortedTransactionList = store =>
     store
       .objects('Transaction')
       .sorted([['timestamp', true]])
@@ -62,51 +56,15 @@ class TransactionsScene extends Component {
 
   _onRefresh = async () => {
     this.setState({ refreshing: true })
-    await this.updateData()
+    await this._updateData()
     this.setState({ refreshing: false })
   }
 
-  updateData = async () => {
+  _updateData = async () => {
     try {
-      const response = await Client.getTransactionList(this.props.context.pin)
+      await updateTransactions(this.props.context.pin)
       const store = await getTransactionStore()
-      store.write(() =>
-        response.map(item => {
-          const transaction = {
-            id: item.hash,
-            type: item.type,
-            block: item.block,
-            contractData: item.contractData,
-            ownerAddress: item.ownerAddress,
-            timestamp: item.timestamp,
-            confirmed: true
-          }
-          if (item.type === 'Transfer') {
-            transaction.id = item.transactionHash
-            transaction.contractData = {
-              transferFromAddress: item.transferFromAddress,
-              transferToAddress: item.transferToAddress,
-              amount: item.amount,
-              tokenName: item.tokenName
-            }
-          }
-          if (item.type === 'Create') {
-            transaction.contractData = {
-              ...transaction.contractData,
-              tokenName: item.contractData.name,
-              unityValue: item.contractData.trxNum
-            }
-          }
-          if (item.type === 'Participate') {
-            transaction.contractData = {
-              ...transaction.contractData,
-              transferFromAddress: item.contractData.toAddress
-            }
-          }
-          store.create('Transaction', transaction, true)
-        })
-      )
-      const transactions = this.getSortedTransactionList(store)
+      const transactions = this._getSortedTransactionList(store)
       this.setState({
         transactions
       })
@@ -119,7 +77,7 @@ class TransactionsScene extends Component {
     this.props.navigation.navigate('TransactionDetails', { item })
   }
 
-  renderCard = item => {
+  _renderCard = item => {
     switch (item.type) {
       case 'Transfer':
         return <TransferCard item={item} onPress={() => this._navigateToDetails(item)} />
@@ -138,7 +96,7 @@ class TransactionsScene extends Component {
     }
   }
 
-  renderListEmptyComponent = () => <Utils.Container />
+  _renderListEmptyComponent = () => <Utils.Container />
 
   render () {
     const { transactions, refreshing } = this.state
@@ -180,9 +138,9 @@ class TransactionsScene extends Component {
           contentContainerStyle={{ padding: Spacing.medium }}
           data={transactions}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => this.renderCard(item)}
+          renderItem={({ item }) => this._renderCard(item)}
           ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
-          ListEmptyComponent={this.renderListEmptyComponent}
+          ListEmptyComponent={this._renderListEmptyComponent}
         />
       </Utils.Container>
     )
