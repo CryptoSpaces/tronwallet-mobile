@@ -221,7 +221,7 @@ class BuyScene extends Component {
     const amountToPay = (price / ONE_TRX) * amountToBuy
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
-        <ScrollView>
+        <ScrollView style={{ paddingBottom: 10 }}>
           <BuyContainer>
             <WhiteBuyText>AMOUNT TO BUY</WhiteBuyText>
             <VerticalSpacer size={4} />
@@ -238,9 +238,15 @@ class BuyScene extends Component {
                 <VerticalSpacer size={4} />
               </React.Fragment>
             )}
-            <BuyText>BALANCE: {formatNumber(totalRemaining)} TRX</BuyText>
+            <Utils.Row>
+              <BuyText>BALANCE:</BuyText>
+              <WhiteBuyText> {formatNumber(totalRemaining)} TRX</WhiteBuyText>
+            </Utils.Row>
             <VerticalSpacer size={7} />
-            <BuyText>PRICE PER TOKEN: {price / ONE_TRX} TRX</BuyText>
+            <Utils.Row>
+              <BuyText>PRICE PER TOKEN:</BuyText>
+              <WhiteBuyText> {price / ONE_TRX} TRX</WhiteBuyText>
+            </Utils.Row>
             <VerticalSpacer size={13} />
           </BuyContainer>
           <MarginFixer>
