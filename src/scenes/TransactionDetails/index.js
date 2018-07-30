@@ -237,12 +237,22 @@ class TransactionDetails extends React.Component {
   }
 
   _renderHeader = () => {
-    const { type, contractData: { tokenName } } = this.props.navigation.state.params.item
-
+    const { type, contractData } = this.props.navigation.state.params.item
+    const tokenName = contractData.tokenName
     const tokenToDisplay = this._getHeaderToken(type, tokenName)
     const amountText = this._getHeaderAmountText(type)
     const amountValue = this._getHeaderAmount()
-    const convertedAmount = tokenToDisplay === 'TRX' ? amountValue / ONE_TRX : amountValue
+
+    let amount
+    if (type === 'Freeze' || type === 'Unfreeze' || type === 'Participate') {
+      amount = amountValue / ONE_TRX
+    } else {
+      if (type === 'Transfer' && tokenName === 'TRX') {
+        amount = amountValue / ONE_TRX
+      } else {
+        amount = amountValue
+      }
+    }
 
     return (
       <View style={{
@@ -267,7 +277,7 @@ class TransactionDetails extends React.Component {
               color: '#7476a2'
             }}>{amountText}</Text>
             <Utils.Row align='center'>
-              <Elements.AmountText>{convertedAmount < 1 ? convertedAmount : convertedAmount.toFixed(2)}</Elements.AmountText>
+              <Elements.AmountText>{amount < 1 ? amount : amount.toFixed(2)}</Elements.AmountText>
               <View style={{width: 11, height: 1}} />
               <View style={{backgroundColor: rgb(46, 47, 71),
                 borderRadius: 2,
