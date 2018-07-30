@@ -16,6 +16,7 @@ import NavigationHeader from '../../components/Navigation/Header'
 import Client from '../../services/client'
 import buildTransactionDetails, { translateError } from './detailMap'
 import getTransactionStore from '../../store/transactions'
+import getBalanceStore from '../../store/balance'
 import { withContext } from '../../store/context'
 
 const CLOSE_SCREEN_TIME = 5000
@@ -131,6 +132,7 @@ class TransactionDetail extends Component {
         if (ANSWERS_TRANSACTIONS.includes(transaction.type)) {
           Answers.logCustom('Transaction Operation', { type: transaction.type })
         }
+        await this._updateBalancesStore()
         this.closeTransactionDetails = setTimeout(this._navigateNext, CLOSE_SCREEN_TIME)
       }
 
@@ -150,6 +152,16 @@ class TransactionDetail extends Component {
         const lastTransaction = store.objectForPrimaryKey('Transaction', hash)
         store.delete(lastTransaction)
       })
+    }
+  }
+
+  _updateBalancesStore = async balances => {
+    try {
+      const balances = await Client.getBalances(this.props.context.pin)
+      const store = await getBalanceStore()
+      store.write(() => balances.map(item => store.create('Balance', item, true)))
+    } catch (error) {
+      console.log('Error while updating User balance')
     }
   }
 
