@@ -24,6 +24,7 @@ class TransactionsScene extends Component {
 
   state = {
     refreshing: false,
+    finishedLoadingTransactions: false,
     transactions: []
   }
 
@@ -31,7 +32,7 @@ class TransactionsScene extends Component {
     Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
     this.setState({
-      transactions: this.getSortedTransactionList(store)
+      transactions: this.getSortedTransactionList(store), finishedLoadingTransactions: true
     })
     this.updateData()
     this.didFocusSubscription = this.props.navigation.addListener(
@@ -113,11 +114,11 @@ class TransactionsScene extends Component {
   }
 
   render () {
-    const { transactions, refreshing } = this.state
+    const { transactions, refreshing, finishedLoadingTransactions } = this.state
     const publicKey = this.props.context.publicKey
 
     return (
-      !transactions.length ? <Empty refreshing={refreshing} />
+      !transactions.length && finishedLoadingTransactions ? <Empty refreshing={refreshing} />
         : (
           <Background>
             <FlatList
