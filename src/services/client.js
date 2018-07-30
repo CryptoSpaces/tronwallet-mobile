@@ -10,7 +10,7 @@ class ClientWallet {
     this.api = Config.MAIN_API_URL
     this.apiTest = Config.API_URL
     this.notifier = Config.NOTIFIER_API_URL
-    this.tronwalletApi = Config.TRON_WALLET_API_URL
+    this.tronwalletApi = Config.TRONWALLET_API
   }
 
   //* ============TronScan Api============*//
@@ -21,88 +21,62 @@ class ClientWallet {
   }
 
   async getTotalVotes () {
-    try {
-      const urlRegex = /^(?:https?:\/\/)/i
-      const apiUrl = await this.getTronscanUrl()
-      const { data } = await axios.get(`${apiUrl}/vote/current-cycle`)
-      const totalVotes = data.total_votes
-      const candidates = data.candidates
-        .filter(candidate => urlRegex.test(candidate.url)) // Cleanup invalid testnet candidates
-        .sort((a, b) => a.votes > b.votes ? -1 : a.votes < b.votes ? 1 : 0)
-        .map((candidate, index) => ({...candidate, rank: index + 1}))
-      return { totalVotes, candidates }
-    } catch (error) {
-      console.warn(error)
-    }
+    const apiUrl = await this.getTronscanUrl()
+    const { data } = await axios.get(`${apiUrl}/vote/current-cycle`)
+    const totalVotes = data.total_votes
+    const candidates = data.candidates
+      .sort((a, b) => a.votes > b.votes ? -1 : a.votes < b.votes ? 1 : 0)
+      .map((candidate, index) => ({...candidate, rank: index + 1}))
+    return { totalVotes, candidates }
   }
 
   async getTransactionDetails (tx) {
-    try {
-      const apiUrl = await this.getTronscanUrl()
-      const { data: { transaction } } = await axios.post(
-        `${apiUrl}/transaction?dry-run`,
-        {
-          transaction: tx
-        }
-      )
-      return transaction
-    } catch (error) {
-      throw new Error(error.message || error)
-    }
+    const apiUrl = await this.getTronscanUrl()
+    const { data: { transaction } } = await axios.post(
+      `${apiUrl}/transaction?dry-run`,
+      {
+        transaction: tx
+      }
+    )
+    return transaction
   }
 
   async getBalances (pin) {
-    try {
-      const apiUrl = await this.getTronscanUrl()
-      const { address } = await getUserSecrets(pin)
-      const { data: { balances } } = await axios.get(
-        `${apiUrl}/account/${address}`
-      )
-      const sortedBalances = balances.sort(
-        (a, b) => Number(b.balance) - Number(a.balance)
-      )
-      return sortedBalances
-    } catch (error) {
-      throw error
-    }
+    const apiUrl = await this.getTronscanUrl()
+    const { address } = await getUserSecrets(pin)
+    const { data: { balances } } = await axios.get(
+      `${apiUrl}/account/${address}`
+    )
+    const sortedBalances = balances.sort(
+      (a, b) => Number(b.balance) - Number(a.balance)
+    )
+    return sortedBalances
   }
 
   async getFreeze (pin) {
-    try {
-      const apiUrl = await this.getTronscanUrl()
-      const { address } = await getUserSecrets(pin)
-      const { data: { frozen, bandwidth, balances } } = await axios.get(
-        `${apiUrl}/account/${address}`
-      )
-      return { ...frozen, total: frozen.total / ONE_TRX, bandwidth, balances }
-    } catch (error) {
-      throw error
-    }
+    const apiUrl = await this.getTronscanUrl()
+    const { address } = await getUserSecrets(pin)
+    const { data: { frozen, bandwidth, balances } } = await axios.get(
+      `${apiUrl}/account/${address}`
+    )
+    return { ...frozen, total: frozen.total / ONE_TRX, bandwidth, balances }
   }
 
   async getUserVotes (pin) {
-    try {
-      const apiUrl = await this.getTronscanUrl()
-      const { address } = await getUserSecrets(pin)
-      const { data: { votes } } = await axios.get(
-        `${apiUrl}/account/${address}/votes`
-      )
-      return votes
-    } catch (error) {
-      throw error
-    }
+    const apiUrl = await this.getTronscanUrl()
+    const { address } = await getUserSecrets(pin)
+    const { data: { votes } } = await axios.get(
+      `${apiUrl}/account/${address}/votes`
+    )
+    return votes
   }
 
   async getTokenList () {
-    try {
-      const apiUrl = await this.getTronscanUrl()
-      const { data: { data } } = await axios.get(
-        `${apiUrl}/token?sort=-name&start=0&status=ico`
-      )
-      return data
-    } catch (error) {
-      throw new Error(error.message || error)
-    }
+    const apiUrl = await this.getTronscanUrl()
+    const { data: { data } } = await axios.get(
+      `${apiUrl}/token?sort=-name&start=0&status=ico`
+    )
+    return data
   }
 
   async getTransactionList (pin) {
@@ -134,26 +108,18 @@ class ClientWallet {
   //* ============TronWalletServerless Api============*//
 
   async giftUser (pin, deviceId) {
-    try {
-      const { address } = await getUserSecrets(pin)
-      const body = { address, deviceId, authid: AUTH_ID }
-      const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body)
-      return result
-    } catch (error) {
-      throw error
-    }
+    const { address } = await getUserSecrets(pin)
+    const body = { address, deviceId, authid: AUTH_ID }
+    const { data: { result } } = await axios.post(`${this.tronwalletApi}/gift`, body)
+    return result
   }
 
   async getAssetList () {
-    try {
-      const { nodeIp } = await NodesIp.getAllNodesIp()
-      const { data } = await axios.get(
-        `${this.tronwalletApi}/vote/list?node=${nodeIp}`
-      )
-      return data
-    } catch (error) {
-      throw new Error(error.message || error)
-    }
+    const { nodeIp } = await NodesIp.getAllNodesIp()
+    const { data } = await axios.get(
+      `${this.tronwalletApi}/vote/list?node=${nodeIp}`
+    )
+    return data
   }
 
   async broadcastTransaction (transactionSigned) {
@@ -162,76 +128,57 @@ class ClientWallet {
       transactionSigned,
       node: nodeIp
     }
-    try {
-      const { data: { result } } = await axios.post(
-        `${this.tronwalletApi}/transaction/broadcast`,
-        reqBody
-      )
-      return result
-    } catch (err) {
-      const { data: { error } } = err.response
-      throw new Error(error)
-    }
+    const { data: { result } } = await axios.post(
+      `${this.tronwalletApi}/transaction/broadcast`,
+      reqBody
+    )
+    return result
   }
 
   async getTransferTransaction ({ to, from, token, amount }) {
-    try {
-      const { nodeIp } = await NodesIp.getAllNodesIp()
-      const reqBody = {
-        from,
-        to,
-        amount,
-        token,
-        node: nodeIp
-      }
-      const { data: { transaction } } = await axios.post(
-        `${this.tronwalletApi}/unsigned/send`,
-        reqBody
-      )
-      return transaction
-    } catch (error) {
-      console.warn(error.response)
-      throw new Error(error.message || error)
+    const { nodeIp } = await NodesIp.getAllNodesIp()
+    const reqBody = {
+      from,
+      to,
+      amount,
+      token,
+      node: nodeIp
     }
+    const { data: { transaction } } = await axios.post(
+      `${this.tronwalletApi}/unsigned/send`,
+      reqBody
+    )
+    return transaction
   }
 
   async getFreezeTransaction (pin, freezeAmount) {
-    try {
-      const { address } = await getUserSecrets(pin)
-      const { nodeIp } = await NodesIp.getAllNodesIp()
-      const reqBody = {
-        address,
-        freezeAmount,
-        freezeDuration: 3,
-        node: nodeIp
-      }
-      const { data: { transaction } } = await axios.post(
-        `${this.tronwalletApi}/unsigned/freeze`,
-        reqBody
-      )
-      return transaction
-    } catch (error) {
-      console.warn(error.response)
-      throw new Error(error.message || error)
+    const { address } = await getUserSecrets(pin)
+    const { nodeIp } = await NodesIp.getAllNodesIp()
+    const reqBody = {
+      address,
+      freezeAmount,
+      freezeDuration: 3,
+      node: nodeIp
     }
+    const { data: { transaction } } = await axios.post(
+      `${this.tronwalletApi}/unsigned/freeze`,
+      reqBody
+    )
+    return transaction
   }
 
   async getUnfreezeTransaction (pin) {
-    try {
-      const { address } = await getUserSecrets(pin)
-      const { nodeIp } = await NodesIp.getAllNodesIp()
-      const reqBody = {
-        address,
-        node: nodeIp
-      }
-      const { data: { transaction } } = await axios.post(
-        `${this.tronwalletApi}/unsigned/unfreeze`,
-        reqBody
-      )
-      return transaction
-    } catch (error) {
-      throw new Error(error.message || error)
+    const { address } = await getUserSecrets(pin)
+    const { nodeIp } = await NodesIp.getAllNodesIp()
+    const reqBody = {
+      address,
+      node: nodeIp
     }
+    const { data: { transaction } } = await axios.post(
+      `${this.tronwalletApi}/unsigned/unfreeze`,
+      reqBody
+    )
+    return transaction
   }
 
   async getParticipateTransaction (pin, {
@@ -239,46 +186,47 @@ class ClientWallet {
     participateToken,
     participateAddress
   }) {
-    try {
-      const { address } = await getUserSecrets(pin)
-      const { nodeIp } = await NodesIp.getAllNodesIp()
-      const reqBody = {
-        address,
-        participateAmount,
-        participateToken,
-        participateAddress,
-        node: nodeIp
-      }
-      const { data: { transaction } } = await axios.post(
-        `${this.tronwalletApi}/unsigned/participate`,
-        reqBody
-      )
-      return transaction
-    } catch (error) {
-      console.warn(error)
-      console.warn(error.response)
-      throw new Error(error.message || error)
+    const { address } = await getUserSecrets(pin)
+    const { nodeIp } = await NodesIp.getAllNodesIp()
+    const reqBody = {
+      address,
+      participateAmount,
+      participateToken,
+      participateAddress,
+      node: nodeIp
     }
+    const { data: { transaction } } = await axios.post(
+      `${this.tronwalletApi}/unsigned/participate`,
+      reqBody
+    )
+    return transaction
   }
 
   async getVoteWitnessTransaction (pin, votes) {
-    try {
-      const { address } = await getUserSecrets(pin)
-      const { nodeIp } = await NodesIp.getAllNodesIp()
-      const reqBody = {
-        address,
-        votes,
-        node: nodeIp
-      }
-      const { data: { transaction } } = await axios.post(
-        `${this.tronwalletApi}/unsigned/vote`,
-        reqBody
-      )
-      return transaction
-    } catch (error) {
-      console.warn(error.response)
-      throw new Error(error.message || error)
+    const { address } = await getUserSecrets(pin)
+    const { nodeIp } = await NodesIp.getAllNodesIp()
+    const reqBody = {
+      address,
+      votes,
+      node: nodeIp
     }
+    const { data: { transaction } } = await axios.post(
+      `${this.tronwalletApi}/unsigned/vote`,
+      reqBody
+    )
+    return transaction
+  }
+
+  async registerDeviceForNotifications (deviceId, publicKey) {
+    return axios.post(`${Config.TRONWALLET_API}/user/put`, { deviceId, publicKey })
+  }
+
+  async notifyNewTransactions (id, transactions) {
+    return axios.post(`${Config.TRONWALLET_API}/notify`, { id, transactions })
+  }
+
+  async getDevicesFromPublicKey (publicKey) {
+    return axios.get(`${Config.TRONWALLET_API}/user/${publicKey}`)
   }
 
   getContractType = number => {

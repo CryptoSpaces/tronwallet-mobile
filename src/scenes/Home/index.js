@@ -100,22 +100,22 @@ class HomeScene extends Component {
     let url
     switch (this.state.graph.timeSpan) {
       case '1H':
-        url = `${Config.TRX_HISTORY_API}histominute?fsym=TRX&tsym=USD&limit=59`
+        url = `${Config.TRX_HISTORY_API}/histominute?fsym=TRX&tsym=USD&limit=59`
         break
       case '1D':
-        url = `${Config.TRX_HISTORY_API}histohour?fsym=TRX&tsym=USD&limit=23`
+        url = `${Config.TRX_HISTORY_API}/histohour?fsym=TRX&tsym=USD&limit=23`
         break
       case '1W':
-        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD&limit=6`
+        url = `${Config.TRX_HISTORY_API}/histoday?fsym=TRX&tsym=USD&limit=6`
         break
       case '1M':
-        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD`
+        url = `${Config.TRX_HISTORY_API}/histoday?fsym=TRX&tsym=USD`
         break
       case '1Y':
-        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD&limit=364`
+        url = `${Config.TRX_HISTORY_API}/histoday?fsym=TRX&tsym=USD&limit=364`
         break
       case 'ALL':
-        url = `${Config.TRX_HISTORY_API}histoday?fsym=TRX&tsym=USD&allData=true`
+        url = `${Config.TRX_HISTORY_API}/histoday?fsym=TRX&tsym=USD&allData=true`
         break
     }
     const response = await axios.get(url, { credentials: false })

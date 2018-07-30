@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
-
 import {
   RefreshControl,
   ScrollView,
   TouchableOpacity,
   AsyncStorage
 } from 'react-native'
-
 import { Answers } from 'react-native-fabric'
 import axios from 'axios'
 import Config from 'react-native-config'
 import ActionSheet from 'react-native-actionsheet'
+// import BackgroundFetch from 'react-native-background-fetch'
 
 import NavigationHeader from '../../components/Navigation/Header'
 import * as Utils from '../../components/Utils'
@@ -26,6 +25,8 @@ import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
 import { getUserSecrets } from '../../utils/secretsUtils'
 import withContext from '../../utils/hocs/withContext'
+// import { updateTransactions } from '../../utils/transactionUtils'
+// import getTransactionStore from '../../store/transactions'
 
 const CURRENCIES = ['USD', 'EUR', 'BTC', 'ETH', 'Cancel']
 
@@ -45,15 +46,56 @@ class BalanceScene extends Component {
     currency: ''
   }
 
-  async componentDidMount () {
+  componentDidMount () {
     Answers.logContentView('Tab', 'Balance')
     try {
       this._loadData()
     } catch (e) {
-      this.setState({error: 'An error occured while loading the data.'})
+      this.setState({ error: 'An error occured while loading the data.' })
     }
     this._navListener =
       this.props.navigation.addListener('didFocus', this._loadData)
+
+    // DISABLED BACKGROUND CHECK
+    // BackgroundFetch.configure({
+    //   minimumFetchInterval: 15,
+    //   stopOnTerminate: false,
+    //   startOnBoot: true,
+    //   enableHeadless: true
+    // }, async () => {
+    //   console.log('[js] Received background-fetch event')
+    //   try {
+    //     await updateTransactions(this.props.context.pin)
+    //     const store = await getTransactionStore()
+    //     const newTransactions = store.objects('Transaction').filtered('notified = false')
+    //     const transactions = newTransactions.map(item => item.id)
+    //     await Client.notifyNewTransactions(this.props.context.oneSignalId, transactions)
+    //     console.log('fetch transactions finished')
+    //   } catch (err) {
+    //     console.log('error', err)
+    //   }
+    //   // Required: Signal completion of your task to native code
+    //   // If you fail to do this, the OS can terminate your app
+    //   // or assign battery-blame for consuming too much background-time
+    //   BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
+    // }, (error) => {
+    //   console.log('[js] RNBackgroundFetch failed to start', error)
+    // })
+
+    // // Optional: Query the authorization status.
+    // BackgroundFetch.status((status) => {
+    //   switch (status) {
+    //     case BackgroundFetch.STATUS_RESTRICTED:
+    //       console.log('BackgroundFetch restricted')
+    //       break
+    //     case BackgroundFetch.STATUS_DENIED:
+    //       console.log('BackgroundFetch denied')
+    //       break
+    //     case BackgroundFetch.STATUS_AVAILABLE:
+    //       console.log('BackgroundFetch is enabled')
+    //       break
+    //   }
+    // })
   }
 
   componentWillUnmount () {
@@ -74,7 +116,7 @@ class BalanceScene extends Component {
         Client.getBalances(this.props.context.pin),
         getUserSecrets(this.props.context.pin),
         axios.get(
-          `${Config.TRX_HISTORY_API}histohour?fsym=TRX&tsym=USD&limit=23`
+          `${Config.TRX_HISTORY_API}/histohour?fsym=TRX&tsym=USD&limit=23`
         ),
         AsyncStorage.getItem(USER_PREFERRED_CURRENCY)
       ])

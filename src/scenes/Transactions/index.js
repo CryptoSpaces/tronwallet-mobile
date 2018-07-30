@@ -5,13 +5,13 @@ import {
 } from 'react-native'
 import { Answers } from 'react-native-fabric'
 
-import NavigationHeader from '../../components/Navigation/Header'
 import Transaction from './Transaction'
 import { Background } from './elements'
+import NavigationHeader from '../../components/Navigation/Header'
 
-import Client from '../../services/client'
 import getTransactionStore from '../../store/transactions'
 import { withContext } from '../../store/context'
+import { updateTransactions } from '../../utils/transactionUtils'
 
 import Empty from './Empty'
 
@@ -32,14 +32,9 @@ class TransactionsScene extends Component {
     Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
     this.setState({
-      transactions: this.getSortedTransactionList(store), finishedLoadingTransactions: true
+      transactions: this._getSortedTransactionList(store), finishedLoadingTransactions: true
     })
-    this.updateData()
-    this.didFocusSubscription = this.props.navigation.addListener(
-      'didFocus',
-      this.updateData
-    )
-    this.dataSubscription = setInterval(this.updateData, POOLING_TIME)
+    this.dataSubscription = setInterval(this._updateData, POOLING_TIME)
   }
 
   componentWillUnmount () {
@@ -47,7 +42,7 @@ class TransactionsScene extends Component {
     clearInterval(this.dataSubscription)
   }
 
-  getSortedTransactionList = store =>
+  _getSortedTransactionList = store =>
     store
       .objects('Transaction')
       .sorted([['timestamp', true]])
@@ -55,52 +50,15 @@ class TransactionsScene extends Component {
 
   _onRefresh = async () => {
     this.setState({ refreshing: true })
-    await this.updateData()
+    await this._updateData()
     this.setState({ refreshing: false })
   }
 
-  updateData = async () => {
+  _updateData = async () => {
     try {
-      const response = await Client.getTransactionList(this.props.context.pin)
+      await updateTransactions(this.props.context.pin)
       const store = await getTransactionStore()
-      store.write(() =>
-        response.map(item => {
-          const transaction = {
-            id: item.hash,
-            type: item.type,
-            block: item.block,
-            contractData: item.contractData,
-            ownerAddress: item.ownerAddress,
-            timestamp: item.timestamp,
-            confirmed: true
-          }
-          if (item.type === 'Transfer') {
-            transaction.id = item.transactionHash
-            transaction.contractData = {
-              transferFromAddress: item.transferFromAddress,
-              transferToAddress: item.transferToAddress,
-              amount: item.amount,
-              tokenName: item.tokenName
-            }
-          }
-          if (item.type === 'Create') {
-            transaction.contractData = {
-              ...transaction.contractData,
-              tokenName: item.contractData.name,
-              unityValue: item.contractData.trxNum
-            }
-          }
-          if (item.type === 'Participate') {
-            transaction.contractData = {
-              ...transaction.contractData,
-              transferFromAddress: item.contractData.toAddress,
-              tokenName: item.contractData.token
-            }
-          }
-          store.create('Transaction', transaction, true)
-        })
-      )
-      const transactions = this.getSortedTransactionList(store)
+      const transactions = this._getSortedTransactionList(store)
       this.setState({
         transactions
       })

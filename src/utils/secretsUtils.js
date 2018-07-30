@@ -4,33 +4,27 @@ import { AsyncStorage } from 'react-native'
 
 import getSecretsStore from '../store/secrets'
 import { resetWalletData } from './userAccountUtils'
+import Client from '../services/client'
 
-export const createUserKeyPair = async pin => {
-  try {
-    const mnemonic = await RNTron.generateMnemonic()
-    await generateKeypair(pin, mnemonic, true)
-    AsyncStorage.setItem('@TronWallet:useStatus', 'active')
-  } catch (error) {
-    throw error
-  }
+export const createUserKeyPair = async (pin, oneSignalId) => {
+  const mnemonic = await RNTron.generateMnemonic()
+  await generateKeypair(pin, oneSignalId, mnemonic, true)
+  AsyncStorage.setItem('@TronWallet:useStatus', 'active')
 }
 
-export const recoverUserKeypair = async (pin, mnemonic, randomlyGenerated = false) => {
-  try {
-    await RNTron.validateMnemonic(mnemonic)
-    await generateKeypair(pin, mnemonic, randomlyGenerated)
-    AsyncStorage.setItem('@TronWallet:useStatus', 'active')
-  } catch (error) {
-    throw error
-  }
+export const recoverUserKeypair = async (pin, oneSignalId, mnemonic, randomlyGenerated = false) => {
+  await RNTron.validateMnemonic(mnemonic)
+  await generateKeypair(pin, oneSignalId, mnemonic, randomlyGenerated)
+  AsyncStorage.setItem('@TronWallet:useStatus', 'active')
 }
 
-const generateKeypair = async (pin, mnemonic, randomlyGenerated) => {
+const generateKeypair = async (pin, oneSignalId, mnemonic, randomlyGenerated) => {
   const generatedKeypair = await RNTron.generateKeypair(mnemonic, 0, false)
   generatedKeypair.mnemonic = mnemonic
   generatedKeypair.id = DeviceInfo.getUniqueID()
   generatedKeypair.confirmed = !randomlyGenerated
   const secretsStore = await getSecretsStore(pin)
+  Client.registerDeviceForNotifications(oneSignalId, generatedKeypair.address)
   await secretsStore.write(() =>
     secretsStore.create('UserSecret', generatedKeypair, true)
   )

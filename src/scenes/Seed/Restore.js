@@ -44,7 +44,7 @@ class Restore extends React.Component {
     Keyboard.dismiss()
     this.setState({ loading: true })
     try {
-      await recoverUserKeypair(this.props.context.pin, seed)
+      await recoverUserKeypair(this.props.context.pin, this.props.context.oneSignalId, seed)
       await updateWalletData()
       Alert.alert('Wallet recovered with success!')
       this.setState({ loading: false }, this._navigateToSettings)
