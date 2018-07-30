@@ -1,4 +1,5 @@
 import React from 'react'
+import { TouchableHighlight } from 'react-native'
 import styled from 'styled-components'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -16,19 +17,32 @@ const Wrapper = styled.TouchableOpacity`
   shadow-opacity: 0.5;
 `
 
-const IconButton = ({ icon, iconColor, ...props }) => (
-  <Wrapper {...props}>
-    <Ionicons
-      name={icon}
-      size={16}
-      color={iconColor}
-    />
-  </Wrapper>
+const HighlightWrapper = Wrapper.withComponent(TouchableHighlight)
+
+const IconButton = ({ icon, iconColor, highlight, ...props }) => (
+  !highlight ? (
+    <Wrapper {...props}>
+      <Ionicons
+        name={icon}
+        size={16}
+        color={iconColor}
+      />
+    </Wrapper>
+  ) : (
+    <HighlightWrapper {...props}>
+      <Ionicons
+        name={icon}
+        size={16}
+        color={iconColor}
+      />
+    </HighlightWrapper>
+  )
 )
 
 IconButton.defaultProps = {
   bg: '#2E2F47',
-  iconColor: '#9C9EB9'
+  iconColor: '#9C9EB9',
+  highlight: false
 }
 
 export default IconButton
