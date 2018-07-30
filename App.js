@@ -84,8 +84,6 @@ const ParticipateStack = createStackNavigator(
     ParticipateHome,
     TokenInfo: TokenInfoScene,
     Buy: BuyScene
-  }, {
-    initialRouteName: 'ParticipateHome'
   }
 )
 
@@ -177,8 +175,8 @@ class App extends Component {
     OneSignal.configure()
     OneSignal.inFocusDisplaying(2)
     OneSignal.addEventListener('ids', this._onIds)
-    OneSignal.addEventListener('received', this._onReceived)
     OneSignal.addEventListener('opened', this._onOpened)
+    OneSignal.addEventListener('received', this._onReceived)
 
     this._getPrice()
     this._setNodes()
@@ -186,6 +184,8 @@ class App extends Component {
 
   componentWillUnmount () {
     OneSignal.removeEventListener('ids', this._onIds)
+    OneSignal.removeEventListener('opened', this._onOpened)
+    OneSignal.removeEventListener('received', this._onReceived)
   }
 
   _onIds = device => {

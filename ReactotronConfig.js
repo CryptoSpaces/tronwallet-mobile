@@ -8,7 +8,7 @@ import Reactotron, {
 
 if (__DEV__) {
   Reactotron
-    .configure({ name: 'TronWallet', host: '192.168.15.2' })
+    .configure({ name: 'TronWallet', host: '192.168.15.4' })
     // .configure()
     .use(trackGlobalErrors())
     .use(openInEditor())

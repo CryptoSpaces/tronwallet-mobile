@@ -10,7 +10,7 @@ class ClientWallet {
     this.api = Config.MAIN_API_URL
     this.apiTest = Config.API_URL
     this.notifier = Config.NOTIFIER_API_URL
-    this.tronwalletApi = Config.TRON_WALLET_API_URL
+    this.tronwalletApi = Config.TRONWALLET_API
   }
 
   //* ============TronScan Api============*//
@@ -218,11 +218,15 @@ class ClientWallet {
   }
 
   async registerDeviceForNotifications (deviceId, publicKey) {
-    return axios.post(`${Config.TRONWALLET_USERS_API}/put`, { deviceId, publicKey })
+    return axios.post(`${Config.TRONWALLET_API}/user/put`, { deviceId, publicKey })
+  }
+
+  async notifyNewTransactions (id, transactions) {
+    return axios.post(`${Config.TRONWALLET_API}/notify`, { id, transactions })
   }
 
   async getDevicesFromPublicKey (publicKey) {
-    return axios.get(`${Config.TRONWALLET_USERS_API}/${publicKey}`)
+    return axios.get(`${Config.TRONWALLET_API}/user/${publicKey}`)
   }
 
   getContractType = number => {

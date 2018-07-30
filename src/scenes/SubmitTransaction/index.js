@@ -137,7 +137,7 @@ class TransactionDetail extends Component {
           const response = await Client.getDevicesFromPublicKey(transaction.contractData.transferToAddress)
           if (response.data.users.length) {
             const content = {
-              'en': 'You have received a transaction.'
+              'en': `You have received a transaction from ${transaction.contractData.transferFromAddress}`
             }
             response.data.users.map(device => {
               OneSignal.postNotification(content, transaction, device.deviceid)

@@ -36,7 +36,7 @@ const TransactionSchema = {
     ownerAddress: 'string',
     contractData: 'ContractData',
     confirmed: 'bool?',
-    notified: { type: 'bool', default: false }
+    notified: { type: 'bool', default: true }
   }
 }
 
@@ -44,14 +44,13 @@ export default async () =>
   Realm.open({
     path: 'Realm.transactions',
     schema: [TransactionSchema, ContractDataSchema, VoteSchema],
-    schemaVersion: 14,
+    schemaVersion: 15,
     migration: (oldRealm, newRealm) => {
-      if (oldRealm.schemaVersion < 14) {
-        const oldTransactions = oldRealm.objects('Transaction')
-        const newTransactions = newRealm.objects('Transaction')
+      if (oldRealm.schemaVersion < 15) {
+        const transactions = newRealm.objects('Transaction')
 
-        for (let i = 0; i < oldTransactions.length; i++) {
-          newTransactions[i].notified = true
+        for (let i = 0; i < transactions.length; i++) {
+          transactions[i].notified = true
         }
       }
     }

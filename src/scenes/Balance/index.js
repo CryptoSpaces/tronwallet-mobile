@@ -8,9 +8,8 @@ import {
 import { Answers } from 'react-native-fabric'
 import axios from 'axios'
 import Config from 'react-native-config'
-import OneSignal from 'react-native-onesignal'
 import ActionSheet from 'react-native-actionsheet'
-import BackgroundFetch from 'react-native-background-fetch'
+// import BackgroundFetch from 'react-native-background-fetch'
 
 import NavigationHeader from '../../components/Navigation/Header'
 import * as Utils from '../../components/Utils'
@@ -26,8 +25,8 @@ import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
 import { getUserSecrets } from '../../utils/secretsUtils'
 import withContext from '../../utils/hocs/withContext'
-import { updateTransactions } from '../../utils/transactionUtils'
-import getTransactionStore from '../../store/transactions'
+// import { updateTransactions } from '../../utils/transactionUtils'
+// import getTransactionStore from '../../store/transactions'
 
 const CURRENCIES = ['USD', 'EUR', 'BTC', 'ETH', 'Cancel']
 const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
@@ -58,59 +57,46 @@ class BalanceScene extends Component {
     this._navListener =
       this.props.navigation.addListener('didFocus', this._loadData)
 
-    BackgroundFetch.configure({
-      minimumFetchInterval: 15,
-      stopOnTerminate: false,
-      startOnBoot: true,
-      enableHeadless: true
-    }, async () => {
-      console.log('[js] Received background-fetch event')
-      try {
-        await updateTransactions(this.props.context.pin)
-        const store = await getTransactionStore()
-        const newTransactions = store.objects('Transaction').filtered('notified = false')
-        const transactionsObjects = newTransactions.map(item => Object.assign({}, item))
-        const content = {
-          'en': `You have received ${transactionsObjects.length} transaction${transactionsObjects.length > 1 && 's'}.`
-        }
-        console.log('transactions', transactionsObjects)
-        OneSignal.postNotification(
-          content,
-          transactionsObjects,
-          this.props.context.oneSignalId,
-          { contentAvailable: true }
-        )
-        store.write(() => {
-          for (let i = 0; i < newTransactions.length; i++) {
-            newTransactions[i].notified = true
-          }
-        })
-        console.log('fetch transactions finished')
-      } catch (err) {
-        console.log('error', err)
-      }
-      // Required: Signal completion of your task to native code
-      // If you fail to do this, the OS can terminate your app
-      // or assign battery-blame for consuming too much background-time
-      BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
-    }, (error) => {
-      console.log('[js] RNBackgroundFetch failed to start', error)
-    })
+    // DISABLED BACKGROUND CHECK
+    // BackgroundFetch.configure({
+    //   minimumFetchInterval: 15,
+    //   stopOnTerminate: false,
+    //   startOnBoot: true,
+    //   enableHeadless: true
+    // }, async () => {
+    //   console.log('[js] Received background-fetch event')
+    //   try {
+    //     await updateTransactions(this.props.context.pin)
+    //     const store = await getTransactionStore()
+    //     const newTransactions = store.objects('Transaction').filtered('notified = false')
+    //     const transactions = newTransactions.map(item => item.id)
+    //     await Client.notifyNewTransactions(this.props.context.oneSignalId, transactions)
+    //     console.log('fetch transactions finished')
+    //   } catch (err) {
+    //     console.log('error', err)
+    //   }
+    //   // Required: Signal completion of your task to native code
+    //   // If you fail to do this, the OS can terminate your app
+    //   // or assign battery-blame for consuming too much background-time
+    //   BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
+    // }, (error) => {
+    //   console.log('[js] RNBackgroundFetch failed to start', error)
+    // })
 
-    // Optional: Query the authorization status.
-    BackgroundFetch.status((status) => {
-      switch (status) {
-        case BackgroundFetch.STATUS_RESTRICTED:
-          console.log('BackgroundFetch restricted')
-          break
-        case BackgroundFetch.STATUS_DENIED:
-          console.log('BackgroundFetch denied')
-          break
-        case BackgroundFetch.STATUS_AVAILABLE:
-          console.log('BackgroundFetch is enabled')
-          break
-      }
-    })
+    // // Optional: Query the authorization status.
+    // BackgroundFetch.status((status) => {
+    //   switch (status) {
+    //     case BackgroundFetch.STATUS_RESTRICTED:
+    //       console.log('BackgroundFetch restricted')
+    //       break
+    //     case BackgroundFetch.STATUS_DENIED:
+    //       console.log('BackgroundFetch denied')
+    //       break
+    //     case BackgroundFetch.STATUS_AVAILABLE:
+    //       console.log('BackgroundFetch is enabled')
+    //       break
+    //   }
+    // })
   }
 
   componentWillUnmount () {
