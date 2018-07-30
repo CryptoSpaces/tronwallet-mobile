@@ -116,7 +116,7 @@ class BalanceScene extends Component {
         Client.getBalances(this.props.context.pin),
         getUserSecrets(this.props.context.pin),
         axios.get(
-          `${Config.TRX_HISTORY_API}histohour?fsym=TRX&tsym=USD&limit=23`
+          `${Config.TRX_HISTORY_API}/histohour?fsym=TRX&tsym=USD&limit=23`
         ),
         AsyncStorage.getItem(USER_PREFERRED_CURRENCY)
       ])

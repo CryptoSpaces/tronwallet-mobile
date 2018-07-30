@@ -32,7 +32,7 @@ class TransactionsScene extends Component {
     Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
     this.setState({
-      transactions: this.getSortedTransactionList(store), finishedLoadingTransactions: true
+      transactions: this._getSortedTransactionList(store), finishedLoadingTransactions: true
     })
     this.dataSubscription = setInterval(this._updateData, POOLING_TIME)
   }
