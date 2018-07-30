@@ -135,12 +135,13 @@ class FreezeScene extends Component {
 
     this.setState({ loading: true })
     try {
+      if (convertedAmount <= 0) { throw new Error('The minimum amount for any freeze transaction is 1.') }
       if (trxBalance < convertedAmount) { throw new Error('Insufficient TRX balance') }
-      if (!Number.isInteger(Number(amount))) { throw new Error('Can only freeze round numbers') }
+      if (!Number.isInteger(convertedAmount)) { throw new Error('Can only freeze round numbers') }
       await this._freezeToken()
     } catch (error) {
       this.setState({ loading: false })
-      Alert.alert(error.message)
+      Alert.alert('Warning', error.message)
     }
   }
 
@@ -188,11 +189,13 @@ class FreezeScene extends Component {
     </Utils.View>
   )
 
+  _formatNumber = n => n.toFixed().replace(/(\d)(?=(\d{3})+(\s|$))/g, '$1,')
+
   render () {
     const { trxBalance, amount, loading, unfreezeStatus } = this.state
     const { freeze } = this.props.context
     let totalPower = freeze.value ? Number(freeze.value.total) : 0
-    totalPower += Number(amount)
+    totalPower += Number(amount.replace(/,/g, ''))
 
     return (
       <KeyboardScreen>
@@ -220,10 +223,11 @@ class FreezeScene extends Component {
               onChangeText={value => this._changeFreeze(value)}
               onSubmitEditing={this._submit}
               placeholder='0'
+              numbersOnly
             />
             <Utils.VerticalSpacer size='small' />
             <Utils.SummaryInfo>
-              {`TRON POWER: ${totalPower}`}
+              {`TRON POWER: ${this._formatNumber(totalPower)}`}
             </Utils.SummaryInfo>
             <Utils.VerticalSpacer size='medium' />
             <ButtonGradient

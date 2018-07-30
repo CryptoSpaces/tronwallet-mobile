@@ -29,7 +29,6 @@ import withContext from '../../utils/hocs/withContext'
 // import getTransactionStore from '../../store/transactions'
 
 const CURRENCIES = ['USD', 'EUR', 'BTC', 'ETH', 'Cancel']
-const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
 
 class BalanceScene extends Component {
   static navigationOptions = () => ({
@@ -117,7 +116,7 @@ class BalanceScene extends Component {
         Client.getBalances(this.props.context.pin),
         getUserSecrets(this.props.context.pin),
         axios.get(
-          `${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`
+          `${Config.TRX_HISTORY_API}histohour?fsym=TRX&tsym=USD&limit=23`
         ),
         AsyncStorage.getItem(USER_PREFERRED_CURRENCY)
       ])
@@ -185,20 +184,22 @@ class BalanceScene extends Component {
           }
         >
           <Utils.Content paddingTop={2}>
-            <ActionSheet
-              ref={ref => { this.ActionSheet = ref }}
-              title='Please, choose your preferred currency.'
-              options={CURRENCIES}
-              cancelButtonIndex={4}
-              onPress={index => this._handleCurrencyChange(index)}
-            />
-            <TouchableOpacity onPress={() => this.ActionSheet.show()}>
-              <TrxValue trxBalance={trxBalance} currency={currency} />
-            </TouchableOpacity>
-            <Utils.VerticalSpacer size='medium' />
-            {!!trxHistory.length && <LineChart chartHistory={trxHistory} />}
-            <Utils.VerticalSpacer size='medium' />
-            <TrxInfo />
+            <Utils.View minHeight={190}>
+              <ActionSheet
+                ref={ref => { this.ActionSheet = ref }}
+                title='Please, choose your preferred currency.'
+                options={CURRENCIES}
+                cancelButtonIndex={4}
+                onPress={index => this._handleCurrencyChange(index)}
+              />
+              <TouchableOpacity onPress={() => this.ActionSheet.show()}>
+                <TrxValue trxBalance={trxBalance} currency={currency} />
+              </TouchableOpacity>
+              <Utils.VerticalSpacer size='medium' />
+              {!!trxHistory.length && <LineChart chartHistory={trxHistory} />}
+              <Utils.VerticalSpacer size='medium' />
+              <TrxInfo />
+            </Utils.View>
             <BalanceNavigation navigation={this.props.navigation} />
             {!seedConfirmed && (
               <BalanceWarning seed={seed} navigation={this.props.navigation}>

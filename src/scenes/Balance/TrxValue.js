@@ -9,6 +9,8 @@ import FadeIn from '../../components/Animations/FadeIn'
 import Badge from '../../components/Badge'
 import * as Utils from '../../components/Utils'
 
+import { formatNumber } from '../../utils/numberUtils'
+
 class TrxValue extends PureComponent {
   state = {
     currencyPrice: null
@@ -23,6 +25,16 @@ class TrxValue extends PureComponent {
     }
   }
 
+  _formatPrice = (value) => {
+    const crypto = ['BTC', 'ETH']
+    const { currency } = this.props
+    // Im not using formatNumber directly because this is a custom formatter for balance screen
+    if (Number.isInteger(value) || crypto.indexOf(currency) >= 0) {
+      return formatNumber(value)
+    } else {
+      return value.toFixed(2)
+    }
+  }
   _getPrice = async (currency) => {
     try {
       const { data: { data } } = await axios.get(`${Config.TRX_PRICE_API}/?convert=${currency}`)
@@ -30,16 +42,6 @@ class TrxValue extends PureComponent {
     } catch (err) {
       console.log(err)
     }
-  }
-
-  _formatPrice = (price) => {
-    const formattedPrice = price.toFixed(2)
-
-    if (formattedPrice === '0.00') {
-      return price.toExponential(1)
-    }
-
-    return formattedPrice
   }
 
   render () {

@@ -114,7 +114,7 @@ class VoteModal extends Component {
               <Utils.View paddingX={'medium'}>
                 <Utils.VerticalSpacer size='medium' />
                 <Utils.Text font='regular' margin={Spacing.small} size='smaller' align='right'>
-              ENTER THE VOTE VALUE
+                  ENTER THE VOTE VALUE
                 </Utils.Text>
                 <Utils.Text font='regular' letterSpacing={0.6} margin={Spacing.small} size='large' align='right'>
                   {formatNumber(amountToVote)}
@@ -152,11 +152,7 @@ class VoteModal extends Component {
                 <Utils.VerticalSpacer size='small' />
                 <Utils.NumPadWrapper>
                   <Utils.NumKeyWrapper flexBasis={100}>
-                    <Utils.BorderButton background={Colors.lightPurple} onPress={() => acceptCurrentVote(amountToVote)}>
-                      <Utils.Text font='bold' size='xsmall' color={Colors.primaryText}>
-                      ADD VOTE
-                      </Utils.Text>
-                    </Utils.BorderButton>
+                    <ButtonGradient onPress={() => acceptCurrentVote(amountToVote)} text='ADD VOTE' />
                   </Utils.NumKeyWrapper>
                 </Utils.NumPadWrapper>
                 {notEnoughTrx && (

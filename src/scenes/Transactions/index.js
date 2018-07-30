@@ -1,26 +1,19 @@
 import React, { Component } from 'react'
 import {
   FlatList,
-  RefreshControl,
-  Image,
-  ActivityIndicator
+  RefreshControl
 } from 'react-native'
 import { Answers } from 'react-native-fabric'
 
-import * as Utils from '../../components/Utils'
-import { Spacing, Colors } from '../../components/DesignSystem'
+import Transaction from './Transaction'
+import { Background } from './elements'
 import NavigationHeader from '../../components/Navigation/Header'
-import TransferCard from './Transfer'
-import ParticipateCard from './Participate'
-import CreateCard from './Create'
-import VoteCard from './Vote'
-import FreezeCard from './Freeze'
-import UnfreezeCard from './Unfreeze'
-import Default from './Default'
 
 import getTransactionStore from '../../store/transactions'
 import { withContext } from '../../store/context'
 import { updateTransactions } from '../../utils/transactionUtils'
+
+import Empty from './Empty'
 
 const POOLING_TIME = 30000
 
@@ -31,6 +24,7 @@ class TransactionsScene extends Component {
 
   state = {
     refreshing: false,
+    finishedLoadingTransactions: false,
     transactions: []
   }
 
@@ -38,7 +32,7 @@ class TransactionsScene extends Component {
     Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
     this.setState({
-      transactions: this._getSortedTransactionList(store)
+      transactions: this.getSortedTransactionList(store), finishedLoadingTransactions: true
     })
     this.dataSubscription = setInterval(this._updateData, POOLING_TIME)
   }
@@ -77,72 +71,27 @@ class TransactionsScene extends Component {
     this.props.navigation.navigate('TransactionDetails', { item })
   }
 
-  _renderCard = item => {
-    switch (item.type) {
-      case 'Transfer':
-        return <TransferCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Freeze':
-        return <FreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Unfreeze':
-        return <UnfreezeCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Vote':
-        return <VoteCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Participate':
-        return <ParticipateCard item={item} onPress={() => this._navigateToDetails(item)} />
-      case 'Create':
-        return <CreateCard item={item} onPress={() => this._navigateToDetails(item)} />
-      default:
-        return <Default item={item} onPress={() => this._navigateToDetails(item)} />
-    }
-  }
-
-  _renderListEmptyComponent = () => <Utils.Container />
-
   render () {
-    const { transactions, refreshing } = this.state
-
-    if (transactions.length === 0) {
-      return (
-        <Utils.View
-          style={{ backgroundColor: Colors.background }}
-          flex={1}
-          justify='center'
-          align='center'
-        >
-          <Image
-            source={require('../../assets/empty.png')}
-            resizeMode='contain'
-            style={{ width: '60%' }}
-          />
-          <Utils.VerticalSpacer size='medium' />
-          {refreshing ? (
-            <ActivityIndicator size='small' color='#ffffff' />
-          ) : (
-            <Utils.Text secondary font='light' size='small'>
-              No transactions found.
-            </Utils.Text>
-          )}
-        </Utils.View>
-      )
-    }
+    const { transactions, refreshing, finishedLoadingTransactions } = this.state
+    const publicKey = this.props.context.publicKey
 
     return (
-      <Utils.Container>
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={this._onRefresh}
+      !transactions.length && finishedLoadingTransactions ? <Empty refreshing={refreshing} />
+        : (
+          <Background>
+            <FlatList
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={this._onRefresh}
+                />
+              }
+              data={transactions}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <Transaction item={item} onPress={() => this._navigateToDetails(item)} publicKey={publicKey.value} />}
             />
-          }
-          contentContainerStyle={{ padding: Spacing.medium }}
-          data={transactions}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => this._renderCard(item)}
-          ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
-          ListEmptyComponent={this._renderListEmptyComponent}
-        />
-      </Utils.Container>
+          </Background>
+        )
     )
   }
 }

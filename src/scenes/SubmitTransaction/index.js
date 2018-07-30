@@ -17,6 +17,7 @@ import NavigationHeader from '../../components/Navigation/Header'
 // Service
 import Client from '../../services/client'
 import getTransactionStore from '../../store/transactions'
+import getBalanceStore from '../../store/balance'
 import { withContext } from '../../store/context'
 import buildTransactionDetails, { translateError } from './detailMap'
 
@@ -50,8 +51,6 @@ class TransactionDetail extends Component {
   _loadData = async () => {
     const { navigation } = this.props
 
-    this.setState({ loadingData: true })
-
     const signedTransaction = navigation.state.params.tx
     const connection = await NetInfo.getConnectionInfo()
     const isConnected = !(connection.type === 'none')
@@ -75,9 +74,14 @@ class TransactionDetail extends Component {
 
   _navigateNext = () => {
     // Reset navigation as transaction submition is the last step of a user interaction
+    const { submitted } = this.state
     const { navigation } = this.props
-    const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
-    navigation.dispatch(navigateToHome)
+    if (submitted) {
+      const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
+      navigation.dispatch(navigateToHome)
+    } else {
+      navigation.goBack()
+    }
   }
 
   _getTransactionObject = () => {
@@ -86,19 +90,19 @@ class TransactionDetail extends Component {
     } = this.state
 
     const type = Client.getContractType(contracts[0].contractTypeId)
-
     const transaction = {
       id: hash,
       type,
       contractData: {
-        transferFromAddress: contracts[0].from,
+        transferFromAddress: contracts[0].from || contracts[0].ownerAddress,
         transferToAddress: contracts[0].to,
-        tokenName: contracts[0].contractTypeId === 1 ? 'TRX' : null
+        tokenName: type === 'Transfer' ? 'TRX' : contracts[0].token
       },
       ownerAddress: contracts[0].from || contracts[0].ownerAddress,
       timestamp: Date.now(),
       confirmed: false
     }
+
     switch (type) {
       case 'Freeze':
         transaction.contractData.frozenBalance = contracts[0].frozenBalance
@@ -144,6 +148,7 @@ class TransactionDetail extends Component {
             })
           }
         }
+        await this._updateBalancesStore()
         this.closeTransactionDetails = setTimeout(this._navigateNext, CLOSE_SCREEN_TIME)
       }
 
@@ -164,6 +169,16 @@ class TransactionDetail extends Component {
         loadingSubmit: false,
         submitted: true
       })
+    }
+  }
+
+  _updateBalancesStore = async balances => {
+    try {
+      const balances = await Client.getBalances(this.props.context.pin)
+      const store = await getBalanceStore()
+      store.write(() => balances.map(item => store.create('Balance', item, true)))
+    } catch (error) {
+      console.log('Error while updating User balance')
     }
   }
 
@@ -240,7 +255,6 @@ class TransactionDetail extends Component {
         <NavigationHeader
           title='TRANSACTION DETAILS'
           onClose={this.props.navigation.getParam('onClose')}
-          onBack={() => this.props.navigation.goBack()}
         />
         <Utils.Container>
           <ScrollView>

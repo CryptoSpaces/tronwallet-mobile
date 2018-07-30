@@ -78,11 +78,11 @@ class TransactionDetails extends React.Component {
       <React.Fragment>
         <Utils.View style={{
           position: 'absolute',
-          right: 20,
+          right: 16,
           top: 75,
           zIndex: 999
         }}>
-          <IconButton icon='md-clipboard' bg={Colors.summaryText} iconColor='#FFFFFF' onPress={() => this._copy()} />
+          <IconButton icon='md-copy' bg={Colors.summaryText} highlight iconColor='#FFFFFF' onPress={() => this._copy()} />
         </Utils.View>
         <Utils.View
           borderRadius={10}
@@ -101,12 +101,7 @@ class TransactionDetails extends React.Component {
               marginVertical: 20
             }}>
               <Utils.Row align='center' justify='space-between'>
-                <Text style={{
-                  fontSize: 11,
-                  lineHeight: 11,
-                  letterSpacing: 0.6,
-                  color: rgb(156, 158, 185)
-                }}>HASH</Text>
+                <Elements.DetailLabel>HASH</Elements.DetailLabel>
               </Utils.Row>
               <View style={{height: 10}} />
               <Text style={{
@@ -123,58 +118,23 @@ class TransactionDetails extends React.Component {
                 marginBottom: 20
               }} />
               <View>
-                <Utils.Row>
-                  <Utils.View>
-                    <Text style={{
-                      fontSize: 11,
-                      lineHeight: 11,
-                      letterSpacing: 0.6,
-                      color: rgb(156, 158, 185)
-                    }}>STATUS</Text>
+                <Utils.Column>
+                  <Utils.Row align='center' justify='space-between'>
+                    <Elements.DetailLabel>STATUS</Elements.DetailLabel>
                     <Utils.VerticalSpacer />
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontWeight: 'bold',
-                      fontSize: 12,
-                      lineHeight: 20,
-                      color: 'white'
-                    }}>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Text>
-                  </Utils.View>
-                  <Utils.View flex={1} />
-                  <Utils.View>
-                    <Text style={{
-                      fontSize: 11,
-                      lineHeight: 11,
-                      letterSpacing: 0.6,
-                      color: rgb(156, 158, 185)
-                    }}>BLOCK</Text>
-                    <View style={{height: 9}} />
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontWeight: 'bold',
-                      fontSize: 12,
-                      lineHeight: 20,
-                      color: 'white'
-                    }}>{block}</Text>
-                  </Utils.View>
-                  <Utils.View flex={1} />
-                  <Utils.View>
-                    <Text style={{
-                      fontSize: 11,
-                      lineHeight: 11,
-                      letterSpacing: 0.6,
-                      color: rgb(156, 158, 185)
-                    }}>TIME</Text>
-                    <View style={{height: 9}} />
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontWeight: 'bold',
-                      fontSize: 12,
-                      lineHeight: 20,
-                      color: 'white'
-                    }}>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Text>
-                  </Utils.View>
-                </Utils.Row>
+                    <Elements.DetailText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.DetailText>
+                  </Utils.Row>
+                  <Utils.VerticalSpacer size='medium' />
+                  <Utils.Row align='center' justify='space-between'>
+                    <Elements.DetailLabel>TIME</Elements.DetailLabel>
+                    <Elements.DetailText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.DetailText>
+                  </Utils.Row>
+                  <Utils.VerticalSpacer size='medium' />
+                  <Utils.Row align='center' justify='space-between'>
+                    <Elements.DetailLabel>BLOCK</Elements.DetailLabel>
+                    <Elements.DetailText>{block}</Elements.DetailText>
+                  </Utils.Row>
+                </Utils.Column>
               </View>
             </View>
           </LinearGradient>
@@ -200,44 +160,29 @@ class TransactionDetails extends React.Component {
     }
   }
 
+  _getIcon = (name, size, color) => (
+    <Ionicons
+      name={name}
+      size={size}
+      color={color}
+    />
+  )
+
   _getHeaderArrowIcon = (type) => {
     const lowerType = type.toLowerCase()
+    const size = 45
 
     if (lowerType === 'unfreeze') {
-      return (
-        <Ionicons
-          name='ios-unlock'
-          size={45}
-          color='#ffffff'
-        />
-      )
+      return this._getIcon('ios-unlock', size, '#ffffff')
     }
     if (lowerType === 'freeze') {
-      return (
-        <Ionicons
-          name='ios-lock'
-          size={45}
-          color='#ffffff'
-        />
-      )
+      return this._getIcon('ios-lock', size, '#ffffff')
     }
     if (lowerType === 'participate') {
-      return (
-        <Ionicons
-          name='ios-arrow-round-up'
-          size={45}
-          color='green'
-        />
-      )
+      return this._getIcon('ios-arrow-round-up', size, rgb(63, 231, 123))
     }
     if (lowerType === 'vote' || lowerType === 'transaction') {
-      return (
-        <Ionicons
-          name='ios-arrow-round-down'
-          size={45}
-          color='red'
-        />
-      )
+      return this._getIcon('ios-arrow-round-down', size, rgb(255, 68, 101))
     }
     return null
   }
@@ -277,12 +222,22 @@ class TransactionDetails extends React.Component {
   }
 
   _renderHeader = () => {
-    const { type, contractData: { tokenName } } = this.props.navigation.state.params.item
-
+    const { type, contractData } = this.props.navigation.state.params.item
+    const tokenName = contractData.tokenName
     const tokenToDisplay = this._getHeaderToken(type, tokenName)
     const amountText = this._getHeaderAmountText(type)
     const amountValue = this._getHeaderAmount()
-    const convertedAmount = tokenToDisplay === 'TRX' ? amountValue / ONE_TRX : amountValue
+
+    let amount
+    if (type === 'Freeze' || type === 'Unfreeze' || type === 'Participate') {
+      amount = amountValue / ONE_TRX
+    } else {
+      if (type === 'Transfer' && tokenName === 'TRX') {
+        amount = amountValue / ONE_TRX
+      } else {
+        amount = amountValue
+      }
+    }
 
     return (
       <View style={{
@@ -307,7 +262,7 @@ class TransactionDetails extends React.Component {
               color: '#7476a2'
             }}>{amountText}</Text>
             <Utils.Row align='center'>
-              <Elements.AmountText>{convertedAmount < 1 ? convertedAmount : convertedAmount.toFixed(2)}</Elements.AmountText>
+              <Elements.AmountText>{amount < 1 ? amount : amount.toFixed(2)}</Elements.AmountText>
               <View style={{width: 11, height: 1}} />
               <View style={{backgroundColor: rgb(46, 47, 71),
                 borderRadius: 2,
@@ -329,9 +284,9 @@ class TransactionDetails extends React.Component {
   _truncateAddress = address => `${address.substring(0, 8)}...${address.substring(address.length - 8, address.length)}`
 
   _renderToFrom = () => {
-    const { type, contractData: { transferFromAddress, transferToAddress } } = this.props.navigation.state.params.item
+    const { type, confirmed, contractData: { transferFromAddress, transferToAddress } } = this.props.navigation.state.params.item
     const TempText = styled.Text`
-      font-family: Helvetica;
+      font-family: 'Rubik-Regular';
       font-size: 13;
       line-height: 20;
       color: white;
@@ -349,11 +304,7 @@ class TransactionDetails extends React.Component {
                 letterSpacing: 0.6,
                 color: rgb(116, 118, 162)
               }}>TO</Text>
-              <Ionicons
-                name='ios-arrow-round-up'
-                size={30}
-                color={rgb(102, 104, 143)}
-              />
+              {this._getIcon('ios-arrow-round-up', 30, confirmed ? rgb(63, 231, 123) : rgb(102, 104, 143))}
             </View>
             <View style={{flexDirection: 'row', width: '100%'}}>
               <Copiable
@@ -375,11 +326,7 @@ class TransactionDetails extends React.Component {
             letterSpacing: 0.6,
             color: rgb(116, 118, 162)
           }}>FROM</Text>
-          <Ionicons
-            name='ios-arrow-round-down'
-            size={30}
-            color={rgb(102, 104, 143)}
-          />
+          {this._getIcon('ios-arrow-round-down', 30, confirmed ? rgb(255, 68, 101) : rgb(102, 104, 143))}
         </View>
         <Copiable
           TextComponent={TempText}

@@ -61,7 +61,7 @@ class ParticipateScene extends Component {
       if (err.message === 'INSUFFICIENT_BALANCE') {
         Alert.alert('Not enough funds (TRX) to participate.')
       } else {
-        Alert.alert('Oops something wrong while building transaction, try again.')
+        Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
       }
     } finally {
       this.setState({ loading: false })

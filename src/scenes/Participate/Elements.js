@@ -3,14 +3,14 @@ import { View } from '../../components/Utils'
 
 export const Text = styled.Text`
   color: white;
-  font-family: 'rubik-regular';
+  font-family: 'Rubik-Regular';
   font-size: 10;
 `
 
 export const TokenPrice = styled.Text`
   color: white;
   font-size: 14;
-  font-family: 'rubik-medium';
+  font-family: 'Rubik-Medium';
 `
 
 export const FeaturedTokenPrice = TokenPrice.extend`
@@ -24,7 +24,7 @@ export const TokenName = TokenPrice.extend`
 export const FeaturedTokenName = TokenName.extend`
   font-size: 18;
   text-align: center;
-  font-family: 'rubik-bold';
+  font-family: 'Rubik-Bold';
 `
 
 export const Card = View.extend`
@@ -53,7 +53,7 @@ export const Featured = View.extend`
 
 export const FeaturedText = Text.extend`
   font-size: 9;
-  font-family: 'rubik-medium';
+  font-family: 'Rubik-Medium';
   text-align: center;
 `
 
@@ -77,7 +77,7 @@ export const MarginFixer = styled.View`
 export const BuyText = styled.Text`
   text-align: left;
   font-size: 11;
-  font-family: 'rubik-medium';
+  font-family: 'Rubik-Medium';
   letter-spacing: 0.6;
   color: rgb(116, 118, 162);
 `
@@ -107,7 +107,7 @@ export const MoreInfoButton = styled.View`
 
 export const ButtonText = styled.Text`
   color: white;
-  font-family: 'rubik-bold';
+  font-family: 'Rubik-Bold';
   font-size: 12;
   text-align: center;
   letter-spacing: 0.8;

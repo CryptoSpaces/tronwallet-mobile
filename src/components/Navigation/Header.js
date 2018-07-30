@@ -101,6 +101,8 @@ class NavigationHeader extends React.Component {
           placeholderTextColor='#fff'
           width={281}
           height={42}
+          autoFocus
+
         />
       </Utils.View>
     )
@@ -116,7 +118,6 @@ class NavigationHeader extends React.Component {
   render () {
     const { noBorder } = this.props
     const { isSearching } = this.state
-
     return (
       <Utils.Header padding={16} justify='center' noBorder={noBorder}>
         {isSearching ? this._renderSeachMode() : this._renderDefaultMode()}

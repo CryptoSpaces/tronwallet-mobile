@@ -50,3 +50,17 @@ export const DescriptionText = CardText.extend`
   font-weight: 100;
   line-height: 24px;
 `
+export const DetailLabel = styled.Text`
+  font-size: 12px;
+  line-height: 20px;
+  font-family: Helvetica;
+  letter-spacing: 0.6;
+  color: rgb(156, 158, 185);           
+`
+export const DetailText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 20px;
+  font-family: Helvetica;
+  color: white; 
+`

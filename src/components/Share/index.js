@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Share, {ShareSheet, Button} from 'react-native-share'
 
-const TestShare = ({visible, close, publicKey}) => {
+const TestShare = ({visible, close, publicKey, navigation}) => {
   const _share = (social) => {
     close()
     setTimeout(() => {
@@ -17,7 +17,7 @@ const TestShare = ({visible, close, publicKey}) => {
   }
 
   return (
-    <ShareSheet visible={visible}>
+    <ShareSheet visible={visible} onCancel={() => { close() }}>
       <Button
         iconSrc={{ uri: TWITTER_ICON }}
         onPress={() => _share('twitter')}
@@ -55,7 +55,8 @@ const TestShare = ({visible, close, publicKey}) => {
 TestShare.propTypes = {
   visible: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  publicKey: PropTypes.string.isRequired
+  publicKey: PropTypes.string.isRequired,
+  navigation: PropTypes.object.isRequired
 }
 
 export default TestShare

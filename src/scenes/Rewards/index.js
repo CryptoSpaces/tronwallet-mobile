@@ -97,15 +97,15 @@ class RewardsScreen extends PureComponent {
                   </Utils.View>
                 </ImageBackground>
               </Utils.View>
+              <Utils.ButtonWrapper onPress={this._navigateHome}>
+                <Ionicons
+                  name='ios-arrow-round-forward'
+                  size={FontSize.huge}
+                  color={Colors.primaryText}
+                />
+              </Utils.ButtonWrapper>
             </ImageBackground>
           </Utils.View>
-          <Utils.ButtonWrapper onPress={this._navigateHome}>
-            <Ionicons
-              name='ios-arrow-round-back'
-              size={FontSize.huge}
-              color={Colors.primaryText}
-            />
-          </Utils.ButtonWrapper>
         </LinearGradient>
       </Utils.Container>
     )

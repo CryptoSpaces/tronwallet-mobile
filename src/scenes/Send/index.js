@@ -45,8 +45,12 @@ class SendScene extends Component {
     to: '',
     amount: '',
     token: 'TRX',
+    addressError: null,
     formattedToken: ``,
-    balances: [],
+    balances: [{
+      balance: 0,
+      token: 'TRX'
+    }],
     error: null,
     warning: null,
     loadingSign: false,
@@ -66,7 +70,6 @@ class SendScene extends Component {
   componentWillUnmount () {
     this._navListener.remove()
   }
-
   _orderBalances = balances => {
     let orderedBalances = []
     balances.forEach((balance) => {
@@ -121,6 +124,21 @@ class SendScene extends Component {
     })
   }
 
+  _changeAddress = (to) => {
+    const trimmedTo = to.trim()
+    if (isAddressValid(trimmedTo)) {
+      this.setState({
+        to: trimmedTo,
+        addressError: null
+      })
+    } else {
+      this.setState({
+        to: trimmedTo,
+        addressError: 'Address is either incomplete or invalid.'
+      })
+    }
+  }
+
   _submit = () => {
     const { amount, to, balances, token, from } = this.state
     const balanceSelected = balances.find(b => b.name === token)
@@ -164,8 +182,8 @@ class SendScene extends Component {
       this._openTransactionDetails(data)
       this.clearInput()
     } catch (error) {
+      Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
       this.setState({
-        error: 'Oops. Something wrong while building transaction. Please Try Again',
         loadingSign: false
       })
     }
@@ -180,12 +198,13 @@ class SendScene extends Component {
         })
       })
     } catch (error) {
-      this.setState({ error: 'Oops. Something wrong while building transaction. Please Try Again', loadingSign: false })
+      Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
+      this.setState({ loadingSign: false })
     }
   }
 
   _readPublicKey = e => this.setState({ to: e.data }, () => {
-    this.closeModal()
+    this._closeModal()
     this._nextInput('to')
   })
 
@@ -194,7 +213,7 @@ class SendScene extends Component {
   _onPaste = async () => {
     const content = await Clipboard.getString()
     if (content) {
-      this._changeInput(content, 'to')
+      this._changeAddress(content)
       this._nextInput('to')
     }
   }
@@ -247,10 +266,10 @@ class SendScene extends Component {
   }
 
   render () {
-    const { loadingSign, loadingData, error, to, trxBalance, amount, balances } = this.state
+    const { loadingSign, loadingData, token, error, to, amount, balances, addressError } = this.state
     const tokenOptions = balances.map(({ name, balance }) => this._formatBalance(name, balance))
+    const balanceSelected = balances.find(b => b.name === token)
     tokenOptions.unshift('Cancel')
-
     return (
       <KeyboardScreen>
         <Utils.Content>
@@ -261,7 +280,7 @@ class SendScene extends Component {
             cancelButtonIndex={0}
             onPress={index => this._handleTokenChange(index, tokenOptions[index])}
           />
-          <TouchableOpacity disabled={trxBalance === 0} onPress={() => this.ActionSheet.show()}>
+          <TouchableOpacity onPress={() => this.ActionSheet.show()}>
             <Input
               label='TOKEN'
               value={this.state.formattedToken}
@@ -275,9 +294,16 @@ class SendScene extends Component {
             label='TO'
             rightContent={this._rightContentTo}
             value={to}
-            onChangeText={text => this._changeInput(text, 'to')}
+            onChangeText={to => this._changeAddress(to)}
             onSubmitEditing={() => this._nextInput('to')}
           />
+          {addressError && (
+            <React.Fragment>
+              <Utils.Text size='xsmall' color='#ff5454'>
+                {addressError}
+              </Utils.Text>
+            </React.Fragment>
+          )}
           <Modal
             visible={this.state.QRModalVisible}
             onRequestClose={this._closeModal}
@@ -294,11 +320,12 @@ class SendScene extends Component {
             innerRef={(input) => { this.amount = input }}
             label='AMOUNT'
             keyboardType='numeric'
-            placeholder='0'
             value={amount}
-            onChangeText={text => this._changeInput(text, 'amount')}
+            placeholder='0'
+            onChangeText={text => this._changeInput(text, 'amount', true)}
             onSubmitEditing={() => this._nextInput('amount')}
             align='right'
+            numbersOnly
           />
           <Utils.Text size='xsmall' secondary>
               The minimum amount for any send transaction is 1.
@@ -317,7 +344,7 @@ class SendScene extends Component {
               font='bold'
               text='SEND'
               onPress={this._submit}
-              disabled={Number(amount) < 1 || trxBalance < Number(amount)}
+              disabled={Number(amount) < 1 || Number(balanceSelected.balance) < Number(amount) || !isAddressValid(to)}
             />
           )}
         </Utils.Content>

@@ -49,7 +49,7 @@ class ReceiveScreen extends PureComponent {
   _copy = async () => {
     try {
       await Clipboard.setString(this.props.context.publicKey.value)
-      this.refs.toast.show('Public Key copied to the clipboard')
+      this.refs.toast.show('Address to the clipboard')
     } catch (error) {
       this.refs.toast.show('Something wrong while copying')
     }
@@ -93,7 +93,7 @@ class ReceiveScreen extends PureComponent {
             />
           </Utils.Content>
         </KeyboardScreen>
-        <Share visible={context.shareModal} publicKey={publicKey} close={context.closeShare} />
+        <Share visible={context.shareModal} publicKey={publicKey} close={context.closeShare} navigation={this.props.navigation} />
       </Utils.Container>
     )
   }
