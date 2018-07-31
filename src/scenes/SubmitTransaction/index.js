@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, StackActions } from 'react-navigation'
 import { Answers } from 'react-native-fabric'
 import OneSignal from 'react-native-onesignal'
 
@@ -77,7 +77,13 @@ class TransactionDetail extends Component {
     const { submitted } = this.state
     const { navigation } = this.props
     if (submitted) {
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'App' })],
+        key: null
+      })
       const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
+      navigation.dispatch(resetAction)
       navigation.dispatch(navigateToHome)
     } else {
       navigation.goBack()
