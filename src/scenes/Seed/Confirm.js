@@ -1,49 +1,86 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { ScrollView, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
-import { ScrollView } from 'react-native'
+import { Answers } from 'react-native-fabric'
 
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
+import NavigationHeader from '../../components/Navigation/Header'
 import ButtonGradient from '../../components/ButtonGradient'
 
+import WalletClient from '../../services/client'
 import { confirmSecret } from '../../utils/secretsUtils'
+import { withContext } from '../../store/context'
 
 const WordWrapper = styled.TouchableOpacity`
   padding-vertical: ${Spacing.small};
   padding-horizontal: ${Spacing.medium};
 `
 
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'App' })],
+  key: null
+})
+
 class Confirm extends React.Component {
-  static navigationOptions = () => ({
-    header: null
+  static navigationOptions = ({ navigation }) => ({
+    header: (
+      <NavigationHeader
+        title='CONFIRM SEED'
+        onBack={() => navigation.goBack()}
+      />
+    )
   })
 
   state = {
-    seed:
-      this.props.navigation.getParam('seed', [])
-        .map(item => ({ word: item, used: false }))
-        .sort(() => 0.5 - Math.random()),
-    selected: []
+    seed: this.props.navigation
+      .getParam('seed', [])
+      .map(item => ({ word: item, used: false }))
+      .sort(() => 0.5 - Math.random()),
+    selected: [],
+    loading: false
   }
 
   _handleSubmit = async () => {
+    const { navigation, context } = this.props
+    this.setState({loading: true})
     try {
-      const seed = this.props.navigation.getParam('seed', []).join(' ')
+      const seed = navigation.getParam('seed', []).join(' ')
       const selectedWords = this.state.selected.join(' ')
       if (seed !== selectedWords) throw new Error('Words dont match!')
-      await confirmSecret()
-      alert('Wallet successfully confirmed.')
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({ routeName: 'Settings' })
-        ]
-      })
-      this.props.navigation.dispatch(resetAction)
+      await confirmSecret(context.pin)
+      Answers.logCustom('Wallet Operation', { type: 'Create' })
+      await this._handleSuccess()
     } catch (error) {
       console.warn(error)
-      alert('Selected words dont match. Make sure you wrote the words in the correct order.')
+      Alert.alert(
+        'Wrong Combination',
+        'Selected words dont match. Make sure you wrote the words in the correct order.'
+      )
+      this.setState({loading: false})
+    }
+  }
+
+  _handleSuccess = async () => {
+    const { navigation, context } = this.props
+    try {
+      const result = await WalletClient.giftUser(context.pin, context.oneSignalId)
+      if (result) {
+        const rewardsParams = {
+          label: 'Wallet Successfully confirmed',
+          amount: 100,
+          token: 'TWX'
+        }
+        navigation.navigate('Rewards', rewardsParams)
+      } else {
+        throw new Error('User gifted or not registered')
+      }
+    } catch (error) {
+      Alert.alert('Success', 'Wallet successfully confirmed.')
+      this.setState({loading: false})
+      navigation.dispatch(resetAction)
     }
   }
 
@@ -67,51 +104,57 @@ class Confirm extends React.Component {
     })
   }
 
-  render() {
+  render () {
+    const { loading } = this.state
     return (
-      <Fragment>
-        <Utils.Header>
-          <Utils.TitleWrapper>
-            <Utils.Title>Confirm Seed</Utils.Title>
-          </Utils.TitleWrapper>
-          <ButtonGradient
-            onPress={this._handleSubmit}
-            text='SUBMIT'
-          />
-        </Utils.Header>
-        <Utils.Container>
-          <ScrollView>
-            <Utils.View flex={1} />
-            <Utils.Content align='center' justify='center'>
-              <Utils.Text>Select the words below in the right order to confirm your secret phrase.</Utils.Text>
-            </Utils.Content>
-            <Utils.View flex={1} />
-            <Utils.Content background={Colors.darkerBackground}>
-              <Utils.Row wrap='wrap' justify='center'>
-                {this.state.selected.map(item => (
-                  <WordWrapper key={item} onPress={() => this._deselectWord(item)}>
-                    <Utils.Text>{item}</Utils.Text>
-                  </WordWrapper>
-                ))}
-              </Utils.Row>
-            </Utils.Content>
-            <Utils.View flex={1} />
-            <Utils.Content background={Colors.darkerBackground}>
-              <Utils.Row wrap='wrap' justify='center'>
-                {this.state.seed.map(item => (
-                  <WordWrapper key={item.word} onPress={() => this._selectWord(item)} disabled={item.used}>
-                    <Utils.Text secondary={item.used}>{item.word}</Utils.Text>
-                  </WordWrapper>
-                ))}
-              </Utils.Row>
-            </Utils.Content>
-            <Utils.VerticalSpacer />
-            <Utils.Button onPress={() => this.props.navigation.goBack()}>Back</Utils.Button>
-          </ScrollView>
-        </Utils.Container>
-      </Fragment>
+      <Utils.Container>
+        <ScrollView>
+          <Utils.View flex={1} />
+          <Utils.Content align='center' justify='center'>
+            <Utils.Text>
+              Select the words below in the right order to confirm your secret
+              phrase.
+            </Utils.Text>
+          </Utils.Content>
+          <Utils.View flex={1} />
+          <Utils.Content background={Colors.darkerBackground}>
+            <Utils.Row wrap='wrap' justify='center'>
+              {this.state.selected.map(item => (
+                <WordWrapper
+                  key={item}
+                  onPress={() => this._deselectWord(item)}
+                >
+                  <Utils.Text>{item}</Utils.Text>
+                </WordWrapper>
+              ))}
+            </Utils.Row>
+          </Utils.Content>
+          <Utils.View flex={1} />
+          <Utils.Content background={Colors.darkerBackground}>
+            <Utils.Row wrap='wrap' justify='center'>
+              {this.state.seed.map(item => (
+                <WordWrapper
+                  key={item.word}
+                  onPress={() => this._selectWord(item)}
+                  disabled={item.used}
+                >
+                  <Utils.Text secondary={item.used}>{item.word}</Utils.Text>
+                </WordWrapper>
+              ))}
+            </Utils.Row>
+          </Utils.Content>
+          <Utils.VerticalSpacer />
+          <Utils.View align='center' paddingY='medium'>
+            <ButtonGradient
+              text='CONFIRM SEED'
+              disabled={loading}
+              onPress={this._handleSubmit}
+            />
+          </Utils.View>
+        </ScrollView>
+      </Utils.Container>
     )
   }
 }
 
-export default Confirm
+export default withContext(Confirm)

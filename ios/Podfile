@@ -49,4 +49,19 @@ target 'tronwallet2' do
 
   pod 'ReactNativeFabric', :path => '../node_modules/react-native-fabric'
 
+  pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
+
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
+
+  pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      if target.name == "React"
+        target.remove_from_project
+      end
+    end
+  end
+  
 end

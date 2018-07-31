@@ -53,16 +53,21 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
-aws-exports.js
 # Bundle artifact
 *.jsbundle
 
-#VS LiveShare
+# VSCode
+.vscode
+
+# VS LiveShare
+.vs
 .vs/slnx.sqlite
+
+# AWS amplify
 aws-exports.js
-ios/Pods/
-ios/Pods/**/*
-ios/Podfile.lock
+
+# Pods
+ios/Pods
 
 #npm lock file
 package-lock.json

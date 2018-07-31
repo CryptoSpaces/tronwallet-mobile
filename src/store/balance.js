@@ -9,8 +9,9 @@ const BalanceSchema = {
   }
 }
 
-export default async () => Realm.open({
-  path: 'Realm.balance',
-  schema: [BalanceSchema],
-  schemaVersion: 0
-})
+export default async () =>
+  Realm.open({
+    path: 'Realm.balance',
+    schema: [BalanceSchema],
+    schemaVersion: 0
+  })

@@ -1,302 +1,207 @@
 import React, { Component } from 'react'
-import { StatusBar, Platform, SafeAreaView, View, AsyncStorage } from 'react-native'
+import { StatusBar, Platform, YellowBox, SafeAreaView } from 'react-native'
 import {
   createBottomTabNavigator,
-  createStackNavigator,
-  createMaterialTopTabNavigator
+  createStackNavigator
 } from 'react-navigation'
-import Amplify from 'aws-amplify'
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+import { createIconSetFromFontello } from 'react-native-vector-icons'
 import axios from 'axios'
 import Config from 'react-native-config'
-import { Sentry } from 'react-native-sentry';
+import OneSignal from 'react-native-onesignal'
 
-import awsExports from './aws-exports'
-import { Colors, ScreenSize } from './src/components/DesignSystem'
+import { Colors } from './src/components/DesignSystem'
 
 import LoadingScene from './src/scenes/Loading'
-import SignupScene from './src/scenes/Signup'
-import ConfirmSignup from './src/scenes/Signup/ConfirmSignup'
-import WelcomeScene from './src/scenes/Welcome'
-import LoginScene from './src/scenes/Login'
-import ConfirmLogin from './src/scenes/Login/ConfirmLogin'
-import SendScreen from './src/scenes/Send'
-import ForgotPassword from './src/scenes/ForgotPassword'
-import NewPassword from './src/scenes/ForgotPassword/NewPassword'
-import SetPublicKey from './src/scenes/SetPublicKey'
+import SendScene from './src/scenes/Send'
 import HomeScene from './src/scenes/Home'
 import BalanceScene from './src/scenes/Balance'
 import VoteScene from './src/scenes/Vote'
 import ReceiveScene from './src/scenes/Receive'
 import TransactionListScene from './src/scenes/Transactions'
-import TransactionDetailScene from './src/scenes/TransactionDetail'
-import TransferScene from './src/scenes/Transfer'
+import SubmitTransactionScene from './src/scenes/SubmitTransaction'
+import FreezeScene from './src/scenes/Freeze'
 import Settings from './src/scenes/Settings'
-import ParticipateScene from './src/scenes/Tokens/Participate'
+import TokenInfoScene from './src/scenes/Participate/TokenInfo'
+import BuyScene from './src/scenes/Participate/Buy'
 import GetVaultScene from './src/scenes/GetVault'
-import FreezeScene from './src/scenes/Freeze/FreezeRoute'
+import FreezeVoteScene from './src/components/Vote/Freeze'
 import RewardsScene from './src/scenes/Rewards'
+import NetworkConnection from './src/scenes/Settings/NetworkModal'
 import SeedCreate from './src/scenes/Seed/Create'
 import SeedRestore from './src/scenes/Seed/Restore'
 import SeedConfirm from './src/scenes/Seed/Confirm'
-import RestoreOrCreateSeed from './src/scenes/Seed/RestoreOrCreateSeed'
-
-import fontelloConfig from './src/assets/icons/config.json'
-import * as Utils from './src/components/Utils'
-import ButtonGradient from './src/components/ButtonGradient'
+import TransactionDetails from './src/scenes/TransactionDetails'
+import ParticipateHome from './src/scenes/Participate'
+import Pin from './src/scenes/Pin'
+import FirstTime from './src/scenes/FirstTime'
 
 import Client from './src/services/client'
-import { getUserPublicKey } from './src/utils/userAccountUtils'
-import NodesIp from './src/utils/nodeIp'
 import { Context } from './src/store/context'
+import NodesIp from './src/utils/nodeIp'
+import { getUserSecrets } from './src/utils/secretsUtils'
+
+import fontelloConfig from './src/assets/icons/config.json'
 
 import './ReactotronConfig'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
-Amplify.configure(awsExports)
-import { YellowBox } from 'react-native'
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
 
-const SettingsStack = createStackNavigator(
-  {
-    Settings,
-    SeedCreate,
-    SeedConfirm
-  },
-  {
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: Colors.background,
-        elevation: 0,
-        borderColor: Colors.background
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontFamily: 'rubik-medium'
-      }
-    }
-  }
-)
-
-const VoteStack = createStackNavigator(
-  {
-    VoteScene
-  },
-  {
-    initialRouteName: 'VoteScene',
-    navigationOptions: ({ navigation }) => ({
-      header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>Vote</Utils.Title>
-            </Utils.TitleWrapper>
-            <View style={{ marginRight: 15 }}>
-              <Utils.Text>{navigation.getParam('totalRemaining')}</Utils.Text>
-              {(navigation.getParam('votesError') || navigation.getParam('listError')) ?
-                <ButtonGradient
-                  size='small'
-                  text='Sync'
-                  onPress={navigation.getParam('loadData')}
-                /> :
-                <ButtonGradient
-                  disabled={navigation.getParam('disabled')}
-                  size='small'
-                  text='Submit'
-                  onPress={navigation.getParam('onSubmit')}
-                />
-              }
-            </View>
-          </Utils.Header>
-        </SafeAreaView>
-      )
-    })
-  }
-)
-const TransferStack = createStackNavigator(
-  {
-    TransferScene
-  },
-  {
-    initialRouteName: 'TransferScene'
-  }
-)
-
-const TransactionList = createStackNavigator(
-  {
-    TransactionListScene
-  }, {
-    initialRouteName: 'TransactionListScene'
-  }
-)
-
-const AppTabs = createBottomTabNavigator(
-  {
-    Home: HomeScene,
-    Vote: {
-      screen: VoteStack,
-      path: 'vote'
+const SettingsStack = createStackNavigator({
+  Settings,
+  SeedCreate,
+  SeedConfirm,
+  NetworkConnection
+}, {
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.background,
+      elevation: 0,
+      borderColor: Colors.background
     },
-    Transactions: TransactionList,
-    Balance: BalanceScene,
-    Transfer: TransferStack,
-    Receive: ReceiveScene,
-    Settings: SettingsStack
-  },
-  {
-    navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state
-        let iconName
-        if (routeName === 'Home') {
-          iconName = `graph,-bar,-chart,-statistics,-analytics`
-        } else if (routeName === 'Balance') {
-          iconName = `wallet,-money,-cash,-balance,-purse`
-        } else if (routeName === 'Transfer') {
-          iconName = `fly,-send,-paper,-submit,-plane`
-        } else if (routeName === 'Vote') {
-          iconName = `shout-out,-speaker,-offer,-announcement,-loud`
-        } else if (routeName === 'Transactions') {
-          iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
-        } else if (routeName === 'Receive') {
-          iconName = `scan,-bar-code,-qr-code,-barcode,-scanner`
-        }
-        else if (routeName === 'Settings') {
-          iconName = `gear,-settings,-update,-setup,-config`
-        }
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontFamily: 'rubik-medium'
+    }
+  }
+})
 
-        return <Icon name={iconName} size={26} color={tintColor} />
+const BalanceStack = createStackNavigator({
+  BalanceScene,
+  ReceiveScene,
+  FreezeScene,
+  SendScene
+})
+
+const TransactionList = createStackNavigator({
+  TransactionListScene,
+  TransactionDetails
+})
+
+const ParticipateStack = createStackNavigator(
+  {
+    ParticipateHome,
+    TokenInfo: TokenInfoScene,
+    Buy: BuyScene
+  }
+)
+
+const AppTabs = createBottomTabNavigator({
+  Home: HomeScene,
+  Vote: {
+    screen: VoteScene,
+    path: 'vote'
+  },
+  Balance: BalanceStack,
+  Transactions: TransactionList,
+  Participate: ParticipateStack,
+  Settings: SettingsStack
+}, {
+  navigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      let iconName
+      if (routeName === 'Home') {
+        iconName = `graph,-bar,-chart,-statistics,-analytics`
+      } else if (routeName === 'Balance') {
+        iconName = `wallet,-money,-cash,-balance,-purse`
+      } else if (routeName === 'Transfer') {
+        iconName = `fly,-send,-paper,-submit,-plane`
+      } else if (routeName === 'Vote') {
+        iconName = `shout-out,-speaker,-offer,-announcement,-loud`
+      } else if (routeName === 'Transactions') {
+        iconName = `network,-arrow,-up-dowm,-mobile-data,-send-receive`
+      } else if (routeName === 'Receive') {
+        iconName = `scan,-bar-code,-qr-code,-barcode,-scanner`
+      } else if (routeName === 'Settings') {
+        iconName = `gear,-settings,-update,-setup,-config`
+      } else if (routeName === 'Participate') {
+        iconName = `dollar,-currency,-money,-cash,-coin`
       }
-    }),
-    tabBarOptions: {
-      activeTintColor: Colors.primaryText,
-      inactiveTintColor: Colors.secondaryText,
-      style: {
-        backgroundColor: 'black'
-      },
-      showLabel: false
+
+      return <Icon name={iconName} size={26} color={tintColor} />
+    }
+  }),
+  tabBarOptions: {
+    activeTintColor: Colors.primaryText,
+    inactiveTintColor: Colors.secondaryText,
+    style: {
+      backgroundColor: 'black'
     },
-    initialRouteName: 'Balance'
-  }
-)
-
-const SignStack = createStackNavigator(
-  {
-    Signup: SignupScene,
-    ConfirmSignup: ConfirmSignup
+    showLabel: false
   },
-  {
-    initialRouteName: 'Signup',
-    navigationOptions: {
-      header: null,
-      title: 'SIGN UP'
-    }
-  }
-)
+  initialRouteName: 'Balance'
+})
 
-const LoginStack = createStackNavigator(
-  {
-    Login: LoginScene,
-    ConfirmLogin: ConfirmLogin,
-    ForgotPassword: ForgotPassword,
-    ConfirmNewPassword: NewPassword
+const RootNavigator = createStackNavigator({
+  Loading: LoadingScene,
+  FirstTime,
+  Pin,
+  SeedRestore,
+  App: AppTabs,
+  GetVault: GetVaultScene,
+  SubmitTransaction: {
+    screen: SubmitTransactionScene,
+    path: 'transaction/:tx'
   },
-  {
-    initialRouteName: 'Login',
-    navigationOptions: {
-      header: null
-    }
-  }
-)
-
-const tabWidth = ScreenSize.width / 2
-const indicatorWidth = 15
-const LoginTabsPadding = 20 + 12
-
-const SignTabs = createMaterialTopTabNavigator(
-  {
-    Login: {
-      screen: LoginStack,
-      navigationOptions: {
-        title: 'SIGN IN'
-      }
-    },
-    Sign: {
-      screen: SignStack,
-      navigationOptions: {
-        title: 'SIGN UP'
-      }
-    }
+  Freeze: FreezeVoteScene,
+  Rewards: RewardsScene
+}, {
+  mode: 'modal',
+  navigationOptions: {
+    gesturesEnabled: false,
+    header: null
   },
-  {
-    tabBarOptions: {
-      activeTintColor: Colors.primaryText,
-      inactiveTintColor: Colors.secondaryText,
-      style: {
-        paddingTop: LoginTabsPadding,
-        backgroundColor: Colors.background,
-        elevation: 0
-      },
-      labelStyle: {
-        fontSize: 16,
-        lineHeight: 20,
-        fontFamily: 'rubik-medium'
-      },
-      indicatorStyle: {
-        width: indicatorWidth,
-        height: 1.2,
-        marginLeft: tabWidth / 2 - indicatorWidth / 2
-      }
-    }
-  }
-)
+  cardStyle: { shadowColor: 'transparent' }
+})
 
-const RootNavigator = createStackNavigator(
-  {
-    Loading: LoadingScene,
-    Welcome: WelcomeScene,
-    RestoreOrCreateSeed,
-    SeedRestore,
-    Auth: SignTabs,
-    App: AppTabs,
-    Send: SendScreen,
-    GetVault: GetVaultScene,
-    Participate: ParticipateScene,
-    SetPublicKey: {
-      screen: SetPublicKey,
-      path: 'getkey/:data'
-    },
-    TransactionDetail: {
-      screen: TransactionDetailScene,
-      path: 'transaction/:tx'
-    },
-    Freeze: FreezeScene,
-    Rewards: RewardsScene
-  },
-  {
-    initialRouteName: 'Loading',
-    mode: 'modal',
-    navigationOptions: {
-      gesturesEnabled: false,
-      header: null
-    }
-  }
-)
+const prefix =
+  Platform.OS === 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
 
-const prefix = Platform.OS == 'android' ? 'tronwalletmobile://tronwalletmobile/' : 'tronwalletmobile://'
 class App extends Component {
-
   state = {
     price: {},
     freeze: {},
-    publicKey: {}
+    publicKey: {},
+    pin: null,
+    oneSignalId: null,
+    shareModal: false,
+    queue: null
   }
 
-  componentDidMount() {
+  async componentDidMount () {
+    OneSignal.init('ce0b0f27-0ae7-4a8c-8fff-2a110da3a163')
+    OneSignal.configure()
+    OneSignal.inFocusDisplaying(2)
+    OneSignal.addEventListener('ids', this._onIds)
+    OneSignal.addEventListener('opened', this._onOpened)
+    OneSignal.addEventListener('received', this._onReceived)
+
     this._getPrice()
     this._setNodes()
-    this._loadUserData()
+  }
+
+  componentWillUnmount () {
+    OneSignal.removeEventListener('ids', this._onIds)
+    OneSignal.removeEventListener('opened', this._onOpened)
+    OneSignal.removeEventListener('received', this._onReceived)
+  }
+
+  _onIds = device => {
+    console.log('Device info: ', device)
+    this.setState({ oneSignalId: device.userId })
+  }
+
+  _onReceived = notification => {
+    console.log('Notification received: ', notification)
+  }
+
+  _onOpened = openResult => {
+    console.log('Message: ', openResult.notification.payload.body)
+    console.log('Data: ', openResult.notification.payload.additionalData)
+    console.log('isActive: ', openResult.notification.isAppInFocus)
+    console.log('openResult: ', openResult)
   }
 
   _loadUserData = () => {
@@ -306,7 +211,7 @@ class App extends Component {
 
   _getFreeze = async () => {
     try {
-      const value = await Client.getFreeze()
+      const value = await Client.getFreeze(this.state.pin)
       this.setState({ freeze: { value } })
     } catch (err) {
       this.setState({ freeze: { err } })
@@ -324,8 +229,8 @@ class App extends Component {
 
   _getPublicKey = async () => {
     try {
-      const publicKey = await getUserPublicKey()
-      this.setState({ publicKey: { value: publicKey } })
+      const { address } = await getUserSecrets(this.state.pin)
+      this.setState({ publicKey: { value: address } })
     } catch (err) {
       this.setState({ publicKey: { err } })
     }
@@ -333,25 +238,58 @@ class App extends Component {
 
   _setNodes = async () => {
     try {
-      await NodesIp.initNodes();
+      await NodesIp.initNodes()
     } catch (error) {
-      console.warn(error);
+      console.warn(error)
     }
   }
 
-  render() {
+  _setPin = (pin, callback) => {
+    this.setState({ pin }, () => {
+      callback()
+      this._loadUserData()
+    })
+  }
+
+  _openShare = () => {
+    this.setState({
+      shareModal: true
+    })
+  }
+
+  _closeShare = () => {
+    this.setState({
+      shareModal: false
+    })
+  }
+
+  _toggleShare = () => {
+    this.setState((state) => ({
+      shareModal: !state.shareModal
+    }))
+  }
+
+  render () {
     const contextProps = {
       ...this.state,
       updateWalletData: this._loadUserData,
       getFreeze: this._getFreeze,
       getPrice: this._getPrice,
-      getPublicKey: this._getPublicKey
+      getPublicKey: this._getPublicKey,
+      setPin: this._setPin,
+      openShare: this._openShare,
+      closeShare: this._closeShare,
+      toggleShare: this._toggleShare,
+      createJobs: this._createJobs
     }
+
     return (
-      <Context.Provider value={contextProps}>
-        <StatusBar barStyle='light-content' />
-        <RootNavigator uriPrefix={prefix} />
-      </Context.Provider>
+      <SafeAreaView style={{ backgroundColor: Colors.background, flex: 1 }} >
+        <Context.Provider value={contextProps}>
+          <StatusBar barStyle='light-content' />
+          <RootNavigator uriPrefix={prefix} />
+        </Context.Provider>
+      </SafeAreaView>
     )
   }
 }

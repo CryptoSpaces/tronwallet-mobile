@@ -1,58 +1,104 @@
 import React, { Component } from 'react'
-import moment from 'moment'
+import {
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+  AsyncStorage
+} from 'react-native'
+import { Answers } from 'react-native-fabric'
 import axios from 'axios'
 import Config from 'react-native-config'
-import { LineChart } from 'react-native-svg-charts'
-import { FlatList, Image, ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native'
-import { Motion, spring, presets } from 'react-motion'
-import { Crashlytics, Answers } from 'react-native-fabric'
-import Client from '../../services/client'
-import Gradient from '../../components/Gradient'
-import formatNumber from '../../utils/formatNumber'
-import ButtonGradient from '../../components/ButtonGradient'
-import FadeIn from '../../components/Animations/FadeIn'
-import GrowIn from '../../components/Animations/GrowIn'
+import ActionSheet from 'react-native-actionsheet'
+// import BackgroundFetch from 'react-native-background-fetch'
+
+import NavigationHeader from '../../components/Navigation/Header'
 import * as Utils from '../../components/Utils'
-import { Colors, Spacing } from '../../components/DesignSystem'
-import TokenItem from './TokenItem'
+import WalletBalances from './WalletBalances'
+import BalanceWarning from './BalanceWarning'
+import BalanceNavigation from './BalanceNavigation'
+import TrxValue from './TrxValue'
+import TrxInfo from './TrxInfo'
+import LineChart from './TrxLineChart'
 
+import { USER_PREFERRED_CURRENCY } from '../../utils/constants'
+import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
-import getAssetsStore from '../../store/assets'
-import { Context } from '../../store/context'
 import { getUserSecrets } from '../../utils/secretsUtils'
+import withContext from '../../utils/hocs/withContext'
+// import { updateTransactions } from '../../utils/transactionUtils'
+// import getTransactionStore from '../../store/transactions'
 
-const PRICE_PRECISION = 4
-const LINE_CHART_HEIGHT = 40
-const LAST_DAY = Math.round(new Date().getTime() / 1000) - 24 * 3600
-const POOLING_TIME = 30000
+const CURRENCIES = ['USD', 'EUR', 'BTC', 'ETH', 'Cancel']
 
 class BalanceScene extends Component {
+  static navigationOptions = () => ({
+    header: <NavigationHeader title='BALANCE' />
+  })
+
   state = {
+    refreshing: false,
     error: null,
-    assetBalance: [],
-    assetList: [],
+    seedConfirmed: true,
+    seed: [],
+    balances: [],
     trxHistory: [],
     trxBalance: 0,
-    refreshing: false,
-    seedConfirmed: true
+    currency: ''
   }
 
-  async componentDidMount() {
+  componentDidMount () {
+    Answers.logContentView('Tab', 'Balance')
     try {
-      const assetList = await this._getAssetsFromStore()
-      const assetBalance = await this._getBalancesFromStore()
-      const data = await getUserSecrets()
-      this.setState({ assetList, assetBalance, seedConfirmed: data.confirmed })
-    } catch (err) {
-      this.setState({ error: 'An error occured while loading data.' })
-    } finally {
       this._loadData()
+    } catch (e) {
+      this.setState({ error: 'An error occured while loading the data.' })
     }
-    this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
-    this._dataListener = setInterval(this._loadData, POOLING_TIME)
+    this._navListener =
+      this.props.navigation.addListener('didFocus', this._loadData)
+
+    // DISABLED BACKGROUND CHECK
+    // BackgroundFetch.configure({
+    //   minimumFetchInterval: 15,
+    //   stopOnTerminate: false,
+    //   startOnBoot: true,
+    //   enableHeadless: true
+    // }, async () => {
+    //   console.log('[js] Received background-fetch event')
+    //   try {
+    //     await updateTransactions(this.props.context.pin)
+    //     const store = await getTransactionStore()
+    //     const newTransactions = store.objects('Transaction').filtered('notified = false')
+    //     const transactions = newTransactions.map(item => item.id)
+    //     await Client.notifyNewTransactions(this.props.context.oneSignalId, transactions)
+    //     console.log('fetch transactions finished')
+    //   } catch (err) {
+    //     console.log('error', err)
+    //   }
+    //   // Required: Signal completion of your task to native code
+    //   // If you fail to do this, the OS can terminate your app
+    //   // or assign battery-blame for consuming too much background-time
+    //   BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
+    // }, (error) => {
+    //   console.log('[js] RNBackgroundFetch failed to start', error)
+    // })
+
+    // // Optional: Query the authorization status.
+    // BackgroundFetch.status((status) => {
+    //   switch (status) {
+    //     case BackgroundFetch.STATUS_RESTRICTED:
+    //       console.log('BackgroundFetch restricted')
+    //       break
+    //     case BackgroundFetch.STATUS_DENIED:
+    //       console.log('BackgroundFetch denied')
+    //       break
+    //     case BackgroundFetch.STATUS_AVAILABLE:
+    //       console.log('BackgroundFetch is enabled')
+    //       break
+    //   }
+    // })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._navListener.remove()
     clearInterval(this._dataListener)
   }
@@ -63,10 +109,40 @@ class BalanceScene extends Component {
     this.setState({ refreshing: false })
   }
 
+  _loadData = async () => {
+    try {
+      const { updateWalletData } = this.props.context
+      const data = await Promise.all([
+        Client.getBalances(this.props.context.pin),
+        getUserSecrets(this.props.context.pin),
+        axios.get(
+          `${Config.TRX_HISTORY_API}/histohour?fsym=TRX&tsym=USD&limit=23`
+        ),
+        AsyncStorage.getItem(USER_PREFERRED_CURRENCY)
+      ])
+
+      await updateWalletData()
+      await this._updateBalancesStore(data[0])
+      const balances = await this._getBalancesFromStore()
+      const { balance } = balances.find(item => item.name === 'TRX')
+      const currency = data[3] || 'USD'
+
+      this.setState({
+        trxHistory: data[2].data.Data.map(item => item.close),
+        trxBalance: balance || 0,
+        balances: data[0],
+        seedConfirmed: data[1].confirmed,
+        seed: data[1].mnemonic.split(' '),
+        currency
+      })
+    } catch (e) {
+      this.setState({ error: e.message })
+    }
+  }
+
   _getBalancesFromStore = async () => {
     const store = await getBalanceStore()
-    return store.objects('Balance')
-      .map(item => Object.assign({}, item))
+    return store.objects('Balance').map(item => Object.assign({}, item))
   }
 
   _updateBalancesStore = async balances => {
@@ -74,99 +150,31 @@ class BalanceScene extends Component {
     store.write(() => balances.map(item => store.create('Balance', item, true)))
   }
 
-  _getAssetsFromStore = async () => {
-    const store = await getAssetsStore()
-    return store.objects('Asset')
-      .filtered(`percentage < 100 AND startTime < ${Date.now()} AND endTime > ${Date.now()}`)
-      .map(item => Object.assign({}, item))
-  }
+  _handleCurrencyChange = async (index) => {
+    const currency = CURRENCIES[index]
 
-  _updateAssetsStore = async assets => {
-    const store = await getAssetsStore()
-    store.write(() => assets.map(item => store.create('Asset', item, true)))
-  }
-
-  _loadData = async () => {
-    try {
-      const { updateWalletData } = this.props.context
-      const getData = await Promise.all([
-        Client.getBalances(),
-        Client.getTokenList()
-      ])
-
-      const trxHistory = await axios.get(`${Config.TRX_HISTORY_API}?fsym=TRX&tsym=USD&fromTs=${LAST_DAY}`)
-      this.setState({ trxHistory: trxHistory.data.Data.map(item => item.close) })
-
-      await Promise.all([
-        this._updateBalancesStore(getData[0]),
-        this._updateAssetsStore(getData[1])
-      ])
-      await updateWalletData()
-
-      const assetBalance = await this._getBalancesFromStore()
-      const assetList = await this._getAssetsFromStore()
-      const trxBalance = assetBalance.find(item => item.name === 'TRX')
-
-      const { confirmed } = await getUserSecrets()
-      
-      this.setState({
-        trxBalance: trxBalance.balance || 0,
-        assetBalance,
-        assetList,
-        seedConfirmed: confirmed
-      })
-      
-    } catch (error) {
-      this.setState({ error: error.message })
+    if (currency && currency !== 'Cancel') {
+      try {
+        await AsyncStorage.setItem(USER_PREFERRED_CURRENCY, currency)
+        this.setState({ currency })
+      } catch (e) {
+        this.setState({ error: 'Error saving preferred currency' })
+      }
     }
   }
 
-  _navigateToParticipate = token => {
-    const { trxBalance, assetList } = this.state;
-    if (token.name !== 'TRX') {
-      const tokenToParticipate = assetList.find(asset => asset.name === token.name);
-      this.props.navigation.navigate('Participate', { token: tokenToParticipate, trxBalance })
-    }
-  }
+  render () {
+    const {
+      trxBalance,
+      balances,
+      trxHistory,
+      seed,
+      seedConfirmed,
+      currency
+    } = this.state
 
-  listHeader = text => (
-    <Utils.View align='flex-start'>
-      <Utils.Text size='xsmall' color={Colors.secondaryText}>{text}</Utils.Text>
-      <Utils.VerticalSpacer />
-    </Utils.View>
-  )
-
-  renderParticipateButton = item => {
-    const now = moment()
-    if (item.percentage >= 100 || moment(item.startTime).isAfter(now) || moment(item.endTime).isBefore(now)) {
-      return (
-        <View style={{ justifyContent: 'center', paddingY: 12 }}>
-          <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
-        </View>
-      )
-    } else {
-      return (
-        <ButtonGradient
-          size='xsmall'
-          onPress={() => this._navigateToParticipate(item)}
-          text='Participate'
-        />
-      )
-    }
-  }
-
-  emptyListComponent = title => (
-    <Utils.View align='center'>
-      <Utils.VerticalSpacer size='medium' />
-      <Utils.Text size='xsmall' font='light' color={Colors.secondaryText}>{title}</Utils.Text>
-    </Utils.View>
-  )
-
-  render() {
-    const { assetBalance, trxBalance, error, assetList, trxHistory } = this.state
     return (
-      <Utils.Container>
-        <Utils.StatusBar />
+      <Utils.Container justify='flex-start' align='stretch'>
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -175,115 +183,30 @@ class BalanceScene extends Component {
             />
           }
         >
-          <Utils.Content>
-            <FadeIn name='header'>
-              <Utils.Row justify='center'>
-                <Utils.View align='center'>
-                  <Image
-                    source={require('../../assets/tron-logo-small.png')}
-                    resizeMode='contain'
-                    style={{ height: 60 }}
-                  />
-                  <Utils.VerticalSpacer size='medium' />
-                  <Utils.Text secondary>BALANCE</Utils.Text>
-                  <Utils.VerticalSpacer />
-                  <Motion defaultStyle={{ balance: 0 }} style={{ balance: spring(trxBalance) }}>
-                    {value => <Utils.Text size='large'>{formatNumber(value.balance.toFixed(0))} TRX</Utils.Text>}
-                  </Motion>
-                  <Utils.VerticalSpacer />
-                  <Context.Consumer>
-                    {({ price }) => price.value && (
-                      <FadeIn name='usd-value'>
-                        <Motion defaultStyle={{ price: 0 }} style={{ price: spring(trxBalance * price.value, presets.gentle) }}>
-                          {value => <Utils.Text size='small' align='center'>{`${(value.price).toFixed(2)} USD`}</Utils.Text>}
-                        </Motion>
-                      </FadeIn>
-                    )}
-                  </Context.Consumer>
-                  {!this.state.seedConfirmed && (
-                    <React.Fragment>
-                      <Utils.VerticalSpacer />
-                      <FadeIn name='seed-warning'>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('SeedCreate')}>
-                          <Utils.Text size='xsmall' secondary align='center'>Please, tap here to confim your 12 seed words.</Utils.Text>
-                        </TouchableOpacity>
-                      </FadeIn>
-                      <Utils.VerticalSpacer />
-                    </React.Fragment>
-                  )}
-                </Utils.View>
-              </Utils.Row>
-            </FadeIn>
-            {!!trxHistory.length && (
-              <Utils.View paddingX='medium'>
-                <GrowIn name='linechart' height={LINE_CHART_HEIGHT}>
-                  <LineChart
-                    style={{ height: LINE_CHART_HEIGHT }}
-                    data={this.state.trxHistory}
-                    svg={{ stroke: 'url(#gradient)', strokeWidth: 3 }}
-                    animate
-                  >
-                    <Gradient />
-                  </LineChart>
-                </GrowIn>
-              </Utils.View>
+          <Utils.Content paddingTop={2}>
+            <Utils.View minHeight={190}>
+              <ActionSheet
+                ref={ref => { this.ActionSheet = ref }}
+                title='Please, choose your preferred currency.'
+                options={CURRENCIES}
+                cancelButtonIndex={4}
+                onPress={index => this._handleCurrencyChange(index)}
+              />
+              <TouchableOpacity onPress={() => this.ActionSheet.show()}>
+                <TrxValue trxBalance={trxBalance} currency={currency} />
+              </TouchableOpacity>
+              <Utils.VerticalSpacer size='medium' />
+              {!!trxHistory.length && <LineChart chartHistory={trxHistory} />}
+              <Utils.VerticalSpacer size='medium' />
+              <TrxInfo />
+            </Utils.View>
+            <BalanceNavigation navigation={this.props.navigation} />
+            {!seedConfirmed && (
+              <BalanceWarning seed={seed} navigation={this.props.navigation}>
+                Please tap to confirm your 12 seed words
+              </BalanceWarning>
             )}
-            <Utils.VerticalSpacer size='big' />
-            <Context.Consumer>
-              {({ price }) => !price.value && (
-                <FadeIn name='loader'>
-                  <ActivityIndicator />
-                </FadeIn>
-              )}
-            </Context.Consumer>
-            <Context.Consumer>
-              {({ price, freeze }) => (price.value && freeze.value) && (
-                <FadeIn name='tronprice'>
-                  <Utils.Row justify='space-between'>
-                    <Utils.View align='flex-start'>
-                      <Utils.Text secondary size='xsmall'>TRON POWER</Utils.Text>
-                      <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ power: 0 }} style={{ power: spring(freeze.value.total, presets.gentle) }}>
-                        {value => <Utils.Text size='small' align='center'>{`${value.power.toFixed(0)}`}</Utils.Text>}
-                      </Motion>
-                    </Utils.View>
-                    <Utils.View align='center'>
-                      <Utils.Text secondary size='xsmall'>TRX PRICE</Utils.Text>
-                      <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ price: 0 }} style={{ price: spring(price.value, presets.gentle) }}>
-                        {value => <Utils.Text size='small' align='center'>{`${value.price.toFixed(PRICE_PRECISION)} USD`}</Utils.Text>}
-                      </Motion>
-                    </Utils.View>
-                    <Utils.View align='flex-end'>
-                      <Utils.Text secondary size='xsmall'>BANDWIDTH</Utils.Text>
-                      <Utils.VerticalSpacer />
-                      <Motion defaultStyle={{ bandwidth: 0 }} style={{ bandwidth: spring(freeze.value.bandwidth.netRemaining, presets.gentle) }}>
-                        {value => <Utils.Text size='small' align='center'>{`${value.bandwidth.toFixed(0)}`}</Utils.Text>}
-                      </Motion>
-                    </Utils.View>
-                  </Utils.Row>
-                </FadeIn>
-              )}
-            </Context.Consumer>
-            <Utils.VerticalSpacer size='medium' />
-            <FlatList
-              ListEmptyComponent={this.emptyListComponent('Participate to a token')}
-              ListHeaderComponent={this.listHeader('BALANCES')}
-              data={assetBalance}
-              renderItem={({ item }) => <TokenItem item={item} onPress={() => this._navigateToParticipate(item)} />}
-              keyExtractor={item => item.name}
-              scrollEnabled
-            />
-            <Utils.VerticalSpacer size='medium' />
-            <FlatList
-              ListEmptyComponent={this.emptyListComponent('No tokens to Participate')}
-              ListHeaderComponent={this.listHeader('PARTICIPATE')}
-              data={assetList}
-              renderItem={({ item }) => <TokenItem item={item} onPress={() => this._navigateToParticipate(item)} />}
-              keyExtractor={item => item.name}
-              scrollEnabled
-            />
-            <Utils.Error>{error}</Utils.Error>
+            <WalletBalances balances={balances} />
           </Utils.Content>
         </ScrollView>
       </Utils.Container>
@@ -291,8 +214,4 @@ class BalanceScene extends Component {
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <BalanceScene context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(BalanceScene)

@@ -24,7 +24,11 @@ const CopyInput = ({ onCopyText, value }) => {
         underlineColorAndroid='transparent'
       />
       <Utils.PasteButton onPress={paste}>
-        <Ionicons name='md-copy' size={FontSize['small']} color={Colors.primaryText} />
+        <Ionicons
+          name='md-copy'
+          size={FontSize['small']}
+          color={Colors.primaryText}
+        />
       </Utils.PasteButton>
     </Utils.Row>
   )
@@ -37,7 +41,7 @@ CopyInput.propsType = {
 }
 
 CopyInput.defaultProps = {
-  onCopyText: () => { }
+  onCopyText: () => {}
 }
 
 export default CopyInput

@@ -42,7 +42,6 @@ class TokensScene extends Component {
       const response = await axios.get(
         'https://testapi.tronscan.org/api/token?sort=-name&start=0&status=ico'
       )
-      console.log(response.data.data)
       this.setState({
         loading: false,
         data: response.data.data,
@@ -58,13 +57,13 @@ class TokensScene extends Component {
 
   navigate = token => this.props.navigation.navigate('Participate', { token })
 
-  format = (percentage) => numeral(percentage).format('0.[00]') + '%'
+  format = percentage => numeral(percentage).format('0.[00]') + '%'
 
   formatAmount = value => {
     return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
-  renderCardFooter = (item) => {
+  renderCardFooter = item => {
     if (item.percentage < 100) {
       return (
         <ButtonGradient
@@ -76,24 +75,28 @@ class TokensScene extends Component {
     }
 
     return (
-      <Utils.View
-        align='center'
-        justify='center'
-      >
+      <Utils.View align='center' justify='center'>
         <Utils.Text color={Colors.red}>FINISHED</Utils.Text>
       </Utils.View>
     )
   }
 
-  renderCard = (item) => (
+  renderCard = item => (
     <Utils.Card>
       <Utils.Row justify='space-between'>
-        <Utils.Text size='small' secondary>{item.name}</Utils.Text>
+        <Utils.Text size='small' secondary>
+          {item.name}
+        </Utils.Text>
         <Utils.Text>{this.format(item.percentage)}</Utils.Text>
       </Utils.Row>
       <Utils.VerticalSpacer size='medium' />
 
-      <Utils.Text ellipsizeMode='tail' numberOfLines={2} size='xsmall' style={{ width: '100%' }}>
+      <Utils.Text
+        ellipsizeMode='tail'
+        numberOfLines={2}
+        size='xsmall'
+        style={{ width: '100%' }}
+      >
         {item.url}
       </Utils.Text>
       <Utils.VerticalSpacer size='small' />
@@ -101,7 +104,9 @@ class TokensScene extends Component {
       <Utils.Row style={{ justifyContent: 'space-between', marginBottom: 5 }}>
         {/* <Utils.Text>{this.format(item.percentage)}</Utils.Text> */}
         <Utils.Text size='small'>
-          <Utils.Text color={Colors.secondaryText} size='small'>{this.formatAmount(item.issued)} </Utils.Text>
+          <Utils.Text color={Colors.secondaryText} size='small'>
+            {this.formatAmount(item.issued)}{' '}
+          </Utils.Text>
           / {this.formatAmount(item.totalSupply)}
         </Utils.Text>
       </Utils.Row>
