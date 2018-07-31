@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert } from 'react-native'
+import { Alert, Keyboard } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import moment from 'moment'
 import { Answers } from 'react-native-fabric'
@@ -221,7 +221,7 @@ class FreezeScene extends Component {
               align='right'
               value={amount}
               onChangeText={value => this._changeFreeze(value)}
-              onSubmitEditing={this._submit}
+              onSubmitEditing={() => Keyboard.dismiss()}
               placeholder='0'
               numbersOnly
             />
