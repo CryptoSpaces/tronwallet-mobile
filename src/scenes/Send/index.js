@@ -254,7 +254,6 @@ class SendScene extends Component {
 
     if (currentInput === 'amount' && this.state.trxBalance !== 0) {
       Keyboard.dismiss()
-      this._submit()
     }
   }
 
