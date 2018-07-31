@@ -64,10 +64,10 @@ class TransactionDetails extends React.Component {
   _copy = async () => {
     const { id } = this.props.navigation.state.params.item
     try {
-      await Clipboard.setString(id)
-      this.refs.toast.show('Hash Key copied to the clipboard')
+      await Clipboard.setString(`https://tronscan.org/#/transaction/${id}`)
+      this.refs.toast.show('Tronscan url for this transaction copied to the clipboard')
     } catch (error) {
-      this.refs.toast.show('Something wrong while copying')
+      this.refs.toast.show('Something went wrong while copying')
     }
   }
 
@@ -100,6 +100,13 @@ class TransactionDetails extends React.Component {
               marginHorizontal: 18,
               marginVertical: 20
             }}>
+              <Toast
+                ref='toast'
+                position='top'
+                fadeInDuration={750}
+                fadeOutDuration={1000}
+                opacity={0.8}
+              />
               <Utils.Row align='center' justify='space-between'>
                 <Elements.DetailLabel>HASH</Elements.DetailLabel>
               </Utils.Row>
@@ -483,13 +490,6 @@ class TransactionDetails extends React.Component {
           }}>
             <View style={{height: 24}} />
             {this._renderDetails()}
-            <Toast
-              ref='toast'
-              position='center'
-              fadeInDuration={750}
-              fadeOutDuration={1000}
-              opacity={0.8}
-            />
           </View>
           <Toast
             ref='addressToast'
