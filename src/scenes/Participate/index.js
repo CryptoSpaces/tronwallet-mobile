@@ -104,7 +104,6 @@ class ParticipateHome extends React.Component {
   }
 
   _updateAssetsStore = async assets => {
-    console.log('assets', assets)
     const store = await getAssetsStore()
     store.write(() => assets.map(item => store.create('Asset', item, true)))
   }
