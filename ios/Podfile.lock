@@ -115,6 +115,8 @@ PODS:
     - Crashlytics
     - Fabric
     - React
+  - RNBackgroundFetch (2.4.3):
+    - React
   - RNDeviceInfo (0.21.5):
     - React
   - RNShare (1.0.27):
@@ -169,6 +171,7 @@ DEPENDENCIES:
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - ReactNativeFabric (from `../node_modules/react-native-fabric`)
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNShare (from `../node_modules/react-native-share`)
   - RNTron (from `../node_modules/react-native-tron/ios/`)
@@ -208,6 +211,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-onesignal"
   ReactNativeFabric:
     :path: "../node_modules/react-native-fabric"
+  RNBackgroundFetch:
+    :path: "../node_modules/react-native-background-fetch"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNShare:
@@ -240,6 +245,7 @@ SPEC CHECKSUMS:
   react-native-camera: ab22041dcf0403d88f2ae4b9ea3ed2644e680423
   react-native-onesignal: 4f425b36d3edf595c93c1a8d3618a93b71a85a51
   ReactNativeFabric: 3912bf9c714d7cc98110eadf06ca6dedef219322
+  RNBackgroundFetch: 8c4f77f83c398c659bce82af2f0a885079417b9e
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
   RNShare: 80d4472ab25e77d9f824cb8d49d7e85af91c66e0
   RNTron: e5cc70419d4fc1021255c7bffb764bbf3e8cc560
@@ -248,6 +254,6 @@ SPEC CHECKSUMS:
   TrezorCrypto: ecef681446bf02af6248d3b5e394026d7e766e56
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: a75365d4870e797a99d1a1592dc1d55ad8e6f861
+PODFILE CHECKSUM: 9169375697cfc092bed62f7beb1d7f48278146c7
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.2
