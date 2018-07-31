@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, StackActions } from 'react-navigation'
 import { Answers } from 'react-native-fabric'
 import OneSignal from 'react-native-onesignal'
 
@@ -72,12 +72,19 @@ class TransactionDetail extends Component {
     }
   }
 
-  _navigateNext = () => {
+  _navigateNext = (stackToReset) => {
     // Reset navigation as transaction submition is the last step of a user interaction
     const { submitted } = this.state
     const { navigation } = this.props
     if (submitted) {
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: stackToReset })]
+      })
       const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
+      if (stackToReset) {
+        navigation.dispatch(resetAction)
+      }
       navigation.dispatch(navigateToHome)
     } else {
       navigation.goBack()
@@ -149,7 +156,8 @@ class TransactionDetail extends Component {
           }
         }
         await this._updateBalancesStore()
-        this.closeTransactionDetails = setTimeout(this._navigateNext, CLOSE_SCREEN_TIME)
+        const stackToReset = this._getStackToReset(transaction.type)
+        this.closeTransactionDetails = setTimeout(() => this._navigateNext(stackToReset), CLOSE_SCREEN_TIME)
       }
 
       this.setState({
@@ -170,6 +178,18 @@ class TransactionDetail extends Component {
         submitted: true
       })
     }
+  }
+
+  _getStackToReset = (transactionType) => {
+    if (transactionType === 'Transfer Asset' || transactionType === 'Transfer' ||
+      transactionType === 'Freeze' || transactionType === 'Unfreeze') {
+      return 'BalanceScene'
+    }
+    if (transactionType === 'Participate') {
+      return 'ParticipateHome'
+    }
+
+    return null
   }
 
   _updateBalancesStore = async balances => {
