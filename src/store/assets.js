@@ -1,5 +1,13 @@
 import Realm from 'realm'
 
+const FrozenItemSchema = {
+  name: 'FrozenItem',
+  properties: {
+    days: 'int',
+    amount: 'int'
+  }
+}
+
 const AssetsSchema = {
   name: 'Asset',
   primaryKey: 'id',
@@ -12,7 +20,6 @@ const AssetsSchema = {
     remaining: 'int',
     remainingPercentage: 'float?',
     percentage: 'float?',
-    frozen: 'float?',
     frozenPercentage: 'float?',
     id: 'string',
     block: 'int',
@@ -35,6 +42,16 @@ const AssetsSchema = {
 export default async () =>
   Realm.open({
     path: 'Realm.assets',
-    schema: [AssetsSchema],
-    schemaVersion: 7
+    schema: [AssetsSchema, FrozenItemSchema],
+    schemaVersion: 9,
+    migration: (oldRealm, newRealm) => {
+      if (oldRealm.schemaVersion < 9) {
+        const oldObjects = oldRealm.objects('Asset')
+        const newObjects = newRealm.objects('Asset')
+
+        for (let i = 0; i < oldObjects.length; i++) {
+          newObjects[i].frozen = null
+        }
+      }
+    }
   })

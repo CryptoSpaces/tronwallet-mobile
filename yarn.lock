@@ -5888,10 +5888,6 @@ progress@2.0.0, progress@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
 
-promise-reflect@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/promise-reflect/-/promise-reflect-1.1.0.tgz#5d4fbb780f83b8b6dadca639362c40fbc1336010"
-
 promise@^7.1.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
@@ -6001,7 +5997,7 @@ randomatic@^3.0.0:
     kind-of "^6.0.0"
     math-random "^1.0.1"
 
-randombytes@^2.0.1, randombytes@^2.0.3:
+randombytes@^2.0.1:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.0.6.tgz#d302c522948588848a8d300c932b44c24231da80"
   dependencies:
@@ -6093,10 +6089,6 @@ react-native-background-fetch@^2.4.3:
     fast-plist "^0.1.2"
     plist "^2.0.1"
     xcode "^0.9.1"
-
-react-native-background-task@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-background-task/-/react-native-background-task-0.2.1.tgz#9d110ed14b245e0d8b9ec8114ce24b33ddda65de"
 
 react-native-branch@2.0.0-beta.3:
   version "2.0.0-beta.3"
@@ -6228,14 +6220,6 @@ react-native-qrcode@^0.2.6:
     prop-types "^15.5.10"
     qr.js "0.0.0"
 
-react-native-queue@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-queue/-/react-native-queue-1.2.1.tgz#75e903979969d026d6ffff270d41f02da77943d3"
-  dependencies:
-    promise-reflect "^1.1.0"
-    react-native-uuid "^1.4.9"
-    realm "^2.0.12"
-
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.7.0.tgz#38f5ab9368d6ef9e5d18ab64212938af3ec39421"
@@ -6264,10 +6248,6 @@ react-native-sentry@^0.38.1:
   dependencies:
     "@sentry/wizard" "^0.9.5"
     raven-js "^3.24.2"
-
-react-native-share@^1.0.27:
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.0.27.tgz#1861afe0d1256bde95d19520ca5d5c3cd348ffad"
 
 react-native-splash-screen@^3.0.9:
   version "3.0.9"
@@ -6332,12 +6312,6 @@ react-native-tab-view@^1.0.0:
 react-native-tron@gettyio/react-native-tron#1.0.4:
   version "1.0.0"
   resolved "https://codeload.github.com/gettyio/react-native-tron/tar.gz/36098741f9da81fc4776cbe9dbcd8a3b80ddd8d1"
-
-react-native-uuid@^1.4.9:
-  version "1.4.9"
-  resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-1.4.9.tgz#a526742f8fddfe6414500655212ca8d109c40229"
-  dependencies:
-    randombytes "^2.0.3"
 
 react-native-vector-icons@4.5.0:
   version "4.5.0"
@@ -6570,25 +6544,6 @@ readable-stream@^2.0.1, readable-stream@^2.0.6, readable-stream@^2.1.4, readable
     safe-buffer "~5.1.1"
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
-
-realm@^2.0.12:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/realm/-/realm-2.14.0.tgz#47c4b4459c6bac3e5965da44fc4b51617cc34d66"
-  dependencies:
-    command-line-args "^4.0.6"
-    decompress "^4.2.0"
-    deepmerge "2.1.0"
-    fs-extra "^4.0.2"
-    ini "^1.3.4"
-    nan "2.8.0"
-    node-fetch "^1.6.3"
-    node-pre-gyp "^0.6.36"
-    progress "^2.0.0"
-    prop-types "^15.5.10"
-    request "^2.78.0"
-    stream-counter "^1.0.0"
-    sync-request "^3.0.1"
-    url-parse "^1.2.0"
 
 realm@^2.12.0:
   version "2.12.0"
