@@ -102,7 +102,6 @@ class VoteScene extends PureComponent {
     this.setState(this.resetVoteData, async () => {
       await this._refreshCandidates()
       await this._loadUserData()
-      this.setState({ loadingList: false, refreshing: false })
     })
 
     navigation.setParams({
@@ -216,12 +215,16 @@ class VoteScene extends PureComponent {
           totalUserVotes: currentUserVoteCount,
           totalRemaining: newTotalRemaining,
           currentFullVotes: newFullVoteList,
-          totalFrozen
+          totalFrozen,
+          loadingList: false,
+          refreshing: false
         })
       } else {
         this.setState({
           totalRemaining: totalFrozen,
-          totalFrozen
+          totalFrozen,
+          loadingList: false,
+          refreshing: false
         })
       }
     } catch (e) {

@@ -152,7 +152,7 @@ class VoteModal extends Component {
                 <Utils.VerticalSpacer size='small' />
                 <Utils.NumPadWrapper>
                   <Utils.NumKeyWrapper flexBasis={100}>
-                    <ButtonGradient onPress={() => acceptCurrentVote(amountToVote)} text='ADD VOTE' />
+                    <ButtonGradient onPress={() => acceptCurrentVote(amountToVote)} text='SET VOTE' />
                   </Utils.NumKeyWrapper>
                 </Utils.NumPadWrapper>
                 {notEnoughTrx && (
