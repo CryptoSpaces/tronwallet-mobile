@@ -5,7 +5,8 @@ import {
   Clipboard,
   Alert,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard
 } from 'react-native'
 
 import { Answers } from 'react-native-fabric'
@@ -252,6 +253,7 @@ class SendScene extends Component {
     }
 
     if (currentInput === 'amount' && this.state.trxBalance !== 0) {
+      Keyboard.dismiss()
       this._submit()
     }
   }
@@ -322,7 +324,7 @@ class SendScene extends Component {
             keyboardType='numeric'
             value={amount}
             placeholder='0'
-            onChangeText={text => this._changeInput(text, 'amount', true)}
+            onChangeText={text => this._changeInput(text, 'amount')}
             onSubmitEditing={() => this._nextInput('amount')}
             align='right'
             numbersOnly
