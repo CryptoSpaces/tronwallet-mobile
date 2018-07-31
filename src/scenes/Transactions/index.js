@@ -34,6 +34,7 @@ class TransactionsScene extends Component {
     this.setState({
       transactions: this._getSortedTransactionList(store), finishedLoadingTransactions: true
     })
+    this._updateData()
     this.dataSubscription = setInterval(this._updateData, POOLING_TIME)
   }
 
