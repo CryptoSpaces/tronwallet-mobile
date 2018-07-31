@@ -10,7 +10,6 @@ import QRCode from '../../components/QRCode'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import KeyboardScreen from '../../components/KeyboardScreen'
-import ShareButton from '../../components/Share/ShareButton'
 import Share from '../../components/Share'
 
 import { withContext } from '../../store/context'
@@ -21,7 +20,7 @@ class ReceiveScreen extends PureComponent {
       header: (
         <NavigationHeader title='RECEIVE'
           onBack={() => { navigation.goBack() }}
-          rightButton={<ShareButton openShare={this._openShare} />}
+          rightButton={<Share />}
         />
       )
     }
@@ -30,12 +29,6 @@ class ReceiveScreen extends PureComponent {
   state = {
     loading: true,
     shareOpen: true
-  }
-
-  _openShare = () => {
-    this.setState(state => ({
-      shareOpen: !(state.shareOpen)
-    }))
   }
 
   componentDidMount () {
@@ -93,7 +86,6 @@ class ReceiveScreen extends PureComponent {
             />
           </Utils.Content>
         </KeyboardScreen>
-        <Share visible={context.shareModal} publicKey={publicKey} close={context.closeShare} navigation={this.props.navigation} />
       </Utils.Container>
     )
   }
