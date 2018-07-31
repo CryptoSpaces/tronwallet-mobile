@@ -52,6 +52,7 @@ export const updateTransactions = async (pin) => {
       if (item.type === 'Participate') {
         transaction.contractData = {
           ...transaction.contractData,
+          tokenName: item.contractData.token,
           transferFromAddress: item.contractData.toAddress
         }
       }
