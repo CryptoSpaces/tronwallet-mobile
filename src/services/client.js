@@ -47,10 +47,12 @@ class ClientWallet {
     const { data: { balances } } = await axios.get(
       `${apiUrl}/account/${address}`
     )
-    const sortedBalances = balances.sort(
-      (a, b) => Number(b.balance) - Number(a.balance)
-    )
-    return sortedBalances
+    if (balances.length > 1) {
+      return balances.sort(
+        (a, b) => Number(b.balance) - Number(a.balance)
+      )
+    }
+    return balances
   }
 
   async getFreeze (pin) {

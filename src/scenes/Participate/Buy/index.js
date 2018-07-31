@@ -219,6 +219,7 @@ class BuyScene extends Component {
     const { name, price, description } = item
     const { totalRemaining, amountToBuy, notEnoughTrxBalance } = this.state
     const amountToPay = (price / ONE_TRX) * amountToBuy
+    const tokenPrice = price / ONE_TRX
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView style={{ paddingBottom: 10 }}>
@@ -245,7 +246,7 @@ class BuyScene extends Component {
             <VerticalSpacer size={7} />
             <Utils.Row>
               <BuyText>PRICE PER TOKEN:</BuyText>
-              <WhiteBuyText> {price / ONE_TRX} TRX</WhiteBuyText>
+              <WhiteBuyText> {tokenPrice} TRX</WhiteBuyText>
             </Utils.Row>
             <VerticalSpacer size={13} />
           </BuyContainer>
@@ -264,7 +265,7 @@ class BuyScene extends Component {
               />
               <OptionBuy
                 title='All in'
-                disabled={totalRemaining === 0}
+                disabled={totalRemaining <= 0 || totalRemaining < tokenPrice}
                 onPress={this._allinVoteCount}
               />
             </Utils.Row>
