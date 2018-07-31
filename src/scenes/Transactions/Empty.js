@@ -3,19 +3,19 @@ import { Image, ActivityIndicator } from 'react-native'
 
 import * as Elements from './elements'
 
-const Empty = ({refreshing}) => (
+const Empty = ({loading}) => (
   <Elements.EmptyScreenContainer>
-    <Image
-      source={require('../../assets/empty.png')}
-      resizeMode='contain'
-      style={{ width: 200, height: 200 }}
-    />
-    <Elements.EmptyScreenText>
-      No transactions found.
-    </Elements.EmptyScreenText>
-    <Elements.VSpacer />
-    {refreshing && (
-      <ActivityIndicator size='small' color='#ffffff' />
+    {loading ? <ActivityIndicator size='small' color='white' /> : (
+      <React.Fragment>
+        <Image
+          source={require('../../assets/empty.png')}
+          resizeMode='contain'
+          style={{ width: 200, height: 200 }}
+        />
+        <Elements.EmptyScreenText>
+          No transactions found.
+        </Elements.EmptyScreenText>
+      </React.Fragment>
     )}
   </Elements.EmptyScreenContainer>
 )

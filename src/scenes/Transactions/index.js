@@ -23,18 +23,27 @@ class TransactionsScene extends Component {
   })
 
   state = {
+    loading: true,
     refreshing: false,
-    finishedLoadingTransactions: false,
     transactions: []
   }
 
   async componentDidMount () {
     Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
-    this.setState({
-      transactions: this._getSortedTransactionList(store), finishedLoadingTransactions: true
-    })
-    this._updateData()
+    const cachedTransactions = this._getSortedTransactionList(store)
+    if (!cachedTransactions.length) {
+      this.setState({
+        transactions: []
+      })
+    } else {
+      this.setState({
+        transactions: cachedTransactions,
+        loading: false
+      })
+    }
+
+    this._onRefresh()
     this.dataSubscription = setInterval(this._updateData, POOLING_TIME)
   }
 
@@ -61,10 +70,14 @@ class TransactionsScene extends Component {
       const store = await getTransactionStore()
       const transactions = this._getSortedTransactionList(store)
       this.setState({
-        transactions
+        transactions,
+        loading: false
       })
     } catch (err) {
       console.error(err)
+      this.setState({
+        loading: false
+      })
     }
   }
 
@@ -73,17 +86,17 @@ class TransactionsScene extends Component {
   }
 
   render () {
-    const { transactions, refreshing, finishedLoadingTransactions } = this.state
+    const { transactions, loading } = this.state
     const publicKey = this.props.context.publicKey
 
     return (
-      !transactions.length && finishedLoadingTransactions ? <Empty refreshing={refreshing} />
+      !transactions.length ? <Empty loading={loading} />
         : (
           <Background>
             <FlatList
               refreshControl={
                 <RefreshControl
-                  refreshing={refreshing}
+                  refreshing={loading}
                   onRefresh={this._onRefresh}
                 />
               }
