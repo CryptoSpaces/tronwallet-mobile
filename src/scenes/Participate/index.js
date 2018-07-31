@@ -9,7 +9,6 @@ import {
   View,
   Dimensions
 } from 'react-native'
-
 import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
@@ -80,7 +79,7 @@ class ParticipateHome extends React.Component {
 
   _loadData = async () => {
     const { assetList } = this.state
-    if (!assetList.length) this.setState({loading: true})
+    if (!assetList.length) this.setState({ loading: true })
 
     try {
       const tokenList = await Client.getTokenList()
@@ -105,6 +104,7 @@ class ParticipateHome extends React.Component {
   }
 
   _updateAssetsStore = async assets => {
+    console.log('assets', assets)
     const store = await getAssetsStore()
     store.write(() => assets.map(item => store.create('Asset', item, true)))
   }
