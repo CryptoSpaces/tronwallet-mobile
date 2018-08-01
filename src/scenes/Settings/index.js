@@ -11,9 +11,11 @@ import { createIconSetFromFontello } from 'react-native-vector-icons'
 import { StackActions, NavigationActions } from 'react-navigation'
 import OneSignal from 'react-native-onesignal'
 import Switch from 'react-native-switch-pro'
+import ConfigJson from '../../../package.json'
 
 // Design
 import * as Utils from '../../components/Utils'
+import { VersionText } from './elements'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -155,42 +157,47 @@ class Settings extends Component {
       }
     ]
 
-    return list.map(item => {
-      const arrowIconName = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
-      return (
-        <TouchableWithoutFeedback onPress={item.onPress} key={item.title}>
-          <Utils.Item padding={16}>
-            <Utils.Row justify='space-between' align='center'>
-              <Utils.Row justify='space-between' align='center'>
-                <View style={styles.rank}>
-                  <Icon
-                    name={item.icon}
-                    size={22}
-                    color={Colors.secondaryText}
-                  />
-                </View>
-                <Utils.View>
-                  <Utils.Text lineHeight={20} size='small'>
-                    {item.title}
-                  </Utils.Text>
-                  <Utils.Text lineHeight={20} size='xsmall' secondary>
-                    {item.description}
-                  </Utils.Text>
-                </Utils.View>
-              </Utils.Row>
-              {(!!item.onPress && !item.right) && (
-                <Icon
-                  name={arrowIconName}
-                  size={15}
-                  color={Colors.secondaryText}
-                />
-              )}
-              {item.right && item.right()}
-            </Utils.Row>
-          </Utils.Item>
-        </TouchableWithoutFeedback>
-      )
-    })
+    return (
+      <React.Fragment>
+        {list.map(item => {
+          const arrowIconName = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
+          return (
+            <TouchableWithoutFeedback onPress={item.onPress} key={item.title}>
+              <Utils.Item padding={16}>
+                <Utils.Row justify='space-between' align='center'>
+                  <Utils.Row justify='space-between' align='center'>
+                    <View style={styles.rank}>
+                      <Icon
+                        name={item.icon}
+                        size={22}
+                        color={Colors.secondaryText}
+                      />
+                    </View>
+                    <Utils.View>
+                      <Utils.Text lineHeight={20} size='small'>
+                        {item.title}
+                      </Utils.Text>
+                      <Utils.Text lineHeight={20} size='xsmall' secondary>
+                        {item.description}
+                      </Utils.Text>
+                    </Utils.View>
+                  </Utils.Row>
+                  {(!!item.onPress && !item.right) && (
+                    <Icon
+                      name={arrowIconName}
+                      size={15}
+                      color={Colors.secondaryText}
+                    />
+                  )}
+                  {item.right && item.right()}
+                </Utils.Row>
+              </Utils.Item>
+            </TouchableWithoutFeedback>
+          )
+        })}
+        <VersionText>{`v${ConfigJson.version}`}</VersionText>
+      </React.Fragment>
+    )
   }
 
   render () {
