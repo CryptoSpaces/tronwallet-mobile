@@ -193,8 +193,9 @@ class FreezeScene extends Component {
   render () {
     const { trxBalance, amount, loading, unfreezeStatus } = this.state
     const { freeze } = this.props.context
-    let totalPower = freeze.value ? Number(freeze.value.total) : 0
-    totalPower += Number(amount.replace(/,/g, ''))
+    const userTotalPower = freeze.value ? Number(freeze.value.total) : 0
+    const newTotalPower = userTotalPower + Number(amount.replace(/,/g, ''))
+
     return (
       <KeyboardScreen>
         <Utils.Container>
@@ -225,7 +226,7 @@ class FreezeScene extends Component {
             />
             <Utils.VerticalSpacer size='small' />
             <Utils.SummaryInfo>
-              {`TRON POWER: ${formatNumber(totalPower)}`}
+              {`TRON POWER: ${formatNumber(newTotalPower)}`}
             </Utils.SummaryInfo>
             <Utils.VerticalSpacer size='medium' />
             <ButtonGradient
@@ -243,7 +244,7 @@ class FreezeScene extends Component {
               <Utils.LightButton
                 paddingY={'medium'}
                 paddingX={'large'}
-                disabled={unfreezeStatus.disabled || loading || !totalPower}
+                disabled={unfreezeStatus.disabled || loading || !userTotalPower}
                 onPress={this._submitUnfreeze}>
                 <Utils.Text size='xsmall'>UNFREEZE</Utils.Text>
               </Utils.LightButton>
