@@ -50,19 +50,24 @@ class Create extends React.Component {
     return (
       <Utils.Container>
         <Utils.View flex={1} />
+        <Utils.View height={1} backgroundColor={Colors.secondaryText} />
         <Utils.Content backgroundColor={Colors.darkerBackground}>
           {!seed && <ActivityIndicator />}
           {seed && (
-            <Utils.Text lineHeight={24} letterSpacing={1.5} align='center'>
+            <Utils.Text lineHeight={24} align='center'>
               {seed}
             </Utils.Text>
           )}
         </Utils.Content>
+        <Utils.View height={1} backgroundColor={Colors.secondaryText} />
         <Utils.VerticalSpacer size='large' />
         <Utils.Row justify='center'>
           <ButtonGradient
             onPress={() =>
-              navigation.navigate('SeedConfirm', { seed: seed.split(' ') })
+              navigation.navigate(
+                'SeedConfirm',
+                { seed: seed.split(' ') }
+              )
             }
             text="I'VE WRITTEN IT DOWN"
           />
