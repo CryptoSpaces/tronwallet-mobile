@@ -1,12 +1,14 @@
 import React from 'react'
 import moment from 'moment'
-import { ScrollView, Clipboard, View, Text } from 'react-native'
+import { ScrollView, Clipboard, View, Text, RefreshControl } from 'react-native'
 import { string, number, bool, shape, array } from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Toast from 'react-native-easy-toast'
 import LinearGradient from 'react-native-linear-gradient'
 import styled from 'styled-components'
 
+import { updateTransactionByHash } from '../../utils/transactionUtils'
+import getTransactionStore from '../../store/transactions'
 import IconButton from '../../components/IconButton'
 import * as Utils from '../../components/Utils'
 import * as Elements from './Elements'
@@ -23,11 +25,6 @@ class TransactionDetails extends React.Component {
         <NavigationHeader
           title='TRANSACTION'
           onBack={() => navigation.goBack()}
-          // rightButton={
-          //   <TouchableOpacity onPress={() => { }}>
-          //     <Feather name='share-2' color='white' size={21} />
-          //   </TouchableOpacity>
-          // }
         />
       )
     }
@@ -61,8 +58,18 @@ class TransactionDetails extends React.Component {
     })
   }
 
+  state = {
+    refreshing: false,
+    item: null
+  }
+
+  componentDidMount () {
+    const { item } = this.props.navigation.state.params
+    this.setState({ item })
+  }
+
   _copy = async () => {
-    const { id } = this.props.navigation.state.params.item
+    const { id } = this.state.item
     try {
       await Clipboard.setString(`https://tronscan.org/#/transaction/${id}`)
       this.refs.toast.show('Tronscan url for this transaction copied to the clipboard')
@@ -72,7 +79,7 @@ class TransactionDetails extends React.Component {
   }
 
   _renderCard = () => {
-    const { id, confirmed, timestamp, block } = this.props.navigation.state.params.item
+    const { id, confirmed, timestamp, block } = this.state.item
 
     return (
       <React.Fragment>
@@ -110,7 +117,7 @@ class TransactionDetails extends React.Component {
               <Utils.Row align='center' justify='space-between'>
                 <Elements.DetailLabel>HASH</Elements.DetailLabel>
               </Utils.Row>
-              <View style={{height: 10}} />
+              <View style={{ height: 10 }} />
               <Text style={{
                 fontFamily: 'Rubik-Regular',
                 fontSize: 14,
@@ -214,7 +221,7 @@ class TransactionDetails extends React.Component {
   }
 
   _getHeaderAmount = () => {
-    const { type, contractData: { amount, frozenBalance, votes } } = this.props.navigation.state.params.item
+    const { type, contractData: { amount, frozenBalance, votes } } = this.state.item
 
     switch (type.toLowerCase()) {
       case 'freeze':
@@ -229,7 +236,7 @@ class TransactionDetails extends React.Component {
   }
 
   _renderHeader = () => {
-    const { type, contractData } = this.props.navigation.state.params.item
+    const { type, contractData } = this.state.item
     const tokenName = contractData.tokenName
     const tokenToDisplay = this._getHeaderToken(type, tokenName)
     const amountText = this._getHeaderAmountText(type)
@@ -255,10 +262,11 @@ class TransactionDetails extends React.Component {
           height: 22,
           backgroundColor: this._getHeaderBadgeColor(type),
           justifyContent: 'center',
-          paddingHorizontal: 10}}>
+          paddingHorizontal: 10
+        }}>
           <Elements.BadgeText>{type.toUpperCase()}</Elements.BadgeText>
         </View>
-        <View style={{height: 15}} />
+        <View style={{ height: 15 }} />
         {type.toLowerCase() !== 'create' &&
           <React.Fragment>
             <Text style={{
@@ -270,13 +278,15 @@ class TransactionDetails extends React.Component {
             }}>{amountText}</Text>
             <Utils.Row align='center'>
               <Elements.AmountText>{amount < 1 ? amount : amount.toFixed(2)}</Elements.AmountText>
-              <View style={{width: 11, height: 1}} />
-              <View style={{backgroundColor: rgb(46, 47, 71),
+              <View style={{ width: 11, height: 1 }} />
+              <View style={{
+                backgroundColor: rgb(46, 47, 71),
                 borderRadius: 2,
                 opacity: 0.97,
                 height: 24,
                 justifyContent: 'center',
-                paddingHorizontal: 8}}>
+                paddingHorizontal: 8
+              }}>
                 <Elements.BadgeText>{tokenToDisplay}</Elements.BadgeText>
               </View>
               <Utils.HorizontalSpacer size='medium' />
@@ -291,7 +301,7 @@ class TransactionDetails extends React.Component {
   _truncateAddress = address => `${address.substring(0, 8)}...${address.substring(address.length - 8, address.length)}`
 
   _renderToFrom = () => {
-    const { type, confirmed, contractData: { transferFromAddress, transferToAddress } } = this.props.navigation.state.params.item
+    const { type, confirmed, contractData: { transferFromAddress, transferToAddress } } = this.state.item
     const TempText = styled.Text`
       font-family: 'Rubik-Regular';
       font-size: 13;
@@ -303,7 +313,7 @@ class TransactionDetails extends React.Component {
       <View>
         {type.toLowerCase() === 'transfer' &&
           <React.Fragment>
-            <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
+            <View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
               <Text style={{
                 fontFamily: 'Rubik-Medium',
                 fontSize: 11,
@@ -313,19 +323,19 @@ class TransactionDetails extends React.Component {
               }}>TO</Text>
               {this._getIcon('ios-arrow-round-up', 30, confirmed ? rgb(63, 231, 123) : rgb(102, 104, 143))}
             </View>
-            <View style={{flexDirection: 'row', width: '100%'}}>
+            <View style={{ flexDirection: 'row', width: '100%' }}>
               <Copiable
                 TextComponent={TempText}
                 showToast={this._showToast}>
                 {transferToAddress}
               </Copiable>
             </View>
-            <View style={{height: 15}} />
+            <View style={{ height: 15 }} />
             <Utils.View height={1} background='#51526B' />
-            <View style={{height: 15}} />
+            <View style={{ height: 15 }} />
           </React.Fragment>
         }
-        <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
+        <View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
           <Text style={{
             fontFamily: 'Rubik-Medium',
             fontSize: 11,
@@ -347,7 +357,7 @@ class TransactionDetails extends React.Component {
   _renderCreateBody = () => {
     const {
       tokenName, unityValue, totalSupply, startTime, endTime, description
-    } = this.props.navigation.state.params.item.contractData
+    } = this.state.item.contractData
 
     return (
       <Utils.Content>
@@ -403,7 +413,7 @@ class TransactionDetails extends React.Component {
   }
 
   _renderVotes = () => {
-    const { votes } = this.props.navigation.state.params.item.contractData
+    const { votes } = this.state.item.contractData
     const TempText = styled.Text`
       font-family: Rubik-Regular;
       font-size: 11px;
@@ -421,7 +431,7 @@ class TransactionDetails extends React.Component {
             showToast={this._showToast}>
             {vote.voteAddress}
           </Copiable>
-          <View style={{height: 14}}>
+          <View style={{ height: 14 }}>
             <Text style={{
               fontFamily: 'Rubik-Regular',
               fontSize: 11,
@@ -460,7 +470,7 @@ class TransactionDetails extends React.Component {
   }
 
   _renderDetails = () => {
-    const lowerType = this.props.navigation.state.params.item.type.toLowerCase()
+    const lowerType = this.state.item.type.toLowerCase()
     switch (lowerType) {
       case 'transfer':
         return this._renderToFrom()
@@ -475,29 +485,59 @@ class TransactionDetails extends React.Component {
     }
   }
 
+  _onRefresh = async () => {
+    const { item } = this.state
+    this.setState({ refreshing: true })
+
+    await updateTransactionByHash(item.id)
+    const transaction = await this._getTransactionByHash(item.id)
+
+    this.setState({ item: transaction, refreshing: false })
+  }
+
+  _getTransactionByHash = async (hash) => {
+    const store = await getTransactionStore()
+    return store
+      .objects('Transaction')
+      .filtered(`id = '${hash}'`)
+      .map(item => Object.assign({}, item))[0]
+  }
+
   render () {
+    const { item } = this.state
     return (
       <Utils.Container>
-        <ScrollView>
-          {this._renderHeader()}
-          <View style={{
-            paddingHorizontal: 32
-          }}>
-            {this._renderCard()}
-          </View>
-          <View style={{
-            paddingHorizontal: 32
-          }}>
-            <View style={{height: 24}} />
-            {this._renderDetails()}
-          </View>
-          <Toast
-            ref='addressToast'
-            position='center'
-            fadeInDuration={750}
-            fadeOutDuration={1000}
-            opacity={0.8}
-          />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
+          {item &&
+            <React.Fragment>
+              {this._renderHeader()}
+              <View style={{
+                paddingHorizontal: 32
+              }}>
+                {this._renderCard()}
+              </View>
+              <View style={{
+                paddingHorizontal: 32
+              }}>
+                <View style={{ height: 24 }} />
+                {this._renderDetails()}
+                <Toast
+                  ref='toast'
+                  position='center'
+                  fadeInDuration={750}
+                  fadeOutDuration={1000}
+                  opacity={0.8}
+                />
+              </View>
+            </React.Fragment>
+          }
         </ScrollView>
       </Utils.Container>
     )
