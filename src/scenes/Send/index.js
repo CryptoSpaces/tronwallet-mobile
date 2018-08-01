@@ -127,7 +127,7 @@ class SendScene extends Component {
 
   _changeAddress = (to) => {
     const trimmedTo = to.trim()
-    if (isAddressValid(trimmedTo)) {
+    if (!trimmedTo.length || isAddressValid(trimmedTo)) {
       this.setState({
         to: trimmedTo,
         addressError: null
