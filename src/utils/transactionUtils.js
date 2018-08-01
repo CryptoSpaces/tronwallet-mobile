@@ -24,42 +24,57 @@ export const updateTransactions = async (pin) => {
   const store = await getTransactionStore()
   store.write(() =>
     transactions.map(item => {
-      const transaction = {
-        id: item.hash,
-        type: item.type,
-        block: item.block,
-        contractData: item.contractData,
-        ownerAddress: item.ownerAddress,
-        timestamp: item.timestamp,
-        confirmed: true
-      }
-      if (item.type === 'Transfer') {
-        transaction.id = item.transactionHash
-        transaction.contractData = {
-          transferFromAddress: item.transferFromAddress,
-          transferToAddress: item.transferToAddress,
-          amount: item.amount,
-          tokenName: item.tokenName
-        }
-      }
-      if (item.type === 'Create') {
-        transaction.contractData = {
-          ...transaction.contractData,
-          tokenName: item.contractData.name,
-          unityValue: item.contractData.trxNum
-        }
-      }
-      if (item.type === 'Participate') {
-        transaction.contractData = {
-          ...transaction.contractData,
-          tokenName: item.contractData.token,
-          transferFromAddress: item.contractData.toAddress
-        }
-      }
-
+      const transaction = createTransaction(item)
       store.create('Transaction', transaction, true)
     })
   )
+}
+
+export const updateTransactionByHash = async (hash) => {
+  const item = await Client.fetchTransactionByHash(hash)
+  const transaction = createTransaction(item)
+  const store = await getTransactionStore()
+
+  store.write(() => {
+    store.create('Transaction', transaction, true)
+  })
+}
+
+const createTransaction = (item) => {
+  const transaction = {
+    id: item.hash,
+    type: item.type,
+    block: item.block,
+    contractData: item.contractData,
+    ownerAddress: item.ownerAddress,
+    timestamp: item.timestamp,
+    confirmed: true
+  }
+  if (item.type === 'Transfer') {
+    transaction.id = item.transactionHash
+    transaction.contractData = {
+      transferFromAddress: item.transferFromAddress,
+      transferToAddress: item.transferToAddress,
+      amount: item.amount,
+      tokenName: item.tokenName
+    }
+  }
+  if (item.type === 'Create') {
+    transaction.contractData = {
+      ...transaction.contractData,
+      tokenName: item.contractData.name,
+      unityValue: item.contractData.trxNum
+    }
+  }
+  if (item.type === 'Participate') {
+    transaction.contractData = {
+      ...transaction.contractData,
+      tokenName: item.contractData.token,
+      transferFromAddress: item.contractData.toAddress
+    }
+  }
+
+  return transaction
 }
 
 export const openDeepLink = async dataToSend => {
