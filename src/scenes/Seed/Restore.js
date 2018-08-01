@@ -1,27 +1,16 @@
 import React from 'react'
-import { SafeAreaView, Alert, Keyboard } from 'react-native'
+import { Alert, Keyboard } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
+import { Answers } from 'react-native-fabric'
 
 import * as Utils from '../../components/Utils'
-import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import { recoverUserKeypair } from '../../utils/secretsUtils'
-import { Context } from '../../store/context'
+import { withContext } from '../../store/context'
 
 class Restore extends React.Component {
-  static navigationOptions = () => ({
-    header: (
-      <SafeAreaView style={{ backgroundColor: Colors.darkerBackground }}>
-        <Utils.Header>
-          <Utils.TitleWrapper>
-            <Utils.Title>Restore Wallet</Utils.Title>
-          </Utils.TitleWrapper>
-        </Utils.Header>
-      </SafeAreaView>
-    )
-  })
-
   state = {
     seed: '',
     loading: false
@@ -42,7 +31,7 @@ class Restore extends React.Component {
       'Restore seed will erase all data on this device and pull information from the network for the restored account.',
       [
         { text: 'Cancel' },
-        { text: 'OK', onPress: () => this._restoreWallet() },
+        { text: 'OK', onPress: this._restoreWallet }
       ],
       { cancelable: false }
     )
@@ -50,57 +39,74 @@ class Restore extends React.Component {
 
   _restoreWallet = async () => {
     const { updateWalletData } = this.props.context
+    const seed = this.state.seed.trim()
+
     Keyboard.dismiss()
     this.setState({ loading: true })
     try {
-      await recoverUserKeypair(this.state.seed)
+      await recoverUserKeypair(this.props.context.pin, this.props.context.oneSignalId, seed)
       await updateWalletData()
-      alert("Wallet recovered with success!")
-      this.setState({ loading: false }, () => {
-        this._navigateToSettings()
-      })
+      Alert.alert('Wallet recovered with success!')
+      this.setState({ loading: false }, this._navigateToSettings)
+      Answers.logCustom('Wallet Operation', { type: 'Restore' })
     } catch (err) {
       console.warn(err)
-      alert("Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again.")
+      Alert.alert(
+        "Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again."
+      )
       this.setState({ loading: false })
     }
   }
 
-  render() {
+  _onKeyPress = (event) => {
+    if (event.nativeEvent.key === 'Enter') {
+      this._handleRestore()
+    }
+  }
+
+  render () {
     const { loading } = this.state
     return (
       <Utils.Container>
-        <Utils.View flex={1} />
-        <Utils.Content>
+        <NavigationHeader
+          title='RESTORE WALLET'
+          onBack={() => this.props.navigation.goBack()}
+          noBorder
+        />
+        <Utils.Content paddingBottom='2'>
           <Utils.FormInput
             placeholder='Please, type your 12 seed words here'
-            multiline={true}
+            height={90}
+            padding={16}
+            multiline
             numberOfLines={4}
             autoCapitalize='none'
             autoCorrect={false}
-            autoFocus
             value={this.state.seed}
             onChangeText={seed => this.setState({ seed })}
+            onKeyPress={this._onKeyPress}
           />
         </Utils.Content>
-        <Utils.View flex={1} />
-        <Utils.Row justify='center'>
+        <Utils.Content paddingTop='2' paddingBottom='4'>
           <ButtonGradient
             disabled={!this.state.seed.length || loading}
             onPress={this._handleRestore}
             text='RESTORE'
           />
-        </Utils.Row>
+        </Utils.Content>
+        <Utils.Content paddingTop='8'>
+          <Utils.Text weight='300' font='light' secondary size='smaller'>
+            To restore your wallet, please provide the same 12 words
+            that you wrote on paper when you created your wallet for the first time.
+            If you enter a different sequence of words, a new empty wallet will be
+            created.
+          </Utils.Text>
+        </Utils.Content>
         <Utils.VerticalSpacer />
-        <Utils.Button onPress={() => this.props.navigation.goBack()}>Back</Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
     )
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <Restore context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(Restore)

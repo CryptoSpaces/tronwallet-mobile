@@ -1,26 +1,29 @@
 import * as React from 'react'
-import { Dimensions, SafeAreaView } from 'react-native'
+import { Dimensions } from 'react-native'
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view'
 import FreezeScreen from '../Freeze/index'
+import { Colors } from '../../components/DesignSystem'
 import SendScreen from '../Send/index'
-import * as Utils from '../../components/Utils'
+import NavigationHeader from '../../components/Navigation/Header'
 
 const initialLayout = {
   height: 0,
   width: Dimensions.get('window').width
 }
 
+const SCREENSIZE = Dimensions.get('window')
+const TAB_WIDTH = SCREENSIZE.width / 2
+const INDICATOR_WIDTH = 100
+
 export default class TransferScene extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>Transfers</Utils.Title>
-            </Utils.TitleWrapper>
-          </Utils.Header>
-        </SafeAreaView>
+        <NavigationHeader
+          title='TRANSFERS'
+          onBack={() => { navigation.goBack() }}
+          noBorder
+        />
       )
     }
   }
@@ -36,13 +39,34 @@ export default class TransferScene extends React.Component {
   _handleIndexChange = index => this.setState({ index })
 
   _renderHeader = props => (
-    <TabBar {...props} style={{ backgroundColor: 'black', flex: 0.1 }} />
+    <TabBar
+      {...props}
+      indicatorStyle={{
+        width: INDICATOR_WIDTH,
+        height: 1,
+        marginLeft: (TAB_WIDTH / 2 - INDICATOR_WIDTH / 2)
+      }}
+      tabStyle={{
+        padding: 8
+      }}
+      labelStyle={{
+        fontFamily: 'Rubik-Medium',
+        fontSize: 12,
+        letterSpacing: 0.65,
+        lineHeight: 12
+      }}
+      style={{
+        backgroundColor: Colors.background,
+        elevation: 0,
+        shadowOpacity: 0
+      }}
+    />
   )
 
   _renderScene = SceneMap({
     send: () => <SendScreen {...this.props} />,
     freeze: () => <FreezeScreen {...this.props} />
-  });
+  })
 
   render () {
     return (
@@ -52,7 +76,6 @@ export default class TransferScene extends React.Component {
         renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
         initialLayout={initialLayout}
-        style={{ backgroundColor: '#191a29' }}
       />
     )
   }

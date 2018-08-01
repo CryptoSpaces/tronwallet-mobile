@@ -1,152 +1,162 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  Alert,
   View,
   TouchableWithoutFeedback,
-  SafeAreaView
+  Alert,
+  ActivityIndicator
 } from 'react-native'
-import { Auth } from 'aws-amplify'
-import { StackActions, NavigationActions } from 'react-navigation'
+import { Answers } from 'react-native-fabric'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
+import { StackActions, NavigationActions } from 'react-navigation'
+import OneSignal from 'react-native-onesignal'
+import Switch from 'react-native-switch-pro'
 
+// Design
 import * as Utils from '../../components/Utils'
 import { Colors, Spacing } from '../../components/DesignSystem'
-import ChangeNodeModal from './ChangeNodeModal'
-import LoadingScene from '../../components/LoadingScene'
+import NavigationHeader from '../../components/Navigation/Header'
 
-import { getUserSecrets } from '../../utils/secretsUtils'
+// Utils
 import fontelloConfig from '../../assets/icons/config.json'
+import { withContext } from '../../store/context'
+import { restartAllWalletData } from '../../utils/userAccountUtils'
+import { getUserSecrets } from '../../utils/secretsUtils'
+import Client from '../../services/client'
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'Loading' })],
+  key: null
+})
 
 class Settings extends Component {
   static navigationOptions = () => {
     return {
-      header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>Settings</Utils.Title>
-            </Utils.TitleWrapper>
-          </Utils.Header>
-        </SafeAreaView>
-      )
+      header: <NavigationHeader title='SETTINGS' />
     }
   }
 
   state = {
-    nodeModalVisible: false,
-    address: null,
     seed: null,
-    loading: true
+    loading: true,
+    subscriptionStatus: null,
+    changingSubscription: false
   }
 
-  componentDidMount() {
-    this.onLoadData()
+  componentDidMount () {
+    Answers.logContentView('Tab', 'Settings')
+    this._onLoadData()
+    OneSignal.getPermissionSubscriptionState(
+      status => this.setState({ subscriptionStatus: status.userSubscriptionEnabled === 'true' })
+    )
   }
 
-  onLoadData = async () => {
-    const data = await getUserSecrets()
-    const address = data.address
+  _onLoadData = async () => {
+    const data = await getUserSecrets(this.props.context.pin)
     const seed = data.mnemonic
-    this.setState({ address, seed, loading: false })
+    this.setState({ seed, loading: false })
   }
 
-  showAlert = () => {
+  _resetWallet = async () => {
     Alert.alert(
-      'Logout',
-      'Do you want to log out of your wallet?',
-      [{
-        text: 'Cancel',
-        style: 'cancel'
-      }, {
-        text: 'Yes',
-        onPress: async () => {
-          await Auth.signOut()
-          const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Auth' })],
-            key: null
-          })
-          this.props.navigation.dispatch(resetAction)
-        },
-        style: 'default'
-      }],
-      { cancelable: true }
+      'Reset Wallet',
+      `Warning: This action will erase all saved data including your 12 secret words. If you didn't save your secret, please do it before continue.`,
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'OK, I understand it',
+          onPress: () => this.props.navigation.navigate('Pin', {
+            shouldGoBack: true,
+            testInput: pin => pin === this.props.context.pin,
+            onSuccess: async () => {
+              await restartAllWalletData()
+              this.props.navigation.dispatch(resetAction)
+            }
+          })}
+      ],
+      { cancelable: false }
     )
   }
 
-  renderLogout = () => {
-    const arrowIcon = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
-    const logout = {
-      title: 'Logout',
-      description: 'Exit application',
-      icon: 'log-out,-exit,-out,-arrow,-sign-out',
-      onPress: this.showAlert
-    }
-    return (
-      <TouchableWithoutFeedback onPress={logout.onPress}>
-        <Utils.Item padding={16} top={0.2}>
-          <Utils.Row justify='space-between' align='center'>
-            <Utils.Row justify='space-between' align='center'>
-              <View style={styles.rank}>
-                <Icon
-                  name={logout.icon}
-                  size={22}
-                  color={Colors.secondaryText}
-                />
-              </View>
-              <Utils.View>
-                <Utils.Text lineHeight={20} size='small'>
-                  {logout.title}
-                </Utils.Text>
-                <Utils.Text lineHeight={20} size='xsmall' secondary>
-                  {logout.description}
-                </Utils.Text>
-              </Utils.View>
-            </Utils.Row>
-            <Utils.Row align='center' justify='space-between'>
-              <Icon name={arrowIcon} size={15} color={Colors.secondaryText} />
-            </Utils.Row>
-          </Utils.Row>
-        </Utils.Item>
-      </TouchableWithoutFeedback>
+  _changeSubscription = () => {
+    this.setState(
+      ({ subscriptionStatus }) => ({ subscriptionStatus: !subscriptionStatus }),
+      () => {
+        OneSignal.setSubscription(this.state.subscriptionStatus)
+        OneSignal.getPermissionSubscriptionState(
+          status => console.log('subscriptions status', status)
+        )
+        if (this.state.subscriptionStatus) {
+          Client.registerDeviceForNotifications(
+            this.props.context.oneSignalId,
+            this.props.context.publicKey.value
+          )
+        } else {
+          // TODO: remove device from db
+        }
+      }
     )
   }
 
-  renderList = () => {
-    const { address, seed } = this.state
-    const shortAddress = address ? `${address.slice(0, 10)}...${address.substr(address.length - 10)}`
-      : 'Loading Account ...'
+  _renderList = () => {
+    const { seed } = this.state
     const list = [
       {
-        title: shortAddress,
-        description: 'Current Account',
-        icon: 'user,-person,-avtar,-profile-picture,-dp'
+        title: 'Notifications Subscription',
+        description: 'Enable or disable push notifications',
+        icon: 'user,-person,-avtar,-profile-picture,-dp',
+        right: () => {
+          if ((this.state.subscriptionStatus === null) || this.state.changingSubscription) {
+            return <ActivityIndicator size='small' color={Colors.primaryText} />
+          }
+          return (
+            <Switch
+              circleStyle={{ backgroundColor: Colors.orange }}
+              backgroundActive={Colors.yellow}
+              backgroundInactive={Colors.secondaryText}
+              value={this.state.subscriptionStatus}
+              onSyncPress={this._changeSubscription}
+            />
+          )
+        }
       },
       {
-        title: 'Edit Nodes',
+        title: 'Network',
         description: 'Choose a node of your preference',
-        icon: 'key,-password,-lock,-privacy,-login',
-        onPress: () => this.setState({ nodeModalVisible: true })
+        icon: 'share,-network,-connect,-community,-media',
+        onPress: () => this.props.navigation.navigate('NetworkConnection')
       },
       {
-        title: 'Confirm Seed',
-        description: 'Confirm the seed password for your account',
+        title: 'Backup Wallet',
+        description: 'Backup your secret words',
         icon: 'key,-password,-lock,-privacy,-login',
-        onPress: () => this.props.navigation.navigate('SeedCreate', { seed })
+        onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
+          testInput: pin => pin === this.props.context.pin,
+          onSuccess: () => this.props.navigation.navigate('SeedCreate', { seed })
+        })
       },
       {
-        title: 'Restore Seed',
-        description: 'Restore previously used seed words',
-        icon: 'key,-password,-lock,-privacy,-login',
-        onPress: () => this.props.navigation.navigate('SeedRestore')
+        title: 'Restore Wallet',
+        description: 'Restore previously used 12 secrets words',
+        icon: 'folder-sync,-data,-folder,-recovery,-sync',
+        onPress: () => this.props.navigation.navigate('Pin', {
+          shouldGoBack: true,
+          testInput: pin => pin === this.props.context.pin,
+          onSuccess: () => this.props.navigation.navigate('SeedRestore')
+        })
+      },
+      {
+        title: 'Reset Wallet',
+        description: 'Restart all data from current wallet',
+        icon: 'delete,-trash,-dust-bin,-remove,-recycle-bin',
+        onPress: this._resetWallet
       }
     ]
 
     return list.map(item => {
-      const arrowIcon = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
+      const arrowIconName = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
       return (
         <TouchableWithoutFeedback onPress={item.onPress} key={item.title}>
           <Utils.Item padding={16}>
@@ -168,15 +178,14 @@ class Settings extends Component {
                   </Utils.Text>
                 </Utils.View>
               </Utils.Row>
-              {!!item.onPress && (
-                <Utils.Row align='center' justify='space-between'>
-                  <Icon
-                    name={arrowIcon}
-                    size={15}
-                    color={Colors.secondaryText}
-                  />
-                </Utils.Row>
+              {(!!item.onPress && !item.right) && (
+                <Icon
+                  name={arrowIconName}
+                  size={15}
+                  color={Colors.secondaryText}
+                />
               )}
+              {item.right && item.right()}
             </Utils.Row>
           </Utils.Item>
         </TouchableWithoutFeedback>
@@ -184,22 +193,13 @@ class Settings extends Component {
     })
   }
 
-  render() {
-    const { nodeModalVisible } = this.state
-
+  render () {
     return (
       <Utils.Container
-        keyboardShouldPersistTaps={'always'}
+        keyboardShouldPersistTaps='always'
         keyboardDismissMode='interactive'
       >
-        {this.renderList()}
-        <Utils.VerticalSpacer size='big' />
-        {this.renderLogout()}
-        <ChangeNodeModal
-          visible={nodeModalVisible}
-          onClose={() => this.setState({ nodeModalVisible: false })}
-          onLoadData={this.onLoadData}
-        />
+        {this._renderList()}
       </Utils.Container>
     )
   }
@@ -222,4 +222,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Settings
+export default withContext(Settings)

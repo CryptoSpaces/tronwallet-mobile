@@ -1,144 +1,113 @@
 import React, { Component } from 'react'
-import { SafeAreaView, FlatList, RefreshControl, Image, ActivityIndicator } from 'react-native'
+import {
+  FlatList,
+  RefreshControl
+} from 'react-native'
+import { Answers } from 'react-native-fabric'
 
-import * as Utils from '../../components/Utils'
-import { Spacing, Colors } from '../../components/DesignSystem'
-import Client from '../../services/client'
-import TransferCard from './Transfer'
-import ParticipateCard from './Participate'
-import VoteCard from './Vote'
-import FreezeCard from './Freeze'
-import Default from './Default'
+import Transaction from './Transaction'
+import { Background } from './elements'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import getTransactionStore from '../../store/transactions'
+import { withContext } from '../../store/context'
+import { updateTransactions } from '../../utils/transactionUtils'
+
+import Empty from './Empty'
 
 const POOLING_TIME = 30000
 
 class TransactionsScene extends Component {
-  static navigationOptions = () => {
-    return {
-      header: (
-        <SafeAreaView style={{ backgroundColor: 'black' }}>
-          <Utils.Header>
-            <Utils.TitleWrapper>
-              <Utils.Title>My Transactions</Utils.Title>
-            </Utils.TitleWrapper>
-          </Utils.Header>
-        </SafeAreaView>
-      )
-    }
-  }
+  static navigationOptions = () => ({
+    header: <NavigationHeader title='MY TRANSACTIONS' />
+  })
 
   state = {
-    refreshing: true,
+    loading: true,
+    refreshing: false,
     transactions: []
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
+    Answers.logContentView('Tab', 'Transactions')
     const store = await getTransactionStore()
-    this.setState({
-      transactions: this.getSortedTransactionList(store),
-      refreshing: false
-    })
-    this.updateData()
-    this.didFocusSubscription = this.props.navigation.addListener('didFocus', this.updateData)
-    this.dataSubscription = setInterval(this.updateData, POOLING_TIME)
+    const cachedTransactions = this._getSortedTransactionList(store)
+    if (!cachedTransactions.length) {
+      this.setState({
+        transactions: []
+      })
+    } else {
+      this.setState({
+        transactions: cachedTransactions,
+        loading: false
+      })
+    }
+
+    this._onRefresh()
+    this.dataSubscription = setInterval(this._updateData, POOLING_TIME)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.didFocusSubscription.remove()
     clearInterval(this.dataSubscription)
   }
 
-  getSortedTransactionList = (store) => store.objects('Transaction').sorted([['timestamp', true]]).map(item => Object.assign({}, item))
+  _getSortedTransactionList = store =>
+    store
+      .objects('Transaction')
+      .sorted([['timestamp', true]])
+      .map(item => Object.assign({}, item))
 
-  updateData = async () => {
+  _onRefresh = async () => {
+    this.setState({ refreshing: true })
+    await this._updateData()
+    this.setState({ refreshing: false })
+  }
+
+  _updateData = async () => {
     try {
-      this.setState({ refreshing: true })
-      const response = await Client.getTransactionList()
+      await updateTransactions(this.props.context.pin)
       const store = await getTransactionStore()
-      store.write(() => response.map(item => {
-        const transaction = {
-          id: item.hash,
-          type: item.type,
-          contractData: item.contractData,
-          ownerAddress: item.ownerAddress,
-          timestamp: item.timestamp
-        }
-        if (item.type === 'Transfer') {
-          transaction.id = item.transactionHash
-          transaction.contractData = {
-            transferFromAddress: item.transferFromAddress,
-            transferToAddress: item.transferToAddress,
-            amount: item.amount,
-            tokenName: item.tokenName
-          }
-        }
-        store.create('Transaction', transaction, true)
-      }))
-      const transactions = this.getSortedTransactionList(store)
+      const transactions = this._getSortedTransactionList(store)
       this.setState({
-        refreshing: false,
-        transactions
+        transactions,
+        loading: false
       })
     } catch (err) {
       console.error(err)
+      this.setState({
+        loading: false
+      })
     }
   }
 
-  renderCard = item => {
-    switch (item.type) {
-      case 'Transfer': return <TransferCard item={item} />
-      case 'Freeze': return <FreezeCard item={item} />
-      case 'Vote': return <VoteCard item={item} />
-      case 'Participate': return <ParticipateCard item={item} />
-      default: return <Default item={item} />
-    }
+  _navigateToDetails = (item) => {
+    this.props.navigation.navigate('TransactionDetails', { item })
   }
 
-  renderListEmptyComponent = () => <Utils.Container />
-
-  render() {
-    const { transactions, refreshing } = this.state
-
-    if (transactions.length === 0) {
-      return (
-        <Utils.View style={{ backgroundColor: Colors.background }} flex={1} justify='center' align='center'>
-          <Image
-            source={require('../../assets/empty.png')}
-            resizeMode='contain'
-            style={{ width: '60%' }}
-          />
-          <Utils.VerticalSpacer size='medium' />
-          {
-            refreshing ?
-              <ActivityIndicator size="small" color="#ffffff" /> :
-              <Utils.Text secondary font='light' size='small'>No transactions found.</Utils.Text>
-          }
-        </Utils.View>
-      )
-    }
-
+  render () {
+    const { transactions, loading } = this.state
+    const publicKey = this.props.context.publicKey
 
     return (
-      <Utils.Container>
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={this.updateData}
+      !transactions.length ? <Empty loading={loading} />
+        : (
+          <Background>
+            <FlatList
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={this._onRefresh}
+                />
+              }
+              data={transactions}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => <Transaction item={item} onPress={() => this._navigateToDetails(item)} publicKey={publicKey.value} />}
             />
-          }
-          contentContainerStyle={{ padding: Spacing.medium }}
-          data={transactions}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => this.renderCard(item)}
-          ItemSeparatorComponent={() => <Utils.VerticalSpacer size='medium' />}
-          ListEmptyComponent={this.renderListEmptyComponent}
-        />
-      </Utils.Container>
+          </Background>
+        )
     )
   }
 }
 
-export default TransactionsScene
+export default withContext(TransactionsScene)

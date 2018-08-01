@@ -1,22 +1,32 @@
 import React from 'react'
-import { SafeAreaView, ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Alert } from 'react-native'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
+import NavigationHeader from '../../components/Navigation/Header'
 
 import { getUserSecrets } from '../../utils/secretsUtils'
+import { withContext } from '../../store/context'
+
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'App' })],
+  key: null
+})
 
 class Create extends React.Component {
-  static navigationOptions = () => ({
+  static navigationOptions = ({ navigation }) => ({
     header: (
-      <SafeAreaView style={{ backgroundColor: Colors.darkerBackground }}>
-        <Utils.Header>
-          <Utils.TitleWrapper>
-            <Utils.Title>Confirm Wallet Seed</Utils.Title>
-          </Utils.TitleWrapper>
-        </Utils.Header>
-      </SafeAreaView>
+      <NavigationHeader
+        title='CONFIRM WALLET SEED'
+        onBack={() => {
+          navigation.getParam('shouldReset', false)
+            ? navigation.dispatch(resetAction)
+            : navigation.goBack()
+        }}
+      />
     )
   })
 
@@ -24,38 +34,53 @@ class Create extends React.Component {
     seed: null
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     try {
-      const { mnemonic } = await getUserSecrets()
+      const { mnemonic } = await getUserSecrets(this.props.context.pin)
       this.setState({ seed: mnemonic })
     } catch (err) {
       console.warn(err)
-      alert('Oops, we have a problem. Please restart the application.')
+      Alert.alert('Oops, we have a problem. Please restart the application.')
     }
   }
 
   render () {
     const { seed } = this.state
+    const { navigation } = this.props
     return (
       <Utils.Container>
         <Utils.View flex={1} />
         <Utils.Content backgroundColor={Colors.darkerBackground}>
           {!seed && <ActivityIndicator />}
-          {seed && <Utils.Text lineHeight={24} letterSpacing={1.5} align='center'>{seed}</Utils.Text>}
+          {seed && (
+            <Utils.Text lineHeight={24} letterSpacing={1.5} align='center'>
+              {seed}
+            </Utils.Text>
+          )}
         </Utils.Content>
-        <Utils.View flex={1} />
+        <Utils.VerticalSpacer size='large' />
         <Utils.Row justify='center'>
           <ButtonGradient
-            onPress={() => this.props.navigation.navigate('SeedConfirm', { seed: seed.split(' ') })}
+            onPress={() =>
+              navigation.navigate('SeedConfirm', { seed: seed.split(' ') })
+            }
             text="I'VE WRITTEN IT DOWN"
           />
         </Utils.Row>
-        <Utils.VerticalSpacer />
-        <Utils.Button onPress={() => this.props.navigation.goBack()}>Confirm later</Utils.Button>
+        <Utils.VerticalSpacer size='medium' />
+        <Utils.Button
+          onPress={() => {
+            navigation.getParam('shouldReset', false)
+              ? navigation.dispatch(resetAction)
+              : navigation.goBack()
+          }}
+        >
+          Confirm later
+        </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
     )
   }
 }
 
-export default Create
+export default withContext(Create)

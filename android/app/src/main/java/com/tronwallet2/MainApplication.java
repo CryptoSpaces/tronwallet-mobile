@@ -2,8 +2,10 @@ package com.tronwallet2;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import cl.json.RNSharePackage;
+import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.smixx.fabric.FabricPackage;
-import com.amazonaws.RNAWSCognitoPackage;
 import io.sentry.RNSentryPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.getty.rntron.RNTronPackage;
@@ -34,18 +36,20 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new FabricPackage(),
-            new RNAWSCognitoPackage(),
-            new RNSentryPackage(),
-            new RNDeviceInfo(),
-            new RNTronPackage(),
-            new ReactNativeConfigPackage(),
-            new RNCameraPackage(),
-            new SplashScreenReactPackage(),
-            new RealmReactPackage(),
-            new VectorIconsPackage(),
-            new SvgPackage(),
-            new LinearGradientPackage()
+          new RNBackgroundFetchPackage(),
+          new RNSharePackage(),
+          new ReactNativeOneSignalPackage(),
+          new FabricPackage(),
+          new RNSentryPackage(),
+          new RNDeviceInfo(),
+          new RNTronPackage(),
+          new ReactNativeConfigPackage(),
+          new RNCameraPackage(),
+          new SplashScreenReactPackage(),
+          new RealmReactPackage(),
+          new VectorIconsPackage(),
+          new SvgPackage(),
+          new LinearGradientPackage()
       );
     }
 

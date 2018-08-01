@@ -50,6 +50,7 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - "NSData+FastHex (1.0.1)"
+  - OneSignal (2.8.5)
   - Protobuf (3.6.0)
   - React (0.55.4):
     - React/Core (= 0.55.4)
@@ -60,6 +61,9 @@ PODS:
   - react-native-camera/RCT (1.1.4):
     - React
   - react-native-camera/RN (1.1.4):
+    - React
+  - react-native-onesignal (3.2.5):
+    - OneSignal (= 2.8.5)
     - React
   - React/ART (0.55.4):
     - React/Core
@@ -113,6 +117,8 @@ PODS:
     - React
   - RNDeviceInfo (0.21.5):
     - React
+  - RNShare (1.0.27):
+    - React
   - RNTron (1.0.0):
     - "NSData+FastHex"
     - React
@@ -148,6 +154,7 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - React/ART (from `../node_modules/react-native`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -163,6 +170,7 @@ DEPENDENCIES:
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - ReactNativeFabric (from `../node_modules/react-native-fabric`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNShare (from `../node_modules/react-native-share`)
   - RNTron (from `../node_modules/react-native-tron/ios/`)
   - SentryReactNative (from `../node_modules/react-native-sentry`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -180,6 +188,7 @@ SPEC REPOS:
     - KSCrash
     - nanopb
     - "NSData+FastHex"
+    - OneSignal
     - Protobuf
     - Sentry
     - TrezorCrypto
@@ -195,10 +204,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-onesignal:
+    :path: "../node_modules/react-native-onesignal"
   ReactNativeFabric:
     :path: "../node_modules/react-native-fabric"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNTron:
     :path: "../node_modules/react-native-tron/ios/"
   SentryReactNative:
@@ -221,17 +234,20 @@ SPEC CHECKSUMS:
   KSCrash: 5394936f41e5c1ef7b79cf79b30d53299b0c160e
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   "NSData+FastHex": a22ad031ee10a4297d0bf4d20cf03406a4476169
+  OneSignal: 42dae269c7eca517aee34963820e1eb922390031
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
   React: aa2040dbb6f317b95314968021bd2888816e03d5
   react-native-camera: ab22041dcf0403d88f2ae4b9ea3ed2644e680423
+  react-native-onesignal: 4f425b36d3edf595c93c1a8d3618a93b71a85a51
   ReactNativeFabric: 3912bf9c714d7cc98110eadf06ca6dedef219322
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
+  RNShare: 80d4472ab25e77d9f824cb8d49d7e85af91c66e0
   RNTron: e5cc70419d4fc1021255c7bffb764bbf3e8cc560
   Sentry: 7d3ea7176e5184e9c35c12a5825905345807e8c1
   SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
   TrezorCrypto: ecef681446bf02af6248d3b5e394026d7e766e56
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: a6885e9ab6e8865cadb423ce139b27dc8219d0c6
+PODFILE CHECKSUM: a75365d4870e797a99d1a1592dc1d55ad8e6f861
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.5.3

@@ -1,166 +1,258 @@
 import React, { Component } from 'react'
-import { Linking, KeyboardAvoidingView } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import qs from 'qs'
+import { Alert, Keyboard } from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import moment from 'moment'
+import { Answers } from 'react-native-fabric'
 
 import * as Utils from '../../components/Utils'
-import Client from '../../services/client'
 import Header from '../../components/Header'
-import Card, { CardRow } from '../../components/Card'
-import { TronVaultURL, MakeTronMobileURL } from '../../utils/deeplinkUtils'
-import { signTransaction } from '../../utils/transactionUtils';
+import Input from '../../components/Input'
+import Badge from '../../components/Badge'
+import ButtonGradient from '../../components/ButtonGradient'
+import { Colors } from '../../components/DesignSystem'
+import KeyboardScreen from '../../components/KeyboardScreen'
+import NavigationHeader from '../../components/Navigation/Header'
 
-import { Context } from '../../store/context'
+import Client from '../../services/client'
+import { signTransaction } from '../../utils/transactionUtils'
+import getTransactionStore from '../../store/transactions'
+import { withContext } from '../../store/context'
+import { formatNumber } from '../../utils/numberUtils'
 
 class FreezeScene extends Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: (
+        <NavigationHeader
+          title='FREEZE'
+          onBack={() => { navigation.goBack() }}
+          noBorder
+        />
+      )
+    }
+  }
   state = {
     from: '',
     balances: [],
     trxBalance: 0,
     bandwidth: 0,
     total: 0,
-    amount: 0,
-    loading: true
+    amount: '',
+    loading: true,
+    unfreezeStatus: {
+      msg: 'After a three day period you can unfreeze your TRX',
+      disabled: false
+    }
   }
 
-  componentDidMount() {
-    this._didFocusSubscription = this.props.navigation.addListener('didFocus', this.loadData)
+  componentDidMount () {
+    Answers.logContentView('Page', 'Freeze')
+    this._didFocusSubscription = this.props.navigation.addListener(
+      'didFocus',
+      this._loadData
+    )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this._didFocusSubscription.remove()
   }
 
-  loadData = async () => {
+  _checkUnfreeze = async () => {
+    let unfreezeStatus = {
+      msg: 'After a three day period you can unfreeze your TRX',
+      disabled: false
+    }
+    try {
+      const transactionStore = await getTransactionStore()
+
+      const queryFreeze = transactionStore
+        .objects('Transaction')
+        .sorted([['timestamp', true]])
+        .filtered('type == "Unfreeze" or type == "Freeze"')
+      const lastFreeze = queryFreeze.length && queryFreeze[0].type === 'Freeze'
+        ? queryFreeze[0] : null
+
+      if (lastFreeze) {
+        const lastFreezeTimePlusThree = moment(lastFreeze.timestamp).add(3, 'days')
+        const differenceFromNow = lastFreezeTimePlusThree.diff(moment())
+        const duration = moment.duration(differenceFromNow)
+
+        if (duration.asSeconds() > 0) {
+          unfreezeStatus.msg = duration.asDays() < 1 ? duration.asHours() < 1
+            ? `You can unfreeze your TRX in ${Math.round(duration.asMinutes())} minutes.`
+            : `You can unfreeze your TRX in ${Math.round(duration.asHours())} hours.`
+            : `You can unfreeze your TRX in ${Math.round(duration.asDays())} days.`
+          unfreezeStatus.disabled = true
+          return unfreezeStatus
+        } else {
+          unfreezeStatus.msg = 'You can unfreeze your TRX now.'
+          unfreezeStatus.disabled = false
+          return unfreezeStatus
+        }
+      } else {
+        return unfreezeStatus
+      }
+    } catch (error) {
+      return unfreezeStatus
+    }
+  }
+
+  _loadData = async () => {
     try {
       const { freeze, publicKey } = this.props.context
       const { balance } = freeze.value.balances.find(b => b.name === 'TRX')
-
+      const total = freeze.value.total || 0
+      const unfreezeStatus = await this._checkUnfreeze()
       this.setState({
         from: publicKey.value,
         balances: freeze,
         trxBalance: balance,
         bandwidth: freeze.value.bandwidth.netReimaining,
-        total: freeze.value.total,
-        loading: false
+        loading: false,
+        unfreezeStatus,
+        total
       })
     } catch (error) {
-      this.setState({
-        loading: false
-      })
+      console.log(error)
+      this.setState({ loading: false })
     }
   }
 
-  submit = async () => {
+  _submitUnfreeze = async () => {
+    this.setState({loading: true})
+    try {
+      const data = await Client.getUnfreezeTransaction(this.props.context.pin)
+      this._openTransactionDetails(data)
+    } catch (error) {
+      Alert.alert('Error while building transaction, try again.')
+      this.setState({ error: 'Error getting transaction', loadingSign: false })
+    } finally {
+      this.setState({loading: false})
+    }
+  }
+  _submit = async () => {
     const { amount, trxBalance } = this.state
+    const convertedAmount = Number(amount)
+
     this.setState({ loading: true })
     try {
-      if (trxBalance < amount) throw new Error('Insufficient TRX balance');
-      await this.freezeToken()
+      if (convertedAmount <= 0) { throw new Error('The minimum amount for any freeze transaction is 1.') }
+      if (trxBalance < convertedAmount) { throw new Error('Insufficient TRX balance') }
+      if (!Number.isInteger(convertedAmount)) { throw new Error('Can only freeze round numbers') }
+      await this._freezeToken()
     } catch (error) {
-      alert(error.message);
-    } finally {
-      this.setState({ loading: false });
-    }
-  }
-
-
-  freezeToken = async () => {
-    const { from, amount } = this.state
-    try {
-      //TronScan
-      //const data = await Client.freezeToken(amount)
-      //Serverless
-      const data = await Client.getFreezeTransaction(amount)
-
-      // Data to deep link, same format as Tron Wallet
-      const dataToSend = qs.stringify({
-        txDetails: { from, amount, Type: 'FREEZE' },
-        pk: from,
-        action: 'transaction',
-        from: 'mobile',
-        URL: MakeTronMobileURL('transaction'),
-        data
-      })
-
-      this.openTransactionDetails(data)
-      //this.openDeepLink(dataToSend)
-
-    } catch (error) {
-      alert("Error while building transaction, try again.");
-      this.setState({ error: 'Error getting transaction', loadingSign: false })
-    }
-  }
-
-  openTransactionDetails = async (transactionUnsigned) => {
-    try {
-      const transactionSigned = await signTransaction(transactionUnsigned);
-      this.setState({ loadingSign: false }, () => {
-        this.props.navigation.navigate('TransactionDetail', { tx: transactionSigned })
-      })
-    } catch (error) {
-      alert(error.message);
-      this.setState({ error: 'Error getting transaction', loadingSign: false })
-    }
-  }
-
-  openDeepLink = async (dataToSend) => {
-    try {
-      const url = `${TronVaultURL}auth/${dataToSend}`
-      await Linking.openURL(url)
       this.setState({ loading: false })
-    } catch (error) {
-      this.setState({ loading: false }, () => {
-        this.props.navigation.navigate('GetVault')
-      })
+      Alert.alert('Warning', error.message)
     }
   }
 
-  render() {
-    const {
-      total,
-      bandwidth,
-      trxBalance,
-      amount,
-      loading
-    } = this.state
+  _freezeToken = async () => {
+    const { amount } = this.state
+    const convertedAmount = Number(amount)
 
+    try {
+      const data = await Client.getFreezeTransaction(this.props.context.pin, convertedAmount)
+      this._openTransactionDetails(data)
+    } catch (error) {
+      Alert.alert('Error while building transaction, try again.')
+      this.setState({ error: 'Error getting transaction' })
+    } finally {
+      this.setState({ loading: false })
+    }
+  }
+
+  _openTransactionDetails = async (transactionUnsigned) => {
+    try {
+      const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
+      this.setState({ loadingSign: false }, () => {
+        this.props.navigation.navigate('SubmitTransaction', {
+          tx: transactionSigned
+        })
+      })
+    } catch (error) {
+      Alert.alert(error.message)
+      this.setState({ error: 'Error getting transaction', loadingSign: false })
+    }
+  }
+
+  _changeFreeze = value => {
+    const validation = /^0[0-9]/
+    let amount = validation.test(value) ? value.slice(1, value.length) : value
+
+    this.setState({
+      amount: amount
+    })
+  }
+
+  _leftContent = () => (
+    <Utils.View marginRight={8} marginLeft={8}>
+      <Ionicons name='ios-unlock' size={16} color={Colors.secondaryText} />
+    </Utils.View>
+  )
+
+  render () {
+    const { trxBalance, amount, loading, unfreezeStatus } = this.state
+    const { freeze } = this.props.context
+    let totalPower = freeze.value ? Number(freeze.value.total) : 0
+    totalPower += Number(amount.replace(/,/g, ''))
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        enabled
-      >
-        <KeyboardAwareScrollView>
-          <Utils.StatusBar />
-          <Utils.Container>
-            <Utils.StatusBar />
-            <Header>
-              <Utils.View align='center'>
-                <Utils.Text size='xsmall' secondary>
-                  Freeze
-                </Utils.Text>
-                <Utils.Text size='medium'>{trxBalance.toFixed(2)} TRX</Utils.Text>
-              </Utils.View>
-            </Header>
-            <Utils.Content style={{ backgroundColor: 'transparent' }}>
-              <Card isEditable loading={loading} buttonLabel='Freeze' onPress={this.submit} onChange={(amount) => this.setState({ amount: Number(amount) })} >
-                <CardRow label='New Frozen TRX' value={amount + total} />
-              </Card>
-              <Card>
-                <CardRow label='Frozen TRX' value={total} />
-                <CardRow label='Current Bandwidth' value={bandwidth} />
-              </Card>
-
-            </Utils.Content>
-          </Utils.Container>
-        </KeyboardAwareScrollView>
-      </KeyboardAvoidingView>
+      <KeyboardScreen>
+        <Utils.Container>
+          <Header>
+            <Utils.View align='center'>
+              <Utils.Text size='xsmall' secondary>
+                BALANCE
+              </Utils.Text>
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.Row align='center'>
+                <Utils.Text size='large'>{formatNumber(trxBalance)}</Utils.Text>
+                <Utils.HorizontalSpacer />
+                <Badge>TRX</Badge>
+              </Utils.Row>
+            </Utils.View>
+          </Header>
+          <Utils.Content paddingTop={8}>
+            <Input
+              label='FREEZE AMOUNT'
+              leftContent={this._leftContent}
+              keyboardType='numeric'
+              align='right'
+              value={amount}
+              onChangeText={value => this._changeFreeze(value)}
+              onSubmitEditing={() => Keyboard.dismiss()}
+              placeholder='0'
+              numbersOnly
+            />
+            <Utils.VerticalSpacer size='small' />
+            <Utils.SummaryInfo>
+              {`TRON POWER: ${formatNumber(totalPower)}`}
+            </Utils.SummaryInfo>
+            <Utils.VerticalSpacer size='medium' />
+            <ButtonGradient
+              font='bold'
+              text='FREEZE'
+              onPress={this._submit}
+              disabled={loading || !(amount > 0 && amount < trxBalance)}
+            />
+            <Utils.VerticalSpacer size='big' />
+            <Utils.View align='center' justify='center'>
+              <Utils.SummaryInfo>
+                {unfreezeStatus.msg}
+              </Utils.SummaryInfo>
+              <Utils.VerticalSpacer size='medium' />
+              <Utils.LightButton
+                paddingY={'medium'}
+                paddingX={'large'}
+                disabled={unfreezeStatus.disabled || loading || !totalPower}
+                onPress={this._submitUnfreeze}>
+                <Utils.Text size='xsmall'>UNFREEZE</Utils.Text>
+              </Utils.LightButton>
+            </Utils.View>
+          </Utils.Content>
+        </Utils.Container>
+      </KeyboardScreen>
     )
   }
 }
 
-export default props => (
-  <Context.Consumer>
-    {context => <FreezeScene context={context} {...props} />}
-  </Context.Consumer>
-)
+export default withContext(FreezeScene)
