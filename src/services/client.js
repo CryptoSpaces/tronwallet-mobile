@@ -26,7 +26,7 @@ class ClientWallet {
     const totalVotes = data.total_votes
     const candidates = data.candidates
       .sort((a, b) => a.votes > b.votes ? -1 : a.votes < b.votes ? 1 : 0)
-      .map((candidate, index) => ({...candidate, rank: index + 1}))
+      .map((candidate, index) => ({ ...candidate, rank: index + 1 }))
     return { totalVotes, candidates }
   }
 
@@ -105,6 +105,29 @@ class ClientWallet {
       ...transaction
     }))
     return sortedTxs
+  }
+
+  async fetchTransactionByHash (hash) {
+    const apiUrl = await this.getTronscanUrl()
+
+    const txResponse = await axios.get(`${apiUrl}/transaction/${hash}`)
+    const type = this.getContractType(txResponse.data.contractType)
+
+    let transaction = {
+      ...txResponse.data,
+      type
+    }
+
+    if (type === 'Transfer Asset') {
+      const tfResponse = await axios.get(`${apiUrl}/transfer/${hash}`)
+      transaction = {
+        ...transaction,
+        ...tfResponse.data,
+        type: 'Transfer'
+      }
+    }
+
+    return transaction
   }
 
   //* ============TronWalletServerless Api============*//
