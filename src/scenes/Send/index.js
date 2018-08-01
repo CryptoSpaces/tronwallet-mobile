@@ -153,7 +153,7 @@ class SendScene extends Component {
       return
     }
 
-    if (!amount || balanceSelected.balance < amount || amount < 1) {
+    if (!amount || balanceSelected.balance < amount || amount <= 0) {
       this.setState({ error: 'Invalid amount' })
       return
     }
@@ -329,8 +329,8 @@ class SendScene extends Component {
             type='float'
             numbersOnly
           />
-          <Utils.Text size='xsmall' secondary>
-              The minimum amount for any send transaction is 1.
+          <Utils.Text light size='xsmall' secondary>
+              The minimum amount for any send transaction is 0.000001.
           </Utils.Text>
           <Utils.VerticalSpacer size='large' />
           {error && (
@@ -346,7 +346,7 @@ class SendScene extends Component {
               font='bold'
               text='SEND'
               onPress={this._submit}
-              disabled={Number(amount) < 1 || Number(balanceSelected.balance) < Number(amount) || !isAddressValid(to)}
+              disabled={Number(amount) <= 0 || Number(balanceSelected.balance) < Number(amount) || !isAddressValid(to)}
             />
           )}
         </Utils.Content>
