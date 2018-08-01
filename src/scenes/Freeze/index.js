@@ -17,6 +17,7 @@ import Client from '../../services/client'
 import { signTransaction } from '../../utils/transactionUtils'
 import getTransactionStore from '../../store/transactions'
 import { withContext } from '../../store/context'
+import { formatNumber } from '../../utils/numberUtils'
 
 class FreezeScene extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -39,7 +40,7 @@ class FreezeScene extends Component {
     amount: '',
     loading: true,
     unfreezeStatus: {
-      msg: '',
+      msg: 'After a three day period you can unfreeze your TRX',
       disabled: false
     }
   }
@@ -59,7 +60,7 @@ class FreezeScene extends Component {
   _checkUnfreeze = async () => {
     let unfreezeStatus = {
       msg: 'After a three day period you can unfreeze your TRX',
-      disabled: true
+      disabled: false
     }
     try {
       const transactionStore = await getTransactionStore()
@@ -189,14 +190,11 @@ class FreezeScene extends Component {
     </Utils.View>
   )
 
-  _formatNumber = n => n.toFixed().replace(/(\d)(?=(\d{3})+(\s|$))/g, '$1,')
-
   render () {
     const { trxBalance, amount, loading, unfreezeStatus } = this.state
     const { freeze } = this.props.context
     let totalPower = freeze.value ? Number(freeze.value.total) : 0
     totalPower += Number(amount.replace(/,/g, ''))
-
     return (
       <KeyboardScreen>
         <Utils.Container>
@@ -207,7 +205,7 @@ class FreezeScene extends Component {
               </Utils.Text>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Row align='center'>
-                <Utils.Text size='large'>{trxBalance.toFixed(2)}</Utils.Text>
+                <Utils.Text size='large'>{formatNumber(trxBalance)}</Utils.Text>
                 <Utils.HorizontalSpacer />
                 <Badge>TRX</Badge>
               </Utils.Row>
@@ -227,7 +225,7 @@ class FreezeScene extends Component {
             />
             <Utils.VerticalSpacer size='small' />
             <Utils.SummaryInfo>
-              {`TRON POWER: ${this._formatNumber(totalPower)}`}
+              {`TRON POWER: ${formatNumber(totalPower)}`}
             </Utils.SummaryInfo>
             <Utils.VerticalSpacer size='medium' />
             <ButtonGradient
@@ -245,7 +243,7 @@ class FreezeScene extends Component {
               <Utils.LightButton
                 paddingY={'medium'}
                 paddingX={'large'}
-                disabled={unfreezeStatus.disabled || loading}
+                disabled={unfreezeStatus.disabled || loading || !totalPower}
                 onPress={this._submitUnfreeze}>
                 <Utils.Text size='xsmall'>UNFREEZE</Utils.Text>
               </Utils.LightButton>
