@@ -66,6 +66,7 @@ export const View = styled.View`
   ${props => props.paddingX && css`padding-horizontal: ${Spacing[props.paddingX]}`};
   ${props => props.padding && css`padding: ${props.padding}px`};
   ${props => props.margin && css`margin: ${props.margin}px`};
+  ${props => props.marginY && css`margin-vertical: ${props.marginY}px`};
   ${props => props.marginTop && css`margin-top: ${props.marginTop}px`};
   ${props => props.marginBottom && css`margin-bottom: ${props.marginBottom}px`};
   ${props => props.marginRight && css`margin-right: ${props.marginRight}px`};

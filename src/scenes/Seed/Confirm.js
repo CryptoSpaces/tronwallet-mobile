@@ -8,6 +8,7 @@ import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
 import ButtonGradient from '../../components/ButtonGradient'
+import FadeIn from '../../components/Animations/FadeIn'
 
 import WalletClient from '../../services/client'
 import { confirmSecret } from '../../utils/secretsUtils'
@@ -36,20 +37,20 @@ class Confirm extends React.Component {
 
   state = {
     seed: this.props.navigation
+      .getParam('seed', []).join(' '),
+    remainingWords: this.props.navigation
       .getParam('seed', [])
-      .map(item => ({ word: item, used: false }))
       .sort(() => 0.5 - Math.random()),
     selected: [],
     loading: false
   }
 
   _handleSubmit = async () => {
-    const { navigation, context } = this.props
-    this.setState({loading: true})
+    const { context } = this.props
+    this.setState({ loading: true })
     try {
-      const seed = navigation.getParam('seed', []).join(' ')
       const selectedWords = this.state.selected.join(' ')
-      if (seed !== selectedWords) throw new Error('Words dont match!')
+      if (this.state.seed !== selectedWords) throw new Error('Words dont match!')
       await confirmSecret(context.pin)
       Answers.logCustom('Wallet Operation', { type: 'Create' })
       await this._handleSuccess()
@@ -59,7 +60,7 @@ class Confirm extends React.Component {
         'Wrong Combination',
         'Selected words dont match. Make sure you wrote the words in the correct order.'
       )
-      this.setState({loading: false})
+      this.setState({ loading: false })
     }
   }
 
@@ -84,23 +85,21 @@ class Confirm extends React.Component {
     }
   }
 
-  _selectWord = item => {
-    if (!this.state.selected.find(word => word === item.word)) {
-      const seed = this.state.seed
-      seed[seed.indexOf(item)].used = true
-      this.setState({
-        seed,
-        selected: [...this.state.selected, item.word]
-      })
-    }
+  _selectWord = (word, index) => {
+    const { remainingWords, selected } = this.state
+    remainingWords.splice(index, 1)
+    this.setState({
+      remainingWords,
+      selected: [...selected, word]
+    })
   }
 
-  _deselectWord = item => {
-    const seed = this.state.seed
-    seed[seed.indexOf(seed.find(word => word.word === item))].used = false
+  _deselectWord = (word, index) => {
+    const { remainingWords, selected } = this.state
+    selected.splice(index, 1)
     this.setState({
-      seed,
-      selected: this.state.selected.filter(word => word !== item)
+      remainingWords: [...remainingWords, word],
+      selected
     })
   }
 
@@ -109,45 +108,44 @@ class Confirm extends React.Component {
     return (
       <Utils.Container>
         <ScrollView>
-          <Utils.View flex={1} />
           <Utils.Content align='center' justify='center'>
             <Utils.Text>
               Select the words below in the right order to confirm your secret
               phrase.
             </Utils.Text>
           </Utils.Content>
-          <Utils.View flex={1} />
-          <Utils.Content background={Colors.darkerBackground}>
+          <Utils.View height={1} backgroundColor={Colors.secondaryText} />
+          <Utils.Content flex={1} background={Colors.darkerBackground}>
             <Utils.Row wrap='wrap' justify='center'>
-              {this.state.selected.map(item => (
-                <WordWrapper
-                  key={item}
-                  onPress={() => this._deselectWord(item)}
-                >
-                  <Utils.Text>{item}</Utils.Text>
-                </WordWrapper>
+              {this.state.selected.map((word, index) => (
+                <FadeIn name={`${index}`} key={index}>
+                  <WordWrapper
+                    onPress={() => this._deselectWord(word, index)}
+                  >
+                    <Utils.Text>{word}</Utils.Text>
+                  </WordWrapper>
+                </FadeIn>
+              ))}
+            </Utils.Row>
+            <Utils.View height={1} backgroundColor={Colors.secondaryText} marginY={16} />
+            <Utils.Row wrap='wrap' justify='center'>
+              {this.state.remainingWords.map((word, index) => (
+                <FadeIn name={`${index}`} key={index}>
+                  <WordWrapper
+                    onPress={() => this._selectWord(word, index)}
+                  >
+                    <Utils.Text>{word}</Utils.Text>
+                  </WordWrapper>
+                </FadeIn>
               ))}
             </Utils.Row>
           </Utils.Content>
-          <Utils.View flex={1} />
-          <Utils.Content background={Colors.darkerBackground}>
-            <Utils.Row wrap='wrap' justify='center'>
-              {this.state.seed.map(item => (
-                <WordWrapper
-                  key={item.word}
-                  onPress={() => this._selectWord(item)}
-                  disabled={item.used}
-                >
-                  <Utils.Text secondary={item.used}>{item.word}</Utils.Text>
-                </WordWrapper>
-              ))}
-            </Utils.Row>
-          </Utils.Content>
+          <Utils.View height={1} backgroundColor={Colors.secondaryText} />
           <Utils.VerticalSpacer />
           <Utils.View align='center' paddingY='medium'>
             <ButtonGradient
               text='CONFIRM SEED'
-              disabled={loading}
+              disabled={loading || this.state.selected.length < 12}
               onPress={this._handleSubmit}
             />
           </Utils.View>

@@ -119,7 +119,7 @@ PODS:
     - React
   - RNDeviceInfo (0.21.5):
     - React
-  - RNShare (1.0.27):
+  - RNShare (1.1.0):
     - React
   - RNTron (1.0.0):
     - "NSData+FastHex"
@@ -247,7 +247,7 @@ SPEC CHECKSUMS:
   ReactNativeFabric: 3912bf9c714d7cc98110eadf06ca6dedef219322
   RNBackgroundFetch: 8c4f77f83c398c659bce82af2f0a885079417b9e
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
-  RNShare: 80d4472ab25e77d9f824cb8d49d7e85af91c66e0
+  RNShare: 40c92dc26432c51019b94dee6e5eb5097d75c794
   RNTron: e5cc70419d4fc1021255c7bffb764bbf3e8cc560
   Sentry: 7d3ea7176e5184e9c35c12a5825905345807e8c1
   SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
