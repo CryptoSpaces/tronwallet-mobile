@@ -21,7 +21,6 @@ import getBalanceStore from '../../store/balance'
 import { withContext } from '../../store/context'
 import buildTransactionDetails, { translateError } from './detailMap'
 
-const CLOSE_SCREEN_TIME = 5000
 const ANSWERS_TRANSACTIONS = ['Transfer', 'Vote', 'Participate', 'Freeze']
 const NOTIFICATION_TRANSACTIONS = ['Transfer', 'Transfer Asset']
 
@@ -39,7 +38,6 @@ class TransactionDetail extends Component {
   }
 
   componentDidMount () {
-    this.props.navigation.setParams({ 'onClose': this._navigateNext })
     this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
@@ -72,14 +70,19 @@ class TransactionDetail extends Component {
     }
   }
 
-  _navigateNext = (stackToReset) => {
+  _navigateNext = () => {
     // Reset navigation as transaction submition is the last step of a user interaction
     const { submitted } = this.state
     const { navigation } = this.props
+    const transaction = this._getTransactionObject()
+    const stackToReset = this._getStackToReset(transaction.type)
     if (submitted) {
       const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: stackToReset })]
+        index: 1,
+        actions: [
+          NavigationActions.navigate({ routeName: 'App' }),
+          NavigationActions.navigate({ routeName: stackToReset })
+        ]
       })
       const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
       if (stackToReset) {
@@ -156,8 +159,6 @@ class TransactionDetail extends Component {
           }
         }
         await this._updateBalancesStore()
-        const stackToReset = this._getStackToReset(transaction.type)
-        this.closeTransactionDetails = setTimeout(() => this._navigateNext(stackToReset), CLOSE_SCREEN_TIME)
       }
 
       this.setState({
@@ -274,7 +275,7 @@ class TransactionDetail extends Component {
       <React.Fragment>
         <NavigationHeader
           title='TRANSACTION DETAILS'
-          onClose={this.props.navigation.getParam('onClose')}
+          onClose={this._navigateNext}
         />
         <Utils.Container>
           <ScrollView>
