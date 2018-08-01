@@ -72,9 +72,9 @@ class TransactionDetails extends React.Component {
     const { id } = this.state.item
     try {
       await Clipboard.setString(`https://tronscan.org/#/transaction/${id}`)
-      this.refs.toast.show('Tronscan url for this transaction copied to the clipboard')
+      this.refs.hashToast.show('Tronscan url for this transaction copied to the clipboard')
     } catch (error) {
-      this.refs.toast.show('Something went wrong while copying')
+      this.refs.hashToast.show('Something went wrong while copying')
     }
   }
 
@@ -108,7 +108,7 @@ class TransactionDetails extends React.Component {
               marginVertical: 20
             }}>
               <Toast
-                ref='toast'
+                ref='hashToast'
                 position='top'
                 fadeInDuration={750}
                 fadeOutDuration={1000}
@@ -526,16 +526,17 @@ class TransactionDetails extends React.Component {
               <View style={{
                 paddingHorizontal: 32
               }}>
-                <View style={{ height: 24 }} />
-                {this._renderDetails()}
                 <Toast
-                  ref='toast'
-                  position='center'
+                  ref='addressToast'
+                  position='top'
                   fadeInDuration={750}
                   fadeOutDuration={1000}
                   opacity={0.8}
                 />
+                <View style={{ height: 24 }} />
+                {this._renderDetails()}
               </View>
+              <View style={{ paddingVertical: 16 }} />
             </React.Fragment>
           }
         </ScrollView>
