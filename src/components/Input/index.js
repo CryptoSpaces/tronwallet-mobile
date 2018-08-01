@@ -2,15 +2,33 @@ import React from 'react'
 
 import * as Elements from './elements'
 
+const thousandSeparator = /(\d)(?=(\d{3})+(\s|$))/g
+const cleanNumber = /[^0-9.]/g
+
 const formatText = (text, numbersOnly, onChangeText) => {
   if (numbersOnly) {
-    return onChangeText(text.replace(/[^0-9]/g, ''))
+    const decimal = text.replace(cleanNumber, '').split('.')
+    if (decimal.length >= 2) {
+      return onChangeText(`${decimal[0]}.${decimal[1].substr(0, 6)}`)
+    } else {
+      return onChangeText(text)
+    }
   }
   return onChangeText(text)
 }
 
-const formatValue = (value, numbersOnly) => numbersOnly
-  ? value.replace(/(\d)(?=(\d{3})+(\s|$))/g, '$1,') : value
+const formatValue = (value, numbersOnly) => {
+  if (numbersOnly) {
+    const decimal = value.split('.')
+    if (decimal.length >= 2) {
+      return `${decimal[0].replace(thousandSeparator, '$1,')}.${decimal[1].substr(0, 6)}`
+    } else {
+      return value.replace(thousandSeparator, '$1,')
+    }
+  } else {
+    return value
+  }
+}
 
 const Input = ({
   innerRef,
