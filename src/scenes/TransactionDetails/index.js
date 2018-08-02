@@ -7,6 +7,7 @@ import Toast from 'react-native-easy-toast'
 import LinearGradient from 'react-native-linear-gradient'
 import styled from 'styled-components'
 
+import getAssetsStore from '../../store/assets'
 import { updateTransactionByHash } from '../../utils/transactionUtils'
 import getTransactionStore from '../../store/transactions'
 import IconButton from '../../components/IconButton'
@@ -62,12 +63,27 @@ class TransactionDetails extends React.Component {
 
   state = {
     refreshing: false,
-    item: null
+    item: null,
+    tokenPrice: 1
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { item } = this.props.navigation.state.params
     this.setState({ item })
+    if (item.type === 'Participate') {
+      const tokenPrice = await this._getTokenPriceFromStore(item.contractData.tokenName)
+      this.setState({ tokenPrice })
+    }
+  }
+
+  _getTokenPriceFromStore = async (tokenName) => {
+    const store = await getAssetsStore()
+    return store
+      .objects('Asset')
+      .filtered(
+        `name == '${tokenName}'`
+      )
+      .map(item => Object.assign({}, item))[0].price
   }
 
   _copy = async () => {
@@ -238,21 +254,19 @@ class TransactionDetails extends React.Component {
   }
 
   _renderHeader = () => {
-    const { type, contractData } = this.state.item
+    const { item: { type, contractData }, tokenPrice } = this.state
     const tokenName = contractData.tokenName
     const tokenToDisplay = this._getHeaderToken(type, tokenName)
     const amountText = this._getHeaderAmountText(type)
     const amountValue = this._getHeaderAmount()
 
     let amount
-    if (type === 'Freeze' || type === 'Unfreeze' || type === 'Participate') {
+    if (type === 'Freeze' || type === 'Unfreeze' || (type === 'Transfer' && tokenName === 'TRX')) {
       amount = amountValue / ONE_TRX
+    } else if (type === 'Participate') {
+      amount = (amountValue / ONE_TRX) / (tokenPrice / ONE_TRX)
     } else {
-      if (type === 'Transfer' && tokenName === 'TRX') {
-        amount = amountValue / ONE_TRX
-      } else {
-        amount = amountValue
-      }
+      amount = amountValue
     }
 
     return (

@@ -169,7 +169,7 @@ class BuyScene extends Component {
   _submit = async () => {
     const { item } = this.props.navigation.state.params
     const { trxBalance, amountToBuy } = this.state
-    const amountToPay = this._fixNumber(amountToBuy * (item.price / ONE_TRX))
+    const amountToPay = amountToBuy * (item.price / ONE_TRX)
 
     try {
       this.setState({ loading: true })
@@ -183,16 +183,16 @@ class BuyScene extends Component {
       const participatePayload = {
         participateAddress: item.ownerAddress,
         participateToken: item.name,
-        participateAmount: amountToPay
+        participateAmount: this._fixNumber(amountToPay)
       }
 
       const data = await Client.getParticipateTransaction(this.props.context.pin, participatePayload)
-      this._openTransactionDetails(data)
+      await this._openTransactionDetails(data)
     } catch (err) {
       if (err.message === 'INSUFFICIENT_BALANCE') {
         Alert.alert('Not enough funds (TRX) to participate.')
       } else if (err.message === 'INSUFFICIENT_TRX') {
-        Alert.alert(`You need to buy at least one TRX worth of ${item.name}.`, `Currently you are buying only ${amountToPay}.`)
+        Alert.alert(`You need to buy at least one TRX worth of ${item.name}.`, `Currently you are buying only ${this._fixNumber(amountToPay)}.`)
       } else {
         Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
       }
@@ -206,7 +206,8 @@ class BuyScene extends Component {
       const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
       this.setState({ loading: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
-          tx: transactionSigned
+          tx: transactionSigned,
+          tokenAmount: this.state.amountToBuy
         })
       })
     } catch (error) {
