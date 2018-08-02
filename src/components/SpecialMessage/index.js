@@ -45,7 +45,7 @@ const withSpecialMessage = (colorA = defaultGradient[0], colorB = defaultGradien
               </Elements.CenterBackGroundIllustration>
             </Elements.ContentWrapper>
           </Elements.BackgroundIllustration>
-          {renderBottomContent()}
+          {renderBottomContent && renderBottomContent()}
         </GradientBG>
       )
     }

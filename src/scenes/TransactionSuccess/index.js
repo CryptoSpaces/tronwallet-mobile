@@ -11,8 +11,6 @@ class TransactionsSuccess extends PureComponent {
     </Wrapper>
   )
 
-  _renderBottomContent = () => null
-
   render () {
     return (
       <SuccessSpecialMessage message='GOOD NEWS!'
