@@ -183,7 +183,7 @@ class BuyScene extends Component {
       const participatePayload = {
         participateAddress: item.ownerAddress,
         participateToken: item.name,
-        participateAmount: amountToPay
+        participateAmount: this._fixNumber(amountToPay)
       }
 
       const data = await Client.getParticipateTransaction(this.props.context.pin, participatePayload)
