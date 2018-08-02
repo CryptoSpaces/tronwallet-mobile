@@ -187,7 +187,7 @@ class BuyScene extends Component {
       }
 
       const data = await Client.getParticipateTransaction(this.props.context.pin, participatePayload)
-      this._openTransactionDetails(data)
+      await this._openTransactionDetails(data)
     } catch (err) {
       if (err.message === 'INSUFFICIENT_BALANCE') {
         Alert.alert('Not enough funds (TRX) to participate.')
