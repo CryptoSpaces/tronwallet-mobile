@@ -197,6 +197,7 @@ class ParticipateHome extends React.Component {
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 0 }}
                 colors={[rgb(255, 68, 101), rgb(246, 202, 29)]}
+                style={{ height: 85 }}
               >
                 {this._renderCardContent(item)}
               </LinearGradient>
