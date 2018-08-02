@@ -23,8 +23,8 @@ export const BackgroundIllustration = styled.ImageBackground`
   position: relative;
   justify-content: center;
   align-items: center;
-  width: 430px;
-  height: 430px;
+  width: 436px;
+  height: 436px;
 `
 export const CenterBackGroundIllustration = BackgroundIllustration.extend`
   width: 340px;
