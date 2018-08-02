@@ -18,3 +18,13 @@ export const formatNumber = (n) => {
       `${formatInteger(first)}.${second.substr(0, decimalPosition)}`)
   }
 }
+
+export const formatFloat = (n) => {
+  const number = n.toString()
+  const decimalPart = number.split('.')
+  if (decimalPart.length > 1) {
+    return `${formatInteger(decimalPart[0])}.${decimalPart[1]}`
+  } else {
+    return `${formatInteger(number)}.00`
+  }
+}
