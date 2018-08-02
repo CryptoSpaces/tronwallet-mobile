@@ -166,8 +166,11 @@ class TransactionDetail extends Component {
         submitError: null
       })
     } catch (error) {
+      // This needs to be adapted better from serverless api
+      const errorMessage = error.response && error.response.data ? error.response.data.error
+        : error.message
       this.setState({
-        submitError: translateError(error.message)
+        submitError: translateError(errorMessage)
       })
       store.write(() => {
         const lastTransaction = store.objectForPrimaryKey('Transaction', hash)

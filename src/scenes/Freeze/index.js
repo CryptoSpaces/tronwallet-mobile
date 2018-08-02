@@ -222,6 +222,7 @@ class FreezeScene extends Component {
               onChangeText={value => this._changeFreeze(value)}
               onSubmitEditing={() => Keyboard.dismiss()}
               placeholder='0'
+              type='int'
               numbersOnly
             />
             <Utils.VerticalSpacer size='small' />

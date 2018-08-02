@@ -2,15 +2,40 @@ import React from 'react'
 
 import * as Elements from './elements'
 
-const formatText = (text, numbersOnly, onChangeText) => {
+const thousandSeparator = /(\d)(?=(\d{3})+(\s|$))/g
+
+const formatText = (text, numbersOnly, onChangeText, type) => {
   if (numbersOnly) {
-    return onChangeText(text.replace(/[^0-9]/g, ''))
+    if (type === 'int') {
+      return onChangeText(text.replace(/[^0-9]/g, ''))
+    } else {
+      const decimal = text.replace(/[^0-9.]/g, '').split('.')
+      if (decimal.length >= 2) {
+        return onChangeText(`${decimal[0]}.${decimal[1].substr(0, 6)}`)
+      } else {
+        return onChangeText(text.replace(/[^0-9.]/g, ''))
+      }
+    }
   }
   return onChangeText(text)
 }
 
-const formatValue = (value, numbersOnly) => numbersOnly
-  ? value.replace(/(\d)(?=(\d{3})+(\s|$))/g, '$1,') : value
+const formatValue = (value, numbersOnly, type) => {
+  if (numbersOnly) {
+    if (type === 'int') {
+      return value.replace(thousandSeparator, '$1,')
+    } else {
+      const decimal = value.split('.')
+      if (decimal.length >= 2) {
+        return `${decimal[0].replace(thousandSeparator, '$1,')}.${decimal[1].substr(0, 6)}`
+      } else {
+        return value.replace(thousandSeparator, '$1,')
+      }
+    }
+  } else {
+    return value
+  }
+}
 
 const Input = ({
   innerRef,
@@ -20,6 +45,7 @@ const Input = ({
   onChangeText,
   value,
   numbersOnly,
+  type,
   ...props
 }) => (
   <Elements.Wrapper>
@@ -35,12 +61,12 @@ const Input = ({
       <Elements.TextInput
         {...props}
         innerRef={innerRef}
-        value={formatValue(value, numbersOnly)}
+        value={formatValue(value, numbersOnly, type)}
         autoCorrect={false}
         autoCapitalize='none'
         underlineColorAndroid='transparent'
         placeholderTextColor='#66688F'
-        onChangeText={text => formatText(text, numbersOnly, onChangeText)}
+        onChangeText={text => formatText(text, numbersOnly, onChangeText, type)}
       />
       {rightContent && rightContent()}
     </Elements.InputWrapper>
