@@ -18,6 +18,8 @@ import { ONE_TRX } from '../../services/client'
 import { rgb } from '../../../node_modules/polished'
 import Copiable from './CopiableAddress'
 
+import { formatFloat } from '../../utils/numberUtils'
+
 class TransactionDetails extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -229,7 +231,7 @@ class TransactionDetails extends React.Component {
       case 'unfreeze':
         return frozenBalance
       case 'vote':
-        return votes.length
+        return Object.keys(votes).reduce((acc, curr) => acc + Number(votes[curr].voteCount), 0)
       default:
         return amount
     }
@@ -277,7 +279,7 @@ class TransactionDetails extends React.Component {
               color: '#7476a2'
             }}>{amountText}</Text>
             <Utils.Row align='center'>
-              <Elements.AmountText>{amount < 1 ? amount : amount.toFixed(2)}</Elements.AmountText>
+              <Elements.AmountText>{amount < 1 ? amount : formatFloat(amount)}</Elements.AmountText>
               <View style={{ width: 11, height: 1 }} />
               <View style={{
                 backgroundColor: rgb(46, 47, 71),

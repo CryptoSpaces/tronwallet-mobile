@@ -3,6 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import fontelloConfig from '../../assets/icons/config.json'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import { ONE_TRX } from '../../services/client'
+import { formatNumber } from '../../utils/numberUtils'
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
 /* Functions that format the amount information to be displayed on screen. */
@@ -59,8 +60,10 @@ export const configureTransaction = (item, { topRow, addressRow, publicKey }) =>
       })
       break
     case 'Vote':
+      const userVotes = contractData.votes
+      const totalVotes = Object.keys(userVotes).reduce((acc, curr) => acc + Number(userVotes[curr].voteCount), 0)
       config.topRow = () => topRow({
-        amount: contractData.votes.length.toString(),
+        amount: formatNumber(totalVotes),
         icon: {
           Type: Feather,
           name: 'thumbs-up',
