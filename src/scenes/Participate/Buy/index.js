@@ -206,7 +206,8 @@ class BuyScene extends Component {
       const transactionSigned = await signTransaction(this.props.context.pin, transactionUnsigned)
       this.setState({ loading: false }, () => {
         this.props.navigation.navigate('SubmitTransaction', {
-          tx: transactionSigned
+          tx: transactionSigned,
+          tokenAmount: this.state.amountToBuy
         })
       })
     } catch (error) {

@@ -34,6 +34,7 @@ class TransactionDetail extends Component {
     submitError: null,
     submitted: false,
     isConnected: null,
+    tokenAmount: null,
     nowDate: moment().format('MM/DD/YYYY HH:MM:SS')
   }
 
@@ -49,7 +50,7 @@ class TransactionDetail extends Component {
   _loadData = async () => {
     const { navigation } = this.props
 
-    const signedTransaction = navigation.state.params.tx
+    const { tx: signedTransaction, tokenAmount } = navigation.state.params
     const connection = await NetInfo.getConnectionInfo()
     const isConnected = !(connection.type === 'none')
 
@@ -62,7 +63,7 @@ class TransactionDetail extends Component {
 
     try {
       const transactionData = await Client.getTransactionDetails(signedTransaction)
-      this.setState({ transactionData, signedTransaction })
+      this.setState({ transactionData, signedTransaction, tokenAmount })
     } catch (error) {
       this.setState({ submitError: error.message })
     } finally {
@@ -204,10 +205,11 @@ class TransactionDetail extends Component {
   }
 
   renderContracts = () => {
-    const { transactionData, nowDate } = this.state
+    const { transactionData, nowDate, tokenAmount } = this.state
     if (!transactionData) return
     const { contracts } = transactionData
-    const contractsElements = buildTransactionDetails(contracts)
+
+    const contractsElements = buildTransactionDetails(contracts, tokenAmount)
     contractsElements.push(
       <DetailRow
         key={'TIME'}

@@ -38,7 +38,7 @@ const toReadableField = (field) => {
 export const translateError = (errorMessage) => (
   errorDic[errorMessage] ? errorDic[errorMessage] : errorMessage
 )
-export default (contracts) => {
+export default (contracts, tokenAmount) => {
   const contractsRows = []
   for (const ctr in contracts[0]) {
     if (ctr === 'contractTypeId') {
@@ -64,12 +64,13 @@ export default (contracts) => {
       )
     } else if (ctr === 'amount' || ctr === 'frozenBalance') {
       const contractId = Number(contracts[0]['contractTypeId'])
-      const amountDivider = contractId === 1 || contractId === 11 || contractId === 9 ? ONE_TRX : 1
+      const amountDivider = contractId === 1 || contractId === 11 ? ONE_TRX : 1
+      const textToDisplay = contractId === 9 ? tokenAmount : contracts[0][ctr] / amountDivider
       contractsRows.push(
         <DetailRow
           key={ctr}
           title={toReadableField(ctr)}
-          text={contracts[0][ctr] / amountDivider}
+          text={textToDisplay}
         />
       )
     } else if (ctr === 'votes') {
