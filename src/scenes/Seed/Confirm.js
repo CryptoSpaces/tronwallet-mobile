@@ -76,9 +76,11 @@ class Confirm extends React.Component {
         }
         navigation.navigate('Rewards', rewardsParams)
       } else {
+        Answers.logCustom('Wallet Operation', { type: 'Gift', message: 'User gifted or not registered' })
         throw new Error('User gifted or not registered')
       }
     } catch (error) {
+      Answers.logCustom('Wallet Operation', { type: 'Gift', message: error.message })
       Alert.alert('Success', 'Wallet successfully confirmed.')
       this.setState({loading: false})
       navigation.dispatch(resetAction)
