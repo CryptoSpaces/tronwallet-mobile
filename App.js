@@ -34,6 +34,7 @@ import TransactionDetails from './src/scenes/TransactionDetails'
 import ParticipateHome from './src/scenes/Participate'
 import Pin from './src/scenes/Pin'
 import FirstTime from './src/scenes/FirstTime'
+import TransactionSuccess from './src/scenes/TransactionSuccess'
 
 import Client from './src/services/client'
 import { Context } from './src/store/context'
@@ -145,6 +146,7 @@ const RootNavigator = createStackNavigator({
     screen: SubmitTransactionScene,
     path: 'transaction/:tx'
   },
+  TransactionSuccess,
   Freeze: FreezeVoteScene,
   Rewards: RewardsScene
 }, {
