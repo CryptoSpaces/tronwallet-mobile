@@ -13,12 +13,12 @@ const transferAmount = ({ tokenName, amount }) => {
   return `${amount} ${tokenName}`
 }
 const freezeAmount = ({frozenBalance}) => `${frozenBalance / ONE_TRX} TRX`
-const participateAmount = ({amount, tokenName}) => `${amount / ONE_TRX} ${tokenName}`
+const participateAmount = ({amount, tokenName}, tokenPrice) => `${(amount / ONE_TRX) / (tokenPrice / ONE_TRX)} ${tokenName}`
 
 /* Configures the object used to hidrate the render components with the proper
 texts and icons. */
 export const configureTransaction = (item, { topRow, addressRow, publicKey }) => {
-  const { contractData } = item
+  const { contractData, tokenPrice } = item
   const config = {}
   switch (item.type) {
     case 'Transfer':
@@ -71,7 +71,7 @@ export const configureTransaction = (item, { topRow, addressRow, publicKey }) =>
       break
     case 'Participate':
       config.topRow = () => topRow({
-        amount: participateAmount(contractData),
+        amount: participateAmount(contractData, tokenPrice),
         icon: {
           Type: Icon,
           name: 'dollar,-currency,-money,-cash,-coin',

@@ -9,6 +9,7 @@ import Transaction from './Transaction'
 import { Background } from './elements'
 import NavigationHeader from '../../components/Navigation/Header'
 
+import getAssetsStore from '../../store/assets'
 import getTransactionStore from '../../store/transactions'
 import { withContext } from '../../store/context'
 import { updateTransactions } from '../../utils/transactionUtils'
@@ -30,15 +31,17 @@ class TransactionsScene extends Component {
 
   async componentDidMount () {
     Answers.logContentView('Tab', 'Transactions')
-    const store = await getTransactionStore()
-    const cachedTransactions = this._getSortedTransactionList(store)
+    const transactionStore = await getTransactionStore()
+    const cachedTransactions = this._getSortedTransactionList(transactionStore)
     if (!cachedTransactions.length) {
       this.setState({
         transactions: []
       })
     } else {
+      const assetStore = await getAssetsStore()
+      const updatedTransactions = this._updateParticipateTransactions(cachedTransactions, assetStore)
       this.setState({
-        transactions: cachedTransactions,
+        transactions: updatedTransactions,
         loading: false
       })
     }
@@ -67,10 +70,12 @@ class TransactionsScene extends Component {
   _updateData = async () => {
     try {
       await updateTransactions(this.props.context.pin)
-      const store = await getTransactionStore()
-      const transactions = this._getSortedTransactionList(store)
+      const transactionStore = await getTransactionStore()
+      const transactions = this._getSortedTransactionList(transactionStore)
+      const assetStore = await getAssetsStore()
+      const updatedTransactions = this._updateParticipateTransactions(transactions, assetStore)
       this.setState({
-        transactions,
+        transactions: updatedTransactions,
         loading: false
       })
     } catch (err) {
@@ -80,6 +85,26 @@ class TransactionsScene extends Component {
       })
     }
   }
+
+  _updateParticipateTransactions = (transactions, assetStore) => (
+    transactions.map((transaction) => {
+      if (transaction.type === 'Participate') {
+        const tokenPrice = this._getTokenPriceFromStore(transaction.contractData.tokenName, assetStore)
+        return { ...transaction, tokenPrice }
+      } else {
+        return transaction
+      }
+    })
+  )
+
+  _getTokenPriceFromStore = (tokenName, assetStore) => (
+    assetStore
+      .objects('Asset')
+      .filtered(
+        `name == '${tokenName}'`
+      )
+      .map(item => Object.assign({}, item))[0].price
+  )
 
   _navigateToDetails = (item) => {
     this.props.navigation.navigate('TransactionDetails', { item })
