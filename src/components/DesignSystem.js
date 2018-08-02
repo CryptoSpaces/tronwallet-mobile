@@ -31,6 +31,8 @@ export const Colors = {
   primaryGradient: ['#FF4465', '#F6CA1D'],
   buttonGradient: ['#FF4465', '#f8a92f', '#fc734b', '#f7b329', '#F4BC3A'],
   transactionCardGradient: ['#444663', '#2d2e46'],
+  transactionsRewardsGradient: ['#FF4465', '#f7b229'],
+  transactionSuccessGradient: ['#3de278', '#1c5631'],
   confirmed: '#3FE77B',
   unconfirmed: '#FF4465',
   yellow: '#F5FF30',
