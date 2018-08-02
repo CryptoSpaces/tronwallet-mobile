@@ -69,6 +69,8 @@ class Confirm extends React.Component {
     try {
       const result = await WalletClient.giftUser(context.pin, context.oneSignalId)
       if (result) {
+        Answers.logCustom('Wallet Operation', { type: 'Gift' })
+
         const rewardsParams = {
           label: 'Wallet Successfully confirmed',
           amount: 100,
