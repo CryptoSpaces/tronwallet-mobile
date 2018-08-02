@@ -35,7 +35,7 @@ class NavigationHeader extends React.Component {
       element = <TouchableOpacity onPress={onBack}>
         <Ionicons
           name='ios-arrow-round-back'
-          size={32}
+          size={38}
           color={Colors.primaryText}
         />
       </TouchableOpacity>
