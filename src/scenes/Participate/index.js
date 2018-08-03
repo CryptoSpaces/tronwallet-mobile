@@ -9,11 +9,13 @@ import {
   View,
   Dimensions
 } from 'react-native'
+
 import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
 import { debounce } from 'lodash'
 
+import SyncButton from '../../components/SyncButton'
 import { Colors } from '../../components/DesignSystem'
 import { orderBalances } from '../../utils/balanceUtils'
 import Client, { ONE_TRX } from '../../services/client'
@@ -48,6 +50,10 @@ class ParticipateHome extends React.Component {
       header: (
         <NavigationHeader
           title='PARTICIPATE'
+          leftButton={<SyncButton
+            loading={params && params.loading}
+            onPress={() => params._loadData()}
+          />}
           onSearch={name => params._onSearch(name)}
           onSearchPressed={() => params._onSearchPressed()}
         />
@@ -66,12 +72,17 @@ class ParticipateHome extends React.Component {
     Answers.logContentView('Tab', 'Participate')
     this._onSearch = debounce(this._onSearch, 350)
     this.props.navigation.setParams({
+      loading: false,
       _onSearch: this._onSearch,
-      _onSearchPressed: this._onSearchPressed
+      _onSearchPressed: this._onSearchPressed,
+      _loadData: this._loadData
     })
 
     const assetList = await this._getAssetsFromStore()
-    this.setState({ assetList, currentList: assetList })
+    if (assetList.length) {
+      this.setState({ assetList, currentList: assetList })
+    }
+    this._loadData()
     this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
@@ -80,8 +91,7 @@ class ParticipateHome extends React.Component {
   }
 
   _loadData = async () => {
-    const { assetList } = this.state
-    if (!assetList.length) this.setState({ loading: true })
+    this.props.navigation.setParams({ loading: true })
 
     try {
       const tokenList = await Client.getTokenList()
@@ -91,7 +101,7 @@ class ParticipateHome extends React.Component {
     } catch (error) {
       this.setState({ error: error.message })
     } finally {
-      this.setState({loading: false})
+      this.props.navigation.setParams({ loading: false })
     }
   }
 
