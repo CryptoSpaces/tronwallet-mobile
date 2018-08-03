@@ -36,13 +36,23 @@ class Confirm extends React.Component {
   })
 
   state = {
-    seed: this.props.navigation
-      .getParam('seed', []).join(' '),
-    remainingWords: this.props.navigation
-      .getParam('seed', [])
-      .sort(() => 0.5 - Math.random()),
+    seed: null,
+    remainingWords: null,
     selected: [],
     loading: false
+  }
+
+  static getDerivedStateFromProps (nextProps) {
+    const initialWords = nextProps.navigation
+      .getParam('seed', [])
+      .slice()
+      .sort(() => 0.5 - Math.random())
+
+    return {
+      seed: nextProps.navigation.getParam('seed', []).join(' '),
+      initialWords,
+      remainingWords: [...initialWords]
+    }
   }
 
   _handleSubmit = async () => {
@@ -89,26 +99,34 @@ class Confirm extends React.Component {
     }
   }
 
+  _filterOut = (word, index) => word.filter((e, i) => i !== index)
+
   _selectWord = (word, index) => {
     const { remainingWords, selected } = this.state
-    remainingWords.splice(index, 1)
     this.setState({
-      remainingWords,
+      remainingWords: this._filterOut(remainingWords, index),
       selected: [...selected, word]
     })
   }
 
   _deselectWord = (word, index) => {
     const { remainingWords, selected } = this.state
-    selected.splice(index, 1)
     this.setState({
       remainingWords: [...remainingWords, word],
-      selected
+      selected: this._filterOut(selected, index)
     })
+  }
+
+  _resetWords = () => {
+    this.setState((state) => ({
+      selected: [],
+      remainingWords: [...state.initialWords]
+    }))
   }
 
   render () {
     const { loading } = this.state
+
     return (
       <Utils.Container>
         <ScrollView>
@@ -146,6 +164,13 @@ class Confirm extends React.Component {
           </Utils.Content>
           <Utils.View height={1} backgroundColor={Colors.secondaryText} />
           <Utils.VerticalSpacer />
+          <Utils.View align='center' paddingY='medium'>
+            <ButtonGradient
+              text='RESET WORDS'
+              disabled={loading || !this.state.selected.length}
+              onPress={this._resetWords}
+            />
+          </Utils.View>
           <Utils.View align='center' paddingY='medium'>
             <ButtonGradient
               text='CONFIRM SEED'
