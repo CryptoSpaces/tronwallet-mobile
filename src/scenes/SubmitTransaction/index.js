@@ -195,7 +195,7 @@ class TransactionDetail extends Component {
     return <Utils.View paddingX={'medium'} paddingY={'small'}>{contractsElements}</Utils.View>
   }
 
-  renderSubmitButton = () => {
+  _renderSubmitButton = () => {
     const { loadingSubmit, disableSubmit } = this.state
 
     return (
@@ -237,7 +237,7 @@ class TransactionDetail extends Component {
       <React.Fragment>
         <NavigationHeader
           title='TRANSACTION DETAILS'
-          onClose={!this.state.loadingSubmit ? () => null : this.props.navigation.goBack()}
+          onClose={!this.state.loadingSubmit ? () => this.props.navigation.goBack() : null}
         />
         <Utils.Container>
           <ScrollView>
