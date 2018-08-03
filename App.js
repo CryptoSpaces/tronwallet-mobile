@@ -13,7 +13,7 @@ import { Colors } from './src/components/DesignSystem'
 
 import LoadingScene from './src/scenes/Loading'
 import SendScene from './src/scenes/Send'
-import HomeScene from './src/scenes/Home'
+import MarketScene from './src/scenes/Market'
 import BalanceScene from './src/scenes/Balance'
 import VoteScene from './src/scenes/Vote'
 import ReceiveScene from './src/scenes/Receive'
@@ -89,7 +89,7 @@ const ParticipateStack = createStackNavigator(
 )
 
 const AppTabs = createBottomTabNavigator({
-  Home: HomeScene,
+  Market: MarketScene,
   Vote: {
     screen: VoteScene,
     path: 'vote'
@@ -103,7 +103,7 @@ const AppTabs = createBottomTabNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName
-      if (routeName === 'Home') {
+      if (routeName === 'Market') {
         iconName = `graph,-bar,-chart,-statistics,-analytics`
       } else if (routeName === 'Balance') {
         iconName = `wallet,-money,-cash,-balance,-purse`
