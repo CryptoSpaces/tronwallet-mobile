@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
+import { ActivityIndicator, NetInfo, ScrollView, TouchableOpacity } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import moment from 'moment'
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -207,7 +207,7 @@ class TransactionDetail extends Component {
     }
   }
 
-  renderContracts = () => {
+  _renderContracts = () => {
     const { transactionData, nowDate, tokenAmount } = this.state
     if (!transactionData) return
     const { contracts } = transactionData
@@ -223,7 +223,7 @@ class TransactionDetail extends Component {
     return <Utils.View paddingX={'medium'} paddingY={'small'}>{contractsElements}</Utils.View>
   }
 
-  renderSubmitButton = () => {
+  _renderSubmitButton = () => {
     const { loadingSubmit, success } = this.state
     if (success) {
       return (
@@ -260,7 +260,7 @@ class TransactionDetail extends Component {
     )
   }
 
-  renderRetryConnection = () => (
+  _renderRetryConnection = () => (
     <Utils.Content align='center' justify='center'>
       <Utils.Text size='small'>
         It seems that you are disconnected. Reconnect to the internet before
@@ -280,13 +280,17 @@ class TransactionDetail extends Component {
       <React.Fragment>
         <NavigationHeader
           title='TRANSACTION DETAILS'
-          onClose={this._navigateNext}
+          rightButton={!this.state.loadingSubmit ? (
+            <TouchableOpacity onPress={this._navigateNext}>
+              <Feather name='x' color='white' size={28} />
+            </TouchableOpacity>
+          ) : null}
         />
         <Utils.Container>
           <ScrollView>
-            {!isConnected && this.renderRetryConnection()}
-            {isConnected && this.renderContracts()}
-            {isConnected && this.renderSubmitButton()}
+            {!isConnected && this._renderRetryConnection()}
+            {isConnected && this._renderContracts()}
+            {isConnected && this._renderSubmitButton()}
             <Utils.Content align='center' justify='center'>
               {submitError && (
                 <Utils.Error>{submitError}</Utils.Error>
