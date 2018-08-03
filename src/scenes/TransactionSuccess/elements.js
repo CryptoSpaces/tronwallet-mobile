@@ -19,3 +19,9 @@ export const SuccessText = styled.Text`
   text-align: center;
   padding-top: 20px;
 `
+export const ContinueButton = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 30px;
+  align-items: center;
+  justify-content: center;
+`

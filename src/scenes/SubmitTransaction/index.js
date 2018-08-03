@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, NetInfo, ScrollView, TouchableOpacity } from 'react-native'
-import Feather from 'react-native-vector-icons/Feather'
+import { ActivityIndicator, NetInfo, ScrollView } from 'react-native'
 import moment from 'moment'
-import { NavigationActions, StackActions } from 'react-navigation'
 import { Answers } from 'react-native-fabric'
 import OneSignal from 'react-native-onesignal'
 
 // Design
 import * as Utils from '../../components/Utils'
-import { Colors, FontSize } from '../../components/DesignSystem'
+import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import DetailRow from './detailRow'
 import LoadingScene from '../../components/LoadingScene'
@@ -30,7 +28,7 @@ class TransactionDetail extends Component {
     loadingSubmit: false,
     transactionData: null,
     signedTransaction: null,
-    success: null,
+    disableSubmit: false,
     submitError: null,
     submitted: false,
     isConnected: null,
@@ -72,27 +70,13 @@ class TransactionDetail extends Component {
   }
 
   _navigateNext = () => {
-    // Reset navigation as transaction submition is the last step of a user interaction
-    const { submitted } = this.state
     const { navigation } = this.props
     const transaction = this._getTransactionObject()
     const stackToReset = this._getStackToReset(transaction.type)
-    if (submitted) {
-      const resetAction = StackActions.reset({
-        index: 1,
-        actions: [
-          NavigationActions.navigate({ routeName: 'App' }),
-          NavigationActions.navigate({ routeName: stackToReset })
-        ]
-      })
-      const navigateToHome = NavigationActions.navigate({ routeName: 'Transactions' })
-      if (stackToReset) {
-        navigation.dispatch(resetAction)
-      }
-      navigation.dispatch(navigateToHome)
-    } else {
-      navigation.goBack()
-    }
+    navigation.navigate('TransactionSuccess', {
+      stackToReset,
+      navigation
+    })
   }
 
   _getTransactionObject = () => {
@@ -136,14 +120,10 @@ class TransactionDetail extends Component {
     this.setState({ loadingSubmit: true, submitError: null })
     const store = await getTransactionStore()
     const transaction = this._getTransactionObject()
-
     try {
-      let success = false
       store.write(() => { store.create('Transaction', transaction, true) })
       const { code } = await Client.broadcastTransaction(signedTransaction)
-
       if (code === 'SUCCESS') {
-        success = true
         if (ANSWERS_TRANSACTIONS.includes(transaction.type)) {
           Answers.logCustom('Transaction Operation', { type: transaction.type })
         }
@@ -161,26 +141,18 @@ class TransactionDetail extends Component {
         }
         await this._updateBalancesStore()
       }
-
-      this.setState({
-        success,
-        submitError: null
-      })
+      this.setState({ submitError: null, loadingSubmit: false, disableSubmit: true }, this._navigateNext)
     } catch (error) {
       // This needs to be adapted better from serverless api
       const errorMessage = error.response && error.response.data ? error.response.data.error
         : error.message
       this.setState({
-        submitError: translateError(errorMessage)
+        submitError: translateError(errorMessage),
+        loadingSubmit: false
       })
       store.write(() => {
         const lastTransaction = store.objectForPrimaryKey('Transaction', hash)
         store.delete(lastTransaction)
-      })
-    } finally {
-      this.setState({
-        loadingSubmit: false,
-        submitted: true
       })
     }
   }
@@ -224,22 +196,7 @@ class TransactionDetail extends Component {
   }
 
   _renderSubmitButton = () => {
-    const { loadingSubmit, success } = this.state
-    if (success) {
-      return (
-        <Utils.Content align='center' justify='center'>
-          <Feather
-            style={{ marginVertical: 5 }}
-            name='check-circle'
-            size={FontSize['large']}
-            color={Colors.green}
-          />
-          <Utils.Text success size='small'>
-            Transaction submitted to network.
-          </Utils.Text>
-        </Utils.Content>
-      )
-    }
+    const { loadingSubmit, disableSubmit } = this.state
 
     return (
       <Utils.View marginTop={5} paddingX={'medium'}>
@@ -253,6 +210,7 @@ class TransactionDetail extends Component {
               testInput: pin => pin === this.props.context.pin,
               onSuccess: this._submitTransaction
             })}
+            disabled={disableSubmit}
             font='bold'
           />
         )}
@@ -275,16 +233,11 @@ class TransactionDetail extends Component {
     const { submitError, loadingData, isConnected } = this.state
 
     if (loadingData) return <LoadingScene />
-
     return (
       <React.Fragment>
         <NavigationHeader
           title='TRANSACTION DETAILS'
-          rightButton={!this.state.loadingSubmit ? (
-            <TouchableOpacity onPress={this._navigateNext}>
-              <Feather name='x' color='white' size={28} />
-            </TouchableOpacity>
-          ) : null}
+          onClose={!this.state.loadingSubmit ? () => this.props.navigation.goBack() : null}
         />
         <Utils.Container>
           <ScrollView>
