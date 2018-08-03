@@ -149,7 +149,7 @@ class HomeScene extends Component {
     return (
       <Utils.ContentWithBackground
         source={require('../../assets/home-header.png')}
-        resizeMode='contain'
+        resizeMode='cover'
       >
         <Utils.StatusBar transparent />
         <Utils.View align='center'>
