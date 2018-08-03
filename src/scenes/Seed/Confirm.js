@@ -94,7 +94,7 @@ class Confirm extends React.Component {
     } catch (error) {
       Answers.logCustom('Wallet Operation', { type: 'Gift', message: error.message })
       Alert.alert('Success', 'Wallet successfully confirmed.')
-      this.setState({loading: false})
+      this.setState({ loading: false })
       navigation.dispatch(resetAction)
     }
   }

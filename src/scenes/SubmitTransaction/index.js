@@ -179,7 +179,7 @@ class TransactionDetail extends Component {
     }
   }
 
-  renderContracts = () => {
+  _renderContracts = () => {
     const { transactionData, nowDate, tokenAmount } = this.state
     if (!transactionData) return
     const { contracts } = transactionData
@@ -218,7 +218,7 @@ class TransactionDetail extends Component {
     )
   }
 
-  renderRetryConnection = () => (
+  _renderRetryConnection = () => (
     <Utils.Content align='center' justify='center'>
       <Utils.Text size='small'>
         It seems that you are disconnected. Reconnect to the internet before
@@ -237,13 +237,13 @@ class TransactionDetail extends Component {
       <React.Fragment>
         <NavigationHeader
           title='TRANSACTION DETAILS'
-          onClose={() => this.props.navigation.goBack()}
+          onClose={!this.state.loadingSubmit ? () => null : this.props.navigation.goBack()}
         />
         <Utils.Container>
           <ScrollView>
-            {!isConnected && this.renderRetryConnection()}
-            {isConnected && this.renderContracts()}
-            {isConnected && this.renderSubmitButton()}
+            {!isConnected && this._renderRetryConnection()}
+            {isConnected && this._renderContracts()}
+            {isConnected && this._renderSubmitButton()}
             <Utils.Content align='center' justify='center'>
               {submitError && (
                 <Utils.Error>{submitError}</Utils.Error>

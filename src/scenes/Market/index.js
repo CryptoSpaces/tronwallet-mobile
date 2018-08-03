@@ -48,7 +48,7 @@ const Cursor = ({ x, y, data, selectedIndex, onPress }) => {
   ))
 }
 
-class HomeScene extends Component {
+class MarketScene extends Component {
   state = {
     graph: {
       loading: true,
@@ -148,8 +148,8 @@ class HomeScene extends Component {
 
     return (
       <Utils.ContentWithBackground
-        source={require('../../assets/home-header.png')}
-        resizeMode='contain'
+        source={require('../../assets/market-header.png')}
+        resizeMode='stretch'
       >
         <Utils.StatusBar transparent />
         <Utils.View align='center'>
@@ -192,7 +192,7 @@ class HomeScene extends Component {
     const supplyFormatter = (value) => this._formatNumber(value)
 
     return (
-      <FadeIn name='home-info'>
+      <FadeIn name='market-info'>
         <Utils.View>
           {selectedIndex !== -1 && (
             <Fragment>
@@ -296,7 +296,7 @@ class HomeScene extends Component {
           <Utils.Row justify='space-between' align='center'>
             {this._renderLabels()}
             {(!marketcap || !volume || !supply) && (
-              <FadeIn name='home-info-loading'>
+              <FadeIn name='market-info-loading'>
                 <Utils.Content>
                   <ActivityIndicator size='small' color={Colors.primaryText} />
                 </Utils.Content>
@@ -324,4 +324,4 @@ class HomeScene extends Component {
   }
 }
 
-export default HomeScene
+export default MarketScene
