@@ -58,7 +58,7 @@ class ParticipateHome extends React.Component {
   state = {
     assetList: [],
     currentList: [],
-    loading: true,
+    loading: false,
     hideSlide: false
   }
 
@@ -69,7 +69,9 @@ class ParticipateHome extends React.Component {
       _onSearch: this._onSearch,
       _onSearchPressed: this._onSearchPressed
     })
-    await this._loadData()
+
+    const assetList = await this._getAssetsFromStore()
+    this.setState({ assetList, currentList: assetList })
     this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
   }
 
@@ -84,8 +86,8 @@ class ParticipateHome extends React.Component {
     try {
       const tokenList = await Client.getTokenList()
       await this._updateAssetsStore(tokenList)
-      const assetList = await this._getAssetsFromStore()
-      this.setState({ assetList, currentList: assetList })
+      const updatedAssets = await this._getAssetsFromStore()
+      this.setState({ assetList: updatedAssets, currentList: updatedAssets })
     } catch (error) {
       this.setState({ error: error.message })
     } finally {
