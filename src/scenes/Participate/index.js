@@ -18,7 +18,8 @@ import { debounce } from 'lodash'
 import SyncButton from '../../components/SyncButton'
 import { Colors } from '../../components/DesignSystem'
 import { orderBalances } from '../../utils/balanceUtils'
-import Client, { ONE_TRX } from '../../services/client'
+import { ONE_TRX } from '../../services/client'
+import { updateAssets } from '../../utils/assetsUtils'
 import getAssetsStore from '../../store/assets'
 import guarantee from '../../assets/guarantee.png'
 import NavigationHeader from '../../components/Navigation/Header'
@@ -94,8 +95,7 @@ class ParticipateHome extends React.Component {
     this.props.navigation.setParams({ loading: true })
 
     try {
-      const tokenList = await Client.getTokenList()
-      await this._updateAssetsStore(tokenList)
+      await updateAssets()
       const updatedAssets = await this._getAssetsFromStore()
       this.setState({ assetList: updatedAssets, currentList: updatedAssets })
     } catch (error) {
@@ -113,11 +113,6 @@ class ParticipateHome extends React.Component {
         `issuedPercentage < 100 AND name <> 'TRX' AND startTime < ${Date.now()} AND endTime > ${Date.now()}`
       )
       .map(item => Object.assign({}, item))
-  }
-
-  _updateAssetsStore = async assets => {
-    const store = await getAssetsStore()
-    store.write(() => assets.map(item => store.create('Asset', item, true)))
   }
 
   _renderSlide = () => {

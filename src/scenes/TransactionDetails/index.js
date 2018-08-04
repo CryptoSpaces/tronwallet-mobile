@@ -7,7 +7,6 @@ import Toast from 'react-native-easy-toast'
 import LinearGradient from 'react-native-linear-gradient'
 import styled from 'styled-components'
 
-import getAssetsStore from '../../store/assets'
 import { updateTransactionByHash } from '../../utils/transactionUtils'
 import getTransactionStore from '../../store/transactions'
 import IconButton from '../../components/IconButton'
@@ -43,6 +42,7 @@ class TransactionDetails extends React.Component {
           ownerAddress: string,
           confirmed: bool,
           block: string,
+          tokenPrice: number,
           contractData: shape({
             tokenName: string,
             transferFromAddress: string,
@@ -63,27 +63,12 @@ class TransactionDetails extends React.Component {
 
   state = {
     refreshing: false,
-    item: null,
-    tokenPrice: 1
+    item: null
   }
 
   async componentDidMount () {
     const { item } = this.props.navigation.state.params
     this.setState({ item })
-    if (item.type === 'Participate') {
-      const tokenPrice = await this._getTokenPriceFromStore(item.contractData.tokenName)
-      this.setState({ tokenPrice })
-    }
-  }
-
-  _getTokenPriceFromStore = async (tokenName) => {
-    const store = await getAssetsStore()
-    return store
-      .objects('Asset')
-      .filtered(
-        `name == '${tokenName}'`
-      )
-      .map(item => Object.assign({}, item))[0].price
   }
 
   _copy = async () => {
@@ -254,7 +239,7 @@ class TransactionDetails extends React.Component {
   }
 
   _renderHeader = () => {
-    const { item: { type, contractData }, tokenPrice } = this.state
+    const { item: { type, contractData, tokenPrice } } = this.state
     const tokenName = contractData.tokenName
     const tokenToDisplay = this._getHeaderToken(type, tokenName)
     const amountText = this._getHeaderAmountText(type)

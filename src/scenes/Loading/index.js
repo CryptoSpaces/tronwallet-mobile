@@ -7,9 +7,11 @@ import { Colors } from '../../components/DesignSystem'
 
 import SecretStore from '../../store/secrets'
 import { withContext } from '../../store/context'
+import { updateAssets } from '../../utils/assetsUtils'
 
 class LoadingScene extends Component {
-  componentDidMount () {
+  async componentDidMount () {
+    await updateAssets()
     SplashScreen.hide()
     this._askPin()
   }

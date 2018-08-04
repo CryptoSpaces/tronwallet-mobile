@@ -15,6 +15,7 @@ import { withContext } from '../../store/context'
 import { updateTransactions } from '../../utils/transactionUtils'
 
 import Empty from './Empty'
+import { ONE_TRX } from '../../services/client'
 
 const POOLING_TIME = 30000
 
@@ -97,14 +98,20 @@ class TransactionsScene extends Component {
     })
   )
 
-  _getTokenPriceFromStore = (tokenName, assetStore) => (
-    assetStore
+  _getTokenPriceFromStore = (tokenName, assetStore) => {
+    const filtered = assetStore
       .objects('Asset')
       .filtered(
         `name == '${tokenName}'`
       )
-      .map(item => Object.assign({}, item))[0].price
-  )
+      .map(item => Object.assign({}, item))
+
+    if (filtered.length) {
+      return filtered[0].price
+    }
+
+    return ONE_TRX
+  }
 
   _navigateToDetails = (item) => {
     this.props.navigation.navigate('TransactionDetails', { item })
