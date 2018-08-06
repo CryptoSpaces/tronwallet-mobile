@@ -84,7 +84,9 @@ class ReceiveScreen extends PureComponent {
                 </Utils.Text>
               </Utils.PasteButton>
               <Utils.HorizontalSpacer />
-              <Share />
+              <Share WrapperButton={Utils.PasteButton}>
+                <Utils.Text> Share </Utils.Text>
+              </Share>
             </Utils.Row>
           </Utils.Content>
         </KeyboardScreen>
