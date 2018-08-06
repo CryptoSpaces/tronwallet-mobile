@@ -15,7 +15,7 @@ import ConfigJson from '../../../package.json'
 
 // Design
 import * as Utils from '../../components/Utils'
-import { VersionText } from './elements'
+import { VersionText, SectionTitle, Getty, PayPartner } from './elements'
 import { Colors, Spacing } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -195,6 +195,13 @@ class Settings extends Component {
             </TouchableWithoutFeedback>
           )
         })}
+        <SectionTitle>PARTNERS</SectionTitle>
+        <Utils.Row justify='center'>
+          <PayPartner source={require('../../assets/paysponsor.png')} />
+          <Utils.HorizontalSpacer size='large' />
+          <Utils.HorizontalSpacer size='large' />
+          <Getty source={require('../../assets/gettysponsor.png')} />
+        </Utils.Row>
         <VersionText>{`v${ConfigJson.version}`}</VersionText>
       </React.Fragment>
     )
