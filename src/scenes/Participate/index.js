@@ -84,11 +84,6 @@ class ParticipateHome extends React.Component {
       this.setState({ assetList, currentList: assetList })
     }
     this._loadData()
-    this._navListener = this.props.navigation.addListener('didFocus', this._loadData)
-  }
-
-  componentWillUnmount () {
-    this._navListener.remove()
   }
 
   _loadData = async () => {
@@ -245,6 +240,7 @@ class ParticipateHome extends React.Component {
           renderItem={({ item }) => this._renderCard(item)}
           keyExtractor={asset => asset.name}
           scrollEnabled
+          removeClippedSubviews
         />
       </Container>
     )
