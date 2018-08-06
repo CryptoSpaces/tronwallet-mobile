@@ -20,7 +20,6 @@ class ReceiveScreen extends PureComponent {
       header: (
         <NavigationHeader title='RECEIVE'
           onBack={() => { navigation.goBack() }}
-          rightButton={<Share />}
         />
       )
     }
@@ -42,7 +41,7 @@ class ReceiveScreen extends PureComponent {
   _copy = async () => {
     try {
       await Clipboard.setString(this.props.context.publicKey.value)
-      this.refs.toast.show('Address to the clipboard')
+      this.refs.toast.show('Copied to clipboard')
     } catch (error) {
       this.refs.toast.show('Something wrong while copying')
     }
@@ -65,18 +64,6 @@ class ReceiveScreen extends PureComponent {
               <Utils.Text size='xsmall'>{publicKey}</Utils.Text>
             </Utils.Label>
             <Utils.VerticalSpacer size='medium' />
-
-            <Utils.PasteButton onPress={this._copy}>
-              <Utils.Text>
-                <Feather
-                  name='clipboard'
-                  size={FontSize['small']}
-                  color={Colors.primaryText}
-                />
-
-                {` Copy My Address`}
-              </Utils.Text>
-            </Utils.PasteButton>
             <Toast
               ref='toast'
               position='center'
@@ -84,6 +71,21 @@ class ReceiveScreen extends PureComponent {
               fadeOutDuration={1000}
               opacity={0.8}
             />
+            <Utils.Row align='center'>
+              <Utils.PasteButton onPress={this._copy}>
+                <Utils.Text>
+                  <Feather
+                    name='clipboard'
+                    size={FontSize['small']}
+                    color={Colors.primaryText}
+                  />
+
+                  {` Copy `}
+                </Utils.Text>
+              </Utils.PasteButton>
+              <Utils.HorizontalSpacer />
+              <Share />
+            </Utils.Row>
           </Utils.Content>
         </KeyboardScreen>
       </Utils.Container>
