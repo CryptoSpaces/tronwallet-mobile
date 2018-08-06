@@ -3,8 +3,9 @@ import { TouchableOpacity, Share } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 
 import withContext from '../../utils/hocs/withContext'
+import { Row } from '../../components/Utils'
 
-const ShareButton = ({context}) => {
+const ShareButton = ({context, WrapperButton = TouchableOpacity, children}) => {
   const { publicKey: { value } } = context
 
   const share = () => {
@@ -18,9 +19,12 @@ const ShareButton = ({context}) => {
   }
 
   return (
-    <TouchableOpacity onPress={() => { share(value) }}>
-      <Feather name='share-2' color='white' size={18} />
-    </TouchableOpacity>
+    <WrapperButton onPress={() => { share(value) }}>
+      <Row>
+        <Feather name='share-2' color='white' size={18} />
+        {children && children}
+      </Row>
+    </WrapperButton>
   )
 }
 
