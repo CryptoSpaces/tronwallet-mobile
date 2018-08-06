@@ -13,14 +13,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
-import { debounce } from 'lodash'
+import { debounce, union } from 'lodash'
 
 import SyncButton from '../../components/SyncButton'
 import { Colors } from '../../components/DesignSystem'
 import { orderBalances } from '../../utils/balanceUtils'
 import { ONE_TRX } from '../../services/client'
 import { updateAssets } from '../../utils/assetsUtils'
-import getAssetsStore from '../../store/assets'
 import guarantee from '../../assets/guarantee.png'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -44,6 +43,8 @@ import {
 } from './Elements'
 import { rgb } from '../../../node_modules/polished'
 
+const AMOUNT_TO_FETCH = 40
+
 class ParticipateHome extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state
@@ -53,7 +54,7 @@ class ParticipateHome extends React.Component {
           title='PARTICIPATE'
           leftButton={<SyncButton
             loading={params && params.loading}
-            onPress={() => params._loadData()}
+            onPress={() => { }}
           />}
           onSearch={name => params._onSearch(name)}
           onSearchPressed={() => params._onSearchPressed()}
@@ -65,8 +66,9 @@ class ParticipateHome extends React.Component {
   state = {
     assetList: [],
     currentList: [],
-    loading: false,
-    hideSlide: false
+    start: 0,
+    searching: false,
+    searchMode: false
   }
 
   async componentDidMount () {
@@ -75,14 +77,9 @@ class ParticipateHome extends React.Component {
     this.props.navigation.setParams({
       loading: false,
       _onSearch: this._onSearch,
-      _onSearchPressed: this._onSearchPressed,
-      _loadData: this._loadData
+      _onSearchPressed: this._onSearchPressed
     })
 
-    const assetList = await this._getAssetsFromStore()
-    if (assetList.length) {
-      this.setState({ assetList, currentList: assetList })
-    }
     this._loadData()
   }
 
@@ -90,9 +87,11 @@ class ParticipateHome extends React.Component {
     this.props.navigation.setParams({ loading: true })
 
     try {
-      await updateAssets()
-      const updatedAssets = await this._getAssetsFromStore()
-      this.setState({ assetList: updatedAssets, currentList: updatedAssets })
+      const assets = await updateAssets(0, AMOUNT_TO_FETCH)
+      const filtered = assets.filter(({ issuedPercentage, name, startTime, endTime }) =>
+        issuedPercentage < 100 && name !== 'TRX' && startTime < Date.now() && endTime > Date.now()
+      )
+      this.setState({ assetList: filtered, currentList: filtered })
     } catch (error) {
       this.setState({ error: error.message })
     } finally {
@@ -100,20 +99,32 @@ class ParticipateHome extends React.Component {
     }
   }
 
-  _getAssetsFromStore = async () => {
-    const store = await getAssetsStore()
-    return store
-      .objects('Asset')
-      .filtered(
-        `issuedPercentage < 100 AND name <> 'TRX' AND startTime < ${Date.now()} AND endTime > ${Date.now()}`
+  _loadMore = async () => {
+    const { start, assetList, searchMode } = this.state
+    if (searchMode) return
+
+    this.props.navigation.setParams({ loading: true })
+    const newStart = start + AMOUNT_TO_FETCH
+
+    try {
+      const assets = await updateAssets(newStart, AMOUNT_TO_FETCH)
+      const filtered = assets.filter(({ issuedPercentage, name, startTime, endTime }) =>
+        issuedPercentage < 100 && name !== 'TRX' && startTime < Date.now() && endTime > Date.now()
       )
-      .map(item => Object.assign({}, item))
+      const updatedAssets = union(assetList, filtered)
+
+      this.setState({ start: newStart, assetList: updatedAssets, currentList: updatedAssets })
+    } catch (error) {
+      this.setState({ error: error.message })
+    } finally {
+      this.props.navigation.setParams({ loading: false })
+    }
   }
 
   _renderSlide = () => {
-    const { hideSlide } = this.state
+    const { searchMode } = this.state
 
-    if (hideSlide) {
+    if (searchMode) {
       return null
     }
 
@@ -121,28 +132,33 @@ class ParticipateHome extends React.Component {
       <View>
         <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='contain' />
         <VerticalSpacer size={20} />
-        {this._renderLoading()}
       </View>
     )
   }
 
   _onSearchPressed = () => {
-    const { hideSlide } = this.state
+    const { searchMode } = this.state
 
-    this.setState({ hideSlide: !hideSlide })
-    if (hideSlide) this._onSearch('')
+    this.setState({ searchMode: !searchMode })
+    if (searchMode) this._onSearch('')
   }
 
-  _onSearch = (name) => {
+  _onSearch = async (name) => {
     const { assetList } = this.state
-    this.setState({ loading: true })
-    if (name) {
-      this.setState({ hideSlide: true })
-      const regex = new RegExp(name.toLowerCase(), 'i')
-      const filtered = assetList.filter(asset => asset.name.toLowerCase().match(regex))
-      this.setState({ currentList: filtered, loading: false })
-    } else {
-      this.setState({ currentList: assetList, loading: false, hideSlide: false })
+
+    try {
+      if (name) {
+        this.setState({ loading: true, searchMode: true })
+        const assets = await updateAssets(0, 10, name)
+        const filtered = assets.filter(({ issuedPercentage, name, startTime, endTime }) =>
+          issuedPercentage < 100 && name !== 'TRX' && startTime < Date.now() && endTime > Date.now()
+        )
+        this.setState({ currentList: filtered, loading: false })
+      } else {
+        this.setState({ currentList: assetList, loading: false, searchMode: false })
+      }
+    } catch (error) {
+      this.setState({ error: error.message })
     }
   }
 
@@ -214,9 +230,9 @@ class ParticipateHome extends React.Component {
   }
 
   _renderLoading = () => {
-    const { loading } = this.state
+    const { searching } = this.state
 
-    if (loading) {
+    if (searching) {
       return (
         <React.Fragment>
           <ActivityIndicator size='small' color={Colors.primaryText} />
@@ -229,11 +245,12 @@ class ParticipateHome extends React.Component {
   }
 
   render () {
-    const { currentList } = this.state
+    const { currentList, searching } = this.state
     const orderedBalances = orderBalances(currentList)
 
     return (
       <Container>
+        {this._renderLoading()}
         <FlatList
           ListHeaderComponent={this._renderSlide()}
           data={orderedBalances}
@@ -241,6 +258,9 @@ class ParticipateHome extends React.Component {
           keyExtractor={asset => asset.name}
           scrollEnabled
           removeClippedSubviews
+          onEndReached={this._loadMore}
+          onEndReachedThreshold={0.75}
+          refreshing={searching}
         />
       </Container>
     )
