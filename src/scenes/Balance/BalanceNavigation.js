@@ -32,6 +32,15 @@ const BalanceNavigation = ({ navigation }) => {
           rightRadius={0}
           onPress={() => navigateNext('FreezeScene')}
         />
+        <ButtonGradient
+          text='PAY'
+          size='medium'
+          multiColumnButton={{x: 2, y: 3}}
+          full
+          leftRadius={0}
+          rightRadius={0}
+          onPress={() => navigateNext('PayScene')}
+        />
         <Utils.HorizontalSpacer size='tiny' />
         <ButtonGradient
           text='SEND'

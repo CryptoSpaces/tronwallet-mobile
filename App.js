@@ -35,6 +35,7 @@ import ParticipateHome from './src/scenes/Participate'
 import Pin from './src/scenes/Pin'
 import FirstTime from './src/scenes/FirstTime'
 import TransactionSuccess from './src/scenes/TransactionSuccess'
+import PayScene from './src/scenes/Pay'
 
 import Client from './src/services/client'
 import { Context } from './src/store/context'
@@ -72,7 +73,8 @@ const BalanceStack = createStackNavigator({
   BalanceScene,
   ReceiveScene,
   FreezeScene,
-  SendScene
+  SendScene,
+  PayScene
 })
 
 const TransactionList = createStackNavigator({
