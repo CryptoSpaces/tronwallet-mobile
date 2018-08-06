@@ -8,12 +8,13 @@ const BaseText = css`
 `
 export const VersionText = styled.Text`
   font-family: Rubik-Regular;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.6;
   ${BaseText}
 `
 export const SectionTitle = styled.Text`
-  font-family: Rubik-Medium;
+  margin-top: 5px;
+  font-family: Rubik-Bold;
   font-size: 14px;
   ${BaseText}
 `
