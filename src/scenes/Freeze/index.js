@@ -234,7 +234,7 @@ class FreezeScene extends Component {
               font='bold'
               text='FREEZE'
               onPress={this._submit}
-              disabled={loading || !(amount > 0 && amount < trxBalance)}
+              disabled={loading || !(amount > 0 && amount <= trxBalance)}
             />
             <Utils.VerticalSpacer size='big' />
             <Utils.View align='center' justify='center'>
