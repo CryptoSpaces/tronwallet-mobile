@@ -45,7 +45,7 @@ const ButtonIcon = ({
 
 ButtonIcon.defaultProps = {
   disabled: false,
-  size: 52
+  size: 64
 }
 
 ButtonIcon.propTypes = {
