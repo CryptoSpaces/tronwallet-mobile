@@ -56,6 +56,8 @@ target 'tronwallet2' do
 
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
 
+  pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|
       if target.name == "React"

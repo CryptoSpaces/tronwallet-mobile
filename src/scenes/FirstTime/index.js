@@ -2,6 +2,7 @@ import React from 'react'
 import { BackHandler } from 'react-native'
 
 import * as Utils from '../../components/Utils'
+import tl from '../../utils/i18n'
 import Logo from '../../components/Logo'
 import ButtonGradient from '../../components/ButtonGradient'
 
@@ -34,7 +35,7 @@ class FirstTime extends React.Component {
           </Utils.Row>
           <Utils.VerticalSpacer size='big' />
           <ButtonGradient
-            text='CREATE WALLET'
+            text={tl.t('createWallet')}
             onPress={() => {
               this.props.navigation.navigate('Pin', {
                 shouldDoubleCheck,
@@ -51,7 +52,7 @@ class FirstTime extends React.Component {
           />
           <Utils.VerticalSpacer />
           <ButtonGradient
-            text='RESTORE WALLET'
+            text={tl.t('restoreWallet')}
             onPress={() => {
               this.props.navigation.navigate('Pin', {
                 shouldDoubleCheck,
