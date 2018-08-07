@@ -12,6 +12,22 @@ const firstTime = {
   }
 }
 
+const market = {
+  time: {
+    hour: '1H',
+    day: '1D',
+    week: '1W',
+    month: '1M',
+    all: 'ALL'
+  },
+  trxPrice: 'TRX PRICE',
+  highest: 'HIGHEST',
+  lowest: 'LOWEST',
+  volume: 'VOLUME 24H',
+  cap: 'MARKET CAP',
+  supply: 'CIRCULATING SUPPLY'
+}
+
 const pin = {
   title: 'SECURITY CHECK',
   enter: 'Enter PIN',
@@ -107,6 +123,7 @@ const settings = {
 
 export default {
   firstTime,
+  market,
   pin,
   seed,
   settings,

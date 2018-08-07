@@ -9,6 +9,7 @@ import { Answers } from 'react-native-fabric'
 import Config from 'react-native-config'
 
 import Gradient from '../../components/Gradient'
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import FadeIn from '../../components/Animations/FadeIn'
@@ -53,7 +54,7 @@ class MarketScene extends Component {
     graph: {
       loading: true,
       data: null,
-      timeSpan: '1H'
+      timeSpan: tl.t('market.time.hour')
     },
     high: null,
     low: null,
@@ -77,7 +78,7 @@ class MarketScene extends Component {
   }
 
   get timeSpans () {
-    return ['1H', '1D', '1W', '1M', 'ALL']
+    return [tl.t('market.time.hour'), tl.t('market.time.day'), tl.t('market.time.week'), tl.t('market.time.month'), tl.t('market.time.all')]
   }
 
   _loadData = async () => {
@@ -159,7 +160,7 @@ class MarketScene extends Component {
             style={{ height: 60 }}
           />
           <Utils.VerticalSpacer size='medium' />
-          <Utils.Text secondary>TRX PRICE</Utils.Text>
+          <Utils.Text secondary>{tl.t('market.trxPrice')}</Utils.Text>
         </Utils.View>
         <Utils.VerticalSpacer size='small' />
         <Utils.Row justify='center'>
@@ -228,13 +229,13 @@ class MarketScene extends Component {
     <Utils.View>
       {this.state.selectedIndex !== -1 && (
         <Fragment>
-          {this._renderLabel('HIGHEST')}
-          {this._renderLabel('LOWEST')}
+          {this._renderLabel(tl.t('market.highest'))}
+          {this._renderLabel(tl.t('market.lowest'))}
         </Fragment>
       )}
-      {this._renderLabel('VOLUME 24H')}
-      {this._renderLabel('MARKET CAP')}
-      {this._renderLabel('CIRCULATING SUPPLY', true)}
+      {this._renderLabel(tl.t('market.volume'))}
+      {this._renderLabel(tl.t('market.cap'))}
+      {this._renderLabel(tl.t('market.supply'), true)}
     </Utils.View>
   )
 
