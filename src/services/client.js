@@ -73,10 +73,10 @@ class ClientWallet {
     return votes
   }
 
-  async getTokenList () {
+  async getTokenList (start, limit, name) {
     const apiUrl = await this.getTronscanUrl()
     const { data: { data } } = await axios.get(
-      `${apiUrl}/token?sort=-name&start=0&status=ico`
+      `${apiUrl}/token?sort=-name&start=${start}&limit=${limit}&name=%25${name}%25&status=ico`
     )
     return data
   }

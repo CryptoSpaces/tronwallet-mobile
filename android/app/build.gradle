@@ -10,6 +10,11 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+
+project.ext.sentryCli = [
+    logLevel: "debug"
+]
+
 apply from: "../../node_modules/react-native-sentry/sentry.gradle"
 
 /**
@@ -118,11 +123,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sentry')
     compile project(':react-native-background-fetch')
-    compile project(':react-native-share')
     compile project(':react-native-onesignal')
     compile project(':react-native-fabric')
-    compile project(':react-native-sentry')
     compile project(':react-native-device-info')
     compile project(':react-native-tron')
     compile project(':react-native-config')

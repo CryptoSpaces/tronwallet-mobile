@@ -4,7 +4,8 @@ import {
   View,
   TouchableWithoutFeedback,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native'
 import { Answers } from 'react-native-fabric'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
@@ -213,7 +214,9 @@ class Settings extends Component {
         keyboardShouldPersistTaps='always'
         keyboardDismissMode='interactive'
       >
-        {this._renderList()}
+        <ScrollView>
+          {this._renderList()}
+        </ScrollView>
       </Utils.Container>
     )
   }

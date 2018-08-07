@@ -8,6 +8,7 @@ import { createIconSetFromFontello } from 'react-native-vector-icons'
 import axios from 'axios'
 import Config from 'react-native-config'
 import OneSignal from 'react-native-onesignal'
+import { Sentry, SentryLog } from 'react-native-sentry'
 
 import { Colors } from './src/components/DesignSystem'
 
@@ -44,6 +45,10 @@ import { getUserSecrets } from './src/utils/secretsUtils'
 import fontelloConfig from './src/assets/icons/config.json'
 
 import './ReactotronConfig'
+
+Sentry.config('https://8ffba48a3f30473883ba930c49ab233d@sentry.io/1236809', {
+  disableNativeIntegration: Platform.OS === 'android'
+}).install()
 
 const Icon = createIconSetFromFontello(fontelloConfig, 'tronwallet')
 
