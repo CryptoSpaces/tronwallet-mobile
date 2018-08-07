@@ -50,9 +50,37 @@ const seed = {
   }
 }
 
+const settings = {
+  title: 'SETTINGS',
+  notifications: {
+    title: 'Notifications Subscription',
+    description: 'Enable or disable push notifications'
+  },
+  network: {
+    title: 'Network',
+    description: 'Choose a node of your preference'
+  },
+  backup: {
+    title: 'Backup Wallet',
+    description: 'Backup your secret words'
+  },
+  restore: {
+    title: 'Restore Wallet',
+    description: 'Restore previously used 12 secrets words'
+  },
+  reset: {
+    title: 'Reset Wallet',
+    description: 'Restart all data from current wallet',
+    warning: `Warning: This action will erase all saved data including your 12 secret words. If you didn't save your secret, please do it before continue.`,
+    button: 'OK, I understand it'
+  },
+  partners: 'PARTNERS'
+}
+
 export default {
   firstTime,
   pin,
   seed,
+  settings,
   ...general
 }
