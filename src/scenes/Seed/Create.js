@@ -2,6 +2,7 @@ import React from 'react'
 import { ActivityIndicator, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -20,7 +21,7 @@ class Create extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <NavigationHeader
-        title='CONFIRM WALLET SEED'
+        title={tl.t('seed.create.title')}
         onBack={() => {
           navigation.getParam('shouldReset', false)
             ? navigation.dispatch(resetAction)
@@ -40,7 +41,7 @@ class Create extends React.Component {
       this.setState({ seed: mnemonic })
     } catch (err) {
       console.warn(err)
-      Alert.alert('Oops, we have a problem. Please restart the application.')
+      Alert.alert(tl.t('seed.create.error'))
     }
   }
 
@@ -69,7 +70,7 @@ class Create extends React.Component {
                 { seed: seed.split(' ') }
               )
             }
-            text="I'VE WRITTEN IT DOWN"
+            text={tl.t('seed.create.button.written')}
           />
         </Utils.Row>
         <Utils.VerticalSpacer size='medium' />
@@ -80,7 +81,7 @@ class Create extends React.Component {
               : navigation.goBack()
           }}
         >
-          Confirm later
+          {tl.t('seed.create.button.later')}
         </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
