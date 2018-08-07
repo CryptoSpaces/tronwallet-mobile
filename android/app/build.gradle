@@ -123,6 +123,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-i18n')
     compile project(':react-native-sentry')
     compile project(':react-native-background-fetch')
     compile project(':react-native-onesignal')
