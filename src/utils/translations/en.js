@@ -58,7 +58,35 @@ const settings = {
   },
   network: {
     title: 'Network',
-    description: 'Choose a node of your preference'
+    description: 'Choose a node of your preference',
+    modal: {
+      title: 'NETWORK',
+      explanation: 'With this option you can select the node that will better suit your needs and preferences. Please be careful while updating the node IP while wrong IP can lead to malfunctions within your wallet. Example: 35.231.121.122:50051',
+      error: {
+        storage: 'Error getting node ip from local storage',
+        invalidIp: 'Please put a valid IP',
+        update: 'Something went wrong while updating nodes ip',
+        reset: 'Something wrong while reseting node ip'
+      },
+      success: {
+        updated: 'Updated',
+        updatedIp: 'Nodes IP updated!',
+        switchTest: 'Switched nodes IP to Testnet',
+        switchMain: 'Switched nodes IP to default main',
+        reset: 'Node IP reseted!'
+      },
+      placeholder: {
+        loadingIp: 'Loading IP',
+        loadingPort: 'Loading Port'
+      },
+      button: {
+        update: 'Update and Connect',
+        reset: 'Reset'
+      },
+      mainNode: 'Main Node',
+      solidityNode: 'Solidity Node',
+      testNet: 'TestNet'
+    }
   },
   backup: {
     title: 'Backup Wallet',
