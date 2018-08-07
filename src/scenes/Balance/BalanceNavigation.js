@@ -1,12 +1,10 @@
 import React from 'react'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { Image, StyleSheet } from 'react-native'
 
 import ButtonIconGradient from '../../components/ButtonIconGradient'
 
-import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 
-const ICON_COLOR = Colors.primaryText
 const ICON_SIZE = 22
 
 const BalanceNavigation = ({ navigation }) => {
@@ -22,10 +20,9 @@ const BalanceNavigation = ({ navigation }) => {
       <Utils.Row>
         <ButtonIconGradient
           text='PAY'
-          icon={<Ionicons
-            name='ios-card-outline'
-            size={ICON_SIZE}
-            color={ICON_COLOR}
+          icon={<Image
+            source={require('../../assets/icon-scan.png')}
+            style={styles.icon}
           />}
           full
           onPress={() => navigateNext('PayScene')}
@@ -33,20 +30,18 @@ const BalanceNavigation = ({ navigation }) => {
         <ButtonIconGradient
           text='SEND'
           full
-          icon={<Ionicons
-            name='ios-paper-plane-outline'
-            size={ICON_SIZE}
-            color={ICON_COLOR}
+          icon={<Image
+            source={require('../../assets/icon-send.png')}
+            style={styles.icon}
           />}
           onPress={() => navigateNext('SendScene')}
         />
         <ButtonIconGradient
           text='RECEIVE'
           full
-          icon={<Ionicons
-            name='ios-qr-scanner-outline'
-            size={ICON_SIZE}
-            color={ICON_COLOR}
+          icon={<Image
+            source={require('../../assets/icon-qrcode.png')}
+            style={styles.icon}
           />}
           onPress={goToReceive}
         />
@@ -54,10 +49,9 @@ const BalanceNavigation = ({ navigation }) => {
           text='FREEZE'
           multiColumnButton={{x: 2, y: 3}}
           full
-          icon={<Ionicons
-            name='ios-snow'
-            size={ICON_SIZE}
-            color={ICON_COLOR}
+          icon={<Image
+            source={require('../../assets/icon-freeze.png')}
+            style={styles.icon}
           />}
           onPress={() => navigateNext('FreezeScene')}
         />
@@ -65,5 +59,12 @@ const BalanceNavigation = ({ navigation }) => {
     </React.Fragment>
   )
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    height: ICON_SIZE,
+    width: ICON_SIZE
+  }
+})
 
 export default BalanceNavigation

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Alert } from 'react-native'
+import { Alert, ActivityIndicator } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
 // Design
+import { Colors } from '../../components/DesignSystem'
 import * as Utils from '../../components/Utils'
 import NavigationHeader from '../../components/Navigation/Header'
-import SyncIcon from '../../components/SyncButton'
 
 // Service
 import WalletClient, { ONE_TRX } from '../../services/client'
@@ -118,7 +118,7 @@ export class index extends Component {
           <NavigationHeader
             title='Scan Transaction'
             onBack={() => { navigation.goBack() }}
-            rightButton={<SyncIcon disabled loading={loading} />}
+            rightButton={loading ? <ActivityIndicator color={Colors.primaryText} size='small' /> : null}
             noBorder
           />
           <QRCodeScanner
