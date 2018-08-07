@@ -12,8 +12,7 @@ const ButtonIcon = ({
   disabled,
   size,
   full,
-  icon,
-  font
+  icon
 }) => {
   const flexProps = {}
   if (full) {
@@ -50,7 +49,11 @@ ButtonIcon.defaultProps = {
 
 ButtonIcon.propTypes = {
   text: PropTypes.string.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  onPress: PropTypes.func,
+  icon: PropTypes.element.isRequired,
+  full: PropTypes.bool
+
 }
 
 const styles = StyleSheet.create({
