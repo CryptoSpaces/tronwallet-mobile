@@ -1,8 +1,10 @@
-const general = {
-  createWallet: 'CRIAR CARTEIRA',
-  restoreWallet: 'RESTAURAR CARTEIRA'
+const firstTime = {
+  button: {
+    create: 'CRIAR CARTEIRA',
+    restore: 'RESTAURAR CARTEIRA'
+  }
 }
 
 export default {
-  ...general
+  firstTime
 }

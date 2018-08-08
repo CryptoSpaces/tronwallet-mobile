@@ -21,6 +21,7 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
 
 // Utils
+import tl from '../../utils/i18n'
 import fontelloConfig from '../../assets/icons/config.json'
 import { withContext } from '../../store/context'
 import { restartAllWalletData } from '../../utils/userAccountUtils'
@@ -37,7 +38,7 @@ const resetAction = StackActions.reset({
 class Settings extends Component {
   static navigationOptions = () => {
     return {
-      header: <NavigationHeader title='SETTINGS' />
+      header: <NavigationHeader title={tl.t('settings.title')} />
     }
   }
 
@@ -64,11 +65,11 @@ class Settings extends Component {
 
   _resetWallet = async () => {
     Alert.alert(
-      'Reset Wallet',
-      `Warning: This action will erase all saved data including your 12 secret words. If you didn't save your secret, please do it before continue.`,
+      tl.t('warning'),
+      tl.t('settings.reset.warning'),
       [
-        {text: 'Cancel', style: 'cancel'},
-        {text: 'OK, I understand it',
+        {text: tl.t('cancel'), style: 'cancel'},
+        {text: tl.t('settings.reset.button'),
           onPress: () => this.props.navigation.navigate('Pin', {
             shouldGoBack: true,
             testInput: pin => pin === this.props.context.pin,
@@ -106,8 +107,8 @@ class Settings extends Component {
     const { seed } = this.state
     const list = [
       {
-        title: 'Notifications Subscription',
-        description: 'Enable or disable push notifications',
+        title: tl.t('settings.notifications.title'),
+        description: tl.t('settings.notifications.description'),
         icon: 'user,-person,-avtar,-profile-picture,-dp',
         right: () => {
           if ((this.state.subscriptionStatus === null) || this.state.changingSubscription) {
@@ -125,14 +126,14 @@ class Settings extends Component {
         }
       },
       {
-        title: 'Network',
-        description: 'Choose a node of your preference',
+        title: tl.t('settings.network.title'),
+        description: tl.t('settings.network.description'),
         icon: 'share,-network,-connect,-community,-media',
         onPress: () => this.props.navigation.navigate('NetworkConnection')
       },
       {
-        title: 'Backup Wallet',
-        description: 'Backup your secret words',
+        title: tl.t('settings.backup.title'),
+        description: tl.t('settings.backup.description'),
         icon: 'key,-password,-lock,-privacy,-login',
         onPress: () => this.props.navigation.navigate('Pin', {
           shouldGoBack: true,
@@ -141,8 +142,8 @@ class Settings extends Component {
         })
       },
       {
-        title: 'Restore Wallet',
-        description: 'Restore previously used 12 secrets words',
+        title: tl.t('settings.restore.title'),
+        description: tl.t('settings.restore.description'),
         icon: 'folder-sync,-data,-folder,-recovery,-sync',
         onPress: () => this.props.navigation.navigate('Pin', {
           shouldGoBack: true,
@@ -151,8 +152,8 @@ class Settings extends Component {
         })
       },
       {
-        title: 'Reset Wallet',
-        description: 'Restart all data from current wallet',
+        title: tl.t('settings.reset.title'),
+        description: tl.t('settings.reset.description'),
         icon: 'delete,-trash,-dust-bin,-remove,-recycle-bin',
         onPress: this._resetWallet
       }
@@ -196,7 +197,7 @@ class Settings extends Component {
             </TouchableWithoutFeedback>
           )
         })}
-        <SectionTitle>PARTNERS</SectionTitle>
+        <SectionTitle>{tl.t('settings.partners')}</SectionTitle>
         <Utils.Row justify='center'>
           <PayPartner source={require('../../assets/paysponsor.png')} />
           <Utils.HorizontalSpacer size='large' />

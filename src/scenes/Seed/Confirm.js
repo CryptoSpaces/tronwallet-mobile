@@ -4,6 +4,7 @@ import { ScrollView, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { Answers } from 'react-native-fabric'
 
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import { Spacing, Colors } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
@@ -29,7 +30,7 @@ class Confirm extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <NavigationHeader
-        title='CONFIRM SEED'
+        title={tl.t('seed.confirm.title')}
         onBack={() => navigation.goBack()}
       />
     )
@@ -66,10 +67,7 @@ class Confirm extends React.Component {
       await this._handleSuccess()
     } catch (error) {
       console.warn(error)
-      Alert.alert(
-        'Wrong Combination',
-        'Selected words dont match. Make sure you wrote the words in the correct order.'
-      )
+      Alert.alert(tl.t('seed.confirm.error.title'), tl.t('seed.confirm.error.message'))
       this.setState({ loading: false })
     }
   }
@@ -82,7 +80,7 @@ class Confirm extends React.Component {
         Answers.logCustom('Wallet Operation', { type: 'Gift' })
 
         const rewardsParams = {
-          label: 'Wallet Successfully confirmed',
+          label: tl.t('seed.confirm.success'),
           amount: 100,
           token: 'TWX'
         }
@@ -93,7 +91,7 @@ class Confirm extends React.Component {
       }
     } catch (error) {
       Answers.logCustom('Wallet Operation', { type: 'Gift', message: error.message })
-      Alert.alert('Success', 'Wallet successfully confirmed.')
+      Alert.alert(tl.t('success'), tl.t('seed.confirm.success'))
       this.setState({ loading: false })
       navigation.dispatch(resetAction)
     }
@@ -132,8 +130,7 @@ class Confirm extends React.Component {
         <ScrollView>
           <Utils.Content align='center' justify='center'>
             <Utils.Text>
-              Select the words below in the right order to confirm your secret
-              phrase.
+              {tl.t('seed.confirm.explanation')}
             </Utils.Text>
           </Utils.Content>
           <Utils.View height={1} backgroundColor={Colors.secondaryText} />
@@ -167,7 +164,7 @@ class Confirm extends React.Component {
           <Utils.Row justify='center'>
             <Utils.View align='center' paddingY='medium'>
               <ButtonGradient
-                text='RESET WORDS'
+                text={tl.t('seed.confirm.button.reset')}
                 disabled={loading || !this.state.selected.length}
                 onPress={this._resetWords}
               />
@@ -175,7 +172,7 @@ class Confirm extends React.Component {
             <Utils.HorizontalSpacer size='large' />
             <Utils.View align='center' paddingY='medium'>
               <ButtonGradient
-                text='CONFIRM SEED'
+                text={tl.t('seed.confirm.button.confirm')}
                 disabled={loading || this.state.selected.length < 12}
                 onPress={this._handleSubmit}
               />

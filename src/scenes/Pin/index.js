@@ -2,6 +2,7 @@ import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import * as Animatable from 'react-native-animatable'
 
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import * as Elements from './elements'
 
@@ -86,9 +87,9 @@ class PinScene extends React.Component {
           {this.state.isDoubleChecking && <Elements.GoBackButton onPress={this._resetState} />}
           {shouldGoBack && <Elements.GoBackButton onPress={() => this.props.navigation.goBack()} />}
           <Utils.View align='center'>
-            <Elements.Label>SECURITY CHECK</Elements.Label>
+            <Elements.Label>{tl.t('pin.title')}</Elements.Label>
             <Utils.VerticalSpacer />
-            <Elements.Text>{this.state.isDoubleChecking ? 'Re-Enter PIN' : 'Enter PIN'}</Elements.Text>
+            <Elements.Text>{this.state.isDoubleChecking ? tl.t('pin.reenter') : tl.t('pin.enter')}</Elements.Text>
           </Utils.View>
         </Utils.Content>
         <Utils.View flex={1} justify='center' align='center'>

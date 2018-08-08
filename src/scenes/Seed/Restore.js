@@ -3,6 +3,7 @@ import { Alert, Keyboard } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { Answers } from 'react-native-fabric'
 
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import ButtonGradient from '../../components/ButtonGradient'
 import NavigationHeader from '../../components/Navigation/Header'
@@ -27,11 +28,11 @@ class Restore extends React.Component {
 
   _handleRestore = async () => {
     Alert.alert(
-      'Warning',
-      'Restore seed will erase all data on this device and pull information from the network for the restored account.',
+      tl.t('warning'),
+      tl.t('seed.restore.warning'),
       [
-        { text: 'Cancel' },
-        { text: 'OK', onPress: this._restoreWallet }
+        { text: tl.t('cancel') },
+        { text: tl.t('ok'), onPress: this._restoreWallet }
       ],
       { cancelable: false }
     )
@@ -46,14 +47,12 @@ class Restore extends React.Component {
     try {
       await recoverUserKeypair(this.props.context.pin, this.props.context.oneSignalId, seed)
       await updateWalletData()
-      Alert.alert('Wallet recovered with success!')
+      Alert.alert(tl.t('seed.restore.success'))
       this.setState({ loading: false }, this._navigateToSettings)
       Answers.logCustom('Wallet Operation', { type: 'Restore' })
     } catch (err) {
       console.warn(err)
-      Alert.alert(
-        "Oops. Looks like the words you typed isn't a valid mnemonic seed. Check for a typo and try again."
-      )
+      Alert.alert(tl.t('seed.restore.error'))
       this.setState({ loading: false })
     }
   }
@@ -69,13 +68,13 @@ class Restore extends React.Component {
     return (
       <Utils.Container>
         <NavigationHeader
-          title='RESTORE WALLET'
+          title={tl.t('seed.restore.title')}
           onBack={() => this.props.navigation.goBack()}
           noBorder
         />
         <Utils.Content paddingBottom='2'>
           <Utils.FormInput
-            placeholder='Please, type your 12 seed words here'
+            placeholder={tl.t('seed.restore.placeholder')}
             height={90}
             padding={16}
             multiline
@@ -91,15 +90,12 @@ class Restore extends React.Component {
           <ButtonGradient
             disabled={!this.state.seed.length || loading}
             onPress={this._handleRestore}
-            text='RESTORE'
+            text={tl.t('seed.restore.button')}
           />
         </Utils.Content>
         <Utils.Content paddingTop='8'>
           <Utils.Text weight='300' font='light' secondary size='smaller'>
-            To restore your wallet, please provide the same 12 words
-            that you wrote on paper when you created your wallet for the first time.
-            If you enter a different sequence of words, a new empty wallet will be
-            created.
+            {tl.t('seed.restore.explanation')}
           </Utils.Text>
         </Utils.Content>
         <Utils.VerticalSpacer />

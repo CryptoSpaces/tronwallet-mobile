@@ -35,7 +35,7 @@ class FirstTime extends React.Component {
           </Utils.Row>
           <Utils.VerticalSpacer size='big' />
           <ButtonGradient
-            text={tl.t('createWallet')}
+            text={tl.t('firstTime.button.create')}
             onPress={() => {
               this.props.navigation.navigate('Pin', {
                 shouldDoubleCheck,
@@ -52,7 +52,7 @@ class FirstTime extends React.Component {
           />
           <Utils.VerticalSpacer />
           <ButtonGradient
-            text={tl.t('restoreWallet')}
+            text={tl.t('firstTime.button.restore')}
             onPress={() => {
               this.props.navigation.navigate('Pin', {
                 shouldDoubleCheck,

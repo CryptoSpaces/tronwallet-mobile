@@ -2,6 +2,7 @@ import React from 'react'
 import { ActivityIndicator, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -21,7 +22,7 @@ class Create extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <NavigationHeader
-        title='CONFIRM WALLET SEED'
+        title={tl.t('seed.create.title')}
         onBack={() => {
           navigation.getParam('shouldReset', false)
             ? navigation.dispatch(resetAction)
@@ -41,7 +42,7 @@ class Create extends React.Component {
       await this._getMnemonic()
     } catch (err) {
       console.log(err)
-      Alert.alert('Oops, we have a problem. Please restart the application.')
+      Alert.alert(tl.t('seed.create.error'))
     }
   }
 
@@ -92,11 +93,11 @@ class Create extends React.Component {
             <Utils.View style={{flex: 1}}>
               <ButtonGradient
                 onPress={this._getNewMnemonic}
-                text='GET NEW SEED'
+                text={tl.t('seed.create.button.newSeed')}
                 full
               />
               <Utils.Text light size='xsmall' secondary>
-                This will generate a completely new wallet.
+                {tl.t('seed.create.generateNew')}
               </Utils.Text>
             </Utils.View>
             <Utils.HorizontalSpacer size='large' />
@@ -107,7 +108,7 @@ class Create extends React.Component {
                   { seed: seed.split(' ') }
                 )
               }
-              text='CONFIRM'
+              text={tl.t('seed.create.button.written')}
               full
             />
           </Utils.Row>
@@ -119,7 +120,7 @@ class Create extends React.Component {
               : navigation.goBack()
           }}
         >
-          Confirm later
+          {tl.t('seed.create.button.later')}
         </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>
