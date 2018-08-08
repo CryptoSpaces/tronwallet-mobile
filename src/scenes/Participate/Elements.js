@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { View } from '../../components/Utils'
+import { Colors } from '../../components/DesignSystem'
 
 export const Text = styled.Text`
   color: white;
@@ -15,6 +16,8 @@ export const TokenPrice = styled.Text`
 
 export const FeaturedTokenPrice = TokenPrice.extend`
   font-size: 18;
+  line-height: 18px;
+  height: 18px;
 `
 
 export const TokenName = TokenPrice.extend`
@@ -32,12 +35,12 @@ export const Card = View.extend`
   margin-right: 20;
   border-radius: 4;
   background: rgb(44,45,67);
-  height: 85;
+  min-height: 85;
   overflow: hidden;
 `
 
 export const CardContent = View.extend`
-  padding: 19px 10px 8px 16px;
+  padding: 19px 15px 15px 15px;
 `
 
 export const Featured = View.extend`
@@ -111,4 +114,19 @@ export const ButtonText = styled.Text`
   font-size: 12;
   text-align: center;
   letter-spacing: 0.8;
+`
+export const BuyButton = styled.View`
+  background-color: rgb(44,45,67);
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-start;
+  padding-vertical: 13px;
+  padding-horizontal: 30px;
+`
+export const TokensTitle = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 15px;
+  margin-left: 20px;
+  color: ${Colors.secondaryText};
 `
