@@ -2,12 +2,14 @@ import React from 'react'
 import { ActivityIndicator, Alert } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
 import NavigationHeader from '../../components/Navigation/Header'
 
-import { getUserSecrets } from '../../utils/secretsUtils'
+import { getUserSecrets, createUserKeyPair } from '../../utils/secretsUtils'
+import { resetWalletData } from '../../utils/userAccountUtils'
 import { withContext } from '../../store/context'
 
 const resetAction = StackActions.reset({
@@ -20,7 +22,7 @@ class Create extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <NavigationHeader
-        title='CONFIRM WALLET SEED'
+        title={tl.t('seed.create.title')}
         onBack={() => {
           navigation.getParam('shouldReset', false)
             ? navigation.dispatch(resetAction)
@@ -31,16 +33,42 @@ class Create extends React.Component {
   })
 
   state = {
-    seed: null
+    seed: null,
+    error: null
   }
 
   async componentDidMount () {
     try {
+      await this._getMnemonic()
+    } catch (err) {
+      console.log(err)
+      Alert.alert(tl.t('seed.create.error'))
+    }
+  }
+
+  _getNewMnemonic = async () => {
+    const { pin, oneSignalId } = this.props.context
+    try {
+      await resetWalletData()
+      await createUserKeyPair(pin, oneSignalId)
+      await this._getMnemonic()
+    } catch (e) {
+      console.log(e)
+      this.setState({
+        error: 'Oops, we have a problem. Please restart the application.'
+      })
+    }
+  }
+
+  _getMnemonic = async () => {
+    try {
       const { mnemonic } = await getUserSecrets(this.props.context.pin)
       this.setState({ seed: mnemonic })
-    } catch (err) {
-      console.warn(err)
-      Alert.alert('Oops, we have a problem. Please restart the application.')
+    } catch (e) {
+      console.log(e)
+      this.setState({
+        error: 'Oops, we have a problem. Please restart the application.'
+      })
     }
   }
 
@@ -60,19 +88,31 @@ class Create extends React.Component {
           )}
         </Utils.Content>
         <Utils.View height={1} backgroundColor={Colors.secondaryText} />
-        <Utils.VerticalSpacer size='large' />
-        <Utils.Row justify='center'>
-          <ButtonGradient
-            onPress={() =>
-              navigation.navigate(
-                'SeedConfirm',
-                { seed: seed.split(' ') }
-              )
-            }
-            text="I'VE WRITTEN IT DOWN"
-          />
-        </Utils.Row>
-        <Utils.VerticalSpacer size='medium' />
+        <Utils.Content paddingBottom={12}>
+          <Utils.Row justify='center' align='flex-start' height={90}>
+            <Utils.View style={{flex: 1}}>
+              <ButtonGradient
+                onPress={this._getNewMnemonic}
+                text={tl.t('seed.create.button.newSeed')}
+                full
+              />
+              <Utils.Text light size='xsmall' secondary>
+                {tl.t('seed.create.generateNew')}
+              </Utils.Text>
+            </Utils.View>
+            <Utils.HorizontalSpacer size='large' />
+            <ButtonGradient
+              onPress={() =>
+                navigation.navigate(
+                  'SeedConfirm',
+                  { seed: seed.split(' ') }
+                )
+              }
+              text={tl.t('seed.create.button.written')}
+              full
+            />
+          </Utils.Row>
+        </Utils.Content>
         <Utils.Button
           onPress={() => {
             navigation.getParam('shouldReset', false)
@@ -80,7 +120,7 @@ class Create extends React.Component {
               : navigation.goBack()
           }}
         >
-          Confirm later
+          {tl.t('seed.create.button.later')}
         </Utils.Button>
         <Utils.View flex={1} />
       </Utils.Container>

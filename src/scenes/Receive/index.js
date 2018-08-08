@@ -7,6 +7,7 @@ import { Answers } from 'react-native-fabric'
 
 import NavigationHeader from '../../components/Navigation/Header'
 import QRCode from '../../components/QRCode'
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import KeyboardScreen from '../../components/KeyboardScreen'
@@ -18,7 +19,7 @@ class ReceiveScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       header: (
-        <NavigationHeader title='RECEIVE'
+        <NavigationHeader title={tl.t('receive.title')}
           onBack={() => { navigation.goBack() }}
         />
       )
@@ -41,9 +42,9 @@ class ReceiveScreen extends PureComponent {
   _copy = async () => {
     try {
       await Clipboard.setString(this.props.context.publicKey.value)
-      this.refs.toast.show('Copied to clipboard')
+      this.refs.toast.show(tl.t('receive.clipboardCopied'))
     } catch (error) {
-      this.refs.toast.show('Something wrong while copying')
+      this.refs.toast.show(tl.t('error.clipboardCopied'))
     }
   }
 
@@ -79,13 +80,12 @@ class ReceiveScreen extends PureComponent {
                     size={FontSize['small']}
                     color={Colors.primaryText}
                   />
-
-                  {` Copy `}
+                  {` ${tl.t('receive.button.copy')} `}
                 </Utils.Text>
               </Utils.PasteButton>
               <Utils.HorizontalSpacer />
               <Share WrapperButton={Utils.PasteButton}>
-                <Utils.Text> Share </Utils.Text>
+                <Utils.Text> {tl.t('receive.button.share')} </Utils.Text>
               </Share>
             </Utils.Row>
           </Utils.Content>

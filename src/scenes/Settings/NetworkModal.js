@@ -3,6 +3,7 @@ import { View, ScrollView, StyleSheet, Alert } from 'react-native'
 import Switch from 'react-native-switch-pro'
 
 // Design
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
 import ButtonGradient from '../../components/ButtonGradient'
@@ -17,7 +18,7 @@ class ChangeNetworkModal extends Component {
     return {
       header: (
         <NavigationHeader
-          title='NETWORK'
+          title={tl.t('settings.network.modal.title')}
           onBack={() => navigation.goBack()}
         />
       )
@@ -59,7 +60,7 @@ class ChangeNetworkModal extends Component {
     } catch (error) {
       console.warn(error.message)
       this.setState({
-        error: 'Error getting node ip from local storage'
+        error: tl.t('settings.network.modal.error.storage')
       })
     }
   }
@@ -82,7 +83,7 @@ class ChangeNetworkModal extends Component {
     this.setState({ loading: true })
 
     if (!this.testIpValidity(ipToSubmit)) {
-      this.setState({ loading: false, error: 'Please put a valid IP' })
+      this.setState({ loading: false, error: tl.t('settings.network.modal.error.invalidIp') })
       return
     }
     this._updateNodes(type, ipToSubmit)
@@ -91,12 +92,12 @@ class ChangeNetworkModal extends Component {
   _updateNodes = async (type, nodeip) => {
     try {
       await NodesIp.setNodeIp(type, nodeip)
-      Alert.alert('Updated', 'Nodes IP updated!')
+      Alert.alert(tl.t('settings.network.modal.success.updated'), tl.t('settings.network.modal.success.updatedIp'))
       this.setState({ loading: false, error: null })
     } catch (error) {
       this.setState({
         loading: false,
-        error: 'Something wrong while updating nodes ip'
+        error: tl.t('settings.network.modal.error.update')
       })
     }
   }
@@ -107,13 +108,13 @@ class ChangeNetworkModal extends Component {
       await NodesIp.switchTestnet(switchValue)
       this.setState({ switchTestnet: switchValue })
       this._loadData()
-      const alertMessage = switchValue ? 'Switched nodes IP to Testnet' : 'Switched nodes IP to default main'
-      Alert.alert('Updated', alertMessage)
+      const alertMessage = switchValue ? tl.t('settings.network.modal.success.switchTest') : tl.t('settings.network.modal.success.switchMain')
+      Alert.alert(tl.t('settings.network.modal.success.updated'), alertMessage)
       await Promise.all([resetWalletData(), resetListsData()])
     } catch (error) {
       this.setState({
         loading: false,
-        error: 'Something wrong while updating nodes ip'
+        error: tl.t('settings.network.modal.error.update')
       })
     }
   }
@@ -122,12 +123,12 @@ class ChangeNetworkModal extends Component {
     try {
       await NodesIp.resetNodesIp(type)
       this._loadData()
-      Alert.alert('Node IP reseted!')
+      Alert.alert(tl.t('settings.network.modal.success.reset'))
       this.setState({ loading: false, error: null })
     } catch (error) {
       this.setState({
         loading: false,
-        error: 'Something wrong while reseting node ip'
+        error: tl.t('settings.network.modal.error.reset')
       })
     }
   }
@@ -168,13 +169,13 @@ class ChangeNetworkModal extends Component {
           <Utils.StatusBar transparent />
           <View style={styles.card}>
             <Utils.Text size='xsmall' secondary>
-              Main Node
+              {tl.t('settings.network.modal.mainNode')}
             </Utils.Text>
             <Utils.Row justify='space-between'>
               <Utils.FormInput
                 defaultValue={mainNode}
                 keyboardType='numeric'
-                placeholder='Loading ip'
+                placeholder={tl.t('settings.network.modal.placeholder.loadingIp')}
                 editable={!switchTestnet}
                 style={styles.buttonUpdate}
                 onChangeText={text => this.changeInput(text, 'mainNode')}
@@ -183,7 +184,7 @@ class ChangeNetworkModal extends Component {
               <Utils.FormInput
                 defaultValue={mainNodePort}
                 keyboardType='numeric'
-                placeholder='Loading port'
+                placeholder={tl.t('settings.network.modal.placeholder.loadingPort')}
                 editable={!switchTestnet}
                 style={styles.buttonReset}
                 onChangeText={text => this.changeInput(text, 'mainNodePort')}
@@ -193,7 +194,7 @@ class ChangeNetworkModal extends Component {
             <Utils.Row justify='space-between'>
               <View style={styles.buttonUpdate}>
                 <ButtonGradient
-                  text='Update and Connect'
+                  text={tl.t('settings.network.modal.button.update')}
                   onPress={() => this._submit('main')}
                   disabled={switchTestnet}
                   size='small'
@@ -201,7 +202,7 @@ class ChangeNetworkModal extends Component {
               </View>
               <View style={styles.buttonReset}>
                 <ButtonGradient
-                  text='Reset'
+                  text={tl.t('settings.network.modal.button.reset')}
                   onPress={() => this._reset('main')}
                   disabled={switchTestnet}
                   size='small'
@@ -212,13 +213,13 @@ class ChangeNetworkModal extends Component {
           <Utils.VerticalSpacer size='medium' />
           <View style={styles.card}>
             <Utils.Text size='xsmall' secondary>
-              Solidity Node
+              {tl.t('settings.network.modal.solidityNode')}
             </Utils.Text>
             <Utils.Row justify='space-between'>
               <Utils.FormInput
                 defaultValue={solidityNode}
                 keyboardType='numeric'
-                placeholder='Loading ip'
+                placeholder={tl.t('settings.network.modal.placeholder.loadingIp')}
                 editable={!switchTestnet}
                 style={styles.buttonUpdate}
                 onChangeText={text => this.changeInput(text, 'solidityNode')}
@@ -227,7 +228,7 @@ class ChangeNetworkModal extends Component {
               <Utils.FormInput
                 defaultValue={solidityNodePort}
                 keyboardType='numeric'
-                placeholder='Loading port'
+                placeholder={tl.t('settings.network.modal.placeholder.loadingPort')}
                 style={styles.buttonReset}
                 editable={!switchTestnet}
                 onChangeText={text =>
@@ -239,7 +240,7 @@ class ChangeNetworkModal extends Component {
             <Utils.Row justify='space-between'>
               <View style={styles.buttonUpdate}>
                 <ButtonGradient
-                  text='Update and Connect'
+                  text={tl.t('settings.network.modal.button.update')}
                   onPress={() => this._submit('solidity')}
                   disabled={switchTestnet}
                   size='small'
@@ -247,7 +248,7 @@ class ChangeNetworkModal extends Component {
               </View>
               <View style={styles.buttonReset}>
                 <ButtonGradient
-                  text='Reset'
+                  text={tl.t('settings.network.modal.button.reset')}
                   onPress={() => this._reset('solidity')}
                   disabled={switchTestnet}
                   size='small'
@@ -258,7 +259,7 @@ class ChangeNetworkModal extends Component {
           <Utils.VerticalSpacer size='medium' />
           <View style={styles.card}>
             <Utils.Row justify='space-between' align='center'>
-              <Utils.Text size='smaller' color={Colors.secondaryText}>TestNet</Utils.Text>
+              <Utils.Text size='smaller' color={Colors.secondaryText}>{tl.t('settings.network.modal.testNet')}</Utils.Text>
               <Switch
                 circleStyle={{ backgroundColor: Colors.orange }}
                 backgroundActive={Colors.yellow}
@@ -270,10 +271,7 @@ class ChangeNetworkModal extends Component {
           {error && <Utils.Error>{error}</Utils.Error>}
           <Utils.Content justify='center' align='center'>
             <Utils.Text color='#ffffff' font='light' size='xsmall'>
-              With this option you can select the node that will better suit
-              your needs and preferences. Please be careful while updating the
-              node IP while wrong IP can lead to malfunctions within your
-              wallet. Example: 35.231.121.122:50051
+              {tl.t('settings.network.modal.explanation')}
             </Utils.Text>
           </Utils.Content>
         </ScrollView>

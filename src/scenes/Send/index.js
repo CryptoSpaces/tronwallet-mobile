@@ -13,6 +13,7 @@ import { Answers } from 'react-native-fabric'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import ActionSheet from 'react-native-actionsheet'
 
+import tl from '../../utils/i18n'
 import ButtonGradient from '../../components/ButtonGradient'
 import Client from '../../services/client'
 import Input from '../../components/Input'
@@ -34,7 +35,7 @@ class SendScene extends Component {
     return {
       header: (
         <NavigationHeader
-          title='SEND'
+          title={tl.t('send.title')}
           onBack={() => { navigation.goBack() }}
           noBorder
         />
@@ -71,6 +72,7 @@ class SendScene extends Component {
   componentWillUnmount () {
     this._navListener.remove()
   }
+
   _orderBalances = balances => {
     let orderedBalances = []
     balances.forEach((balance) => {
@@ -107,10 +109,10 @@ class SendScene extends Component {
         loadingData: false,
         trxBalance: balance,
         formattedToken: this._formatBalance('TRX', balance),
-        warning: balance === 0 ? 'Not enough balance.' : null
+        warning: balance === 0 ? tl.t('send.error.insufficientBalance') : null
       })
     } catch (error) {
-      Alert.alert('Error while getting balance data')
+      Alert.alert(tl.t('send.error.gettingBalance'))
       // TODO - Error handler
       this.setState({
         loadingData: false
@@ -135,7 +137,7 @@ class SendScene extends Component {
     } else {
       this.setState({
         to: trimmedTo,
-        addressError: 'Address is either incomplete or invalid.'
+        addressError: tl.t('send.error.incompleteAddress')
       })
     }
   }
@@ -145,16 +147,16 @@ class SendScene extends Component {
     const balanceSelected = balances.find(b => b.name === token)
 
     if (!isAddressValid(to) || from === to) {
-      this.setState({ error: 'Invalid receiver address' })
+      this.setState({ error: tl.t('send.error.invalidReceiver') })
       return
     }
     if (!balanceSelected) {
-      this.setState({ error: 'Select a balance first' })
+      this.setState({ error: tl.t('send.error.selectBalance') })
       return
     }
 
     if (!amount || balanceSelected.balance < amount || amount <= 0) {
-      this.setState({ error: 'Invalid amount' })
+      this.setState({ error: tl.t('send.error.invalidAmount') })
       return
     }
 
@@ -183,7 +185,7 @@ class SendScene extends Component {
       this._openTransactionDetails(data)
       this.clearInput()
     } catch (error) {
-      Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
+      Alert.alert(tl.t('warning'), tl.t('error.default'))
       this.setState({
         loadingSign: false
       })
@@ -199,7 +201,7 @@ class SendScene extends Component {
         })
       })
     } catch (error) {
-      Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
+      Alert.alert(tl.t('warning'), tl.t('error.default'))
       this.setState({ loadingSign: false })
     }
   }
@@ -225,7 +227,7 @@ class SendScene extends Component {
     }
   }
 
-  _formatBalance = (token, balance) => `${token} (${formatNumber(balance)} available)`
+  _formatBalance = (token, balance) => `${token} (${formatNumber(balance)} ${tl.t('send.available')})`
 
   _rightContentTo = () => (
     <React.Fragment>
@@ -270,20 +272,20 @@ class SendScene extends Component {
     const { loadingSign, loadingData, token, error, to, amount, balances, addressError } = this.state
     const tokenOptions = balances.map(({ name, balance }) => this._formatBalance(name, balance))
     const balanceSelected = balances.find(b => b.name === token)
-    tokenOptions.unshift('Cancel')
+    tokenOptions.unshift(tl.t('cancel'))
     return (
       <KeyboardScreen>
         <Utils.Content>
           <ActionSheet
             ref={ref => { this.ActionSheet = ref }}
-            title='Please, choose a token below.'
+            title={tl.t('send.chooseToken')}
             options={tokenOptions}
             cancelButtonIndex={0}
             onPress={index => this._handleTokenChange(index, tokenOptions[index])}
           />
           <TouchableOpacity onPress={() => this.ActionSheet.show()}>
             <Input
-              label='TOKEN'
+              label={tl.t('send.input.token')}
               value={this.state.formattedToken}
               rightContent={this._rightContentToken}
               editable={false}
@@ -292,7 +294,7 @@ class SendScene extends Component {
           <Utils.VerticalSpacer size='medium' />
           <Input
             innerRef={(input) => { this.to = input }}
-            label='TO'
+            label={tl.t('send.input.to')}
             rightContent={this._rightContentTo}
             value={to}
             onChangeText={to => this._changeAddress(to)}
@@ -319,7 +321,7 @@ class SendScene extends Component {
           <Utils.VerticalSpacer size='medium' />
           <Input
             innerRef={(input) => { this.amount = input }}
-            label='AMOUNT'
+            label={tl.t('send.input.amount')}
             keyboardType='numeric'
             value={amount}
             placeholder='0'
@@ -330,7 +332,7 @@ class SendScene extends Component {
             numbersOnly
           />
           <Utils.Text light size='xsmall' secondary>
-              The minimum amount for any send transaction is 0.000001.
+            {tl.t('send.minimumAmount')}
           </Utils.Text>
           <Utils.VerticalSpacer size='large' />
           {error && (
@@ -344,7 +346,7 @@ class SendScene extends Component {
           ) : (
             <ButtonGradient
               font='bold'
-              text='SEND'
+              text={tl.t('send.title')}
               onPress={this._submit}
               disabled={Number(amount) <= 0 || Number(balanceSelected.balance) < Number(amount) || !isAddressValid(to)}
             />
