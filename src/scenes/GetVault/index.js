@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {
   Platform,
   Image,
@@ -6,6 +7,8 @@ import {
   Linking,
   Dimensions
 } from 'react-native'
+
+import tl from '../../utils/i18n'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import * as Utils from '../../components/Utils'
 import { Colors } from '../../components/DesignSystem'
@@ -16,10 +19,9 @@ import logoAndroid from '../../assets/logo-android.png'
 import tronLogo from '../../assets/tron-logo-small.png'
 
 const ANDROID_URL = 'market://details?id=com.tronmobile'
-const IOS_URL =
-  'itms://itunes.apple.com/us/app/tronvault/id1380161153?ls=1&mt=8'
-
+const IOS_URL = 'itms://itunes.apple.com/us/app/tronvault/id1380161153?ls=1&mt=8'
 const { width } = Dimensions.get('window')
+
 export default props => {
   const onPress = async () => {
     if (Platform.OS === 'ios') {
@@ -50,12 +52,11 @@ export default props => {
         />
         <Utils.VerticalSpacer size='medium' />
         <Utils.Text size='xsmall'>
-          It seems that you don't have Tron Vault installed in your phone to
-          proceed with your transaction.
+          {tl.t('getVault.notInstalled')}
         </Utils.Text>
         <Utils.VerticalSpacer size='large' />
         <Utils.Text size='small' font='light'>
-          You can download it here
+          {tl.t('getVault.downloadHere')}
         </Utils.Text>
         <Utils.VerticalSpacer size='medium' />
         <TouchableOpacity onPress={onPress}>

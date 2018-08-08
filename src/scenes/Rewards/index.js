@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { StackActions, NavigationActions } from 'react-navigation'
 
+import tl from '../../utils/i18n'
 import * as Elements from './elements'
 import { Colors, FontSize } from '../../components/DesignSystem'
 import SpecialMessage from '../../components/SpecialMessage'
@@ -26,7 +27,7 @@ class RewardsScreen extends PureComponent {
           {label}
         </Elements.AccountText>
         <Elements.EarnedText>
-          You have earned
+          {tl.t('rewards.earned')}
         </Elements.EarnedText>
         <Elements.AmountText>
           {amount}
@@ -55,7 +56,7 @@ class RewardsScreen extends PureComponent {
   render () {
     return (
       <SpecialMessage
-        message='REWARDS'
+        message={tl.t('rewards.title')}
         renderMiddleContent={this._centerContent}
         renderBottomContent={this._bottomContent}
       />

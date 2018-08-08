@@ -2,7 +2,15 @@ const general = {
   success: 'Success',
   warning: 'Warning',
   cancel: 'Cancel',
-  ok: 'OK'
+  ok: 'OK',
+  error: {
+    default: 'Woops something went wrong. Try again later, If the error persist try to update the network settings.',
+    buildingTransaction: 'Error while building transaction, try again.',
+    gettingTransaction: 'Error while getting transaction.',
+    clipboardCopied: 'Something wrong while copying'
+  },
+  balance: 'Balance',
+  tronPower: 'TRON POWER'
 }
 
 const firstTime = {
@@ -10,6 +18,29 @@ const firstTime = {
     create: 'CREATE WALLET',
     restore: 'RESTORE WALLET'
   }
+}
+
+const freeze = {
+  title: 'FREEZE',
+  unfreeze: {
+    title: 'UNFREEZE',
+    inThreeDays: 'After a three day period you can unfreeze your TRX',
+    inXMinutes: 'You can unfreeze your TRX in {{minutes}} minutes.',
+    inXHours: 'You can unfreeze your TRX in {{hours}} minutes.',
+    inXDays: 'You can unfreeze your TRX in {{days}} minutes.',
+    now: 'You can unfreeze your TRX now.'
+  },
+  error: {
+    minimumAmount: 'The minimum amount for any freeze transaction is 1.',
+    insufficientBalance: 'Insufficient TRX balance',
+    roundNumbers: 'Can only freeze round numbers'
+  },
+  amount: 'FREEZE AMOUNT'
+}
+
+const getVault = {
+  notInstalled: `It seems that you don't have Tron Vault installed in your phone to proceed with your transaction.`,
+  downloadHere: 'You can download it here'
 }
 
 const market = {
@@ -32,6 +63,20 @@ const pin = {
   title: 'SECURITY CHECK',
   enter: 'Enter PIN',
   reenter: 'Re-Enter PIN'
+}
+
+const receive = {
+  title: 'RECEIVE',
+  clipboardCopied: 'Copied to clipboard',
+  button: {
+    copy: 'Copy',
+    share: 'Share'
+  }
+}
+
+const rewards = {
+  title: 'REWARDS',
+  earned: 'You have earned'
 }
 
 const seed = {
@@ -66,6 +111,26 @@ const seed = {
     error: `Oops. Looks like the words you typed aren't a valid mnemonic seed. Check for a typo and try again.`,
     button: 'RESTORE'
   }
+}
+
+const send = {
+  title: 'SEND',
+  error: {
+    insufficientBalance: 'Not enough balance.',
+    gettingBalance: 'Error while getting balance data',
+    incompleteAddress: 'Address is either incomplete or invalid.',
+    invalidReceiver: 'Invalid receiver address',
+    selectBalance: 'Select a balance first',
+    invalidAmount: 'Invalid amount'
+  },
+  input: {
+    token: 'TOKEN',
+    to: 'TO',
+    amount: 'AMOUNT'
+  },
+  available: 'available',
+  chooseToken: 'Please, choose a token below.',
+  minimumAmount: 'The minimum amount for any send transaction is 0.000001.'
 }
 
 const settings = {
@@ -125,9 +190,14 @@ const settings = {
 
 export default {
   firstTime,
+  freeze,
+  getVault,
   market,
   pin,
+  receive,
+  rewards,
   seed,
+  send,
   settings,
   ...general
 }

@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import moment from 'moment'
 import { Answers } from 'react-native-fabric'
 
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 import Header from '../../components/Header'
 import Input from '../../components/Input'
@@ -24,7 +25,7 @@ class FreezeScene extends Component {
     return {
       header: (
         <NavigationHeader
-          title='FREEZE'
+          title={tl.t('freeze.title')}
           onBack={() => { navigation.goBack() }}
           noBorder
         />
@@ -40,7 +41,7 @@ class FreezeScene extends Component {
     amount: '',
     loading: true,
     unfreezeStatus: {
-      msg: 'After a three day period you can unfreeze your TRX',
+      msg: tl.t('freeze.unfreeze.inThreeDays'),
       disabled: false
     }
   }
@@ -59,7 +60,7 @@ class FreezeScene extends Component {
 
   _checkUnfreeze = async () => {
     let unfreezeStatus = {
-      msg: 'After a three day period you can unfreeze your TRX',
+      msg: tl.t('freeze.unfreeze.inThreeDays'),
       disabled: false
     }
     try {
@@ -79,13 +80,13 @@ class FreezeScene extends Component {
 
         if (duration.asSeconds() > 0) {
           unfreezeStatus.msg = duration.asDays() < 1 ? duration.asHours() < 1
-            ? `You can unfreeze your TRX in ${Math.round(duration.asMinutes())} minutes.`
-            : `You can unfreeze your TRX in ${Math.round(duration.asHours())} hours.`
-            : `You can unfreeze your TRX in ${Math.round(duration.asDays())} days.`
+            ? tl.t('freeze.unfreeze.inXMinutes', { minutes: Math.round(duration.asMinutes()) })
+            : tl.t('freeze.unfreeze.inXHours', { hours: Math.round(duration.asHours()) })
+            : tl.t('freeze.unfreeze.inXDays', { days: Math.round(duration.asDays()) })
           unfreezeStatus.disabled = true
           return unfreezeStatus
         } else {
-          unfreezeStatus.msg = 'You can unfreeze your TRX now.'
+          unfreezeStatus.msg = tl.t('freeze.unfreeze.now')
           unfreezeStatus.disabled = false
           return unfreezeStatus
         }
@@ -124,8 +125,8 @@ class FreezeScene extends Component {
       const data = await Client.getUnfreezeTransaction(this.props.context.pin)
       this._openTransactionDetails(data)
     } catch (error) {
-      Alert.alert('Error while building transaction, try again.')
-      this.setState({ error: 'Error getting transaction', loadingSign: false })
+      Alert.alert(tl.t('error.buildingTransaction'))
+      this.setState({ loadingSign: false })
     } finally {
       this.setState({loading: false})
     }
@@ -136,13 +137,13 @@ class FreezeScene extends Component {
 
     this.setState({ loading: true })
     try {
-      if (convertedAmount <= 0) { throw new Error('The minimum amount for any freeze transaction is 1.') }
-      if (trxBalance < convertedAmount) { throw new Error('Insufficient TRX balance') }
-      if (!Number.isInteger(convertedAmount)) { throw new Error('Can only freeze round numbers') }
+      if (convertedAmount <= 0) { throw new Error(tl.t('freeze.error.minimiumAmount')) }
+      if (trxBalance < convertedAmount) { throw new Error(tl.t('freeze.error.insufficientAmount')) }
+      if (!Number.isInteger(convertedAmount)) { throw new Error(tl.t('freeze.error.roundNumbers')) }
       await this._freezeToken()
     } catch (error) {
       this.setState({ loading: false })
-      Alert.alert('Warning', error.message)
+      Alert.alert(tl.t('warning'), error.message)
     }
   }
 
@@ -154,8 +155,7 @@ class FreezeScene extends Component {
       const data = await Client.getFreezeTransaction(this.props.context.pin, convertedAmount)
       this._openTransactionDetails(data)
     } catch (error) {
-      Alert.alert('Error while building transaction, try again.')
-      this.setState({ error: 'Error getting transaction' })
+      Alert.alert(Alert.alert(tl.t('error.buildingTransaction')))
     } finally {
       this.setState({ loading: false })
     }
@@ -170,8 +170,8 @@ class FreezeScene extends Component {
         })
       })
     } catch (error) {
-      Alert.alert(error.message)
-      this.setState({ error: 'Error getting transaction', loadingSign: false })
+      Alert.alert(tl.t('error.gettingTransaction'))
+      this.setState({ loadingSign: false })
     }
   }
 
@@ -202,7 +202,7 @@ class FreezeScene extends Component {
           <Header>
             <Utils.View align='center'>
               <Utils.Text size='xsmall' secondary>
-                BALANCE
+                {tl.t('balance')}
               </Utils.Text>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Row align='center'>
@@ -214,7 +214,7 @@ class FreezeScene extends Component {
           </Header>
           <Utils.Content paddingTop={8}>
             <Input
-              label='FREEZE AMOUNT'
+              label={tl.t('freeze.amount')}
               leftContent={this._leftContent}
               keyboardType='numeric'
               align='right'
@@ -227,12 +227,12 @@ class FreezeScene extends Component {
             />
             <Utils.VerticalSpacer size='small' />
             <Utils.SummaryInfo>
-              {`TRON POWER: ${formatNumber(newTotalPower)}`}
+              {`${tl.t('tronPower')} ${formatNumber(newTotalPower)}`}
             </Utils.SummaryInfo>
             <Utils.VerticalSpacer size='medium' />
             <ButtonGradient
               font='bold'
-              text='FREEZE'
+              text={tl.t('freeze.title')}
               onPress={this._submit}
               disabled={loading || !(amount > 0 && amount <= trxBalance)}
             />
@@ -247,7 +247,7 @@ class FreezeScene extends Component {
                 paddingX={'large'}
                 disabled={unfreezeStatus.disabled || loading || !userTotalPower}
                 onPress={this._submitUnfreeze}>
-                <Utils.Text size='xsmall'>UNFREEZE</Utils.Text>
+                <Utils.Text size='xsmall'>{tl.t('freeze.unfreeze.title')}</Utils.Text>
               </Utils.LightButton>
             </Utils.View>
           </Utils.Content>
