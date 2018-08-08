@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import {
-  FlatList,
-  RefreshControl
-} from 'react-native'
+import { FlatList, RefreshControl } from 'react-native'
 import { Answers } from 'react-native-fabric'
 
+import tl from '../../utils/i18n'
 import Transaction from './Transaction'
 import { Background } from './elements'
 import NavigationHeader from '../../components/Navigation/Header'
@@ -21,7 +19,7 @@ const POOLING_TIME = 30000
 
 class TransactionsScene extends Component {
   static navigationOptions = () => ({
-    header: <NavigationHeader title='MY TRANSACTIONS' />
+    header: <NavigationHeader title={tl.t('transactions.title')} />
   })
 
   state = {

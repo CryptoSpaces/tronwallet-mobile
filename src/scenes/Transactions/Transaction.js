@@ -1,8 +1,30 @@
 import React from 'react'
 import moment from 'moment'
-import { configureTransaction } from './Utils'
 
+import tl from '../../utils/i18n'
+import { configureTransaction } from './Utils'
 import * as Elements from './elements'
+
+const getTranslatedType = (type) => {
+  switch (type) {
+    case 'Transfer':
+      return tl.t('transactionType.transfer')
+    case 'Transfer Asset':
+      return tl.t('transactionType.transferAsset')
+    case 'Freeze':
+      return tl.t('transactionType.freeze')
+    case 'Unfreeze':
+      return tl.t('transactionType.unfreeze')
+    case 'Vote':
+      return tl.t('transactionType.vote')
+    case 'Participate':
+      return tl.t('transactionType.participate')
+    case 'Create':
+      return tl.t('transactionType.create')
+    default:
+      return tl.t('transactionType.undefined')
+  }
+}
 
 const Transaction = ({ item, onPress, publicKey }) => {
   /* Renders the top row with the badge and the amount information pertaining
@@ -11,7 +33,7 @@ const Transaction = ({ item, onPress, publicKey }) => {
     <Elements.InfoRow>
       <Elements.Badge color={badgeColor}>
         <Elements.BadgeText>
-          {item.type.toUpperCase()}
+          {getTranslatedType(item.type).toUpperCase()}
         </Elements.BadgeText>
       </Elements.Badge>
       <Elements.TransactionValue>
@@ -30,7 +52,7 @@ const Transaction = ({ item, onPress, publicKey }) => {
   const _renderMiddleInfoRow = () => (
     <Elements.InfoRow>
       <Elements.Confirmation>
-        {item.confirmed ? 'Confirmed' : 'Unconfirmed'}
+        {item.confirmed ? tl.t('confirmed') : tl.t('unconfirmed')}
       </Elements.Confirmation>
       <Elements.Moment>
         {moment(item.timestamp).fromNow()}
@@ -42,12 +64,12 @@ const Transaction = ({ item, onPress, publicKey }) => {
   const _renderAddress = ({from, to}) => (
     <React.Fragment>
       <Elements.AddressRow>
-        <Elements.AddressTitle>From: </Elements.AddressTitle>
+        <Elements.AddressTitle>{tl.t('transactions.from')}: </Elements.AddressTitle>
         <Elements.Address>{from}</Elements.Address>
       </Elements.AddressRow>
       {to && (
         <Elements.AddressRow>
-          <Elements.AddressTitle>To: </Elements.AddressTitle>
+          <Elements.AddressTitle>{tl.t('transactions.to')}: </Elements.AddressTitle>
           <Elements.Address>{to}</Elements.Address>
         </Elements.AddressRow>
       )}

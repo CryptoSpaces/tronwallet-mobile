@@ -10,7 +10,19 @@ const general = {
     clipboardCopied: 'Something wrong while copying'
   },
   balance: 'Balance',
-  tronPower: 'TRON POWER'
+  tronPower: 'TRON POWER',
+  confirmed: 'Confirmed',
+  unconfirmed: 'Unconfirmed',
+  transactionType: {
+    transfer: 'Transfer',
+    transferAsset: 'Transfer Asset',
+    freeze: 'Freeze',
+    unfreeze: 'Unfreeze',
+    vote: 'Vote',
+    participate: 'Participate',
+    create: 'Create',
+    undefined: 'Undefined Type'
+  }
 }
 
 const firstTime = {
@@ -188,6 +200,13 @@ const settings = {
   partners: 'PARTNERS'
 }
 
+const transactions = {
+  title: 'MY TRANSACTIONS',
+  from: 'From',
+  to: 'To',
+  notFound: 'No transactions found.'
+}
+
 export default {
   firstTime,
   freeze,
@@ -199,5 +218,6 @@ export default {
   seed,
   send,
   settings,
+  transactions,
   ...general
 }
