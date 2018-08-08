@@ -164,20 +164,23 @@ class Confirm extends React.Component {
           </Utils.Content>
           <Utils.View height={1} backgroundColor={Colors.secondaryText} />
           <Utils.VerticalSpacer />
-          <Utils.View align='center' paddingY='medium'>
-            <ButtonGradient
-              text='RESET WORDS'
-              disabled={loading || !this.state.selected.length}
-              onPress={this._resetWords}
-            />
-          </Utils.View>
-          <Utils.View align='center' paddingY='medium'>
-            <ButtonGradient
-              text='CONFIRM SEED'
-              disabled={loading || this.state.selected.length < 12}
-              onPress={this._handleSubmit}
-            />
-          </Utils.View>
+          <Utils.Row justify='center'>
+            <Utils.View align='center' paddingY='medium'>
+              <ButtonGradient
+                text='RESET WORDS'
+                disabled={loading || !this.state.selected.length}
+                onPress={this._resetWords}
+              />
+            </Utils.View>
+            <Utils.HorizontalSpacer size='large' />
+            <Utils.View align='center' paddingY='medium'>
+              <ButtonGradient
+                text='CONFIRM SEED'
+                disabled={loading || this.state.selected.length < 12}
+                onPress={this._handleSubmit}
+              />
+            </Utils.View>
+          </Utils.Row>
         </ScrollView>
       </Utils.Container>
     )
