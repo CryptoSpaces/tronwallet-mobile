@@ -41,7 +41,6 @@ import {
   HorizontalSpacer,
   BuyButton,
   ButtonText,
-  BuyButtonWrapper,
   TokensTitle
 } from './Elements'
 import { rgb } from '../../../node_modules/polished'
@@ -210,11 +209,9 @@ class ParticipateHome extends React.Component {
           </View>
           <HorizontalSpacer size={20} />
           {name === 'TWX' && (
-            <BuyButtonWrapper elevation={8}>
-              <BuyButton>
-                <ButtonText>BUY NOW</ButtonText>
-              </BuyButton>
-            </BuyButtonWrapper>
+            <BuyButton elevation={8}>
+              <ButtonText>BUY NOW</ButtonText>
+            </BuyButton>
           )}
         </Row>
       </CardContent>

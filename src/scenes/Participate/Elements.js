@@ -115,16 +115,14 @@ export const ButtonText = styled.Text`
   text-align: center;
   letter-spacing: 0.8;
 `
-export const BuyButton = styled.TouchableOpacity`
+export const BuyButton = styled.View`
+  background-color: rgb(44,45,67);
+  border-radius: 5px;
   justify-content: center;
   align-items: center;
   align-self: flex-start;
   padding-vertical: 13px;
   padding-horizontal: 30px;
-`
-export const BuyButtonWrapper = styled.View`
-  background-color: rgb(44,45,67);
-  border-radius: 5px;
 `
 export const TokensTitle = styled.Text`
   font-family: Rubik-Medium;
