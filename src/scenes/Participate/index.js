@@ -221,7 +221,7 @@ class ParticipateHome extends React.Component {
   _renderCard = (asset) => {
     return (
       <React.Fragment>
-        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Buy', { asset }) }}>
+        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Buy', { item: asset }) }}>
           <Card>
             {asset.verified ? (
               <LinearGradient
