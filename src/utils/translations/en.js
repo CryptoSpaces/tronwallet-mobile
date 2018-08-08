@@ -232,6 +232,11 @@ const transactionDetails = {
   votedAddress: 'VOTED ADDRESS'
 }
 
+const transactionSuccess = {
+  submitted: 'TRANSACTION SUBMITTED TO NETWORK!',
+  success: 'SUCCESS!'
+}
+
 export default {
   firstTime,
   freeze,
@@ -245,5 +250,6 @@ export default {
   settings,
   transactions,
   transactionDetails,
+  transactionSuccess,
   ...general
 }
