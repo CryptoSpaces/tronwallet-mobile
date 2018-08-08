@@ -41,7 +41,8 @@ import {
   HorizontalSpacer,
   BuyButton,
   ButtonText,
-  BuyButtonWrapper
+  BuyButtonWrapper,
+  TokensTitle
 } from './Elements'
 import { rgb } from '../../../node_modules/polished'
 
@@ -133,6 +134,10 @@ class ParticipateHome extends React.Component {
     return (
       <View>
         <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='cover' />
+        <VerticalSpacer size={30} />
+        <TokensTitle>
+          TOKENS
+        </TokensTitle>
         <VerticalSpacer size={20} />
       </View>
     )
@@ -234,7 +239,7 @@ class ParticipateHome extends React.Component {
               this._renderCardContent(asset)
             )}
           </Card>
-          <VerticalSpacer size={11} />
+          <VerticalSpacer size={15} />
         </TouchableOpacity>
       </React.Fragment>
     )

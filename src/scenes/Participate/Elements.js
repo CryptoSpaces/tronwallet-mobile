@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { View } from '../../components/Utils'
+import { Colors } from '../../components/DesignSystem'
 
 export const Text = styled.Text`
   color: white;
@@ -124,4 +125,10 @@ export const BuyButton = styled.TouchableOpacity`
 export const BuyButtonWrapper = styled.View`
   background-color: rgb(44,45,67);
   border-radius: 5px;
+`
+export const TokensTitle = styled.Text`
+  font-family: Rubik-Medium;
+  font-size: 15px;
+  margin-left: 20px;
+  color: ${Colors.secondaryText};
 `
