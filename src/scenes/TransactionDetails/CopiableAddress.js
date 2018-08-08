@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react'
 import { TouchableOpacity, Clipboard } from 'react-native'
 
+import tl from '../../utils/i18n'
+
 class Copiable extends PureComponent {
   state = {
     text: ''
@@ -15,9 +17,9 @@ class Copiable extends PureComponent {
     try {
       const { text } = this.state
       await Clipboard.setString(text)
-      showToast('Public Key copied to the clipboard')
+      showToast('transactionDetails.clipboard.publicKey')
     } catch (error) {
-      showToast('Something wrong while copying')
+      showToast(tl.t('error.clipboardCopied'))
     }
   }
 

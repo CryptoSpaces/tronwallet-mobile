@@ -207,6 +207,31 @@ const transactions = {
   notFound: 'No transactions found.'
 }
 
+const transactionDetails = {
+  title: 'TRANSACTION',
+  clipboard: {
+    tronscanUrl: 'Tronscan url for this transaction copied to the clipboard',
+    publicKey: 'Public Key copied to the clipboard'
+  },
+  hash: 'HASH',
+  status: 'STATUS',
+  time: 'TIME',
+  block: 'BLOCK',
+  frozenBalance: 'FROZEN BALANCE',
+  unfrozenBalance: 'UNFROZEN BALANCE',
+  totalVotes: 'TOTAL VOTES',
+  amount: 'AMOUNT',
+  to: 'TO',
+  from: 'FROM',
+  tokenName: 'TOKEN NAME',
+  unityValue: 'UNITY VALUE',
+  totalSupply: 'TOTAL SUPPLY',
+  startTime: 'START TIME',
+  endTime: 'END TIME',
+  description: 'DESCRIPTION',
+  votedAddress: 'VOTED ADDRESS'
+}
+
 export default {
   firstTime,
   freeze,
@@ -219,5 +244,6 @@ export default {
   send,
   settings,
   transactions,
+  transactionDetails,
   ...general
 }

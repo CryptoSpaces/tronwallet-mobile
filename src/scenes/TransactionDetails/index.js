@@ -7,7 +7,8 @@ import Toast from 'react-native-easy-toast'
 import LinearGradient from 'react-native-linear-gradient'
 import styled from 'styled-components'
 
-import { updateTransactionByHash } from '../../utils/transactionUtils'
+import tl from '../../utils/i18n'
+import { updateTransactionByHash, getTranslatedType } from '../../utils/transactionUtils'
 import getTransactionStore from '../../store/transactions'
 import IconButton from '../../components/IconButton'
 import * as Utils from '../../components/Utils'
@@ -25,7 +26,7 @@ class TransactionDetails extends React.Component {
     return {
       header: (
         <NavigationHeader
-          title='TRANSACTION'
+          title={tl.t('transactionDetails.title')}
           onBack={() => navigation.goBack()}
         />
       )
@@ -75,9 +76,9 @@ class TransactionDetails extends React.Component {
     const { id } = this.state.item
     try {
       await Clipboard.setString(`https://tronscan.org/#/transaction/${id}`)
-      this.refs.hashToast.show('Tronscan url for this transaction copied to the clipboard')
+      this.refs.hashToast.show(tl.t('transactionDetails.clipboard.tronscanUrl'))
     } catch (error) {
-      this.refs.hashToast.show('Something went wrong while copying')
+      this.refs.hashToast.show(tl.t('error.clipboardCopied'))
     }
   }
 
@@ -118,7 +119,7 @@ class TransactionDetails extends React.Component {
                 opacity={0.8}
               />
               <Utils.Row align='center' justify='space-between'>
-                <Elements.DetailLabel>HASH</Elements.DetailLabel>
+                <Elements.DetailLabel>{tl.t('transactionDetails.hash')}</Elements.DetailLabel>
               </Utils.Row>
               <View style={{ height: 10 }} />
               <Text style={{
@@ -137,18 +138,18 @@ class TransactionDetails extends React.Component {
               <View>
                 <Utils.Column>
                   <Utils.Row align='center' justify='space-between'>
-                    <Elements.DetailLabel>STATUS</Elements.DetailLabel>
+                    <Elements.DetailLabel>{tl.t('transactionDetails.status')}</Elements.DetailLabel>
                     <Utils.VerticalSpacer />
-                    <Elements.DetailText>{confirmed ? 'Confirmed' : 'Unconfirmed'}</Elements.DetailText>
+                    <Elements.DetailText>{confirmed ? tl.t('confirmed') : tl.t('unconfirmed')}</Elements.DetailText>
                   </Utils.Row>
                   <Utils.VerticalSpacer size='medium' />
                   <Utils.Row align='center' justify='space-between'>
-                    <Elements.DetailLabel>TIME</Elements.DetailLabel>
+                    <Elements.DetailLabel>{tl.t('transactionDetails.time')}</Elements.DetailLabel>
                     <Elements.DetailText>{moment(timestamp).format('DD/MM/YYYY hh:mm A')}</Elements.DetailText>
                   </Utils.Row>
                   <Utils.VerticalSpacer size='medium' />
                   <Utils.Row align='center' justify='space-between'>
-                    <Elements.DetailLabel>BLOCK</Elements.DetailLabel>
+                    <Elements.DetailLabel>{tl.t('transactionDetails.block')}</Elements.DetailLabel>
                     <Elements.DetailText>{block}</Elements.DetailText>
                   </Utils.Row>
                 </Utils.Column>
@@ -213,13 +214,13 @@ class TransactionDetails extends React.Component {
   _getHeaderAmountText = (type) => {
     switch (type.toLowerCase()) {
       case 'freeze':
-        return 'FROZEN BALANCE'
+        return tl.t('transactionDetails.frozenBalance')
       case 'unfreeze':
-        return 'UNFROZEN BALANCE'
+        return tl.t('transactionDetails.unfrozenBalance')
       case 'vote':
-        return 'TOTAL VOTES'
+        return tl.t('transactionDetails.totalVotes')
       default:
-        return 'AMOUNT'
+        return tl.t('transactionDetails.amount')
     }
   }
 
@@ -265,7 +266,7 @@ class TransactionDetails extends React.Component {
           justifyContent: 'center',
           paddingHorizontal: 10
         }}>
-          <Elements.BadgeText>{type.toUpperCase()}</Elements.BadgeText>
+          <Elements.BadgeText>{getTranslatedType(type).toUpperCase()}</Elements.BadgeText>
         </View>
         <View style={{ height: 15 }} />
         {type.toLowerCase() !== 'create' &&
@@ -321,7 +322,7 @@ class TransactionDetails extends React.Component {
                 lineHeight: 11,
                 letterSpacing: 0.6,
                 color: rgb(116, 118, 162)
-              }}>TO</Text>
+              }}>{tl.t('transactionDetails.to')}</Text>
               {this._getIcon('ios-arrow-round-up', 30, confirmed ? rgb(63, 231, 123) : rgb(102, 104, 143))}
             </View>
             <View style={{ flexDirection: 'row', width: '100%' }}>
@@ -343,7 +344,7 @@ class TransactionDetails extends React.Component {
             lineHeight: 11,
             letterSpacing: 0.6,
             color: rgb(116, 118, 162)
-          }}>FROM</Text>
+          }}>{tl.t('transactionDetails.from')}</Text>
           {this._getIcon('ios-arrow-round-down', 30, confirmed ? rgb(255, 68, 101) : rgb(102, 104, 143))}
         </View>
         <Copiable
@@ -364,38 +365,38 @@ class TransactionDetails extends React.Component {
       <Utils.Content>
         <Utils.Row>
           <Utils.Column>
-            <Elements.Label>TOKEN NAME</Elements.Label>
+            <Elements.Label>{tl.t('transactionDetails.tokenName')}</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
             <Elements.TokenText>{tokenName}</Elements.TokenText>
           </Utils.Column>
           <Utils.Column position='absolute' left='50%'>
-            <Elements.Label>UNITY VALUE</Elements.Label>
+            <Elements.Label>{tl.t('transactionDetails.unityValue')}</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
             <Elements.TokenText>{(unityValue / ONE_TRX).toFixed(2)} TRX</Elements.TokenText>
           </Utils.Column>
         </Utils.Row>
         <Utils.VerticalSpacer size='big' />
         <Utils.Column>
-          <Elements.Label>TOTAL SUPPLY</Elements.Label>
+          <Elements.Label>{tl.t('transactionDetails.totalSupply')}</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
           <Elements.AmountText>{totalSupply}</Elements.AmountText>
         </Utils.Column>
         <Utils.VerticalSpacer size='big' />
         <Utils.Row>
           <Utils.Column>
-            <Elements.Label>START TIME</Elements.Label>
+            <Elements.Label>{tl.t('transactionDetails.startTime')}</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
             <Elements.DescriptionText>{moment(startTime).format('DD/MM/YYYY hh:mm A')}</Elements.DescriptionText>
           </Utils.Column>
           <Utils.Column position='absolute' left='50%'>
-            <Elements.Label>END TIME</Elements.Label>
+            <Elements.Label>{tl.t('transactionDetails.endTime')}</Elements.Label>
             <Utils.VerticalSpacer size='xsmall' />
             <Elements.DescriptionText>{moment(endTime).format('DD/MM/YYYY hh:mm A')}</Elements.DescriptionText>
           </Utils.Column>
         </Utils.Row>
         <Utils.VerticalSpacer size='big' />
         <Utils.Column>
-          <Elements.Label>DESCRIPTION</Elements.Label>
+          <Elements.Label>{tl.t('transactionDetails.description')}</Elements.Label>
           <Utils.VerticalSpacer size='xsmall' />
           <Elements.DescriptionText>
             {description}
@@ -455,14 +456,14 @@ class TransactionDetails extends React.Component {
             lineHeight: 11,
             letterSpacing: 0.6,
             color: rgb(116, 118, 162)
-          }}>VOTED ADDRESS</Text>
+          }}>{tl.t('transactionDetails.voteAddress')}</Text>
           <Text style={{
             fontFamily: 'Rubik-Medium',
             fontSize: 11,
             lineHeight: 11,
             letterSpacing: 0.6,
             color: rgb(116, 118, 162)
-          }}>AMOUNT</Text>
+          }}>{tl.t('transactionDetails.amount')}</Text>
         </Utils.Row>
         <Utils.VerticalSpacer size='medium' />
         {votesToRender}
