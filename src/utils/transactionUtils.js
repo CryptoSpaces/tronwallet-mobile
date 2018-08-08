@@ -1,6 +1,7 @@
 import RNTron from 'react-native-tron'
 import { Linking } from 'react-native'
 
+import tl from '../utils/i18n'
 import { getUserSecrets } from './secretsUtils'
 import { TronVaultURL } from './deeplinkUtils'
 import getTransactionStore from '../store/transactions'
@@ -75,6 +76,27 @@ const createTransaction = (item) => {
   }
 
   return transaction
+}
+
+export const getTranslatedType = (type) => {
+  switch (type) {
+    case 'Transfer':
+      return tl.t('transactionType.transfer')
+    case 'Transfer Asset':
+      return tl.t('transactionType.transferAsset')
+    case 'Freeze':
+      return tl.t('transactionType.freeze')
+    case 'Unfreeze':
+      return tl.t('transactionType.unfreeze')
+    case 'Vote':
+      return tl.t('transactionType.vote')
+    case 'Participate':
+      return tl.t('transactionType.participate')
+    case 'Create':
+      return tl.t('transactionType.create')
+    default:
+      return tl.t('transactionType.undefined')
+  }
 }
 
 export const openDeepLink = async dataToSend => {

@@ -3,28 +3,8 @@ import moment from 'moment'
 
 import tl from '../../utils/i18n'
 import { configureTransaction } from './Utils'
+import { getTranslatedType } from '../../utils/transactionUtils'
 import * as Elements from './elements'
-
-const getTranslatedType = (type) => {
-  switch (type) {
-    case 'Transfer':
-      return tl.t('transactionType.transfer')
-    case 'Transfer Asset':
-      return tl.t('transactionType.transferAsset')
-    case 'Freeze':
-      return tl.t('transactionType.freeze')
-    case 'Unfreeze':
-      return tl.t('transactionType.unfreeze')
-    case 'Vote':
-      return tl.t('transactionType.vote')
-    case 'Participate':
-      return tl.t('transactionType.participate')
-    case 'Create':
-      return tl.t('transactionType.create')
-    default:
-      return tl.t('transactionType.undefined')
-  }
-}
 
 const Transaction = ({ item, onPress, publicKey }) => {
   /* Renders the top row with the badge and the amount information pertaining
