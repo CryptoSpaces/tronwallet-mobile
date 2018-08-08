@@ -44,7 +44,7 @@ class FirstTime extends React.Component {
                   await createUserKeyPair(pin, this.props.context.oneSignalId)
                   this.props.context.setPin(
                     pin,
-                    () => this.props.navigation.navigate('SeedCreate', { shouldReset: true })
+                    () => this.props.navigation.navigate('SeedCreate', { shouldReset: true, firstTime: true })
                   )
                 }
               })

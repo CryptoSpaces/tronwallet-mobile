@@ -45,7 +45,7 @@ class LoadingScene extends Component {
         testInput: this._tryToOpenStore
       })
     } else {
-      this.props.navigation.navigate('Pin', {
+      this.props.navigation.navigate('FirstTime', {
         testInput: this._tryToOpenStore,
         onSuccess: this._handleSuccess
       })
