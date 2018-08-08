@@ -48,9 +48,7 @@ class ClientWallet {
       `${apiUrl}/account/${address}`
     )
     if (balances && balances.length > 1) {
-      return balances.sort(
-        (a, b) => { if (b) return Number(b.balance) - Number(a.balance) }
-      )
+      return balances.sort((a, b) => Number(b.balance) - Number(a.balance))
     }
     return balances
   }
