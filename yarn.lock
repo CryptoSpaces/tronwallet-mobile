@@ -6249,7 +6249,7 @@ react-native-sentry@^0.38.1:
     "@sentry/wizard" "^0.9.5"
     raven-js "^3.24.2"
 
-react-native-share@^1.0.27:
+react-native-share@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.1.0.tgz#9e9b7cee03ca7a3325d65da68a3b1285319de5b8"
 

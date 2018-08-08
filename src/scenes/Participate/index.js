@@ -17,9 +17,8 @@ import { debounce, union } from 'lodash'
 
 import SyncButton from '../../components/SyncButton'
 import { Colors } from '../../components/DesignSystem'
-import { orderBalances } from '../../utils/balanceUtils'
+import { orderAssets, updateAssets } from '../../utils/assetsUtils'
 import { ONE_TRX } from '../../services/client'
-import { updateAssets } from '../../utils/assetsUtils'
 import guarantee from '../../assets/guarantee.png'
 import NavigationHeader from '../../components/Navigation/Header'
 
@@ -162,16 +161,16 @@ class ParticipateHome extends React.Component {
     }
   }
 
-  _renderCardContent = ({ name, price, issuedPercentage, endTime, isFeatured }) => (
+  _renderCardContent = ({ name, price, issuedPercentage, endTime, verified }) => (
     <React.Fragment>
-      {isFeatured && (
+      {verified && (
         <Featured>
           <FeaturedText align='center'>FEATURED</FeaturedText>
         </Featured>
       )}
       <CardContent>
         <Row justify='space-between'>
-          {isFeatured ? (
+          {verified ? (
             <Row>
               <FeaturedTokenName>{name}</FeaturedTokenName>
               <HorizontalSpacer size={4} />
@@ -180,7 +179,7 @@ class ParticipateHome extends React.Component {
           ) : (
             <TokenName>{name}</TokenName>
           )}
-          {isFeatured ? <FeaturedTokenPrice>{price / ONE_TRX} TRX</FeaturedTokenPrice> : <TokenPrice>{price / ONE_TRX} TRX</TokenPrice>}
+          {verified ? <FeaturedTokenPrice>{price / ONE_TRX} TRX</FeaturedTokenPrice> : <TokenPrice>{price / ONE_TRX} TRX</TokenPrice>}
         </Row>
         <VerticalSpacer size={15} />
         <ProgressBar
@@ -200,27 +199,21 @@ class ParticipateHome extends React.Component {
   )
 
   _renderCard = (asset) => {
-    const isFeatured = asset.name === 'TWX' || asset.name === 'GVX'
-    const item = {
-      ...asset,
-      isFeatured
-    }
-
     return (
       <React.Fragment>
-        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Buy', { item }) }}>
+        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Buy', { asset }) }}>
           <Card>
-            {isFeatured ? (
+            {asset.verified ? (
               <LinearGradient
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 0 }}
                 colors={[rgb(255, 68, 101), rgb(246, 202, 29)]}
                 style={{ height: 85 }}
               >
-                {this._renderCardContent(item)}
+                {this._renderCardContent(asset)}
               </LinearGradient>
             ) : (
-              this._renderCardContent(item)
+              this._renderCardContent(asset)
             )}
           </Card>
           <VerticalSpacer size={11} />
@@ -246,7 +239,7 @@ class ParticipateHome extends React.Component {
 
   render () {
     const { currentList, searching } = this.state
-    const orderedBalances = orderBalances(currentList)
+    const orderedBalances = orderAssets(currentList)
 
     return (
       <Container>

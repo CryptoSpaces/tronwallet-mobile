@@ -160,7 +160,7 @@ class Settings extends Component {
     ]
 
     return (
-      <React.Fragment>
+      <ScrollView>
         {list.map(item => {
           const arrowIconName = 'arrow,-right,-right-arrow,-navigation-right,-arrows'
           return (
@@ -205,7 +205,7 @@ class Settings extends Component {
           <Getty source={require('../../assets/gettysponsor.png')} />
         </Utils.Row>
         <VersionText>{`v${ConfigJson.version}`}</VersionText>
-      </React.Fragment>
+      </ScrollView>
     )
   }
 

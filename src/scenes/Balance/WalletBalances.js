@@ -6,10 +6,11 @@ import { orderBalances } from '../../utils/balanceUtils'
 import { Colors } from '../../components/DesignSystem'
 import Badge from '../../components/Badge'
 import * as Utils from '../../components/Utils'
+import { orderAssets } from '../../utils/assetsUtils'
 
 class WalletBalances extends PureComponent {
   render () {
-    const { balances } = this.props
+    const balances = orderAssets(this.props.balances)
 
     return (
       <React.Fragment>
@@ -26,7 +27,7 @@ class WalletBalances extends PureComponent {
         {balances && orderBalances(balances).map((item) => (
           <Utils.Content key={item.name} paddingHorizontal='none' paddingVertical='medium'>
             <Utils.Row justify='space-between'>
-              <Badge bg={Colors.lightestBackground} guarantee={item.name === 'TRX' || item.name === 'TWX'}>{item.name}</Badge>
+              <Badge bg={Colors.lightestBackground} guarantee={item.verified}>{item.name}</Badge>
               <Utils.Text>{formatNumber(item.balance)}</Utils.Text>
             </Utils.Row>
           </Utils.Content>

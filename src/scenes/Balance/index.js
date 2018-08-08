@@ -24,6 +24,7 @@ import { USER_PREFERRED_CURRENCY } from '../../utils/constants'
 import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
 import { getUserSecrets } from '../../utils/secretsUtils'
+import { updateAssets } from '../../utils/assetsUtils'
 import withContext from '../../utils/hocs/withContext'
 // import { updateTransactions } from '../../utils/transactionUtils'
 // import getTransactionStore from '../../store/transactions'
@@ -53,8 +54,12 @@ class BalanceScene extends Component {
     } catch (e) {
       this.setState({ error: 'An error occured while loading the data.' })
     }
+
     this._navListener =
       this.props.navigation.addListener('didFocus', this._loadData)
+
+    // Update assets when you enter the wallet
+    updateAssets()
 
     // DISABLED BACKGROUND CHECK
     // BackgroundFetch.configure({
