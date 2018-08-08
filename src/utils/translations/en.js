@@ -50,8 +50,10 @@ const seed = {
   create: {
     title: 'CONFIRM WALLET SEED',
     error: 'Oops, we have a problem. Please restart the application.',
+    generateNew: 'This will generate a completely new wallet.',
     button: {
       written: `I'VE WRITTEN IT DOWN`,
+      newSeed: 'GET NEW SEED',
       later: 'Confirm later'
     }
   },
