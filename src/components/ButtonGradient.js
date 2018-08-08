@@ -56,7 +56,7 @@ const ButtonGradient = ({
           }
         ]}
       >
-        <Utils.Text weight={weight} size={'button'} font={font}>{text}</Utils.Text>
+        <Utils.Text weight={weight} size='button' font={font} align='center'>{text}</Utils.Text>
       </LinearGradient>
     </TouchableOpacity>
   )

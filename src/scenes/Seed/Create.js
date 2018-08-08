@@ -75,6 +75,8 @@ class Create extends React.Component {
   render () {
     const { seed } = this.state
     const { navigation } = this.props
+    const firstTime = navigation.getParam('firstTime', false)
+
     return (
       <Utils.Container>
         <Utils.View flex={1} />
@@ -88,19 +90,23 @@ class Create extends React.Component {
           )}
         </Utils.Content>
         <Utils.View height={1} backgroundColor={Colors.secondaryText} />
-        <Utils.Content paddingBottom={12}>
-          <Utils.Row justify='center' align='flex-start' height={90}>
-            <Utils.View style={{flex: 1}}>
-              <ButtonGradient
-                onPress={this._getNewMnemonic}
-                text={tl.t('seed.create.button.newSeed')}
-                full
-              />
-              <Utils.Text light size='xsmall' secondary>
-                {tl.t('seed.create.generateNew')}
-              </Utils.Text>
-            </Utils.View>
-            <Utils.HorizontalSpacer size='large' />
+        <Utils.Content paddingBottom={firstTime ? 12 : 2}>
+          <Utils.Row justify='center' align='flex-start' height={firstTime ? 90 : 60}>
+            {firstTime && (
+              <React.Fragment>
+                <Utils.View style={{flex: 1}}>
+                  <ButtonGradient
+                    onPress={this._getNewMnemonic}
+                    text={tl.t('seed.create.button.newSeed')}
+                    full
+                  />
+                  <Utils.Text light size='xsmall' secondary>
+                    {tl.t('seed.create.generateNew')}
+                  </Utils.Text>
+                </Utils.View>
+                <Utils.HorizontalSpacer size='large' />
+              </React.Fragment>
+            )}
             <ButtonGradient
               onPress={() =>
                 navigation.navigate(
