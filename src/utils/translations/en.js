@@ -98,6 +98,7 @@ const seed = {
       title: 'Wrong Combination',
       message: `Selected words don't match. Make sure you wrote the words in the correct order.`
     },
+    success: 'Wallet successfully confirmed',
     explanation: 'Select the words below in the right order to confirm your secret phrase.',
     button: {
       reset: 'RESET WORDS',
