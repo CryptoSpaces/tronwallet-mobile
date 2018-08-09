@@ -39,7 +39,10 @@ import {
   FeaturedText,
   FeaturedTokenName,
   FeaturedTokenPrice,
-  HorizontalSpacer
+  HorizontalSpacer,
+  BuyButton,
+  ButtonText,
+  TokensTitle
 } from './Elements'
 import { rgb } from '../../../node_modules/polished'
 
@@ -130,7 +133,11 @@ class ParticipateHome extends React.Component {
 
     return (
       <View>
-        <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='contain' />
+        <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='cover' />
+        <VerticalSpacer size={30} />
+        <TokensTitle>
+          TOKENS
+        </TokensTitle>
         <VerticalSpacer size={20} />
       </View>
     )
@@ -170,30 +177,43 @@ class ParticipateHome extends React.Component {
         </Featured>
       )}
       <CardContent>
-        <Row justify='space-between'>
+        <Row justify='space-between' align='center'>
           {verified ? (
-            <Row>
+            <Row align='center'>
+              <Image source={require('../../assets/tron-logo-small.png')} style={{ height: 36, width: 36 }} />
+              <HorizontalSpacer size={8} />
+
               <FeaturedTokenName>{name}</FeaturedTokenName>
               <HorizontalSpacer size={4} />
-              <Image alignSelf='flex-start' source={guarantee} style={{ height: 14, width: 14 }} />
+              <Image source={guarantee} style={{ height: 14, width: 14 }} />
             </Row>
           ) : (
             <TokenName>{name}</TokenName>
           )}
           {verified ? <FeaturedTokenPrice>{price / ONE_TRX} TRX</FeaturedTokenPrice> : <TokenPrice>{price / ONE_TRX} TRX</TokenPrice>}
         </Row>
-        <VerticalSpacer size={15} />
-        <ProgressBar
-          progress={Math.round(issuedPercentage) / 100}
-          borderWidth={0}
-          width={null} height={4}
-          color={rgb(6, 231, 123)}
-          unfilledColor={rgb(25, 26, 42)}
-        />
-        <VerticalSpacer size={6} />
-        <Row justify='space-between'>
-          <Text>{tl.t('ends')} {moment(endTime).fromNow()}</Text>
-          <Text>{Math.round(issuedPercentage)}%</Text>
+        <VerticalSpacer size={verified ? 12 : 20} />
+        <Row>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <ProgressBar
+              progress={Math.round(issuedPercentage) / 100}
+              borderWidth={0}
+              width={null} height={4}
+              color={rgb(6, 231, 123)}
+              unfilledColor={rgb(25, 26, 42)}
+            />
+            <VerticalSpacer size={6} />
+            <Row justify='space-between'>
+              <Text>{tl.t('ends')} {moment(endTime).fromNow()}</Text>
+              <Text>{Math.round(issuedPercentage)}%</Text>
+            </Row>
+          </View>
+          <HorizontalSpacer size={20} />
+          {name === 'TWX' && (
+            <BuyButton elevation={8}>
+              <ButtonText>{tl.t('participate.button.buyNow')}</ButtonText>
+            </BuyButton>
+          )}
         </Row>
       </CardContent>
     </React.Fragment>
@@ -202,14 +222,14 @@ class ParticipateHome extends React.Component {
   _renderCard = (asset) => {
     return (
       <React.Fragment>
-        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Buy', { asset }) }}>
+        <TouchableOpacity onPress={() => { this.props.navigation.navigate('Buy', { item: asset }) }}>
           <Card>
             {asset.verified ? (
               <LinearGradient
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 0 }}
                 colors={[rgb(255, 68, 101), rgb(246, 202, 29)]}
-                style={{ height: 85 }}
+                style={{ flex: 1 }}
               >
                 {this._renderCardContent(asset)}
               </LinearGradient>
@@ -217,7 +237,7 @@ class ParticipateHome extends React.Component {
               this._renderCardContent(asset)
             )}
           </Card>
-          <VerticalSpacer size={11} />
+          <VerticalSpacer size={15} />
         </TouchableOpacity>
       </React.Fragment>
     )

@@ -92,7 +92,8 @@ const participate = {
   featured: 'FEATURED',
   button: {
     confirm: 'CONFIRM',
-    moreInfo: 'MORE INFO'
+    moreInfo: 'MORE INFO',
+    buyNow: 'BUY NOW'
   },
   error: {
     insufficientBalance: 'Not enough funds (TRX) to participate.',
