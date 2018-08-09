@@ -22,7 +22,10 @@ const general = {
     participate: 'Participate',
     create: 'Create',
     undefined: 'Undefined Type'
-  }
+  },
+  ends: 'Ends',
+  clear: 'Clear',
+  allIn: 'All In'
 }
 
 const balance = {
@@ -82,6 +85,40 @@ const market = {
   volume: 'VOLUME 24H',
   cap: 'MARKET CAP',
   supply: 'CIRCULATING SUPPLY'
+}
+
+const participate = {
+  title: 'PARTICIPATE',
+  featured: 'FEATURED',
+  button: {
+    confirm: 'CONFIRM',
+    moreInfo: 'MORE INFO'
+  },
+  error: {
+    insufficientBalance: 'Not enough funds (TRX) to participate.',
+    insufficientTrx: {
+      title: 'You need to buy at least one TRX worth of {{token}}.',
+      message: 'Currently you are buying only {{amount}}.'
+    }
+  },
+  warning: `You don't have enough TRX to buy that many {{token}}.`,
+  amountToBuy: 'AMOUNT TO BUY',
+  pricePerToken: 'PRICE PER TOKEN',
+  tokenDescription: 'TOKEN DESCRIPTION',
+  tokenInfo: 'TOKEN INFO',
+  token: 'TOKEN',
+  frozen: 'FROZEN',
+  percentage: 'PERCENTAGE',
+  issued: 'ISSUED',
+  totalSupply: 'TOTAL SUPPLY',
+  startTime: 'START TIME',
+  endTime: 'END TIME',
+  description: 'DESCRIPTION',
+  transaction: 'TRANSACTION',
+  ownerAddress: 'OWNER ADDRESS',
+  trxNum: 'TRX NUM',
+  num: 'NUM',
+  block: 'BLOCK'
 }
 
 const pin = {
@@ -257,6 +294,7 @@ export default {
   freeze,
   getVault,
   market,
+  participate,
   pin,
   receive,
   rewards,
