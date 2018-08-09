@@ -5,6 +5,7 @@ import { Linking, FlatList, Alert } from 'react-native'
 import { Answers } from 'react-native-fabric'
 
 // Utils
+import tl from '../../utils/i18n'
 import { TronVaultURL } from '../../utils/deeplinkUtils'
 import { formatNumber } from '../../utils/numberUtils'
 
@@ -248,7 +249,7 @@ class VoteScene extends PureComponent {
         const data = await WalletClient.getVoteWitnessTransaction(this.props.context.pin, currentVotes)
         this._openTransactionDetails(data)
       } catch (error) {
-        Alert.alert('Error while building transaction, try again.')
+        Alert.alert(tl.t('error.buildingTransaction'))
         this.setState({ loadingList: false })
         navigation.setParams({ disabled: false })
       }
@@ -264,7 +265,7 @@ class VoteScene extends PureComponent {
         })
       })
     } catch (error) {
-      this.setState({ error: 'Error getting transaction', loadingList: false })
+      this.setState({ error: tl.t('error.gettingTransaction'), loadingList: false })
     }
   }
 
@@ -306,6 +307,7 @@ class VoteScene extends PureComponent {
     this.setState({ searchInput: value, onSearching: true })
     await this._queryList(value)
   }
+
   _queryList = async (value) => {
     const store = await getCandidateStore()
     const voteList = store.objects('Candidate').sorted([['rank', false]]).map(item => Object.assign({}, item))
@@ -415,7 +417,7 @@ class VoteScene extends PureComponent {
         <Header>
           <Utils.View align='center'>
             <Utils.Text size='tiny' weight='500' secondary>
-          TOTAL VOTES
+              {tl.t('votes.totalVotes')}
             </Utils.Text>
             <Utils.VerticalSpacer />
             <Utils.Text size='small'>
@@ -424,7 +426,7 @@ class VoteScene extends PureComponent {
           </Utils.View>
           <Utils.View align='center'>
             <Utils.Text size='tiny' weight='500' secondary>
-              VOTES AVAILABLE
+              {tl.t('votes.votesAvailable')}
             </Utils.Text>
             <Utils.VerticalSpacer />
             <Utils.Text
@@ -444,7 +446,7 @@ class VoteScene extends PureComponent {
           underlineColorAndroid='transparent'
           onChangeText={text => this._onSearch(text, 'search')}
           editable={!refreshing && !loadingList}
-          placeholder='Search'
+          placeholder={tl.t('votes.search')}
           placeholderTextColor='#fff'
           marginBottom={0}
           marginTop={0}
@@ -458,7 +460,7 @@ class VoteScene extends PureComponent {
     console.log(`${e.name}. ${e.message}`)
     this.setState(
       {
-        [errorType]: "Oops, something didn't load correctly. Try to reload",
+        [errorType]: tl.t('votes.error'),
         loadingList: false,
         refreshing: false
       },
@@ -487,7 +489,7 @@ class VoteScene extends PureComponent {
     return (
       <Utils.Container>
         <NavigationHeader
-          title='VOTES'
+          title={tl.t('votes.title')}
           leftButton={<SyncButton
             loading={refreshing || loadingList}
             onPress={this._loadData}

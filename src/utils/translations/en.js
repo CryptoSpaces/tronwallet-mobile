@@ -325,6 +325,14 @@ const transactionSuccess = {
   success: 'SUCCESS!'
 }
 
+const votes = {
+  title: 'VOTES',
+  totalVotes: 'TOTAL VOTES',
+  votesAvailable: 'VOTES AVAILABLE',
+  search: 'Search',
+  error: `Oops, something didn't load correctly. Try to reload`
+}
+
 export default {
   balance,
   firstTime,
@@ -342,5 +350,6 @@ export default {
   transactions,
   transactionDetails,
   transactionSuccess,
+  votes,
   ...general
 }
