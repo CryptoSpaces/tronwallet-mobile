@@ -271,7 +271,7 @@ class SendScene extends Component {
   render () {
     const { loadingSign, loadingData, token, error, to, amount, balances, addressError } = this.state
     const tokenOptions = balances.map(({ name, balance }) => this._formatBalance(name, balance))
-    const balanceSelected = balances.find(b => b.name === token)
+    const balanceSelected = balances.find(b => b.name === token) || balances[0]
     tokenOptions.unshift(tl.t('cancel'))
     return (
       <KeyboardScreen>
