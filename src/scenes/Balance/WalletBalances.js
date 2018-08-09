@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+
+import tl from '../../utils/i18n'
 import { formatNumber } from '../../utils/numberUtils'
 import { orderBalances } from '../../utils/balanceUtils'
-
 import { Colors } from '../../components/DesignSystem'
 import Badge from '../../components/Badge'
 import * as Utils from '../../components/Utils'
@@ -17,10 +18,10 @@ class WalletBalances extends PureComponent {
         <Utils.VerticalSpacer size='large' />
         <Utils.Row justify='space-between'>
           <Utils.Text size='xsmall' secondary>
-            TOKENS
+            {tl.t('balance.tokens')}
           </Utils.Text>
           <Utils.Text size='xsmall' secondary>
-            HOLDINGS
+            {tl.t('balance.holdings')}
           </Utils.Text>
         </Utils.Row>
         <Utils.VerticalSpacer size='big' />

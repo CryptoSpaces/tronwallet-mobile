@@ -15,6 +15,7 @@ import * as Utils from '../../../components/Utils'
 import { Colors } from '../../../components/DesignSystem'
 import ButtonGradient from '../../../components/ButtonGradient'
 import NavigationHeader from '../../../components/Navigation/Header'
+import OptionBuy from '../../../components/Vote/InOutOption'
 
 import {
   BuyText,
@@ -28,10 +29,8 @@ import {
   TrxValueText
 } from '../Elements'
 
-// Design
-import OptionBuy from '../../../components/Vote/InOutOption'
-
 // Utils
+import tl from '../../../utils/i18n'
 import getBalanceStore from '../../../store/balance'
 import { formatNumber } from '../../../utils/numberUtils'
 import Client, { ONE_TRX } from '../../../services/client'
@@ -145,7 +144,7 @@ class BuyScene extends Component {
     }
 
     return (
-      <ButtonGradient disabled={amountToBuy === 0} onPress={() => this._submit()} text='CONFIRM' />
+      <ButtonGradient disabled={amountToBuy === 0} onPress={() => this._submit()} text={tl.t('participate.button.confirm')} />
     )
   }
 
@@ -190,11 +189,14 @@ class BuyScene extends Component {
       await this._openTransactionDetails(data)
     } catch (err) {
       if (err.message === 'INSUFFICIENT_BALANCE') {
-        Alert.alert('Not enough funds (TRX) to participate.')
+        Alert.alert(tl.t('participate.error.insufficientBalance'))
       } else if (err.message === 'INSUFFICIENT_TRX') {
-        Alert.alert(`You need to buy at least one TRX worth of ${item.name}.`, `Currently you are buying only ${this._fixNumber(amountToPay)}.`)
+        Alert.alert(
+          tl.t('participate.error.insufficientTrx.title', { token: item.name }),
+          tl.t('participate.error.insufficientTrx.message', { amount: this._fixNumber(amountToPay) })
+        )
       } else {
-        Alert.alert('Warning', 'Woops something went wrong. Try again later, If the error persist try to update the network settings.')
+        Alert.alert(tl.t('warning'), tl.t('error.default'))
       }
     } finally {
       this.setState({ loading: false })
@@ -211,7 +213,7 @@ class BuyScene extends Component {
         })
       })
     } catch (error) {
-      Alert.alert('Error getting transaction.')
+      Alert.alert(tl.t('error.gettingTransaction'))
     }
   }
 
@@ -225,7 +227,7 @@ class BuyScene extends Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView style={{ paddingBottom: 10 }}>
           <BuyContainer>
-            <WhiteBuyText>AMOUNT TO BUY</WhiteBuyText>
+            <WhiteBuyText>{tl.t('participate.amountToBuy')}</WhiteBuyText>
             <VerticalSpacer size={4} />
             <AmountText>
               {formatNumber(amountToBuy)}
@@ -235,18 +237,18 @@ class BuyScene extends Component {
               <React.Fragment>
                 <VerticalSpacer size={4} />
                 <WhiteBuyText>
-                  You don't have enough TRX to buy that many {name}.
+                  {tl.t('participate.warning', { token: name })}
                 </WhiteBuyText>
                 <VerticalSpacer size={4} />
               </React.Fragment>
             )}
             <Utils.Row>
-              <BuyText>BALANCE:</BuyText>
+              <BuyText>{tl.t('balance.title')}:</BuyText>
               <WhiteBuyText> {formatNumber(totalRemaining)} TRX</WhiteBuyText>
             </Utils.Row>
             <VerticalSpacer size={7} />
             <Utils.Row>
-              <BuyText>PRICE PER TOKEN:</BuyText>
+              <BuyText>{tl.t('participate.pricePerToken')}:</BuyText>
               <WhiteBuyText> {tokenPrice} TRX</WhiteBuyText>
             </Utils.Row>
             <VerticalSpacer size={13} />
@@ -260,12 +262,12 @@ class BuyScene extends Component {
           <MarginFixer>
             <Utils.Row>
               <OptionBuy
-                title='Clear'
+                title={tl.t('clear')}
                 disabled={amountToBuy === 0}
                 onPress={this._clearVoteCount}
               />
               <OptionBuy
-                title='All in'
+                title={tl.t('allIn')}
                 disabled={totalRemaining <= 0 || totalRemaining < tokenPrice}
                 onPress={this._allinVoteCount}
               />
@@ -277,7 +279,7 @@ class BuyScene extends Component {
             <VerticalSpacer size={23} />
             {!!description.length && (
               <React.Fragment>
-                <BuyText>TOKEN DESCRIPTION</BuyText>
+                <BuyText>{tl.t('participate.tokenDescription')}</BuyText>
                 <VerticalSpacer size={17} />
                 <BuyText>{description}</BuyText>
                 <VerticalSpacer size={17} />
@@ -285,7 +287,7 @@ class BuyScene extends Component {
             )}
             <TouchableOpacity onPress={() => { this.props.navigation.navigate('TokenInfo', { item }) }}>
               <MoreInfoButton>
-                <ButtonText>MORE INFO</ButtonText>
+                <ButtonText>{tl.t('participate.button.moreInfo')}</ButtonText>
               </MoreInfoButton>
             </TouchableOpacity>
           </BuyContainer>

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import ButtonGradient from '../../components/ButtonGradient'
+import tl from '../../utils/i18n'
 import * as Utils from '../../components/Utils'
 
 const BalanceNavigation = ({ navigation }) => {
@@ -15,7 +16,7 @@ const BalanceNavigation = ({ navigation }) => {
       <Utils.VerticalSpacer size='xsmall' />
       <Utils.Row>
         <ButtonGradient
-          text='RECEIVE'
+          text={tl.t('receive.title')}
           size='medium'
           multiColumnButton={{x: 0, y: 2}}
           full
@@ -24,7 +25,7 @@ const BalanceNavigation = ({ navigation }) => {
         />
         <Utils.HorizontalSpacer size='tiny' />
         <ButtonGradient
-          text='FREEZE'
+          text={tl.t('freeze.title')}
           size='medium'
           multiColumnButton={{x: 2, y: 3}}
           full
@@ -34,7 +35,7 @@ const BalanceNavigation = ({ navigation }) => {
         />
         <Utils.HorizontalSpacer size='tiny' />
         <ButtonGradient
-          text='SEND'
+          text={tl.t('send.title')}
           size='medium'
           multiColumnButton={{x: 3, y: 4}}
           full

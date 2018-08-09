@@ -13,6 +13,7 @@ import LoadingScene from '../../components/LoadingScene'
 import NavigationHeader from '../../components/Navigation/Header'
 
 // Service
+import tl from '../../utils/i18n'
 import Client from '../../services/client'
 import getTransactionStore from '../../store/transactions'
 import getBalanceStore from '../../store/balance'
@@ -132,7 +133,7 @@ class TransactionDetail extends Component {
           const response = await Client.getDevicesFromPublicKey(transaction.contractData.transferToAddress)
           if (response.data.users.length) {
             const content = {
-              'en': `You have received a transaction from ${transaction.contractData.transferFromAddress}`
+              'en': tl.t('submitTransaction.notification', { address: transaction.contractData.transferFromAddress })
             }
             response.data.users.map(device => {
               OneSignal.postNotification(content, transaction, device.deviceid)
@@ -204,7 +205,7 @@ class TransactionDetail extends Component {
           <ActivityIndicator size='small' color={Colors.primaryText} />
         ) : (
           <ButtonGradient
-            text='SUBMIT TRANSACTION'
+            text={tl.t('submitTransaction.button.submit')}
             onPress={() => this.props.navigation.navigate('Pin', {
               shouldGoBack: true,
               testInput: pin => pin === this.props.context.pin,
@@ -221,11 +222,10 @@ class TransactionDetail extends Component {
   _renderRetryConnection = () => (
     <Utils.Content align='center' justify='center'>
       <Utils.Text size='small'>
-        It seems that you are disconnected. Reconnect to the internet before
-        proceeding with the transaction.
+        {tl.t('submitTransaction.disconnectedMessage')}
       </Utils.Text>
       <Utils.VerticalSpacer size='large' />
-      <ButtonGradient text='Try again' onPress={this._loadData} size='small' />
+      <ButtonGradient text={tl.t('submitTransaction.button.tryAgain')} onPress={this._loadData} size='small' />
     </Utils.Content>
   )
 
@@ -236,7 +236,7 @@ class TransactionDetail extends Component {
     return (
       <React.Fragment>
         <NavigationHeader
-          title='TRANSACTION DETAILS'
+          title={tl.t('submitTransaction.title')}
           onClose={!this.state.loadingSubmit ? () => this.props.navigation.goBack() : null}
         />
         <Utils.Container>

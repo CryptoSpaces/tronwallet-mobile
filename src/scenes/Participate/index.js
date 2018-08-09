@@ -15,6 +15,7 @@ import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
 import { debounce, union } from 'lodash'
 
+import tl from '../../utils/i18n'
 import SyncButton from '../../components/SyncButton'
 import { Colors } from '../../components/DesignSystem'
 import { orderAssets, updateAssets } from '../../utils/assetsUtils'
@@ -53,7 +54,7 @@ class ParticipateHome extends React.Component {
     return {
       header: (
         <NavigationHeader
-          title='PARTICIPATE'
+          title={tl.t('participate.title')}
           leftButton={<SyncButton
             loading={params && params.loading}
             onPress={() => { }}
@@ -172,7 +173,7 @@ class ParticipateHome extends React.Component {
     <React.Fragment>
       {verified && (
         <Featured>
-          <FeaturedText align='center'>FEATURED</FeaturedText>
+          <FeaturedText align='center'>{tl.t('participate.featured')}</FeaturedText>
         </Featured>
       )}
       <CardContent>
@@ -203,14 +204,14 @@ class ParticipateHome extends React.Component {
             />
             <VerticalSpacer size={6} />
             <Row justify='space-between'>
-              <Text>Ends {moment(endTime).fromNow()}</Text>
+              <Text>{tl.t('ends')} {moment(endTime).fromNow()}</Text>
               <Text>{Math.round(issuedPercentage)}%</Text>
             </Row>
           </View>
           <HorizontalSpacer size={20} />
           {name === 'TWX' && (
             <BuyButton elevation={8}>
-              <ButtonText>BUY NOW</ButtonText>
+              <ButtonText>{tl.t('participate.button.buyNow')}</ButtonText>
             </BuyButton>
           )}
         </Row>

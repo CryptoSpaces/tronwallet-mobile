@@ -20,6 +20,7 @@ import TrxValue from './TrxValue'
 import TrxInfo from './TrxInfo'
 import LineChart from './TrxLineChart'
 
+import tl from '../../utils/i18n'
 import { USER_PREFERRED_CURRENCY } from '../../utils/constants'
 import Client from '../../services/client'
 import getBalanceStore from '../../store/balance'
@@ -29,11 +30,11 @@ import withContext from '../../utils/hocs/withContext'
 // import { updateTransactions } from '../../utils/transactionUtils'
 // import getTransactionStore from '../../store/transactions'
 
-const CURRENCIES = ['USD', 'EUR', 'BTC', 'ETH', 'Cancel']
+const CURRENCIES = [tl.t('cancel'), 'USD', 'EUR', 'BTC', 'ETH']
 
 class BalanceScene extends Component {
   static navigationOptions = () => ({
-    header: <NavigationHeader title='BALANCE' />
+    header: <NavigationHeader title={tl.t('balance.title')} />
   })
 
   state = {
@@ -52,7 +53,7 @@ class BalanceScene extends Component {
     try {
       this._loadData()
     } catch (e) {
-      this.setState({ error: 'An error occured while loading the data.' })
+      this.setState({ error: tl.t('balance.error.loadingData') })
     }
 
     this._navListener =
@@ -156,14 +157,13 @@ class BalanceScene extends Component {
   }
 
   _handleCurrencyChange = async (index) => {
-    const currency = CURRENCIES[index]
-
-    if (currency && currency !== 'Cancel') {
+    if (index !== 0) {
+      const currency = CURRENCIES[index]
       try {
         await AsyncStorage.setItem(USER_PREFERRED_CURRENCY, currency)
         this.setState({ currency })
       } catch (e) {
-        this.setState({ error: 'Error saving preferred currency' })
+        this.setState({ error: tl.t('balance.error.savingCurrency') })
       }
     }
   }
@@ -192,9 +192,9 @@ class BalanceScene extends Component {
             <Utils.View minHeight={190}>
               <ActionSheet
                 ref={ref => { this.ActionSheet = ref }}
-                title='Please, choose your preferred currency.'
+                title={tl.t('balance.chooseCurrency')}
                 options={CURRENCIES}
-                cancelButtonIndex={4}
+                cancelButtonIndex={0}
                 onPress={index => this._handleCurrencyChange(index)}
               />
               <TouchableOpacity onPress={() => this.ActionSheet.show()}>
@@ -208,7 +208,7 @@ class BalanceScene extends Component {
             <BalanceNavigation navigation={this.props.navigation} />
             {!seedConfirmed && (
               <BalanceWarning seed={seed} navigation={this.props.navigation}>
-                Please tap to confirm your 12 seed words
+                {tl.t('balance.confirmSeed')}
               </BalanceWarning>
             )}
             <WalletBalances balances={balances} />

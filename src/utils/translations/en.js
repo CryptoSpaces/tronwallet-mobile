@@ -9,8 +9,8 @@ const general = {
     gettingTransaction: 'Error while getting transaction.',
     clipboardCopied: 'Something wrong while copying'
   },
-  balance: 'Balance',
   tronPower: 'TRON POWER',
+  trxPrice: 'TRX PRICE',
   confirmed: 'Confirmed',
   unconfirmed: 'Unconfirmed',
   transactionType: {
@@ -22,7 +22,23 @@ const general = {
     participate: 'Participate',
     create: 'Create',
     undefined: 'Undefined Type'
-  }
+  },
+  ends: 'Ends',
+  clear: 'Clear',
+  allIn: 'All In'
+}
+
+const balance = {
+  title: 'BALANCE',
+  error: {
+    loadingData: 'An error occured while loading the data.',
+    savingCurrency: 'Error saving preferred currency'
+  },
+  chooseCurrency: 'Please, choose your preferred currency.',
+  confirmSeed: 'Please tap to confirm your 12 seed words',
+  bandwidth: 'BANDWITH',
+  tokens: 'TOKENS',
+  holdings: 'HOLDINGS'
 }
 
 const firstTime = {
@@ -47,7 +63,8 @@ const freeze = {
     insufficientBalance: 'Insufficient TRX balance',
     roundNumbers: 'Can only freeze round numbers'
   },
-  amount: 'FREEZE AMOUNT'
+  amount: 'FREEZE AMOUNT',
+  balance: 'Balance'
 }
 
 const getVault = {
@@ -63,12 +80,46 @@ const market = {
     month: '1M',
     all: 'ALL'
   },
-  trxPrice: 'TRX PRICE',
   highest: 'HIGHEST',
   lowest: 'LOWEST',
   volume: 'VOLUME 24H',
   cap: 'MARKET CAP',
   supply: 'CIRCULATING SUPPLY'
+}
+
+const participate = {
+  title: 'PARTICIPATE',
+  featured: 'FEATURED',
+  button: {
+    confirm: 'CONFIRM',
+    moreInfo: 'MORE INFO',
+    buyNow: 'BUY NOW'
+  },
+  error: {
+    insufficientBalance: 'Not enough funds (TRX) to participate.',
+    insufficientTrx: {
+      title: 'You need to buy at least one TRX worth of {{token}}.',
+      message: 'Currently you are buying only {{amount}}.'
+    }
+  },
+  warning: `You don't have enough TRX to buy that many {{token}}.`,
+  amountToBuy: 'AMOUNT TO BUY',
+  pricePerToken: 'PRICE PER TOKEN',
+  tokenDescription: 'TOKEN DESCRIPTION',
+  tokenInfo: 'TOKEN INFO',
+  token: 'TOKEN',
+  frozen: 'FROZEN',
+  percentage: 'PERCENTAGE',
+  issued: 'ISSUED',
+  totalSupply: 'TOTAL SUPPLY',
+  startTime: 'START TIME',
+  endTime: 'END TIME',
+  description: 'DESCRIPTION',
+  transaction: 'TRANSACTION',
+  ownerAddress: 'OWNER ADDRESS',
+  trxNum: 'TRX NUM',
+  num: 'NUM',
+  block: 'BLOCK'
 }
 
 const pin = {
@@ -201,6 +252,43 @@ const settings = {
   partners: 'PARTNERS'
 }
 
+const submitTransaction = {
+  title: 'TRANSACTION DETAILS',
+  notification: 'You have received a transaction from {{address}}',
+  button: {
+    tryAgain: 'Try again',
+    submit: 'SUBMIT TRANSACTION'
+  },
+  disconnectedMessage: 'It seems that you are disconnected. Reconnect to the internet before proceeding with the transaction.',
+  dic: {
+    fronzeBalance: 'Frozen Balance',
+    contractType: 'Transaction Type',
+    ownerAddress: 'From',
+    toAddress: 'To',
+    participateAssetIssueContract: 'Participate',
+    transferAssetContract: 'Transfer',
+    transferContract: 'Transfer',
+    unfreezeBalanceContract: 'Unfreeze',
+    freezeBalanceContract: 'Freeze',
+    assetIssueContract: 'Create',
+    voteWitnessContract: 'Vote',
+    frozenDuration: 'Duration',
+    frozenBalance: 'Total to Freeze'
+  },
+  errorDic: {
+    contractValidate: 'Transaction data not valid. Please try again later.',
+    signature: 'Transaction signature not valid.',
+    duplicate: 'Transaction already broadcasted.',
+    contractValidateCee: 'Transaction data not valid (CEE). Please try again later.',
+    bandwith: 'Not enought bandwidth. Please try again later.',
+    contractValidateTapos: 'Transaction data not valid (TAPOS). Please try again later.',
+    tooBig: 'Transaction too big to be submitted.',
+    expiration: 'Transaction expired. Please try again.',
+    serverBusy: 'Server busy.'
+  },
+  totalVotes: 'Total Votes'
+}
+
 const transactions = {
   title: 'MY TRANSACTIONS',
   from: 'From',
@@ -238,19 +326,31 @@ const transactionSuccess = {
   success: 'SUCCESS!'
 }
 
+const votes = {
+  title: 'VOTES',
+  totalVotes: 'TOTAL VOTES',
+  votesAvailable: 'VOTES AVAILABLE',
+  search: 'Search',
+  error: `Oops, something didn't load correctly. Try to reload`
+}
+
 export default {
+  balance,
   firstTime,
   freeze,
   getVault,
   market,
+  participate,
   pin,
   receive,
   rewards,
   seed,
   send,
   settings,
+  submitTransaction,
   transactions,
   transactionDetails,
   transactionSuccess,
+  votes,
   ...general
 }

@@ -1,33 +1,35 @@
 import React from 'react'
+
+import tl from '../../utils/i18n'
 import DetailRow from './detailRow'
 import { ONE_TRX } from '../../services/client'
 
 const dic = {
-  'fronzeBalance': 'Frozen Balance',
-  'contractType': 'Transaction Type',
-  'ownerAddress': 'From',
-  'toAddress': 'To',
-  'ParticipateAssetIssueContract': 'Participate',
-  'TransferAssetContract': 'Transfer',
-  'TransferContract': 'Transfer',
-  'UnfreezeBalanceContract': 'Unfreeze',
-  'FreezeBalanceContract': 'Freeze',
-  'AssetIssueContract': 'Create',
-  'VoteWitnessContract': 'Vote',
-  'frozenDuration': 'Duration',
-  'frozenBalance': 'Total to Freeze'
+  'fronzeBalance': tl.t('submitTransaction.dic.frozenBalance'),
+  'contractType': tl.t('submitTransaction.dic.contractType'),
+  'ownerAddress': tl.t('submitTransaction.dic.ownerAddress'),
+  'toAddress': tl.t('submitTransaction.dic.toAddress'),
+  'ParticipateAssetIssueContract': tl.t('submitTransaction.dic.participateAssetIssueContract'),
+  'TransferAssetContract': tl.t('submitTransaction.dic.transferAssetContract'),
+  'TransferContract': tl.t('submitTransaction.dic.transferContract'),
+  'UnfreezeBalanceContract': tl.t('submitTransaction.dic.unfreezeBalanceContract'),
+  'FreezeBalanceContract': tl.t('submitTransaction.dic.freezeBalanceContract'),
+  'AssetIssueContract': tl.t('submitTransaction.dic.assetIssueContract'),
+  'VoteWitnessContract': tl.t('submitTransaction.dic.voteWitnessContract'),
+  'frozenDuration': tl.t('submitTransaction.dic.frozenDuration'),
+  'frozenBalance': tl.t('submitTransaction.dic.frozenBalance')
 }
 
 export const errorDic = {
-  'CONTRACT_VALIDATE_ERROR': 'Transaction data not valid. Please try again later.',
-  'SIGERROR': 'Transaction signature not valid',
-  'DUP_TRANSACTION_ERROR': 'Transaction already broadcasted',
-  'CONTRACT_EXE_ERROR': 'Transaction data not valid (CEE). Please try again later.',
-  'BANDWITH_ERROR': 'Not enought bandwidth. Please try again later',
-  'TAPOS_ERROR': 'Transaction data not valid (TAPOS). Please try again later.',
-  'TOO_BIG_TRANSACTION_ERROR': 'Transaction too big to be submitted.',
-  'TRANSACTION_EXPIRATION_ERROR': 'Transaction expired. Please try again.',
-  'SERVER_BUSY': 'Server busy'
+  'CONTRACT_VALIDATE_ERROR': tl.t('submitTransaction.errorDic.contractValidate'),
+  'SIGERROR': tl.t('submitTransaction.errorDic.signature'),
+  'DUP_TRANSACTION_ERROR': tl.t('submitTransaction.errorDic.duplicate'),
+  'CONTRACT_EXE_ERROR': tl.t('submitTransaction.errorDic.contractValidateCee'),
+  'BANDWITH_ERROR': tl.t('submitTransaction.errorDic.bandwith'),
+  'TAPOS_ERROR': tl.t('submitTransaction.errorDic.contractValidateTapos'),
+  'TOO_BIG_TRANSACTION_ERROR': tl.t('submitTransaction.errorDic.tooBig'),
+  'TRANSACTION_EXPIRATION_ERROR': tl.t('submitTransaction.errorDic.expiration'),
+  'SERVER_BUSY': tl.t('submitTransaction.errorDic.serverBusy')
 }
 
 export const firstLetterCapitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
@@ -76,7 +78,7 @@ export default (contracts, tokenAmount) => {
     } else if (ctr === 'votes') {
       const totalVotes = contracts[0][ctr].length
       contractsRows.push(
-        <DetailRow key={ctr} title={toReadableField('Total Votes')} text={totalVotes} />
+        <DetailRow key={ctr} title={toReadableField(tl.t('submitTransaction.totalVotes'))} text={totalVotes} />
       )
     } else {
       contractsRows.push(
