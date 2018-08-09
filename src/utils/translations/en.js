@@ -41,6 +41,14 @@ const balance = {
   holdings: 'HOLDINGS'
 }
 
+const components = {
+  share: {
+    title: 'Share TronWallet address',
+    message: `This is my TronWallet address:\n\n {{address}}\n\nTip: Once you have copied it you can paste it in your TronWallet app using the special button on Send screen.`,
+    dialogTitle: 'Share using:'
+  }
+}
+
 const firstTime = {
   button: {
     create: 'CREATE WALLET',
@@ -336,6 +344,7 @@ const votes = {
 
 export default {
   balance,
+  components,
   firstTime,
   freeze,
   getVault,
