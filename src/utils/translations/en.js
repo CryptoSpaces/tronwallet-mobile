@@ -9,8 +9,8 @@ const general = {
     gettingTransaction: 'Error while getting transaction.',
     clipboardCopied: 'Something wrong while copying'
   },
-  balance: 'Balance',
   tronPower: 'TRON POWER',
+  trxPrice: 'TRX PRICE',
   confirmed: 'Confirmed',
   unconfirmed: 'Unconfirmed',
   transactionType: {
@@ -23,6 +23,19 @@ const general = {
     create: 'Create',
     undefined: 'Undefined Type'
   }
+}
+
+const balance = {
+  title: 'BALANCE',
+  error: {
+    loadingData: 'An error occured while loading the data.',
+    savingCurrency: 'Error saving preferred currency'
+  },
+  chooseCurrency: 'Please, choose your preferred currency.',
+  confirmSeed: 'Please tap to confirm your 12 seed words',
+  bandwidth: 'BANDWITH',
+  tokens: 'TOKENS',
+  holdings: 'HOLDINGS'
 }
 
 const firstTime = {
@@ -47,7 +60,8 @@ const freeze = {
     insufficientBalance: 'Insufficient TRX balance',
     roundNumbers: 'Can only freeze round numbers'
   },
-  amount: 'FREEZE AMOUNT'
+  amount: 'FREEZE AMOUNT',
+  balance: 'Balance'
 }
 
 const getVault = {
@@ -63,7 +77,6 @@ const market = {
     month: '1M',
     all: 'ALL'
   },
-  trxPrice: 'TRX PRICE',
   highest: 'HIGHEST',
   lowest: 'LOWEST',
   volume: 'VOLUME 24H',
@@ -239,6 +252,7 @@ const transactionSuccess = {
 }
 
 export default {
+  balance,
   firstTime,
   freeze,
   getVault,

@@ -160,7 +160,7 @@ class MarketScene extends Component {
             style={{ height: 60 }}
           />
           <Utils.VerticalSpacer size='medium' />
-          <Utils.Text secondary>{tl.t('market.trxPrice')}</Utils.Text>
+          <Utils.Text secondary>{tl.t('trxPrice')}</Utils.Text>
         </Utils.View>
         <Utils.VerticalSpacer size='small' />
         <Utils.Row justify='center'>

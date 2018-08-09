@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { Motion, spring, presets } from 'react-motion'
 import { Context } from '../../store/context'
 
+import tl from '../../utils/i18n'
 import FadeIn from '../../components/Animations/FadeIn'
 import * as Utils from '../../components/Utils'
 
@@ -16,7 +17,7 @@ class TrxInfo extends PureComponent {
               <Utils.VerticalSpacer size='medium' />
               <Utils.Row justify='space-between'>
                 <Utils.View align='center'>
-                  <Utils.Text size='xsmall' secondary>TRON POWER</Utils.Text>
+                  <Utils.Text size='xsmall' secondary>{tl.t('tronPower')}</Utils.Text>
                   <Motion
                     defaultStyle={{ power: 0 }}
                     style={{
@@ -29,7 +30,7 @@ class TrxInfo extends PureComponent {
                   </Motion>
                 </Utils.View>
                 <Utils.View align='center'>
-                  <Utils.Text size='xsmall' secondary>TRX PRICE</Utils.Text>
+                  <Utils.Text size='xsmall' secondary>{tl.t('trxPrice')}</Utils.Text>
                   <Motion
                     defaultStyle={{ price: 0 }}
                     style={{ price: spring(price.value, presets.gentle) }}
@@ -42,7 +43,7 @@ class TrxInfo extends PureComponent {
                   </Motion>
                 </Utils.View>
                 <Utils.View align='center'>
-                  <Utils.Text size='xsmall' secondary>BANDWIDTH</Utils.Text>
+                  <Utils.Text size='xsmall' secondary>{tl.t('balance.bandwidth')}</Utils.Text>
                   <Motion
                     defaultStyle={{ bandwidth: 0 }}
                     style={{

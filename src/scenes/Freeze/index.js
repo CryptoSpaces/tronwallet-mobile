@@ -202,7 +202,7 @@ class FreezeScene extends Component {
           <Header>
             <Utils.View align='center'>
               <Utils.Text size='xsmall' secondary>
-                {tl.t('balance')}
+                {tl.t('freeze.balance')}
               </Utils.Text>
               <Utils.VerticalSpacer size='medium' />
               <Utils.Row align='center'>
