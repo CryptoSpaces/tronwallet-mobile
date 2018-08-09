@@ -83,8 +83,8 @@ const freeze = {
     title: 'UNFREEZE',
     inThreeDays: 'After a three day period you can unfreeze your TRX',
     inXMinutes: 'You can unfreeze your TRX in {{minutes}} minutes.',
-    inXHours: 'You can unfreeze your TRX in {{hours}} minutes.',
-    inXDays: 'You can unfreeze your TRX in {{days}} minutes.',
+    inXHours: 'You can unfreeze your TRX in {{hours}} hours.',
+    inXDays: 'You can unfreeze your TRX in {{days}} days.',
     now: 'You can unfreeze your TRX now.'
   },
   error: {

@@ -57,7 +57,7 @@ class TransactionDetail extends Component {
 
     if (!isConnected) {
       this.setState({ loadingData: false })
-      return
+      return null
     }
 
     try {
@@ -182,7 +182,7 @@ class TransactionDetail extends Component {
 
   _renderContracts = () => {
     const { transactionData, nowDate, tokenAmount } = this.state
-    if (!transactionData) return
+    if (transactionData) return null
     const { contracts } = transactionData
 
     const contractsElements = buildTransactionDetails(contracts, tokenAmount)

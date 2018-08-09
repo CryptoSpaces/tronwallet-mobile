@@ -47,10 +47,8 @@ class ClientWallet {
     const { data: { balances } } = await axios.get(
       `${apiUrl}/account/${address}`
     )
-    if (balances.length > 1) {
-      return balances.sort(
-        (a, b) => Number(b.balance) - Number(a.balance)
-      )
+    if (balances && balances.length > 1) {
+      return balances.sort((a, b) => Number(b.balance) - Number(a.balance))
     }
     return balances
   }
