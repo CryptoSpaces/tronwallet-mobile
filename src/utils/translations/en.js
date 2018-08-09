@@ -251,6 +251,43 @@ const settings = {
   partners: 'PARTNERS'
 }
 
+const submitTransaction = {
+  title: 'TRANSACTION DETAILS',
+  notification: 'You have received a transaction from {{address}}',
+  button: {
+    tryAgain: 'Try again',
+    submit: 'SUBMIT TRANSACTION'
+  },
+  disconnectedMessage: 'It seems that you are disconnected. Reconnect to the internet before proceeding with the transaction.',
+  dic: {
+    fronzeBalance: 'Frozen Balance',
+    contractType: 'Transaction Type',
+    ownerAddress: 'From',
+    toAddress: 'To',
+    participateAssetIssueContract: 'Participate',
+    transferAssetContract: 'Transfer',
+    transferContract: 'Transfer',
+    unfreezeBalanceContract: 'Unfreeze',
+    freezeBalanceContract: 'Freeze',
+    assetIssueContract: 'Create',
+    voteWitnessContract: 'Vote',
+    frozenDuration: 'Duration',
+    frozenBalance: 'Total to Freeze'
+  },
+  errorDic: {
+    contractValidate: 'Transaction data not valid. Please try again later.',
+    signature: 'Transaction signature not valid.',
+    duplicate: 'Transaction already broadcasted.',
+    contractValidateCee: 'Transaction data not valid (CEE). Please try again later.',
+    bandwith: 'Not enought bandwidth. Please try again later.',
+    contractValidateTapos: 'Transaction data not valid (TAPOS). Please try again later.',
+    tooBig: 'Transaction too big to be submitted.',
+    expiration: 'Transaction expired. Please try again.',
+    serverBusy: 'Server busy.'
+  },
+  totalVotes: 'Total Votes'
+}
+
 const transactions = {
   title: 'MY TRANSACTIONS',
   from: 'From',
@@ -301,6 +338,7 @@ export default {
   seed,
   send,
   settings,
+  submitTransaction,
   transactions,
   transactionDetails,
   transactionSuccess,
