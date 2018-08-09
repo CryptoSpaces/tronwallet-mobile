@@ -1,6 +1,7 @@
 # TronWallet
-iOS and Android Crypto Wallet Dapp for TRON (TRX) powered by React Native
+[![CircleCI](https://circleci.com/gh/gettyio/tronwallet-mobile/tree/development.svg?style=svg)](https://circleci.com/gh/gettyio/tronwallet-mobile/tree/development)
 
+TronWallet is an open source fully decentralized p2p crypto wallet for TRON Network built with React Native.
 
 ## Creating a new wallet
 As you launch your TronWallet app, after a short introductory splash screen, you will have two options to continue with your TronWallet experience: Create or Restore your wallet.
