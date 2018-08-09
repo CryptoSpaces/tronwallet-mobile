@@ -1,7 +1,9 @@
 import React from 'react'
 import moment from 'moment'
-import { configureTransaction } from './Utils'
 
+import tl from '../../utils/i18n'
+import { configureTransaction } from './Utils'
+import { getTranslatedType } from '../../utils/transactionUtils'
 import * as Elements from './elements'
 
 const Transaction = ({ item, onPress, publicKey }) => {
@@ -11,7 +13,7 @@ const Transaction = ({ item, onPress, publicKey }) => {
     <Elements.InfoRow>
       <Elements.Badge color={badgeColor}>
         <Elements.BadgeText>
-          {item.type.toUpperCase()}
+          {getTranslatedType(item.type).toUpperCase()}
         </Elements.BadgeText>
       </Elements.Badge>
       <Elements.TransactionValue>
@@ -30,7 +32,7 @@ const Transaction = ({ item, onPress, publicKey }) => {
   const _renderMiddleInfoRow = () => (
     <Elements.InfoRow>
       <Elements.Confirmation>
-        {item.confirmed ? 'Confirmed' : 'Unconfirmed'}
+        {item.confirmed ? tl.t('confirmed') : tl.t('unconfirmed')}
       </Elements.Confirmation>
       <Elements.Moment>
         {moment(item.timestamp).fromNow()}
@@ -42,12 +44,12 @@ const Transaction = ({ item, onPress, publicKey }) => {
   const _renderAddress = ({from, to}) => (
     <React.Fragment>
       <Elements.AddressRow>
-        <Elements.AddressTitle>From: </Elements.AddressTitle>
+        <Elements.AddressTitle>{tl.t('transactions.from')}: </Elements.AddressTitle>
         <Elements.Address>{from}</Elements.Address>
       </Elements.AddressRow>
       {to && (
         <Elements.AddressRow>
-          <Elements.AddressTitle>To: </Elements.AddressTitle>
+          <Elements.AddressTitle>{tl.t('transactions.to')}: </Elements.AddressTitle>
           <Elements.Address>{to}</Elements.Address>
         </Elements.AddressRow>
       )}

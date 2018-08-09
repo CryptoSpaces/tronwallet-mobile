@@ -10,7 +10,19 @@ const general = {
     clipboardCopied: 'Something wrong while copying'
   },
   balance: 'Balance',
-  tronPower: 'TRON POWER'
+  tronPower: 'TRON POWER',
+  confirmed: 'Confirmed',
+  unconfirmed: 'Unconfirmed',
+  transactionType: {
+    transfer: 'Transfer',
+    transferAsset: 'Transfer Asset',
+    freeze: 'Freeze',
+    unfreeze: 'Unfreeze',
+    vote: 'Vote',
+    participate: 'Participate',
+    create: 'Create',
+    undefined: 'Undefined Type'
+  }
 }
 
 const firstTime = {
@@ -86,6 +98,7 @@ const seed = {
       title: 'Wrong Combination',
       message: `Selected words don't match. Make sure you wrote the words in the correct order.`
     },
+    success: 'Wallet successfully confirmed',
     explanation: 'Select the words below in the right order to confirm your secret phrase.',
     button: {
       reset: 'RESET WORDS',
@@ -188,6 +201,43 @@ const settings = {
   partners: 'PARTNERS'
 }
 
+const transactions = {
+  title: 'MY TRANSACTIONS',
+  from: 'From',
+  to: 'To',
+  notFound: 'No transactions found.'
+}
+
+const transactionDetails = {
+  title: 'TRANSACTION',
+  clipboard: {
+    tronscanUrl: 'Tronscan url for this transaction copied to the clipboard',
+    publicKey: 'Public Key copied to the clipboard'
+  },
+  hash: 'HASH',
+  status: 'STATUS',
+  time: 'TIME',
+  block: 'BLOCK',
+  frozenBalance: 'FROZEN BALANCE',
+  unfrozenBalance: 'UNFROZEN BALANCE',
+  totalVotes: 'TOTAL VOTES',
+  amount: 'AMOUNT',
+  to: 'TO',
+  from: 'FROM',
+  tokenName: 'TOKEN NAME',
+  unityValue: 'UNITY VALUE',
+  totalSupply: 'TOTAL SUPPLY',
+  startTime: 'START TIME',
+  endTime: 'END TIME',
+  description: 'DESCRIPTION',
+  votedAddress: 'VOTED ADDRESS'
+}
+
+const transactionSuccess = {
+  submitted: 'TRANSACTION SUBMITTED TO NETWORK!',
+  success: 'SUCCESS!'
+}
+
 export default {
   firstTime,
   freeze,
@@ -199,5 +249,8 @@ export default {
   seed,
   send,
   settings,
+  transactions,
+  transactionDetails,
+  transactionSuccess,
   ...general
 }

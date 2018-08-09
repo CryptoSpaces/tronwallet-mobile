@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, ActivityIndicator } from 'react-native'
 
+import tl from '../../utils/i18n'
 import * as Elements from './elements'
 
 const Empty = ({loading}) => (
@@ -13,7 +14,7 @@ const Empty = ({loading}) => (
           style={{ width: 200, height: 200 }}
         />
         <Elements.EmptyScreenText>
-          No transactions found.
+          {tl.t('transactions.notFound')}
         </Elements.EmptyScreenText>
       </React.Fragment>
     )}

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { NavigationActions, StackActions } from 'react-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import tl from '../../utils/i18n'
 import { SuccessSpecialMessage } from '../../components/SpecialMessage'
 import { Icon, SuccessText, Wrapper, ContinueButton } from './elements'
 
@@ -27,7 +28,7 @@ class TransactionsSuccess extends PureComponent {
   _renderMiddleContent = () => (
     <Wrapper>
       <Icon source={require('../../assets/checked.png')} />
-      <SuccessText>TRANSACTION SUBMITTED TO NETWORK!</SuccessText>
+      <SuccessText>{tl.t('transactionSuccess.submitted')}</SuccessText>
     </Wrapper>
   )
 
@@ -43,7 +44,7 @@ class TransactionsSuccess extends PureComponent {
 
   render () {
     return (
-      <SuccessSpecialMessage message='SUCCESS!'
+      <SuccessSpecialMessage message={tl.t('transactionSuccess.success')}
         renderMiddleContent={this._renderMiddleContent}
         renderBottomContent={this._renderBottomContent}
         bgIllustration={require('../../assets/circle-illustration-green.png')}
