@@ -1,5 +1,6 @@
 # TronWallet
 [![CircleCI](https://circleci.com/gh/gettyio/tronwallet-mobile/tree/development.svg?style=svg)](https://circleci.com/gh/gettyio/tronwallet-mobile/tree/development)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 TronWallet is an open source fully decentralized p2p crypto wallet for TRON Network built with React Native.
 
