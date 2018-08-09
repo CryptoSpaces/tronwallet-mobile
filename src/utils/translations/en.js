@@ -46,6 +46,11 @@ const components = {
     title: 'Share TronWallet address',
     message: `This is my TronWallet address:\n\n {{address}}\n\nTip: Once you have copied it you can paste it in your TronWallet app using the special button on Send screen.`,
     dialogTitle: 'Share using:'
+  },
+  QRScanner: {
+    title: 'Address Scanner',
+    explanation: 'Scan the QRCode to identify the target user',
+    permissionMessage: 'To scan the public key the app needs your permission to access the camera.'
   }
 }
 
