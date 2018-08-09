@@ -1,9 +1,10 @@
 import React from 'react'
 import { Modal, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+
+import tl from '../../utils/i18n'
 import formatUrl from '../../utils/formatUrl'
 import { formatNumber } from '../../utils/numberUtils'
-
 import { Colors } from '../DesignSystem'
 import ButtonGradient from '../ButtonGradient'
 import * as Utils from '../Utils'
@@ -50,11 +51,7 @@ const VoteModal = ({
             {notEnoughTrx && (
               <React.Fragment>
                 <Utils.Text>
-                  {`You do not have enough frozen TRX. Freeze more TRX${
-                    totalRemaining
-                      ? ' or lower the vote amount'
-                      : ' to continue'
-                  }.`}
+                  {totalRemaining ? tl.t('components.vote.freezeOrLower') : tl.t('components.vote.freezeToContinue')}
                 </Utils.Text>
                 <Utils.VerticalSpacer size='medium' />
                 <ButtonGradient
@@ -62,7 +59,7 @@ const VoteModal = ({
                     closeModal()
                     navigation.navigate('Freeze')
                   }}
-                  text='Freeze'
+                  text={tl.t('components.vote.freeze')}
                   size='medium'
                   width={100}
                 />
@@ -73,7 +70,7 @@ const VoteModal = ({
         {totalRemaining !== null && (
           <Utils.Content>
             <Utils.Text secondary align='right'>
-              {`Total votes available: ${totalRemaining}`}
+              {tl.t('components.vote.totalVotes')} ${totalRemaining}`
             </Utils.Text>
           </Utils.Content>
         )}
@@ -95,7 +92,7 @@ const VoteModal = ({
                 color={Colors.primaryText}
               />
               <Utils.HorizontalSpacer />
-              <Utils.Text>DELETE</Utils.Text>
+              <Utils.Text>{tl.t('components.vote.delete')}</Utils.Text>
             </Utils.NumKey>
           </Utils.NumKeyWrapper>
           <Utils.VerticalSpacer />
@@ -103,7 +100,7 @@ const VoteModal = ({
             <ButtonGradient
               onPress={acceptCurrentVote}
               disabled={disableSubmit}
-              text='SET'
+              text={tl.t('components.vote.set')}
             />
           </Utils.NumKeyWrapper>
         </Utils.NumPadWrapper>

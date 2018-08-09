@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import PropTypes from 'prop-types'
+
+import tl from '../../utils/i18n'
 import { Colors, Spacing, ButtonSize } from '../DesignSystem'
 import * as Utils from '../Utils'
 
@@ -20,7 +22,7 @@ const FloatingConfirm = ({onPress, disabled, voteCount}) => (
         }]}
       >
         <Utils.Row justify='center' align='center'>
-          <Utils.Text weight={'bold'} size={'xsmall'}>CONFIRM VOTES</Utils.Text>
+          <Utils.Text weight={'bold'} size={'xsmall'}>{tl.t('components.vote.confirmVotes')}</Utils.Text>
           <Utils.View
             align='center'
             justify='center'

@@ -10,6 +10,7 @@ import RankVote from './list/LeftBadge'
 import ClearVotes from '../ClearButton'
 
 // Utils
+import tl from '../../utils/i18n'
 import formatUrl from '../../utils/formatUrl'
 import { formatNumber } from '../../utils/numberUtils'
 import ButtonGradient from '../ButtonGradient'
@@ -41,7 +42,7 @@ class ConfirmModal extends Component {
                 {formatUrl(url)}
               </Utils.Text>
               <Utils.Text lineHeight={20} size='xsmall'>
-                  Your Votes: {formatNumber(item.voteCount)}
+                {tl.t('components.vote.yourVotes')} {formatNumber(item.voteCount)}
               </Utils.Text>
             </Utils.Column>
           </Utils.Row>
@@ -77,7 +78,7 @@ class ConfirmModal extends Component {
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
           <Utils.Container>
             <NavigationHeader
-              title={'MY VOTES'}
+              title={tl.t('components.vote.myVotes')}
               onBack={closeModal}
               rightButton={<ClearVotes
                 onPress={clearVotes}
@@ -95,7 +96,7 @@ class ConfirmModal extends Component {
             <Utils.View paddingX={'large'} paddingY={'medium'}>
               <ButtonGradient
                 size='large'
-                text='CONFIRM'
+                text={tl.t('components.vote.confirm')}
                 font='bold'
                 disabled={currentFullVotes.length <= 0 || loading}
                 onPress={this._onSubmit}

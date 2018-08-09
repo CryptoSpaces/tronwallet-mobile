@@ -10,6 +10,7 @@ import NavigationHeader from '../Navigation/Header'
 import OptionVote from './InOutOption'
 
 // Utils
+import tl from '../../utils/i18n'
 import formatUrl from '../../utils/formatUrl'
 import { formatNumber } from '../../utils/numberUtils'
 
@@ -114,14 +115,14 @@ class VoteModal extends Component {
               <Utils.View paddingX={'medium'}>
                 <Utils.VerticalSpacer size='medium' />
                 <Utils.Text font='regular' margin={Spacing.small} size='smaller' align='right'>
-                  ENTER THE VOTE VALUE
+                  {tl.t('components.vote.enterVote')}
                 </Utils.Text>
                 <Utils.Text font='regular' letterSpacing={0.6} margin={Spacing.small} size='large' align='right'>
                   {formatNumber(amountToVote)}
                 </Utils.Text>
                 <Utils.Row marginRight={Spacing.small} justify='flex-end' align='flex-end'>
                   <Utils.Text font='regular' lineHeight={14} margin={Spacing.xsmall} align='right' size='smaller' secondary>
-                  VOTES REMAINING
+                    {tl.t('components.vote.votesRemaining')}
                   </Utils.Text>
                   <Utils.Text
                     font='regular'
@@ -139,12 +140,12 @@ class VoteModal extends Component {
                 </Utils.NumPadWrapper>
                 <Utils.NumPadWrapper>
                   <OptionVote
-                    title='Clear'
+                    title={tl.t('clear')}
                     disabled={amountToVote === 0}
                     onPress={this._clearVoteCount}
                   />
                   <OptionVote
-                    title='All in'
+                    title={tl.t('allIn')}
                     disabled={totalRemaining <= 0}
                     onPress={this._allinVoteCount}
                   />
@@ -152,13 +153,13 @@ class VoteModal extends Component {
                 <Utils.VerticalSpacer size='small' />
                 <Utils.NumPadWrapper>
                   <Utils.NumKeyWrapper flexBasis={100}>
-                    <ButtonGradient onPress={() => acceptCurrentVote(amountToVote)} text='SET VOTE' />
+                    <ButtonGradient onPress={() => acceptCurrentVote(amountToVote)} text={tl.t('components.vote.setVote')} />
                   </Utils.NumKeyWrapper>
                 </Utils.NumPadWrapper>
                 {notEnoughTrx && (
                   <Utils.View paddingY='medium' align='center'>
                     <Utils.Text font='regular' secondary light size='small'>
-                      If you need more votes you can Freeze more TRX.
+                      {tl.t('components.vote.moreVotes')}
                     </Utils.Text>
                     <Utils.VerticalSpacer size='medium' />
                     <ButtonGradient
@@ -166,7 +167,7 @@ class VoteModal extends Component {
                         closeModal()
                         navigation.navigate('Freeze')
                       }}
-                      text='FREEZE'
+                      text={tl.t('freeze.title')}
                       size='medium'
                       width={100}
                     />
