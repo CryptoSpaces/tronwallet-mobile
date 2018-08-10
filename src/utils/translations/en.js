@@ -41,6 +41,35 @@ const balance = {
   holdings: 'HOLDINGS'
 }
 
+const components = {
+  share: {
+    title: 'Share TronWallet address',
+    message: `This is my TronWallet address:\n\n {{address}}\n\nTip: Once you have copied it you can paste it in your TronWallet app using the special button on Send screen.`,
+    dialogTitle: 'Share using:'
+  },
+  QRScanner: {
+    title: 'Address Scanner',
+    explanation: 'Scan the QRCode to identify the target user',
+    permissionMessage: 'To scan the public key the app needs your permission to access the camera.'
+  },
+  vote: {
+    enterVote: 'ENTER THE VOTE VALUE',
+    votesRemaining: 'VOTES REMAINING',
+    setVote: 'SET VOTE',
+    moreVotes: 'If you need more votes you can Freeze more TRX.',
+    confirmVotes: 'CONFIRM VOTES',
+    yourVotes: 'Your Votes',
+    myVotes: 'MY VOTES',
+    confirm: 'CONFIRM',
+    freeze: 'Freeze',
+    totalVotes: 'Total votes available:',
+    delete: 'DELETE',
+    set: 'SET',
+    freezeOrLower: 'You do not have enough frozen TRX. Freeze more TRX or lower the vote amount',
+    freezeToContinue: 'You do not have enough frozen TRX. Freeze more TRX to continue'
+  }
+}
+
 const firstTime = {
   button: {
     create: 'CREATE WALLET',
@@ -336,6 +365,7 @@ const votes = {
 
 export default {
   balance,
+  components,
   firstTime,
   freeze,
   getVault,

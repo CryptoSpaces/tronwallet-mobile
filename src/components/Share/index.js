@@ -2,6 +2,7 @@ import React from 'react'
 import { TouchableOpacity, Share } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 
+import tl from '../../utils/i18n'
 import withContext from '../../utils/hocs/withContext'
 import { Row } from '../../components/Utils'
 
@@ -10,11 +11,11 @@ const ShareButton = ({context, WrapperButton = TouchableOpacity, children}) => {
 
   const share = () => {
     Share.share({
-      message: `This is my TronWallet address:\n\n ${value}\n\nTip: Once you have copied it you can paste it in your TronWallet app using the special button on Send screen.`,
-      title: 'Share TronWallet address',
+      message: tl.t('components.share.message', { address: value }),
+      title: tl.t('components.share.title'),
       url: 'https://www.getty.io'
     }, {
-      dialogTitle: 'Share using:'
+      dialogTitle: tl.t('components.share.dialogTitle')
     })
   }
 

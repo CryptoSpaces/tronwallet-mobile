@@ -2,6 +2,8 @@ import React from 'react'
 import { SafeAreaView } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+
+import tl from '../utils/i18n'
 import PropTypes from 'prop-types'
 import { Colors } from '../components/DesignSystem'
 import * as Utils from '../components/Utils'
@@ -11,7 +13,7 @@ const QRCodeComponent = ({ onRead, onClose }) => (
     <SafeAreaView style={{ backgroundColor: Colors.background }}>
       <Utils.Header>
         <Utils.TitleWrapper>
-          <Utils.Title>Address Scanner</Utils.Title>
+          <Utils.Title>{tl.t('components.QRScanner.title')}</Utils.Title>
         </Utils.TitleWrapper>
         <Utils.CloseButton onPress={onClose}>
           <Ionicons
@@ -39,7 +41,7 @@ const QRCodeComponent = ({ onRead, onClose }) => (
             borderColor={'white'}
           />
           <Utils.Text marginTop='medium' align='center'>
-            Scan the QRCode to identify the target user
+            {tl.t('components.QRScanner.explanation')}
           </Utils.Text>
         </Utils.View>
       }
@@ -48,7 +50,7 @@ const QRCodeComponent = ({ onRead, onClose }) => (
         width: '100%',
         justifyContent: 'flex-start'
       }}
-      permissionDialogMessage='To scan the public key the app needs your permission to access the camera.'
+      permissionDialogMessage={tl.t('components.QRScanner.permissionMessage')}
       onRead={onRead}
     />
   </Utils.Container>
