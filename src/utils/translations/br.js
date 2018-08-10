@@ -283,7 +283,7 @@ const settings = {
     title: 'Mudar Idioma',
     description: 'Muda o idioma do aplicativo',
     choose: 'Por favor, escolha um Idioma abaixo:',
-    sucess: 'Idioma alterado para {{language}}, por favor reinicie o app',
+    success: 'Idioma alterado para {{language}}, por favor reinicie o app',
     error: 'Erro ao salvar Idioma'
   },
   partners: 'PARCEIROS'
@@ -298,7 +298,6 @@ const submitTransaction = {
   },
   disconnectedMessage: 'Parece que você está desconectado. Reconecte-se à internet antes de proceder com essa transação.',
   dic: {
-    fronzeBalance: 'Saldo Congelado',
     contractType: 'Tipo de Transação',
     ownerAddress: 'De',
     toAddress: 'Para',

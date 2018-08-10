@@ -456,7 +456,7 @@ class TransactionDetails extends React.Component {
             lineHeight: 11,
             letterSpacing: 0.6,
             color: rgb(116, 118, 162)
-          }}>{tl.t('transactionDetails.voteAddress')}</Text>
+          }}>{tl.t('transactionDetails.votedAddress')}</Text>
           <Text style={{
             fontFamily: 'Rubik-Medium',
             fontSize: 11,

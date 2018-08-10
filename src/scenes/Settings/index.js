@@ -117,7 +117,7 @@ class Settings extends Component {
       const language = LANGUAGES[index]
       try {
         await AsyncStorage.setItem(USER_PREFERRED_LANGUAGE, language.key)
-        this.refs.languageToast.show(tl.t('settings.language.sucess', { language: language.value }))
+        this.refs.languageToast.show(tl.t('settings.language.success', { language: language.value }))
       } catch (e) {
         this.refs.languageToast.show(tl.t('settings.language.error'))
       }

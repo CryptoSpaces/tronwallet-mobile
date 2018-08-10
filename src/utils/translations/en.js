@@ -283,7 +283,7 @@ const settings = {
     title: 'Change Language',
     description: 'Change the app Language',
     choose: 'Please, choose a Language below:',
-    sucess: 'Language changed to {{language}}, please restart the app',
+    success: 'Language changed to {{language}}, please restart the app',
     error: 'Error saving preferred language'
   },
   partners: 'PARTNERS'
@@ -298,7 +298,6 @@ const submitTransaction = {
   },
   disconnectedMessage: 'It seems that you are disconnected. Reconnect to the internet before proceeding with the transaction.',
   dic: {
-    fronzeBalance: 'Frozen Balance',
     contractType: 'Transaction Type',
     ownerAddress: 'From',
     toAddress: 'To',

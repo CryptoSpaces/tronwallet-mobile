@@ -5,7 +5,6 @@ import DetailRow from './detailRow'
 import { ONE_TRX } from '../../services/client'
 
 const dic = {
-  'fronzeBalance': tl.t('submitTransaction.dic.frozenBalance'),
   'contractType': tl.t('submitTransaction.dic.contractType'),
   'ownerAddress': tl.t('submitTransaction.dic.ownerAddress'),
   'toAddress': tl.t('submitTransaction.dic.toAddress'),
