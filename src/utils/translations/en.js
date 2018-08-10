@@ -279,6 +279,13 @@ const settings = {
     warning: `Warning: This action will erase all saved data including your 12 secret words. If you didn't save your secret, please do it before continue.`,
     button: 'OK, I understand it'
   },
+  language: {
+    title: 'Change Language',
+    description: 'Change the app Language',
+    choose: 'Please, choose a Language below:',
+    sucess: 'Language changed to {{language}}, please restart the app',
+    error: 'Error saving preferred language'
+  },
   partners: 'PARTNERS'
 }
 

@@ -279,6 +279,13 @@ const settings = {
     warning: `Atenção: Essa ação irá apagar todos os dados salvos, incluindo suas 12 palavras secretas. Se você não anotou seu segredo, por favor faça antes de continuar.`,
     button: 'OK, eu entendo'
   },
+  language: {
+    title: 'Mudar Idioma',
+    description: 'Muda o idioma do aplicativo',
+    choose: 'Por favor, escolha um Idioma abaixo:',
+    sucess: 'Idioma alterado para {{language}}, por favor reinicie o app',
+    error: 'Erro ao salvar Idioma'
+  },
   partners: 'PARCEIROS'
 }
 

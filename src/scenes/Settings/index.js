@@ -5,8 +5,11 @@ import {
   TouchableWithoutFeedback,
   Alert,
   ActivityIndicator,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native'
+import ActionSheet from 'react-native-actionsheet'
+import Toast from 'react-native-easy-toast'
 import { Answers } from 'react-native-fabric'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import { StackActions, NavigationActions } from 'react-navigation'
@@ -21,6 +24,7 @@ import { Colors, Spacing } from '../../components/DesignSystem'
 import NavigationHeader from '../../components/Navigation/Header'
 
 // Utils
+import { USER_PREFERRED_LANGUAGE } from '../../utils/constants'
 import tl from '../../utils/i18n'
 import fontelloConfig from '../../assets/icons/config.json'
 import { withContext } from '../../store/context'
@@ -34,6 +38,11 @@ const resetAction = StackActions.reset({
   actions: [NavigationActions.navigate({ routeName: 'Loading' })],
   key: null
 })
+const LANGUAGES = [
+  { value: tl.t('cancel') },
+  { key: 'en-US', value: 'English' },
+  { key: 'pt-BR', value: 'Português' }
+]
 
 class Settings extends Component {
   static navigationOptions = () => {
@@ -103,6 +112,18 @@ class Settings extends Component {
     )
   }
 
+  _handleLanguageChange = async (index) => {
+    if (index !== 0) {
+      const language = LANGUAGES[index]
+      try {
+        await AsyncStorage.setItem(USER_PREFERRED_LANGUAGE, language.key)
+        this.refs.languageToast.show(tl.t('settings.language.sucess', { language: language.value }))
+      } catch (e) {
+        this.refs.languageToast.show(tl.t('settings.language.error'))
+      }
+    }
+  }
+
   _renderList = () => {
     const { seed } = this.state
     const list = [
@@ -156,6 +177,12 @@ class Settings extends Component {
         description: tl.t('settings.reset.description'),
         icon: 'delete,-trash,-dust-bin,-remove,-recycle-bin',
         onPress: this._resetWallet
+      },
+      {
+        title: tl.t('settings.language.title'),
+        description: tl.t('settings.language.description'),
+        icon: 'earth,-globe,-planet,-world,-universe',
+        onPress: () => this.ActionSheet.show()
       }
     ]
 
@@ -210,11 +237,27 @@ class Settings extends Component {
   }
 
   render () {
+    const languageOptions = LANGUAGES.map(language => language.value)
+
     return (
       <Utils.Container
         keyboardShouldPersistTaps='always'
         keyboardDismissMode='interactive'
       >
+        <ActionSheet
+          ref={ref => { this.ActionSheet = ref }}
+          title={tl.t('settings.language.choose')}
+          options={languageOptions}
+          cancelButtonIndex={0}
+          onPress={index => this._handleLanguageChange(index)}
+        />
+        <Toast
+          ref='languageToast'
+          position='top'
+          fadeInDuration={1250}
+          fadeOutDuration={1250}
+          opacity={0.8}
+        />
         <ScrollView>
           {this._renderList()}
         </ScrollView>
