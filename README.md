@@ -1,6 +1,10 @@
 # TronWallet
 [![CircleCI](https://circleci.com/gh/gettyio/tronwallet-mobile/tree/development.svg?style=svg)](https://circleci.com/gh/gettyio/tronwallet-mobile/tree/development)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![GitHub issues](https://img.shields.io/github/issues/gettyio/tronwallet-mobile.svg)](https://github.com/gettyio/tronwallet-mobile/issues)
+[![GitHub stars](https://img.shields.io/github/stars/gettyio/tronwallet-mobile.svg)](https://github.com/gettyio/tronwallet-mobile/stargazers)
+[![GitHub license](https://img.shields.io/github/license/gettyio/tronwallet-mobile.svg)](https://github.com/gettyio/tronwallet-mobile/blob/development/LICENSE)
+
 
 TronWallet is an open source fully decentralized p2p crypto wallet for TRON Network built with React Native.
 
