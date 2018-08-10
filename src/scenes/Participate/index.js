@@ -136,7 +136,7 @@ class ParticipateHome extends React.Component {
         <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='cover' />
         <VerticalSpacer size={30} />
         <TokensTitle>
-          TOKENS
+          {tl.t('participate.tokens')}
         </TokensTitle>
         <VerticalSpacer size={20} />
       </View>

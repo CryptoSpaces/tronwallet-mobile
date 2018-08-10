@@ -137,6 +137,7 @@ const participate = {
   tokenDescription: 'TOKEN DESCRIPTION',
   tokenInfo: 'TOKEN INFO',
   token: 'TOKEN',
+  tokens: 'TOKENS',
   frozen: 'FROZEN',
   percentage: 'PERCENTAGE',
   issued: 'ISSUED',

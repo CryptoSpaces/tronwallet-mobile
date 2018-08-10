@@ -17,7 +17,7 @@ class Copiable extends PureComponent {
     try {
       const { text } = this.state
       await Clipboard.setString(text)
-      showToast('transactionDetails.clipboard.publicKey')
+      showToast(tl.t('transactionDetails.clipboard.publicKey'))
     } catch (error) {
       showToast(tl.t('error.clipboardCopied'))
     }
