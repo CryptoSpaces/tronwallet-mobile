@@ -10,6 +10,7 @@ import {
   Dimensions
 } from 'react-native'
 
+import I18n from 'react-native-i18n'
 import LinearGradient from 'react-native-linear-gradient'
 import ProgressBar from 'react-native-progress/Bar'
 import moment from 'moment'
@@ -47,6 +48,10 @@ import {
 import { rgb } from '../../../node_modules/polished'
 
 const AMOUNT_TO_FETCH = 40
+const BANNER = {
+  en: require('../../assets/images/banner-en.png'),
+  pt: require('../../assets/images/banner-pt.png')
+}
 
 class ParticipateHome extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -124,6 +129,11 @@ class ParticipateHome extends React.Component {
     }
   }
 
+  _getBanner = () => {
+    const locale = I18n.currentLocale().substr(0, 2)
+    return BANNER[locale] ? BANNER[locale] : BANNER.en
+  }
+
   _renderSlide = () => {
     const { searchMode } = this.state
 
@@ -133,10 +143,10 @@ class ParticipateHome extends React.Component {
 
     return (
       <View>
-        <Image source={require('../../assets/images/banner.png')} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='cover' />
+        <Image source={this._getBanner()} style={{ height: 232, width: Dimensions.get('window').width }} resizeMode='cover' />
         <VerticalSpacer size={30} />
         <TokensTitle>
-          TOKENS
+          {tl.t('participate.tokens')}
         </TokensTitle>
         <VerticalSpacer size={20} />
       </View>
